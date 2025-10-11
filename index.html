@@ -7,6 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
+  /* Prevent horizontal scroll on full page */
+  html, body {
+    overflow-x: hidden;
+    overscroll-behavior-x: contain;
+  }
   :root {
     --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
     --bg-light: #f8f9fb;
@@ -36,7 +41,6 @@
     --btn-bg-buy-hover: #2a5e9d;
   }
 
-  /* Body & typography */
   body {
     font-family: 'Poppins', Arial, sans-serif;
     background: var(--bg-light);
@@ -46,7 +50,6 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  /* Header with logo and dark mode toggle aligned */
   .main-header {
     background: var(--gradient-light);
     display: flex;
@@ -89,7 +92,6 @@
     background: rgba(255 255 255 / 0.25);
   }
 
-  /* Search section */
   .search-section {
     background: var(--bg-deep-light);
     padding: 32px 24px 24px 24px;
@@ -98,12 +100,12 @@
     flex-direction: column;
     align-items: center;
   }
-  /* Category Icons bar - updated to horizontal swipe */
+
   .category-icons {
     margin: 18px 0 18px 0;
     display: flex;
-    flex-wrap: nowrap; /* no wrap */
-    overflow-x: auto; /* horizontal scroll */
+    flex-wrap: nowrap;
+    overflow-x: auto;
     overflow-y: hidden;
     justify-content: flex-start;
     gap: 16px;
@@ -111,8 +113,9 @@
     padding-right: 10px;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+    overscroll-behavior-x: contain;
   }
-  /* Hide scrollbar */
   .category-icons::-webkit-scrollbar {
     height: 6px;
   }
@@ -156,7 +159,6 @@
     color: inherit;
   }
 
-  /* Search form inputs */
   .search-form {
     width: 100%;
     max-width: 500px;
@@ -179,7 +181,6 @@
     cursor: pointer;
   }
 
-  /* Product grid */
   .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -200,7 +201,6 @@
     }
   }
 
-  /* Product card */
   .product-card {
     background: var(--bg-light);
     border-radius: 14px;
@@ -283,7 +283,6 @@
     background-color: var(--btn-bg-buy-hover);
   }
 
-  /* Responsive and Flex improvement */
   @media (max-width: 600px) {
     .main-header {
       padding: 14px 20px;
@@ -333,7 +332,6 @@
     }
   }
 
-  /* Dark mode overrides */
   [data-theme="dark"] {
     background: #121212;
     color: #eee;
@@ -384,9 +382,7 @@
     <form class="search-form" onsubmit="event.preventDefault();">
       <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
     </form>
-    <div class="category-icons" id="categoryBar">
-      <!-- category icons populate here -->
-    </div>
+    <div class="category-icons" id="categoryBar"></div>
   </div>
   <div class="product-grid" id="product-list">
     <p style="text-align:center; color:#777;">Loading products...</p>
@@ -409,7 +405,6 @@
   let selectedCategory = 'Overall';
   let allProducts = [];
 
-  // Create category icon elements and attach event listeners
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
     el.className = 'category-icon' + (cat.name === selectedCategory ? ' selected' : '');
@@ -430,10 +425,8 @@
     });
   }
 
-  // Populate category bar on load
   categories.forEach(cat => categoryBar.appendChild(createCategoryIcon(cat)));
 
-  // Search input event resets category selection if changed
   searchInput.addEventListener('input', () => {
     if (selectedCategory !== 'Overall') {
       selectedCategory = 'Overall';
@@ -442,7 +435,6 @@
     filterProducts();
   });
 
-  // Fetch products and display
   async function loadProducts() {
     try {
       const response = await fetch('products.json');
@@ -455,7 +447,6 @@
     }
   }
 
-  // Animate product card insert with fade and slide up
   function displayProducts(products) {
     const productList = document.getElementById('product-list');
     if (products.length === 0) {
@@ -484,7 +475,6 @@
     });
   }
 
-  // Filter products based on current search and selected category
   function filterProducts() {
     const searchText = searchInput.value.trim().toLowerCase();
     let filtered = allProducts.slice();
