@@ -4,44 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shop+</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Google Fonts: Poppins (Premium Typography) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --gradient: linear-gradient(120deg,#0047ab 60%,#0099ff 100%);
       --bg-deep: #0e1a39;
       --bg-light: #f8f9fb;
       --accent: #0099ff;
       --accent-dark: #0047ab;
       --logo-bg: #fff;
-      --logo-shadow: rgba(0, 71, 171, 0.12);
+      --logo-shadow: rgba(0,71,171,0.12);
       --logo-accent: #0099ff;
       --text-dark: #1f1f1f;
       --text-light: #fff;
     }
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       background: var(--bg-light);
       margin: 0;
       color: var(--text-dark);
-      min-height: 100vh;
     }
     .main-header {
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.8px;
       background: var(--gradient);
-      padding: 16px 0 10px 0;
+      padding: 20px 0 14px 0;
       display: flex;
       align-items: center;
       justify-content: flex-start;
     }
     .shopplus-logo {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2.2rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 2.4rem;
       font-weight: 700;
       color: var(--accent-dark);
       background: var(--logo-bg);
-      padding: 0 24px 0 20px;
+      padding: 0 28px 0 18px;
       border-radius: 14px;
       box-shadow: 0 4px 14px var(--logo-shadow);
-      letter-spacing: 0.5px;
+      letter-spacing: 0.7px;
       margin-left: 12px;
     }
     .shopplus-logo .plus {
@@ -52,45 +55,55 @@
       vertical-align: baseline;
     }
     .search-section {
+      font-family: 'Poppins', Arial, sans-serif;
+      padding: 32px 0 22px 0;
       background: var(--bg-deep);
-      padding: 30px 0 20px 0;
       color: var(--text-light);
-      box-shadow: 0 2px 16px #0047ab22;
       display: flex;
       justify-content: center;
     }
     .search-form {
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 500;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 0;
+      gap: 11px;
       max-width: 600px;
       width: 100%;
       padding: 0 10px;
     }
     .search-form input, .search-form select {
+      font-family: 'Poppins', Arial, sans-serif;
       border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 17px;
+      padding: 13px 16px;
+      font-size: 18px;
+      font-weight: 500;
       border: none;
       outline: none;
       background: #fff;
       color: #222;
-      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
       flex: 1;
       min-width: 0;
+      letter-spacing: 0.25px;
     }
     .search-form select {
-      flex: 0 0 140px;
+      flex: 0 0 150px;
+      font-size: 17px;
+      font-weight: 500;
+      background: #f6f6ff;
     }
-    .search-form button { display: none; }
+    .search-form button {
+      display: none;
+    }
     .product-grid {
+      font-family: 'Poppins', Arial, sans-serif;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
-      padding: 20px 20px 32px;
-      margin-top: 20px;
+      padding: 24px 20px 32px;
+      margin-top: 22px;
       max-width: 1280px;
       margin-left: auto;
       margin-right: auto;
@@ -102,10 +115,11 @@
       .product-grid { grid-template-columns: repeat(2, 1fr); }
     }
     .product-card {
+      font-family: 'Poppins', Arial, sans-serif;
       background: #fff;
       border-radius: 14px;
-      box-shadow: 0 4px 16px rgba(0, 71, 171, 0.16);
-      padding: 16px;
+      box-shadow: 0 4px 16px rgba(0,71,171,0.16);
+      padding: 17px 13px 13px 13px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -123,23 +137,25 @@
       flex-shrink: 0;
       height: 70%;
       width: auto;
-      max-width: 92%;
+      max-width: 95%;
       object-fit: contain;
       border-radius: 12px;
       background: #f2f4fc;
       padding: 8px;
       box-sizing: border-box;
-      margin: 0 auto 10px auto;
+      margin: 0 auto 11px auto;
       display: block;
     }
     .product-card h2 {
-      font-size: 16px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 17px;
       font-weight: 600;
+      letter-spacing: 0.12px;
       color: #0047ab;
-      margin: 0 0 10px 0;
+      margin: 0 0 12px 0;
       text-align: center;
       white-space: normal;
-      line-height: 1.2;
+      line-height: 1.22;
       flex: none;
     }
     .card-actions {
@@ -149,9 +165,10 @@
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
     }
     .btn {
+      font-family: 'Poppins', Arial, sans-serif;
       flex: 1 1 0;
       min-width: 0;
       max-width: 120px;
@@ -169,6 +186,7 @@
       box-sizing: border-box;
       word-break: break-word;
       white-space: nowrap;
+      letter-spacing: 0.2px;
     }
     .view-details { background: #43a047; }
     .view-details:hover { background: #38733b; }
@@ -177,17 +195,19 @@
     @media (max-width: 600px) {
       .main-header { font-size: 1.2rem; padding: 13px 0; }
       .shopplus-logo { font-size: 1.3rem; padding: 0 12px 0 7px; margin-left: 6px;}
-      .product-card { height: 200px; padding: 10px; }
+      .product-card { height: 200px; padding: 11px; }
       .product-card img { height: 65%; }
       .product-card h2 { font-size: 13px;}
       .card-actions { gap: 6px;}
-      .btn { font-size: 11px; max-width: 90px; padding: 8px 0;}
+      .btn { font-size: 12px; max-width: 85px; padding: 8px 0; }
+      .search-form input, .search-form select { font-size: 15px;}
     }
     @media (max-width: 400px) {
       .btn { font-size: 10px; max-width: 70px;}
       .card-actions { gap: 3px; }
       .product-card { height: 180px;}
       .product-card img { height: 60%; }
+      .search-form input, .search-form select { font-size: 13px;}
     }
   </style>
 </head>
