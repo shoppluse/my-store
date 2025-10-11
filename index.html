@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
-  /* Root variables for light and dark themes */
   :root {
     --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
     --bg-light: #f8f9fb;
@@ -99,15 +98,34 @@
     flex-direction: column;
     align-items: center;
   }
-  /* Category Icons bar */
+  /* Category Icons bar - updated to horizontal swipe */
   .category-icons {
     margin: 18px 0 18px 0;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap; /* no wrap */
+    overflow-x: auto; /* horizontal scroll */
+    overflow-y: hidden;
+    justify-content: flex-start;
     gap: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
   }
+  /* Hide scrollbar */
+  .category-icons::-webkit-scrollbar {
+    height: 6px;
+  }
+  .category-icons::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.12);
+    border-radius: 3px;
+  }
+  .category-icons::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
   .category-icon {
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -315,7 +333,7 @@
     }
   }
 
-  /* Dark mode: override background and text colors */
+  /* Dark mode overrides */
   [data-theme="dark"] {
     background: #121212;
     color: #eee;
@@ -355,47 +373,43 @@
   [data-theme="dark"] .product-card:hover {
     box-shadow: 0 12px 36px rgba(12, 63, 150, 0.8);
   }
-
 </style>
 </head>
-
 <body>
   <div class="main-header">
     <span class="shopplus-logo">Shop<span class="plus">+</span></span>
     <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
   </div>
-
   <div class="search-section">
     <form class="search-form" onsubmit="event.preventDefault();">
       <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
     </form>
-    <!-- Category icon bar -->
     <div class="category-icons" id="categoryBar">
-      <!-- Categories will be loaded here -->
+      <!-- category icons populate here -->
     </div>
   </div>
-
   <div class="product-grid" id="product-list">
     <p style="text-align:center; color:#777;">Loading products...</p>
   </div>
 
 <script>
-  // Data for categories with SVG icons (fill color auto from css currentColor)
   const categories = [
-    { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
-    { name: 'Electronics', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
-    { name: 'Fashion', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h10v14H7z"/><ellipse cx="12" cy="18" rx="4" ry="2" /></svg>' },
-    { name: 'Home', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/></svg>' },
-    { name: 'Accessories', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/></svg>' },
-    { name: 'Sports', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l3 7h7l-5 5 2 7-6-4-6 4 2-7-5-5h7z"/></svg>' },
-    { name: 'Beauty', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 18v6M12 6V0"/></svg>' },
-    { name: 'Gadgets', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="21" r="1"/></svg>' },
+    { name: 'Overall', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/></svg>' },
+    { name: 'Electronics', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
+    { name: 'Fashion', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7 4h10v14H7z"/><ellipse cx="12" cy="18" rx="4" ry="2" /></svg>' },
+    { name: 'Home', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 12l9-9 9 9v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/></svg>' },
+    { name: 'Accessories', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/></svg>' },
+    { name: 'Sports', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l3 7h7l-5 5 2 7-6-4-6 4 2-7-5-5h7z"/></svg>' },
+    { name: 'Beauty', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="6"/><path d="M12 18v6M12 6V0"/></svg>' },
+    { name: 'Gadgets', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="21" r="1"/></svg>' },
   ];
 
-  // Initialize category bar
   const categoryBar = document.getElementById('categoryBar');
+  const searchInput = document.getElementById('searchBar');
   let selectedCategory = 'Overall';
+  let allProducts = [];
 
+  // Create category icon elements and attach event listeners
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
     el.className = 'category-icon' + (cat.name === selectedCategory ? ' selected' : '');
@@ -416,19 +430,19 @@
     });
   }
 
-  // Populate category bar
+  // Populate category bar on load
   categories.forEach(cat => categoryBar.appendChild(createCategoryIcon(cat)));
 
-  const searchInput = document.getElementById('searchBar');
+  // Search input event resets category selection if changed
   searchInput.addEventListener('input', () => {
-    selectedCategory = 'Overall';
-    updateCategorySelection();
+    if (selectedCategory !== 'Overall') {
+      selectedCategory = 'Overall';
+      updateCategorySelection();
+    }
     filterProducts();
   });
 
   // Fetch products and display
-  let allProducts = [];
-
   async function loadProducts() {
     try {
       const response = await fetch('products.json');
@@ -441,7 +455,7 @@
     }
   }
 
-  // Animate product card insert
+  // Animate product card insert with fade and slide up
   function displayProducts(products) {
     const productList = document.getElementById('product-list');
     if (products.length === 0) {
@@ -451,7 +465,7 @@
     productList.innerHTML = '';
     products.forEach((p, i) => {
       const card = document.createElement('div');
-      card.className = 'product-card';
+      card.className = 'product-card visible';
       card.style.opacity = 0;
       card.style.transform = 'translateY(20px)';
       card.innerHTML = `
@@ -463,7 +477,6 @@
         </div>
       `;
       productList.appendChild(card);
-      // Animate with delay for smooth transition
       setTimeout(() => {
         card.style.opacity = 1;
         card.style.transform = 'none';
@@ -471,7 +484,7 @@
     });
   }
 
-  // Filtering products based on search and category
+  // Filter products based on current search and selected category
   function filterProducts() {
     const searchText = searchInput.value.trim().toLowerCase();
     let filtered = allProducts.slice();
@@ -484,7 +497,7 @@
     displayProducts(filtered);
   }
 
-  // Dark mode toggle with persistence
+  // Dark mode toggle with localStorage persistence
   const darkToggleBtn = document.getElementById('darkModeToggle');
   const htmlEl = document.documentElement;
   const savedTheme = localStorage.getItem('theme');
@@ -507,7 +520,6 @@
     }
   });
 
-  // Initial load
   window.addEventListener('DOMContentLoaded', () => {
     loadProducts();
   });
