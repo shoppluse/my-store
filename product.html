@@ -36,6 +36,7 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
+      min-height: 340px;
     }
     .main-image {
       width: 320px;
@@ -45,6 +46,10 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       background: white;
       padding: 15px;
+      opacity: 1;
+      visibility: visible;
+      display: block;
+      z-index: 10;
     }
     .thumbnail-row {
       display: flex;
@@ -179,51 +184,38 @@
         return;
       }
 
-      // Functions for rendering rating stars
-      function getStars(rating) {
-        const fullStars = Math.floor(rating);
-        const halfStar = rating - fullStars >= 0.5 ? true : false;
-        let starsHtml = "";
-        for (let i = 0; i < fullStars; i++) {
-          starsHtml += "&#9733;"; // solid star
-        }
-        if (halfStar) starsHtml += "&#x2BEA;"; // half star character or choose an icon
-        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-        for (let i = 0; i < emptyStars; i++) {
-          starsHtml += "&#9734;"; // hollow star
-        }
-        return starsHtml;
+      function getStars(r) {
+        const fullStars = Math.floor(r);
+        const halfStar = r - fullStars >= 0.5;
+        let stars = '';
+        for (let i = 0; i < fullStars; i++) stars += '★';
+        if (halfStar) stars += '☆'; // can replace with half star icon
+        for (let i = fullStars + (halfStar ? 1 : 0); i < 5; i++) stars += '☆';
+        return stars;
       }
 
       let selectedImageIndex = 0;
 
       function updateMainImage(index) {
         selectedImageIndex = index;
-        mainImgElem.src = product.images && product.images.length > 0 ? product.images[index] : product.image;
-        const thumbs = container.querySelectorAll(".thumbnail-row img");
-        thumbs.forEach((imgElem, i) => {
-          imgElem.classList.toggle("selected", i === index);
-        });
+        mainImage.src = product.images && product.images.length > 0 ? product.images[index] : product.image;
+        thumbnails.forEach((img, i) => img.classList.toggle('selected', i === index));
       }
 
       container.innerHTML = `
         <div class="image-section">
-          <img class="main-image" src="${product.images && product.images.length>0 ? product.images[0] : product.image}" alt="${product.name}" />
+          <img class="main-image" src="${product.images && product.images.length > 0 ? product.images[0] : product.image}" alt="${product.name}" />
           <div class="thumbnail-row">
             ${
-              product.images && product.images.length > 1
-                ? product.images.map(
-                    (img, i) => `<img src="${img}" alt="${product.name} ${i+1}" data-index="${i}" />`
-                  ).join("")
-                : ""
+              product.images && product.images.length > 1 
+                ? product.images.map((img, idx) => `<img src="${img}" alt="${product.name} ${idx+1}" data-index="${idx}" />`).join('')
+                : ''
             }
           </div>
         </div>
         <div class="details">
           <h1>${product.name}</h1>
-          <div class="rating" title="Rating: ${product.rating || "4.5"} / 5">
-            ${getStars(product.rating || 4.5)} (${product.rating || 4.5})
-          </div>
+          <div class="rating" title="${product.rating || 4.5} / 5">${getStars(product.rating || 4.5)} (${product.rating || 4.5})</div>
           <p>${product.description}</p>
           <div class="price">₹${product.price}</div>
           <div class="actions">
@@ -232,15 +224,14 @@
           </div>
         </div>`;
 
-      const mainImgElem = container.querySelector(".main-image");
-      const thumbImages = container.querySelectorAll(".thumbnail-row img");
-      thumbImages.forEach(imgElem => {
-        imgElem.addEventListener("click", () => {
-          updateMainImage(parseInt(imgElem.getAttribute('data-index')));
+      const mainImage = container.querySelector('.main-image');
+      const thumbnails = container.querySelectorAll('.thumbnail-row img');
+      thumbnails.forEach(img => {
+        img.addEventListener('click', () => {
+          updateMainImage(parseInt(img.dataset.index));
         });
       });
-      // Highlight first thumbnail by default if available
-      if (thumbImages.length > 0) thumbImages[0].classList.add("selected");
+      if (thumbnails.length > 0) thumbnails[0].classList.add('selected');
     }
 
     loadProductDetails();
