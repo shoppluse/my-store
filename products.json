@@ -2,10 +2,15 @@
   {
     "id": 1,
     "name": "Mouse Pad",
-    "description": "Add a stylish and functional touch to your desk with this extended-size world map mouse pad — perfect for gaming, work, or study setups.",
+    "description": "STRIFF World Map Extended Size (800 mm x 300 mm x 2 mm) Gaming Mouse Pad| Desk Mat | Stitched Edges| Non-Slip Rubber Base|Computer Laptop|Keyboard Mouse Pad for Office & Home (World Map).",
     "price": "Just ₹169!",
     "link": "https://amzn.to/3WnfvVf",
-    "image": "https://m.media-amazon.com/images/I/61s6d6BxW4L._SX425_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/61s6d6BxW4L._SX425_.jpg",
+      "https://m.media-amazon.com/images/I/71h9KVhOXkL._SX425_.jpg",
+      "https://m.media-amazon.com/images/I/61yhYWin5XL._SX425_.jpg"
+    ],
+    "rating": 4.4,
     "category": "Electronics"
   },
   {
