@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Shop+</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
 <style>
-  html, body {
-    overflow-x: hidden;
-  }
+  /* Root variables for light and dark themes */
   :root {
     --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
     --bg-light: #f8f9fb;
@@ -37,6 +36,8 @@
     --btn-bg-buy: #3a8dde;
     --btn-bg-buy-hover: #2a5e9d;
   }
+
+  /* Body & typography */
   body {
     font-family: 'Poppins', Arial, sans-serif;
     background: var(--bg-light);
@@ -45,31 +46,68 @@
     min-height: 100vh;
     transition: background 0.3s ease, color 0.3s ease;
   }
-  .main-header { background: var(--gradient-light); display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; box-shadow: 0 4px 12px var(--logo-shadow-light); }
-  .shopplus-logo { font-size: 2.2rem; font-weight: 700; color: var(--accent-dark-light); background: var(--logo-bg-light); padding: 0 30px 0 22px; border-radius: 16px; letter-spacing: 0.6px; user-select: none; display: inline-flex; align-items: center; gap: 6px; }
-  .shopplus-logo .plus { color: var(--accent-light); font-size: 2.6rem; font-weight: 900; margin-left: 4px; user-select: none; }
-  .dark-mode-toggle { cursor: pointer; font-size: 1.6rem; background: transparent; border: none; color: var(--accent-light); padding: 6px 12px; border-radius: 20px; transition: background 0.3s ease; }
-  .dark-mode-toggle:hover { background: rgba(255 255 255 / 0.25); }
-  .search-section { background: var(--bg-deep-light); padding: 32px 24px 24px 24px; color: var(--text-light); display: flex; flex-direction: column; align-items: center; }
+
+  /* Header with logo and dark mode toggle aligned */
+  .main-header {
+    background: var(--gradient-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    box-shadow: 0 4px 12px var(--logo-shadow-light);
+  }
+  .shopplus-logo {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent-dark-light);
+    background: var(--logo-bg-light);
+    padding: 0 30px 0 22px;
+    border-radius: 16px;
+    letter-spacing: 0.6px;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .shopplus-logo .plus {
+    color: var(--accent-light);
+    font-size: 2.6rem;
+    font-weight: 900;
+    margin-left: 4px;
+    user-select: none;
+  }
+  .dark-mode-toggle {
+    cursor: pointer;
+    font-size: 1.6rem;
+    background: transparent;
+    border: none;
+    color: var(--accent-light);
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: background 0.3s ease;
+  }
+  .dark-mode-toggle:hover {
+    background: rgba(255 255 255 / 0.25);
+  }
+
+  /* Search section */
+  .search-section {
+    background: var(--bg-deep-light);
+    padding: 32px 24px 24px 24px;
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Category Icons bar */
   .category-icons {
     margin: 18px 0 18px 0;
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    justify-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 16px;
-    padding-left: 10px;
-    padding-right: 10px;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    scrollbar-gutter: stable;
   }
-  .category-icons::-webkit-scrollbar { height: 6px; }
-  .category-icons::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.12); border-radius: 3px; }
-  .category-icons::-webkit-scrollbar-track { background: transparent; }
   .category-icon {
-    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,15 +121,68 @@
     transition: background 0.3s ease, transform 0.2s ease;
     user-select: none;
   }
-  .category-icon.selected, .category-icon:hover { background: var(--accent-light); color: white; transform: scale(1.15); }
-  .category-icon svg { width: 28px; height: 28px; fill: currentColor; }
-  .category-label { font-size: 0.7rem; margin-top: 4px; font-weight: 600; color: inherit; }
-  .search-form { width: 100%; max-width: 500px; display: flex; gap: 14px; }
-  .search-form input { flex-grow: 1; border-radius: 8px; border: none; padding: 13px 18px; font-size: 16px; outline: none; }
-  .search-form select { border-radius: 8px; border: none; padding: 13px 15px; font-size: 15px; cursor: pointer; }
-  .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; padding: 24px 30px 48px 30px; max-width: 1280px; margin: 0 auto; min-height: 300px; }
-  @media (max-width: 1100px) { .product-grid {grid-template-columns: repeat(3, 1fr);} }
-  @media (max-width: 650px) { .product-grid {grid-template-columns: repeat(2, 1fr);} }
+  .category-icon.selected, .category-icon:hover {
+    background: var(--accent-light);
+    color: white;
+    transform: scale(1.15);
+  }
+  .category-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+  }
+  .category-label {
+    font-size: 0.7rem;
+    margin-top: 4px;
+    font-weight: 600;
+    color: inherit;
+  }
+
+  /* Search form inputs */
+  .search-form {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    gap: 14px;
+  }
+  .search-form input {
+    flex-grow: 1;
+    border-radius: 8px;
+    border: none;
+    padding: 13px 18px;
+    font-size: 16px;
+    outline: none;
+  }
+  .search-form select {
+    border-radius: 8px;
+    border: none;
+    padding: 13px 15px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  /* Product grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    padding: 24px 30px 48px 30px;
+    max-width: 1280px;
+    margin: 0 auto;
+    min-height: 300px;
+  }
+  @media (max-width: 1100px) {
+    .product-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 650px) {
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Product card */
   .product-card {
     background: var(--bg-light);
     border-radius: 14px;
@@ -105,7 +196,10 @@
     transform: translateY(20px);
     height: 340px;
   }
-  .product-card.visible { opacity: 1; transform: none; }
+  .product-card.visible {
+    opacity: 1;
+    transform: none;
+  }
   .product-card:hover {
     transform: translateY(-8px) scale(1.07);
     box-shadow: 0 14px 36px rgba(0, 71, 171, 0.26);
@@ -156,10 +250,22 @@
     transform: translateY(-3px);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
   }
-  .view-details { background-color: var(--btn-bg-view); color: white; }
-  .view-details:hover { background-color: var(--btn-bg-view-hover); }
-  .buy-now { background-color: var(--btn-bg-buy); color: white; }
-  .buy-now:hover { background-color: var(--btn-bg-buy-hover); }
+  .view-details {
+    background-color: var(--btn-bg-view);
+    color: white;
+  }
+  .view-details:hover {
+    background-color: var(--btn-bg-view-hover);
+  }
+  .buy-now {
+    background-color: var(--btn-bg-buy);
+    color: white;
+  }
+  .buy-now:hover {
+    background-color: var(--btn-bg-buy-hover);
+  }
+
+  /* Responsive and Flex improvement */
   @media (max-width: 600px) {
     .main-header {
       padding: 14px 20px;
@@ -209,7 +315,7 @@
     }
   }
 
-  /* Dark mode overrides */
+  /* Dark mode: override background and text colors */
   [data-theme="dark"] {
     background: #121212;
     color: #eee;
@@ -249,39 +355,46 @@
   [data-theme="dark"] .product-card:hover {
     box-shadow: 0 12px 36px rgba(12, 63, 150, 0.8);
   }
+
 </style>
 </head>
+
 <body>
   <div class="main-header">
     <span class="shopplus-logo">Shop<span class="plus">+</span></span>
     <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
   </div>
+
   <div class="search-section">
     <form class="search-form" onsubmit="event.preventDefault();">
       <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
     </form>
-    <div class="category-icons" id="categoryBar"></div>
+    <!-- Category icon bar -->
+    <div class="category-icons" id="categoryBar">
+      <!-- Categories will be loaded here -->
+    </div>
   </div>
+
   <div class="product-grid" id="product-list">
     <p style="text-align:center; color:#777;">Loading products...</p>
   </div>
 
 <script>
+  // Data for categories with SVG icons (fill color auto from css currentColor)
   const categories = [
-    { name: 'Overall', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/></svg>' },
-    { name: 'Electronics', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
-    { name: 'Fashion', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7 4h10v14H7z"/><ellipse cx="12" cy="18" rx="4" ry="2" /></svg>' },
-    { name: 'Home', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 12l9-9 9 9v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/></svg>' },
-    { name: 'Accessories', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/></svg>' },
-    { name: 'Sports', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l3 7h7l-5 5 2 7-6-4-6 4 2-7-5-5h7z"/></svg>' },
-    { name: 'Beauty', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="6"/><path d="M12 18v6M12 6V0"/></svg>' },
-    { name: 'Gadgets', icon: '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="21" r="1"/></svg>' },
+    { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
+    { name: 'Electronics', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
+    { name: 'Fashion', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h10v14H7z"/><ellipse cx="12" cy="18" rx="4" ry="2" /></svg>' },
+    { name: 'Home', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/></svg>' },
+    { name: 'Accessories', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/></svg>' },
+    { name: 'Sports', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l3 7h7l-5 5 2 7-6-4-6 4 2-7-5-5h7z"/></svg>' },
+    { name: 'Beauty', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 18v6M12 6V0"/></svg>' },
+    { name: 'Gadgets', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="21" r="1"/></svg>' },
   ];
 
+  // Initialize category bar
   const categoryBar = document.getElementById('categoryBar');
-  const searchInput = document.getElementById('searchBar');
   let selectedCategory = 'Overall';
-  let allProducts = [];
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -303,15 +416,18 @@
     });
   }
 
+  // Populate category bar
   categories.forEach(cat => categoryBar.appendChild(createCategoryIcon(cat)));
 
+  const searchInput = document.getElementById('searchBar');
   searchInput.addEventListener('input', () => {
-    if (selectedCategory !== 'Overall') {
-      selectedCategory = 'Overall';
-      updateCategorySelection();
-    }
+    selectedCategory = 'Overall';
+    updateCategorySelection();
     filterProducts();
   });
+
+  // Fetch products and display
+  let allProducts = [];
 
   async function loadProducts() {
     try {
@@ -325,6 +441,7 @@
     }
   }
 
+  // Animate product card insert
   function displayProducts(products) {
     const productList = document.getElementById('product-list');
     if (products.length === 0) {
@@ -334,7 +451,7 @@
     productList.innerHTML = '';
     products.forEach((p, i) => {
       const card = document.createElement('div');
-      card.className = 'product-card visible';
+      card.className = 'product-card';
       card.style.opacity = 0;
       card.style.transform = 'translateY(20px)';
       card.innerHTML = `
@@ -346,6 +463,7 @@
         </div>
       `;
       productList.appendChild(card);
+      // Animate with delay for smooth transition
       setTimeout(() => {
         card.style.opacity = 1;
         card.style.transform = 'none';
@@ -353,6 +471,7 @@
     });
   }
 
+  // Filtering products based on search and category
   function filterProducts() {
     const searchText = searchInput.value.trim().toLowerCase();
     let filtered = allProducts.slice();
@@ -365,6 +484,7 @@
     displayProducts(filtered);
   }
 
+  // Dark mode toggle with persistence
   const darkToggleBtn = document.getElementById('darkModeToggle');
   const htmlEl = document.documentElement;
   const savedTheme = localStorage.getItem('theme');
@@ -387,6 +507,7 @@
     }
   });
 
+  // Initial load
   window.addEventListener('DOMContentLoaded', () => {
     loadProducts();
   });
