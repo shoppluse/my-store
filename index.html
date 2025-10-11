@@ -1,283 +1,516 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shop+</title>
-  <!-- Google Fonts: Poppins (Premium Typography) -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --gradient: linear-gradient(120deg,#0047ab 60%,#0099ff 100%);
-      --bg-deep: #0e1a39;
-      --bg-light: #f8f9fb;
-      --accent: #0099ff;
-      --accent-dark: #0047ab;
-      --logo-bg: #fff;
-      --logo-shadow: rgba(0,71,171,0.12);
-      --logo-accent: #0099ff;
-      --text-dark: #1f1f1f;
-      --text-light: #fff;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shop+</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* Root variables for light and dark themes */
+  :root {
+    --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+    --bg-light: #f8f9fb;
+    --bg-deep-light: #0e1a39;
+    --text-dark-light: #1f1f1f;
+    --accent-light: #0099ff;
+    --accent-dark-light: #0047ab;
+    --logo-bg-light: #fff;
+    --logo-shadow-light: rgba(0, 71, 171, 0.12);
+    --btn-bg-view: #43a047;
+    --btn-bg-view-hover: #38733b;
+    --btn-bg-buy: #0099ff;
+    --btn-bg-buy-hover: #006cc0;
+  }
+  [data-theme="dark"] {
+    --gradient-light: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
+    --bg-light: #121212;
+    --bg-deep-light: #1a1a2e;
+    --text-dark-light: #eaeaea;
+    --accent-light: #66b0ff;
+    --accent-dark-light: #3a8dde;
+    --logo-bg-light: #222;
+    --logo-shadow-light: rgba(51, 153, 255, 0.4);
+    --btn-bg-view: #2abf6a;
+    --btn-bg-view-hover: #1e8f3f;
+    --btn-bg-buy: #3a8dde;
+    --btn-bg-buy-hover: #2a5e9d;
+  }
+
+  /* Body & typography */
+  body {
+    font-family: 'Poppins', Arial, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark-light);
+    margin: 0;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* Header with logo and dark mode toggle aligned */
+  .main-header {
+    background: var(--gradient-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    box-shadow: 0 4px 12px var(--logo-shadow-light);
+  }
+  .shopplus-logo {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent-dark-light);
+    background: var(--logo-bg-light);
+    padding: 0 30px 0 22px;
+    border-radius: 16px;
+    letter-spacing: 0.6px;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .shopplus-logo .plus {
+    color: var(--accent-light);
+    font-size: 2.6rem;
+    font-weight: 900;
+    margin-left: 4px;
+    user-select: none;
+  }
+  .dark-mode-toggle {
+    cursor: pointer;
+    font-size: 1.6rem;
+    background: transparent;
+    border: none;
+    color: var(--accent-light);
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: background 0.3s ease;
+  }
+  .dark-mode-toggle:hover {
+    background: rgba(255 255 255 / 0.25);
+  }
+
+  /* Search section */
+  .search-section {
+    background: var(--bg-deep-light);
+    padding: 32px 24px 24px 24px;
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Category Icons bar */
+  .category-icons {
+    margin: 18px 0 18px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  .category-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-light);
+    border-radius: 50%;
+    width: 62px;
+    height: 62px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    user-select: none;
+  }
+  .category-icon.selected, .category-icon:hover {
+    background: var(--accent-light);
+    color: white;
+    transform: scale(1.15);
+  }
+  .category-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+  }
+  .category-label {
+    font-size: 0.7rem;
+    margin-top: 4px;
+    font-weight: 600;
+    color: inherit;
+  }
+
+  /* Search form inputs */
+  .search-form {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    gap: 14px;
+  }
+  .search-form input {
+    flex-grow: 1;
+    border-radius: 8px;
+    border: none;
+    padding: 13px 18px;
+    font-size: 16px;
+    outline: none;
+  }
+  .search-form select {
+    border-radius: 8px;
+    border: none;
+    padding: 13px 15px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  /* Product grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    padding: 24px 30px 48px 30px;
+    max-width: 1280px;
+    margin: 0 auto;
+    min-height: 300px;
+  }
+  @media (max-width: 1100px) {
+    .product-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: var(--bg-light);
-      margin: 0;
-      color: var(--text-dark);
+  }
+  @media (max-width: 650px) {
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  /* Product card */
+  .product-card {
+    background: var(--bg-light);
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 71, 171, 0.12);
+    padding: 18px 15px 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    height: 340px;
+  }
+  .product-card.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .product-card:hover {
+    transform: translateY(-8px) scale(1.07);
+    box-shadow: 0 14px 36px rgba(0, 71, 171, 0.26);
+  }
+  .product-card img {
+    height: 70%;
+    width: auto;
+    max-width: 95%;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #f2f4fc;
+    padding: 9px;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+  }
+  .product-card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent-dark-light);
+    margin: 0 0 14px 0;
+    text-align: center;
+    line-height: 1.28;
+  }
+  .card-actions {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+  }
+  .btn {
+    flex: 1 1 auto;
+    max-width: 160px;
+    padding: 12px 0;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    user-select: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  }
+  .view-details {
+    background-color: var(--btn-bg-view);
+    color: white;
+  }
+  .view-details:hover {
+    background-color: var(--btn-bg-view-hover);
+  }
+  .buy-now {
+    background-color: var(--btn-bg-buy);
+    color: white;
+  }
+  .buy-now:hover {
+    background-color: var(--btn-bg-buy-hover);
+  }
+
+  /* Responsive and Flex improvement */
+  @media (max-width: 600px) {
     .main-header {
-      font-family: 'Poppins', Arial, sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      background: var(--gradient);
-      padding: 20px 0 14px 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
+      padding: 14px 20px;
+      font-size: 1.9rem;
     }
     .shopplus-logo {
-      font-family: 'Poppins', Arial, sans-serif;
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: var(--accent-dark);
-      background: var(--logo-bg);
-      padding: 0 28px 0 18px;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px var(--logo-shadow);
-      letter-spacing: 0.7px;
-      margin-left: 12px;
+      font-size: 1.6rem;
+      padding: 0 20px 0 16px;
+      letter-spacing: 0.4px;
     }
     .shopplus-logo .plus {
-      color: var(--logo-accent);
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-left: 4px;
-      vertical-align: baseline;
+      font-size: 2rem;
     }
     .search-section {
-      font-family: 'Poppins', Arial, sans-serif;
-      padding: 32px 0 22px 0;
-      background: var(--bg-deep);
-      color: var(--text-light);
-      display: flex;
-      justify-content: center;
+      padding: 20px 16px 16px 16px;
     }
     .search-form {
-      font-family: 'Poppins', Arial, sans-serif;
-      font-weight: 500;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 11px;
-      max-width: 600px;
-      width: 100%;
-      padding: 0 10px;
-    }
-    .search-form input, .search-form select {
-      font-family: 'Poppins', Arial, sans-serif;
-      border-radius: 8px;
-      padding: 13px 16px;
-      font-size: 18px;
-      font-weight: 500;
-      border: none;
-      outline: none;
-      background: #fff;
-      color: #222;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      flex: 1;
-      min-width: 0;
-      letter-spacing: 0.25px;
+      max-width: 90%;
+      gap: 10px;
     }
     .search-form select {
-      flex: 0 0 150px;
-      font-size: 17px;
-      font-weight: 500;
-      background: #f6f6ff;
+      flex: 0 0 120px;
+      font-size: 14px;
+      padding: 10px 12px;
     }
-    .search-form button {
-      display: none;
+    .search-form input {
+      padding: 10px 14px;
+      font-size: 15px;
     }
     .product-grid {
-      font-family: 'Poppins', Arial, sans-serif;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      padding: 24px 20px 32px;
-      margin-top: 22px;
-      max-width: 1280px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    @media (max-width: 1100px) {
-      .product-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 650px) {
-      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      padding: 18px 20px 36px 20px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
     }
     .product-card {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 4px 16px rgba(0,71,171,0.16);
-      padding: 17px 13px 13px 13px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: transform 0.18s;
-      justify-content: flex-start;
-      height: 320px;
-      min-width: 0;
-      box-sizing: border-box;
-    }
-    .product-card:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 8px 22px #0047ab23;
-    }
-    .product-card img {
-      flex-shrink: 0;
-      height: 70%;
-      width: auto;
-      max-width: 95%;
-      object-fit: contain;
-      border-radius: 12px;
-      background: #f2f4fc;
-      padding: 8px;
-      box-sizing: border-box;
-      margin: 0 auto 11px auto;
-      display: block;
+      height: 280px;
+      padding: 14px 12px 14px 12px;
     }
     .product-card h2 {
-      font-family: 'Poppins', Arial, sans-serif;
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: 0.12px;
-      color: #0047ab;
-      margin: 0 0 12px 0;
-      text-align: center;
-      white-space: normal;
-      line-height: 1.22;
-      flex: none;
-    }
-    .card-actions {
-      margin-top: auto;
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 11px;
+      font-size: 16px;
+      margin-bottom: 12px;
     }
     .btn {
-      font-family: 'Poppins', Arial, sans-serif;
-      flex: 1 1 0;
-      min-width: 0;
-      max-width: 120px;
+      max-width: 140px;
+      font-size: 14px;
       padding: 10px 0;
-      border-radius: 7px;
-      text-decoration: none;
-      color: white;
-      font-weight: 600;
-      font-size: 13px;
-      transition: background 0.13s;
-      border: none;
-      cursor: pointer;
-      outline: none;
-      text-align: center;
-      box-sizing: border-box;
-      word-break: break-word;
-      white-space: nowrap;
-      letter-spacing: 0.2px;
     }
-    .view-details { background: #43a047; }
-    .view-details:hover { background: #38733b; }
-    .buy-now { background: var(--accent); }
-    .buy-now:hover { background: #006cc0; }
-    @media (max-width: 600px) {
-      .main-header { font-size: 1.2rem; padding: 13px 0; }
-      .shopplus-logo { font-size: 1.3rem; padding: 0 12px 0 7px; margin-left: 6px;}
-      .product-card { height: 200px; padding: 11px; }
-      .product-card img { height: 65%; }
-      .product-card h2 { font-size: 13px;}
-      .card-actions { gap: 6px;}
-      .btn { font-size: 12px; max-width: 85px; padding: 8px 0; }
-      .search-form input, .search-form select { font-size: 15px;}
-    }
-    @media (max-width: 400px) {
-      .btn { font-size: 10px; max-width: 70px;}
-      .card-actions { gap: 3px; }
-      .product-card { height: 180px;}
-      .product-card img { height: 60%; }
-      .search-form input, .search-form select { font-size: 13px;}
-    }
-  </style>
+  }
+
+  /* Dark mode: override background and text colors */
+  [data-theme="dark"] {
+    background: #121212;
+    color: #eee;
+  }
+  [data-theme="dark"] .main-header {
+    background: linear-gradient(120deg, #121a2f 60%, #16213e 100%);
+  }
+  [data-theme="dark"] .shopplus-logo {
+    background: #222;
+    color: #88b5ff;
+    box-shadow: 0 4px 14px rgba(51, 102, 255, 0.45);
+  }
+  [data-theme="dark"] .search-section {
+    background: #16213e;
+  }
+  [data-theme="dark"] .product-card {
+    background: #1c1c2b;
+    box-shadow: 0 6px 22px rgba(10, 75, 200, 0.6);
+  }
+  [data-theme="dark"] .product-card h2 {
+    color: #a3bbff;
+  }
+  [data-theme="dark"] .btn.view-details {
+    background: #3caf70;
+    box-shadow: 0 4px 20px #238028;
+  }
+  [data-theme="dark"] .btn.view-details:hover {
+    background: #277129;
+  }
+  [data-theme="dark"] .btn.buy-now {
+    background: #4a8de7;
+    box-shadow: 0 4px 20px #205d99;
+  }
+  [data-theme="dark"] .btn.buy-now:hover {
+    background: #235885;
+  }
+  [data-theme="dark"] .product-card:hover {
+    box-shadow: 0 12px 36px rgba(12, 63, 150, 0.8);
+  }
+
+</style>
 </head>
+
 <body>
   <div class="main-header">
     <span class="shopplus-logo">Shop<span class="plus">+</span></span>
+    <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
   </div>
+
   <div class="search-section">
-    <form class="search-form" onsubmit="event.preventDefault(); filterProducts();">
-      <input type="text" id="searchBar" placeholder="Search for phones, gadgets, etc." />
-      <select id="categoryFilter">
-        <option value="Overall">Overall</option>
-        <option value="Electronics">Electronics</option>
-        <option value="Fashion">Fashion</option>
-        <option value="Home">Home</option>
-        <option value="Accessories">Accessories</option>
-        <option value="Sports">Sports</option>
-        <option value="Beauty">Beauty</option>
-        <option value="Gadgets">Gadgets</option>
-      </select>
+    <form class="search-form" onsubmit="event.preventDefault();">
+      <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
     </form>
+    <!-- Category icon bar -->
+    <div class="category-icons" id="categoryBar">
+      <!-- Categories will be loaded here -->
+    </div>
   </div>
+
   <div class="product-grid" id="product-list">
     <p style="text-align:center; color:#777;">Loading products...</p>
   </div>
-  <script>
-    let allProducts = [];
-    async function loadProducts() {
-      try {
-        const response = await fetch('products.json');
-        if (!response.ok) throw new Error('File not found');
-        allProducts = await response.json();
-        displayProducts(allProducts);
-      } catch (err) {
-        document.getElementById('product-list').innerHTML = '<p style="text-align:center;color:red;">Error loading products. Check products.json</p>';
-        console.error(err);
-      }
+
+<script>
+  // Data for categories with SVG icons (fill color auto from css currentColor)
+  const categories = [
+    { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
+    { name: 'Electronics', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
+    { name: 'Fashion', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h10v14H7z"/><ellipse cx="12" cy="18" rx="4" ry="2" /></svg>' },
+    { name: 'Home', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/></svg>' },
+    { name: 'Accessories', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/></svg>' },
+    { name: 'Sports', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l3 7h7l-5 5 2 7-6-4-6 4 2-7-5-5h7z"/></svg>' },
+    { name: 'Beauty', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 18v6M12 6V0"/></svg>' },
+    { name: 'Gadgets', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="21" r="1"/></svg>' },
+  ];
+
+  // Initialize category bar
+  const categoryBar = document.getElementById('categoryBar');
+  let selectedCategory = 'Overall';
+
+  function createCategoryIcon(cat) {
+    const el = document.createElement('div');
+    el.className = 'category-icon' + (cat.name === selectedCategory ? ' selected' : '');
+    el.setAttribute('data-cat', cat.name);
+    el.innerHTML = cat.icon + '<div class="category-label">' + cat.name + '</div>';
+    el.addEventListener('click', () => {
+      if (selectedCategory === cat.name) return;
+      selectedCategory = cat.name;
+      updateCategorySelection();
+      filterProducts();
+    });
+    return el;
+  }
+
+  function updateCategorySelection() {
+    Array.from(categoryBar.children).forEach(el => {
+      el.classList.toggle('selected', el.getAttribute('data-cat') === selectedCategory);
+    });
+  }
+
+  // Populate category bar
+  categories.forEach(cat => categoryBar.appendChild(createCategoryIcon(cat)));
+
+  const searchInput = document.getElementById('searchBar');
+  searchInput.addEventListener('input', () => {
+    selectedCategory = 'Overall';
+    updateCategorySelection();
+    filterProducts();
+  });
+
+  // Fetch products and display
+  let allProducts = [];
+
+  async function loadProducts() {
+    try {
+      const response = await fetch('products.json');
+      if (!response.ok) throw new Error('File not found');
+      allProducts = await response.json();
+      displayProducts(allProducts);
+    } catch (err) {
+      document.getElementById('product-list').innerHTML = '<p style="text-align:center;color:red;">Error loading products. Check products.json</p>';
+      console.error(err);
     }
-    function createCard(p) {
-      return `
-      <div class="product-card">
+  }
+
+  // Animate product card insert
+  function displayProducts(products) {
+    const productList = document.getElementById('product-list');
+    if (products.length === 0) {
+      productList.innerHTML = '<p style="text-align:center;color:#888;">No products found.</p>';
+      return;
+    }
+    productList.innerHTML = '';
+    products.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.style.opacity = 0;
+      card.style.transform = 'translateY(20px)';
+      card.innerHTML = `
         <img src="${p.image}" alt="${p.name}" />
         <h2>${p.name}</h2>
         <div class="card-actions">
           <a class="btn view-details" href="product.html?id=${p.id}">View Details</a>
           <a class="btn buy-now" href="${p.link}" target="_blank">Buy Now</a>
         </div>
-      </div>
       `;
+      productList.appendChild(card);
+      // Animate with delay for smooth transition
+      setTimeout(() => {
+        card.style.opacity = 1;
+        card.style.transform = 'none';
+      }, i * 70);
+    });
+  }
+
+  // Filtering products based on search and category
+  function filterProducts() {
+    const searchText = searchInput.value.trim().toLowerCase();
+    let filtered = allProducts.slice();
+    if (selectedCategory !== 'Overall') {
+      filtered = filtered.filter(p => p.category === selectedCategory);
     }
-    function displayProducts(products) {
-      if (products.length === 0) {
-        document.getElementById('product-list').innerHTML = '<p style="text-align:center; color:#888;">No products found.</p>';
-      } else {
-        document.getElementById('product-list').innerHTML = products.map(createCard).join('');
-      }
+    if (searchText.length > 0) {
+      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchText));
     }
-    function filterProducts() {
-      const searchText = document.getElementById('searchBar').value.toLowerCase();
-      const category = document.getElementById('categoryFilter').value;
-      const filtered = allProducts.filter(p => {
-        const searchMatch = p.name.toLowerCase().includes(searchText);
-        const categoryMatch = category === 'Overall' || p.category === category;
-        return searchMatch && categoryMatch;
-      });
-      displayProducts(filtered);
+    displayProducts(filtered);
+  }
+
+  // Dark mode toggle with persistence
+  const darkToggleBtn = document.getElementById('darkModeToggle');
+  const htmlEl = document.documentElement;
+  const savedTheme = localStorage.getItem('theme');
+
+  if (savedTheme) {
+    htmlEl.setAttribute('data-theme', savedTheme);
+    darkToggleBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  }
+
+  darkToggleBtn.addEventListener('click', () => {
+    const currentTheme = htmlEl.getAttribute('data-theme');
+    if (currentTheme === 'dark') {
+      htmlEl.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+      darkToggleBtn.textContent = '🌙';
+    } else {
+      htmlEl.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      darkToggleBtn.textContent = '☀️';
     }
-    document.getElementById('searchBar').addEventListener('input', filterProducts);
-    document.getElementById('categoryFilter').addEventListener('change', filterProducts);
-    window.addEventListener('DOMContentLoaded', loadProducts);
-  </script>
+  });
+
+  // Initial load
+  window.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+  });
+</script>
 </body>
 </html>
