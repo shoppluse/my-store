@@ -1,16 +1,6 @@
 [
   {
     "id": 1,
-    "name": "Mouse Pad",
-    "description": "STRIFF World Map Extended Size (800 mm x 300 mm x 2 mm) Gaming Mouse Pad| Desk Mat | Stitched Edges| Non-Slip Rubber Base|Computer Laptop|Keyboard Mouse Pad for Office & Home (World Map).",
-    "price": "Just ₹169!",
-    "link": "https://amzn.to/3WnfvVf",
-    "images": "https://m.media-amazon.com/images/I/81vJJOQkrvL._SX425_.jpg",
-    "rating": 4.4,
-    "category": "Electronics"
-  },
-  {
-    "id": 2,
     "name": "M MEDLER Bag",
     "description": "Spacious, durable, and stylish – your perfect travel companion.",
     "price": "Just ₹376",
@@ -20,7 +10,7 @@
     "category": "Home"
   },
   {
-    "id": 3,
+    "id": 2,
     "name": "LED Writing Board",
     "description": "Perfect for home reminders, office notes, or a unique gifting option.",
     "price": "Just ₹715",
@@ -30,7 +20,7 @@
     "category": "Accessories"
   },
   {
-    "id": 4,
+    "id": 3,
     "name": "Lymio Shirt for Men",
     "description": "Casual Shirt for Men|| Shirt for Men|| Men Stylish Shirt Style:Casual Neckline:Collar Sleeve Length:Long Sleeve Reguler Fit.",
     "price": "Just ₹379",
@@ -40,7 +30,7 @@
     "category": "Fashion"
   },
   {
-    "id": 5,
+    "id": 4,
     "name": "TAGDO Men's Loose Fit",
     "description": "For a relaxed weekend look, pair those sneakers with casual pants and a loose-fitting shirt.",
     "price": "Just ₹426",
@@ -50,7 +40,7 @@
     "category": "Fashion"
   },
 {
-    "id": 6,
+    "id": 5,
     "name": "Lymio Hoodie",
     "description": "Hoodies || Sweatshirt for Unisex || Unisex Hoodie",
     "price": "Just ₹449",
