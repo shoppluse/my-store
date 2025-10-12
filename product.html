@@ -11,6 +11,7 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       background: linear-gradient(90deg, #1e88e5, #42a5f5);
       color: white;
@@ -22,6 +23,7 @@
       top: 0;
       z-index: 10;
     }
+
     .container {
       display: flex;
       flex-direction: row;
@@ -31,83 +33,51 @@
       gap: 40px;
       flex-wrap: wrap;
     }
-    .image-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      min-height: 340px;
-    }
-    .main-image {
-      width: 320px;
-      height: 320px;
+
+    .image-section img {
+      width: 300px;
+      height: 300px;
       object-fit: contain;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       background: white;
       padding: 15px;
-      opacity: 1;
-      visibility: visible;
-      display: block;
-      z-index: 10;
     }
-    .thumbnail-row {
-      display: flex;
-      gap: 10px;
-      max-width: 320px;
-      overflow-x: auto;
-    }
-    .thumbnail-row img {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      background: white;
-      padding: 6px;
-      transition: transform 0.3s ease;
-    }
-    .thumbnail-row img:hover, .thumbnail-row img.selected {
-      transform: scale(1.1);
-      box-shadow: 0 4px 18px rgba(0,0,0,0.3);
-    }
+
     .details {
       max-width: 500px;
       background: white;
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      flex: 1;
     }
+
     .details h1 {
       font-size: 26px;
       margin-bottom: 10px;
       color: #1e3a8a;
     }
-    .rating {
-      color: #f4b400;
-      font-size: 20px;
-      margin-bottom: 12px;
-      font-weight: 700;
-    }
+
     .details p {
       color: #333;
       font-size: 16px;
       line-height: 1.6;
     }
+
     .price {
       font-size: 22px;
       color: #1e88e5;
       font-weight: bold;
-      margin: 22px 0;
+      margin: 20px 0;
     }
+
     .actions {
       margin-top: 20px;
       display: flex;
       gap: 15px;
       flex-wrap: wrap;
     }
+
     .actions a {
       text-decoration: none;
       padding: 12px 20px;
@@ -115,24 +85,32 @@
       color: white;
       font-weight: bold;
       transition: all 0.3s ease;
-      flex: 1 1 130px;
-      text-align: center;
-      user-select: none;
     }
+
     .buy-btn {
       background: #1e88e5;
     }
+
     .buy-btn:hover {
       background: #1565c0;
       transform: scale(1.05);
     }
+
     .back-btn {
       background: #555;
     }
+
     .back-btn:hover {
       background: #333;
       transform: scale(1.05);
     }
+
+    .rating {
+      color: #f4b400;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -140,15 +118,6 @@
       color: white;
       margin-top: 50px;
       font-size: 14px;
-    }
-    @media (max-width: 750px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
-      .details {
-        max-width: 90%;
-      }
     }
   </style>
 </head>
@@ -184,38 +153,13 @@
         return;
       }
 
-      function getStars(r) {
-        const fullStars = Math.floor(r);
-        const halfStar = r - fullStars >= 0.5;
-        let stars = '';
-        for (let i = 0; i < fullStars; i++) stars += '★';
-        if (halfStar) stars += '☆'; // can replace with half star icon
-        for (let i = fullStars + (halfStar ? 1 : 0); i < 5; i++) stars += '☆';
-        return stars;
-      }
-
-      let selectedImageIndex = 0;
-
-      function updateMainImage(index) {
-        selectedImageIndex = index;
-        mainImage.src = product.images && product.images.length > 0 ? product.images[index] : product.image;
-        thumbnails.forEach((img, i) => img.classList.toggle('selected', i === index));
-      }
-
       container.innerHTML = `
         <div class="image-section">
-          <img class="main-image" src="${product.images && product.images.length > 0 ? product.images[0] : product.image}" alt="${product.name}" />
-          <div class="thumbnail-row">
-            ${
-              product.images && product.images.length > 1 
-                ? product.images.map((img, idx) => `<img src="${img}" alt="${product.name} ${idx+1}" data-index="${idx}" />`).join('')
-                : ''
-            }
-          </div>
+          <img src="${product.image}" alt="${product.name}">
         </div>
         <div class="details">
           <h1>${product.name}</h1>
-          <div class="rating" title="${product.rating || 4.5} / 5">${getStars(product.rating || 4.5)} (${product.rating || 4.5})</div>
+          <div class="rating">⭐ ${product.rating || "4.5"} / 5</div>
           <p>${product.description}</p>
           <div class="price">₹${product.price}</div>
           <div class="actions">
@@ -223,15 +167,6 @@
             <a href="index.html" class="back-btn">Back to Store</a>
           </div>
         </div>`;
-
-      const mainImage = container.querySelector('.main-image');
-      const thumbnails = container.querySelectorAll('.thumbnail-row img');
-      thumbnails.forEach(img => {
-        img.addEventListener('click', () => {
-          updateMainImage(parseInt(img.dataset.index));
-        });
-      });
-      if (thumbnails.length > 0) thumbnails[0].classList.add('selected');
     }
 
     loadProductDetails();
