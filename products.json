@@ -39,8 +39,18 @@
     "rating": 4.6,
     "category": "Fashion"
   },
-{
+  {
     "id": 5,
+    "name": "Mouse Pad",
+    "description": "STRIFF World Map Extended Size (800 mm x 300 mm x 2 mm) Gaming Mouse Pad| Desk Mat | Stitched Edges| Non-Slip Rubber Base|Computer Laptop|Keyboard Mouse Pad for Office & Home (World Map).",
+    "price": "Just ₹169!",
+    "link": "https://amzn.to/3WnfvVf",
+    "images": "https://m.media-amazon.com/images/I/81vJJOQkrvL._SX425_.jpg",
+    "rating": 4.4,
+    "category": "Electronics"
+  },
+  {
+    "id": 6,
     "name": "Lymio Hoodie",
     "description": "Hoodies || Sweatshirt for Unisex || Unisex Hoodie",
     "price": "Just ₹449",
