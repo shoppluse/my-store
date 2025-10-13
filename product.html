@@ -66,7 +66,7 @@
       gap: 40px;
       flex-wrap: wrap;
       max-width: 1100px;
-      margin: 40px auto 60px auto;
+      margin: 40px auto 100px auto; /* added bottom space for footer */
     }
 
     .image-section img {
@@ -163,6 +163,7 @@
       right: 0;
       user-select: none;
       font-size: 14px;
+      z-index: 10;
     }
 
     /* Responsive improvements */
@@ -170,9 +171,10 @@
       .container {
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        padding: 20px 12px 120px 12px; /* more padding bottom to avoid footer overlap */
         gap: 24px;
-        margin: 40px 12px 60px 12px;
+        margin: 20px 0 0 0;
+        max-width: 100vw;
       }
       .image-section img {
         width: 90vw;
