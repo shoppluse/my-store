@@ -6,7 +6,6 @@
   <title>Product Details - ShopPlus</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* Same fonts and color variables for consistency */
     :root {
       --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
       --bg-light: #f8f9fb;
@@ -166,10 +165,14 @@
       font-size: 14px;
     }
 
+    /* Responsive improvements */
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
         align-items: center;
+        padding: 20px;
+        gap: 24px;
+        margin: 40px 12px 60px 12px;
       }
       .image-section img {
         width: 90vw;
@@ -208,14 +211,11 @@
 <body>
   <header>ShopPlus Product Details</header>
 
-  <div id="product-container" class="container">
-    <!-- Product details will load here -->
-  </div>
+  <div id="product-container" class="container"></div>
 
   <footer>© 2025 ShopPlus. All rights reserved.</footer>
 
   <script>
-    // Apply persisted dark mode from index.html toggle
     const htmlEl = document.documentElement;
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -236,9 +236,8 @@
         container.innerHTML = `
           <div style="text-align:center; padding:50px;">
             <h2>Product not found</h2>
-            <a href="index.html" class="back-btn" 
-               style="text-decoration:none;">
-               Go Back
+            <a href="index.html" class="back-btn" style="text-decoration:none;">
+              Go Back
             </a>
           </div>`;
         return;
@@ -259,6 +258,7 @@
           </div>
         </div>`;
     }
+
     loadProductDetails();
   </script>
 </body>
