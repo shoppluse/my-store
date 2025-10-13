@@ -1,27 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Product Details - ShopPlus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    /* Same fonts and color variables for consistency */
+    :root {
+      --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --bg-light: #f8f9fb;
+      --bg-deep-light: #0e1a39;
+      --text-dark-light: #1f1f1f;
+      --accent-light: #0099ff;
+      --accent-dark-light: #0047ab;
+      --logo-bg-light: #fff;
+      --logo-shadow-light: rgba(0, 71, 171, 0.12);
+      --btn-bg-view: #43a047;
+      --btn-bg-view-hover: #38733b;
+      --btn-bg-buy: #0099ff;
+      --btn-bg-buy-hover: #006cc0;
+    }
+    [data-theme="dark"] {
+      --gradient-light: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
+      --bg-light: #121212;
+      --bg-deep-light: #1a1a2e;
+      --text-dark-light: #eaeaea;
+      --accent-light: #66b0ff;
+      --accent-dark-light: #3a8dde;
+      --logo-bg-light: #222;
+      --logo-shadow-light: rgba(51, 153, 255, 0.4);
+      --btn-bg-view: #2abf6a;
+      --btn-bg-view-hover: #1e8f3f;
+      --btn-bg-buy: #3a8dde;
+      --btn-bg-buy-hover: #2a5e9d;
+    }
+
     body {
-      font-family: "Poppins", sans-serif;
-      background: #f8fafc;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark-light);
       margin: 0;
-      padding: 0;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     header {
-      background: linear-gradient(90deg, #1e88e5, #42a5f5);
+      background: var(--gradient-light);
       color: white;
-      padding: 15px 30px;
+      padding: 18px 24px;
       font-size: 22px;
-      font-weight: bold;
+      font-weight: 700;
       text-align: center;
       position: sticky;
       top: 0;
-      z-index: 10;
+      box-shadow: 0 4px 12px var(--logo-shadow-light);
+      user-select: none;
     }
 
     .container {
@@ -32,6 +66,8 @@
       padding: 30px;
       gap: 40px;
       flex-wrap: wrap;
+      max-width: 1100px;
+      margin: 40px auto 60px auto;
     }
 
     .image-section img {
@@ -46,78 +82,126 @@
 
     .details {
       max-width: 500px;
-      background: white;
+      background: var(--bg-light);
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      color: var(--text-dark-light);
     }
 
     .details h1 {
       font-size: 26px;
       margin-bottom: 10px;
-      color: #1e3a8a;
-    }
-
-    .details p {
-      color: #333;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    .price {
-      font-size: 22px;
-      color: #1e88e5;
-      font-weight: bold;
-      margin: 20px 0;
-    }
-
-    .actions {
-      margin-top: 20px;
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .actions a {
-      text-decoration: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      color: white;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    .buy-btn {
-      background: #1e88e5;
-    }
-
-    .buy-btn:hover {
-      background: #1565c0;
-      transform: scale(1.05);
-    }
-
-    .back-btn {
-      background: #555;
-    }
-
-    .back-btn:hover {
-      background: #333;
-      transform: scale(1.05);
+      color: var(--accent-dark-light);
     }
 
     .rating {
       color: #f4b400;
       font-size: 18px;
       margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .details p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .price {
+      font-size: 22px;
+      color: var(--accent-light);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .actions a {
+      flex: 1 1 140px;
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 12px 20px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      user-select: none;
+    }
+
+    .buy-btn {
+      background-color: var(--btn-bg-buy);
+    }
+    .buy-btn:hover {
+      background-color: var(--btn-bg-buy-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+    }
+
+    .back-btn {
+      background-color: var(--btn-bg-view);
+    }
+    .back-btn:hover {
+      background-color: var(--btn-bg-view-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.16);
     }
 
     footer {
       text-align: center;
-      padding: 20px;
-      background: #1e88e5;
       color: white;
-      margin-top: 50px;
+      background: var(--gradient-light);
+      padding: 18px 24px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      user-select: none;
       font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .image-section img {
+        width: 90vw;
+        height: auto;
+      }
+      .details {
+        max-width: 90vw;
+      }
+      footer {
+        position: static;
+      }
+    }
+
+    /* Dark mode overrides */
+    [data-theme="dark"] {
+      background: #121212;
+      color: #eee;
+    }
+    [data-theme="dark"] header {
+      background: linear-gradient(120deg, #121a2f 60%, #16213e 100%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.75);
+    }
+    [data-theme="dark"] .details {
+      background-color: #1a1a2a;
+      box-shadow: 0 6px 22px rgba(51,102,255,.6);
+      color: #a3bbff;
+    }
+    [data-theme="dark"] .details h1 {
+      color: #ace1ff;
+    }
+    [data-theme="dark"] footer {
+      background: linear-gradient(120deg, #121a2f 60%, #16213e 100%);
     }
   </style>
 </head>
@@ -131,6 +215,13 @@
   <footer>© 2025 ShopPlus. All rights reserved.</footer>
 
   <script>
+    // Apply persisted dark mode from index.html toggle
+    const htmlEl = document.documentElement;
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      htmlEl.setAttribute('data-theme', savedTheme);
+    }
+
     async function loadProductDetails() {
       const params = new URLSearchParams(window.location.search);
       const productId = params.get("id");
@@ -146,7 +237,7 @@
           <div style="text-align:center; padding:50px;">
             <h2>Product not found</h2>
             <a href="index.html" class="back-btn" 
-               style="text-decoration:none; background:#1e88e5; padding:10px 15px; color:white; border-radius:5px;">
+               style="text-decoration:none;">
                Go Back
             </a>
           </div>`;
@@ -161,14 +252,13 @@
           <h1>${product.name}</h1>
           <div class="rating">⭐ ${product.rating || "4.5"} / 5</div>
           <p>${product.description}</p>
-          <div class="price">₹${product.price}</div>
+          <div class="price">${product.price}</div>
           <div class="actions">
             <a href="${product.link}" target="_blank" class="buy-btn">Buy on Amazon</a>
             <a href="index.html" class="back-btn">Back to Store</a>
           </div>
         </div>`;
     }
-
     loadProductDetails();
   </script>
 </body>
