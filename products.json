@@ -73,5 +73,20 @@
     ],
     "rating": 3.6,
     "category": "Fashion"
-  }
+  },
+  {
+    "id": 6,
+    "name": "Campus Sneakers",
+    "description": "Max out your style quotient with The Campus OG-27 Men's Sneaker Shoes. Make your everyday outings extra happening with the coolest sneakers on your feet. Displaying sleek and modern looks, these sneakers are perfect for every affair. The PU material of the upper keeps your feet safe from splashes and dirt, while the Yoga Max insole keeps your stride bouncy and comfy! The Anti-Slip outsole design further enhances your grip, preventing accidental slips and keeping your feet ready for all the fun! Pairing striking shades of bottle green, black, and bright white, these sneakers elevate your outfits and turn heads effortlessly!",
+    "price": "Just ₹1,069",
+    "link": "https://amzn.to/4qda8Ga",
+    "image": "https://m.media-amazon.com/images/I/51G7Lqk3wWL._SY500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/51G7Lqk3wWL._SY500_.jpg",
+      "https://m.media-amazon.com/images/I/71lp8SbMlzL._SY500_.jpg",
+      "https://m.media-amazon.com/images/I/61gi7t80VfL._SY500_.jpg"
+    ],
+    "rating": 3.6,
+    "category": "Fashion"
+  },
 ]
