@@ -9,38 +9,28 @@
     :root {
       --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
       --bg-light: #f8f9fb;
-      --bg-deep-light: #0e1a39;
-      --text-dark-light: #1f1f1f;
+      --bg-card: #172040;
       --accent-light: #0099ff;
-      --accent-dark-light: #0047ab;
-      --logo-bg-light: #fff;
       --btn-bg-view: #43a047;
-      --btn-bg-view-hover: #38733b;
       --btn-bg-buy: #0099ff;
+      --btn-bg-view-hover: #38733b;
       --btn-bg-buy-hover: #006cc0;
-      --card-bg: #172040;
     }
     [data-theme="dark"] {
-      --gradient-light: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
       --bg-light: #121212;
-      --bg-deep-light: #1a1a2e;
-      --text-dark-light: #eaeaea;
+      --bg-card: #191a2f;
       --accent-light: #66b0ff;
-      --accent-dark-light: #3a8dde;
-      --logo-bg-light: #222;
       --btn-bg-view: #2abf6a;
-      --btn-bg-view-hover: #1e8f3f;
       --btn-bg-buy: #3a8dde;
+      --btn-bg-view-hover: #1e8f3f;
       --btn-bg-buy-hover: #2a5e9d;
-      --card-bg: #121726;
     }
     body {
       font-family: 'Poppins', Arial, sans-serif;
       background: var(--bg-light);
-      color: var(--text-dark-light);
       margin: 0;
+      color: #eaeaea;
       min-height: 100vh;
-      transition: background 0.3s, color 0.3s;
     }
     header {
       background: var(--gradient-light);
@@ -51,159 +41,149 @@
       text-align: center;
       position: sticky;
       top: 0;
-      user-select: none;
       z-index: 10;
     }
-
     .product-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 32px 0 90px 0;
+      margin: 32px 0 80px 0;
     }
-
-    /* Carousel styles */
     .carousel-container {
       width: 98vw;
       max-width: 420px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 18px;
+      margin-bottom: 10px;
     }
-    .carousel-viewport {
-      overflow-x: auto;
+    .carousel-track {
       display: flex;
-      flex-direction: row;
+      overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
-      background: var(--logo-bg-light);
-      border-radius: 10px;
-      box-shadow: 0 4px 14px rgba(0,0,0,.13);
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.13);
+      background: #fff;
       width: 100%;
       max-width: 420px;
     }
     .carousel-image {
       min-width: 100%;
       max-width: 420px;
-      height: 320px;
+      height: 300px;
       object-fit: contain;
       border-radius: 10px;
       scroll-snap-align: center;
       background: #fff;
-      transition: border 0.2s;
       padding: 10px;
       box-sizing: border-box;
-      border: 3px solid transparent;
+      border: 2.5px solid transparent;
     }
     .carousel-thumbs {
-      margin-top: 10px;
+      margin: 10px auto 0 auto;
       display: flex;
       justify-content: center;
-      gap: 9px;
+      gap: 8px;
+      width: 100%;
     }
     .carousel-thumb {
-      width: 50px;
-      height: 50px;
-      border-radius: 8px;
+      width: 45px;
+      height: 45px;
+      border-radius: 7px;
       object-fit: cover;
       background: #fff;
-      border: 2.5px solid transparent;
-      box-shadow: 0 1px 6px rgba(0,0,0,.10);
+      border: 2px solid transparent;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.10);
       cursor: pointer;
-      transition: border 0.15s;
       opacity: 0.65;
+      transition: border 0.17s, opacity 0.17s;
     }
     .carousel-thumb.active, .carousel-thumb:hover {
       border: 2.5px solid var(--accent-light);
       opacity: 1;
     }
-    /* Details card */
     .details-card {
-      margin-top: 24px;
-      width: 98vw;
-      max-width: 415px;
-      background: var(--card-bg);
+      margin-top: 28px;
+      width: 99vw;
+      max-width: 410px;
+      background: var(--bg-card);
       border-radius: 14px;
       box-shadow: 0 2px 16px rgba(0,71,171,0.10);
-      padding: 26px 22px 22px 22px;
+      padding: 24px 14px 18px 18px;
       display: flex;
       flex-direction: column;
+      gap: 10px;
       align-items: flex-start;
       color: #fff;
-      gap: 5px;
     }
     .details-card .title {
       color: #c6eaff;
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 700;
       margin-bottom: 8px;
     }
     .details-card .rating {
       color: #ffd700;
-      font-size: 18px;
-      margin-bottom: 6px;
+      font-size: 17px;
       font-weight: 600;
     }
     .details-card .desc {
       color: #d1d9eb;
       font-size: 15px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .details-card .price {
-      font-size: 20px;
+      font-size: 19px;
       color: var(--accent-light);
       font-weight: 700;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
     .details-card .actions {
       display: flex;
       gap: 13px;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 6px;
     }
     .details-card .actions a {
-      flex: 1 1 130px;
+      flex: 1 1 110px;
       text-decoration: none;
       color: white;
-      font-weight: 700;
-      border-radius: 9px;
+      border-radius: 8px;
       padding: 12px 0;
       text-align: center;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.11);
-      transition: background-color 0.3s, transform 0.2s;
-      user-select: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.13);
       font-size: 15px;
+      margin-top: 0;
+      transition: background-color 0.23s, transform 0.2s;
+      user-select: none;
     }
     .details-card .buy-btn {
       background-color: var(--btn-bg-buy);
     }
     .details-card .buy-btn:hover {
-      background-color: var(--btn-bg-buy-hover); transform: scale(1.04);
+      background-color: var(--btn-bg-buy-hover); transform: scale(1.03);
     }
     .details-card .back-btn {
       background-color: var(--btn-bg-view);
     }
     .details-card .back-btn:hover {
-      background-color: var(--btn-bg-view-hover); transform: scale(1.04);
+      background-color: var(--btn-bg-view-hover); transform: scale(1.03);
     }
-
     @media (max-width: 500px) {
-      .carousel-image { height: 220px; }
-      .details-card { max-width: 99vw; padding: 16px 6vw; }
-      .carousel-viewport, .carousel-container { max-width: 99vw; }
+      .carousel-image { height: 160px; }
+      .details-card { max-width: 98vw; padding: 12px 5vw; }
+      .carousel-track, .carousel-container { max-width: 98vw; }
     }
-    [data-theme="dark"] .details-card { color: #fff; }
-    [data-theme="dark"] .details-card .desc { color: #9fc4e8; }
     footer {
       text-align: center;
       color: white;
       background: var(--gradient-light);
       padding: 15px 10px;
+      font-size: 15px;
+      border-radius: 0 0 16px 16px;
+      margin-top: 45px;
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      font-size: 14px;
       z-index: 10;
     }
     @media (max-width: 768px) { footer { position: static; } }
@@ -213,24 +193,15 @@
   <header>ShopPlus Product Details</header>
   <div class="product-wrapper" id="product-root"></div>
   <footer>© 2025 ShopPlus. All rights reserved.</footer>
-
   <script>
-    // Theme sync
     const htmlEl = document.documentElement;
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) htmlEl.setAttribute('data-theme', savedTheme);
-
-    // Utility: stars
-    function stars(rating) {
-      const full = Math.floor(rating), half = rating % 1 >= 0.5, empty = 5 - full - (half ? 1 : 0);
-      return "★".repeat(full) + (half ? "½" : "") + "☆".repeat(empty);
-    }
 
     async function loadProductDetails() {
       const params = new URLSearchParams(window.location.search);
       const pid = params.get("id");
       const root = document.getElementById("product-root");
-
       try {
         const response = await fetch("products.json");
         if (!response.ok) throw "JSON not found";
@@ -238,21 +209,24 @@
         const product = products.find(p => p.id == pid);
 
         if (!product) {
-          root.innerHTML = `<div style="text-align:center; margin:38px 0 140px 0; color:#fff;">
+          root.innerHTML = `<div style="text-align:center; margin:38px 0 140px 0;">
             <h2>Product not found</h2>
             <a href="index.html" class="details-card back-btn" style="display:inline-block;margin:18px auto;">Go Back</a>
             </div>`;
           return;
         }
 
-        // Build carousel images and thumbs
+        // Images + thumbnail logic
         const imgs = (product.images && product.images.length > 0) ? product.images : [product.image];
-        let carouselImgs = imgs.map((src, i) => <img class="carousel-image" src="${src}" alt="Product image ${i+1}" style="display:${i===0?'block':'none'};">).join('');
-        let thumbs = imgs.length > 1 ? <div class="carousel-thumbs">${imgs.map((src, i) => `<img class="carousel-thumb${i===0?' active':''}" src="${src}" data-idx="${i}">).join('')}</div>` : "";
+        let thumbs = imgs.length > 1 ?
+          `<div class="carousel-thumbs">${imgs.map((src, i) => `<img class="carousel-thumb${i===0?' active':''}" src="${src}" data-idx="${i}">`).join('')}</div>`
+          : "";
 
         root.innerHTML = `
           <div class="carousel-container">
-            <div class="carousel-viewport" id="carousel-track">${carouselImgs}</div>
+            <div class="carousel-track" id="carousel-track">
+              ${imgs.map((src) => `<img class="carousel-image" src="${src}">`).join('')}
+            </div>
             ${thumbs}
           </div>
           <div class="details-card">
@@ -266,27 +240,17 @@
             </div>
           </div>
         `;
-
-        // JS for switching images on thumb click and swipe
-        let current = 0, imgElements = root.querySelectorAll('.carousel-image'), thumbElements = root.querySelectorAll('.carousel-thumb');
+        // Thumbnail JS logic
+        let imgElements = root.querySelectorAll('.carousel-image');
+        let thumbElements = root.querySelectorAll('.carousel-thumb');
+        let current = 0;
         function setCurrent(index) {
-          imgElements.forEach((img, i) => img.style.display = i === index ? "block" : "none");
+          imgElements[index].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
           thumbElements.forEach((thumb, i) => thumb.classList.toggle("active", i === index));
           current = index;
         }
         thumbElements.forEach((thumb, i) => {
           thumb.addEventListener("click", () => setCurrent(i));
-        });
-        // Swipe support for mobile
-        let startX = null;
-        root.querySelector('.carousel-viewport').addEventListener('touchstart', e => {
-          startX = e.touches[0].clientX;
-        });
-        root.querySelector('.carousel-viewport').addEventListener('touchend', e => {
-          if (startX === null) return; const endX = e.changedTouches[0].clientX;
-          if (endX - startX > 50 && current > 0) setCurrent(current - 1);
-          if (startX - endX > 50 && current < imgs.length-1) setCurrent(current + 1);
-          startX = null;
         });
       } catch {
         root.innerHTML = "<p style='color:red;text-align:center;margin-top:40px;'>Error loading product details.</p>";
