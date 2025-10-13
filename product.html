@@ -66,10 +66,17 @@
       gap: 40px;
       flex-wrap: wrap;
       max-width: 1100px;
-      margin: 40px auto 100px auto; /* added bottom space for footer */
+      margin: 40px auto 100px auto;
     }
 
-    .image-section img {
+    .image-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .image-preview {
       width: 300px;
       height: 300px;
       object-fit: contain;
@@ -77,6 +84,31 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       background: white;
       padding: 15px;
+    }
+
+    .thumbnails {
+      display: flex;
+      gap: 10px;
+      max-width: 300px;
+      overflow-x: auto;
+    }
+
+    .thumb-img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: white;
+      padding: 5px;
+      transition: transform 0.2s ease;
+    }
+
+    .thumb-img.selected,
+    .thumb-img:hover {
+      transform: scale(1.15);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.25);
     }
 
     .details {
@@ -137,6 +169,7 @@
     .buy-btn {
       background-color: var(--btn-bg-buy);
     }
+
     .buy-btn:hover {
       background-color: var(--btn-bg-buy-hover);
       transform: translateY(-3px);
@@ -146,6 +179,7 @@
     .back-btn {
       background-color: var(--btn-bg-view);
     }
+
     .back-btn:hover {
       background-color: var(--btn-bg-view-hover);
       transform: translateY(-3px);
@@ -171,14 +205,17 @@
       .container {
         flex-direction: column;
         align-items: center;
-        padding: 20px 12px 120px 12px; /* more padding bottom to avoid footer overlap */
+        padding: 20px 12px 120px 12px;
         gap: 24px;
         margin: 20px 0 0 0;
         max-width: 100vw;
       }
-      .image-section img {
+      .image-preview {
         width: 90vw;
         height: auto;
+      }
+      .thumbnails {
+        max-width: 90vw;
       }
       .details {
         max-width: 90vw;
@@ -218,6 +255,7 @@
   <footer>© 2025 ShopPlus. All rights reserved.</footer>
 
   <script>
+    // Apply dark mode from index.html toggle
     const htmlEl = document.documentElement;
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -245,9 +283,29 @@
         return;
       }
 
+      // Maintain main image preview index
+      let currentPreviewIndex = 0;
+
+      function updateMainImage(index) {
+        const mainImage = document.querySelector('.image-preview');
+        mainImage.src = product.images && product.images.length > 0 ? product.images[index] : product.image;
+        currentPreviewIndex = index;
+        // Highlight selected thumb
+        document.querySelectorAll('.thumb-img').forEach((img, i) => {
+          img.classList.toggle('selected', i === index);
+        });
+      }
+
+      // Build multiple images UI if available
+      let thumbnailsHtml = '';
+      if (product.images && product.images.length > 0) {
+        thumbnailsHtml = product.images.map((img, i) => `<img class="thumb-img${i === 0 ? ' selected' : ''}" src="${img}" alt="Thumbnail ${i+1}" data-index="${i}">`).join('');
+      }
+
       container.innerHTML = `
         <div class="image-section">
-          <img src="${product.image}" alt="${product.name}">
+          <img class="image-preview" src="${product.images && product.images.length > 0 ? product.images[0] : product.image}" alt="${product.name}">
+          <div class="thumbnails">${thumbnailsHtml}</div>
         </div>
         <div class="details">
           <h1>${product.name}</h1>
@@ -259,6 +317,16 @@
             <a href="index.html" class="back-btn">Back to Store</a>
           </div>
         </div>`;
+
+      // Add thumbnail click listeners
+      document.querySelectorAll('.thumb-img').forEach(img => {
+        img.addEventListener('click', e => {
+          const idx = parseInt(e.target.getAttribute('data-index'));
+          if (!isNaN(idx)) {
+            updateMainImage(idx);
+          }
+        });
+      });
     }
 
     loadProductDetails();
