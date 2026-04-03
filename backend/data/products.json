@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Wireless Earbuds",
+    "price": 1499,
+    "image": "https://via.placeholder.com/200",
+    "description": "High-quality wireless earbuds with clear sound."
+  },
+  {
+    "id": 2,
+    "name": "Smart Watch",
+    "price": 2499,
+    "image": "https://via.placeholder.com/200",
+    "description": "Stylish smartwatch with fitness tracking features."
+  },
+  {
+    "id": 3,
+    "name": "Bluetooth Speaker",
+    "price": 1999,
+    "image": "https://via.placeholder.com/200",
+    "description": "Portable speaker with deep bass and long battery life."
+  }
+]
