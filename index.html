@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
-  /* Root variables for light and dark themes */
   :root {
     --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
     --bg-light: #f8f9fb;
@@ -22,6 +21,7 @@
     --btn-bg-buy: #0099ff;
     --btn-bg-buy-hover: #006cc0;
   }
+
   [data-theme="dark"] {
     --gradient-light: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
     --bg-light: #121212;
@@ -37,7 +37,6 @@
     --btn-bg-buy-hover: #2a5e9d;
   }
 
-  /* Body & typography */
   body {
     font-family: 'Poppins', Arial, sans-serif;
     background: var(--bg-light);
@@ -47,7 +46,6 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  /* Header with logo and dark mode toggle aligned */
   .main-header {
     background: var(--gradient-light);
     display: flex;
@@ -56,6 +54,7 @@
     padding: 18px 24px;
     box-shadow: 0 4px 12px var(--logo-shadow-light);
   }
+
   .shopplus-logo {
     font-size: 2.2rem;
     font-weight: 700;
@@ -69,6 +68,7 @@
     align-items: center;
     gap: 6px;
   }
+
   .shopplus-logo .plus {
     color: var(--accent-light);
     font-size: 2.6rem;
@@ -76,6 +76,7 @@
     margin-left: 4px;
     user-select: none;
   }
+
   .dark-mode-toggle {
     cursor: pointer;
     font-size: 1.6rem;
@@ -86,20 +87,19 @@
     border-radius: 20px;
     transition: background 0.3s ease;
   }
+
   .dark-mode-toggle:hover {
     background: rgba(255 255 255 / 0.25);
   }
 
-  /* Search section */
   .search-section {
     background: var(--bg-deep-light);
     padding: 32px 24px 24px 24px;
-    color: var(--text-light);
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  /* Category Icons bar */
+
   .category-icons {
     margin: 18px 0 18px 0;
     display: flex;
@@ -107,6 +107,7 @@
     justify-content: center;
     gap: 16px;
   }
+
   .category-icon {
     display: flex;
     flex-direction: column;
@@ -121,16 +122,20 @@
     transition: background 0.3s ease, transform 0.2s ease;
     user-select: none;
   }
-  .category-icon.selected, .category-icon:hover {
+
+  .category-icon.selected,
+  .category-icon:hover {
     background: var(--accent-light);
     color: white;
     transform: scale(1.15);
   }
+
   .category-icon svg {
     width: 28px;
     height: 28px;
     fill: currentColor;
   }
+
   .category-label {
     font-size: 0.7rem;
     margin-top: 4px;
@@ -138,13 +143,13 @@
     color: inherit;
   }
 
-  /* Search form inputs */
   .search-form {
     width: 100%;
     max-width: 500px;
     display: flex;
     gap: 14px;
   }
+
   .search-form input {
     flex-grow: 1;
     border-radius: 8px;
@@ -153,15 +158,7 @@
     font-size: 16px;
     outline: none;
   }
-  .search-form select {
-    border-radius: 8px;
-    border: none;
-    padding: 13px 15px;
-    font-size: 15px;
-    cursor: pointer;
-  }
 
-  /* Product grid */
   .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -171,18 +168,19 @@
     margin: 0 auto;
     min-height: 300px;
   }
+
   @media (max-width: 1100px) {
     .product-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
+
   @media (max-width: 650px) {
     .product-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  /* Product card */
   .product-card {
     background: var(--bg-light);
     border-radius: 14px;
@@ -196,14 +194,12 @@
     transform: translateY(20px);
     height: 340px;
   }
-  .product-card.visible {
-    opacity: 1;
-    transform: none;
-  }
+
   .product-card:hover {
     transform: translateY(-8px) scale(1.07);
     box-shadow: 0 14px 36px rgba(0, 71, 171, 0.26);
   }
+
   .product-card img {
     height: 70%;
     width: auto;
@@ -215,6 +211,7 @@
     box-sizing: border-box;
     margin-bottom: 14px;
   }
+
   .product-card h2 {
     font-size: 18px;
     font-weight: 600;
@@ -223,6 +220,7 @@
     text-align: center;
     line-height: 1.28;
   }
+
   .card-actions {
     margin-top: auto;
     width: 100%;
@@ -230,6 +228,7 @@
     justify-content: center;
     gap: 14px;
   }
+
   .btn {
     flex: 1 1 auto;
     max-width: 160px;
@@ -246,68 +245,76 @@
     user-select: none;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   }
+
   .btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
   }
+
   .view-details {
     background-color: var(--btn-bg-view);
     color: white;
   }
+
   .view-details:hover {
     background-color: var(--btn-bg-view-hover);
   }
+
   .buy-now {
     background-color: var(--btn-bg-buy);
     color: white;
   }
+
   .buy-now:hover {
     background-color: var(--btn-bg-buy-hover);
   }
 
-  /* Responsive and Flex improvement */
   @media (max-width: 600px) {
     .main-header {
       padding: 14px 20px;
       font-size: 1.9rem;
     }
+
     .shopplus-logo {
       font-size: 1.6rem;
       padding: 0 20px 0 16px;
       letter-spacing: 0.4px;
     }
+
     .shopplus-logo .plus {
       font-size: 2rem;
     }
+
     .search-section {
       padding: 20px 16px 16px 16px;
     }
+
     .search-form {
       max-width: 90%;
       gap: 10px;
     }
-    .search-form select {
-      flex: 0 0 120px;
-      font-size: 14px;
-      padding: 10px 12px;
-    }
+
     .search-form input {
       padding: 10px 14px;
       font-size: 15px;
     }
+
     .product-grid {
       padding: 18px 20px 36px 20px;
       grid-template-columns: repeat(2, 1fr);
       gap: 18px;
     }
+
     .product-card {
       height: 280px;
       padding: 14px 12px 14px 12px;
     }
+
     .product-card h2 {
       font-size: 16px;
       margin-bottom: 12px;
     }
+
     .btn {
       max-width: 140px;
       font-size: 14px;
@@ -315,47 +322,55 @@
     }
   }
 
-  /* Dark mode: override background and text colors */
   [data-theme="dark"] {
     background: #121212;
     color: #eee;
   }
+
   [data-theme="dark"] .main-header {
     background: linear-gradient(120deg, #121a2f 60%, #16213e 100%);
   }
+
   [data-theme="dark"] .shopplus-logo {
     background: #222;
     color: #88b5ff;
     box-shadow: 0 4px 14px rgba(51, 102, 255, 0.45);
   }
+
   [data-theme="dark"] .search-section {
     background: #16213e;
   }
+
   [data-theme="dark"] .product-card {
     background: #1c1c2b;
     box-shadow: 0 6px 22px rgba(10, 75, 200, 0.6);
   }
+
   [data-theme="dark"] .product-card h2 {
     color: #a3bbff;
   }
+
   [data-theme="dark"] .btn.view-details {
     background: #3caf70;
     box-shadow: 0 4px 20px #238028;
   }
+
   [data-theme="dark"] .btn.view-details:hover {
     background: #277129;
   }
+
   [data-theme="dark"] .btn.buy-now {
     background: #4a8de7;
     box-shadow: 0 4px 20px #205d99;
   }
+
   [data-theme="dark"] .btn.buy-now:hover {
     background: #235885;
   }
+
   [data-theme="dark"] .product-card:hover {
     box-shadow: 0 12px 36px rgba(12, 63, 150, 0.8);
   }
-
 </style>
 </head>
 
@@ -369,7 +384,7 @@
     <form class="search-form" onsubmit="event.preventDefault();">
       <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
     </form>
-    <!-- Category icon bar -->
+
     <div class="category-icons" id="categoryBar">
       <!-- Categories will be loaded here -->
     </div>
@@ -380,7 +395,8 @@
   </div>
 
 <script>
-  // Data for categories with SVG icons (fill color auto from css currentColor)
+  const BACKEND_URL = "https://my-store-backend-9hra.onrender.com";
+
   const categories = [
     { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
     { name: 'Electronics', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
@@ -389,24 +405,29 @@
     { name: 'Accessories', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="12" r="1"/></svg>' },
     { name: 'Sports', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l3 7h7l-5 5 2 7-6-4-6 4 2-7-5-5h7z"/></svg>' },
     { name: 'Beauty', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 18v6M12 6V0"/></svg>' },
-    { name: 'Gadgets', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="21" r="1"/></svg>' },
+    { name: 'Gadgets', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="21" r="1"/></svg>' }
   ];
 
-  // Initialize category bar
   const categoryBar = document.getElementById('categoryBar');
+  const searchInput = document.getElementById('searchBar');
+  const productList = document.getElementById('product-list');
+
   let selectedCategory = 'Overall';
+  let allProducts = [];
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
     el.className = 'category-icon' + (cat.name === selectedCategory ? ' selected' : '');
     el.setAttribute('data-cat', cat.name);
     el.innerHTML = cat.icon + '<div class="category-label">' + cat.name + '</div>';
+
     el.addEventListener('click', () => {
       if (selectedCategory === cat.name) return;
       selectedCategory = cat.name;
       updateCategorySelection();
       filterProducts();
     });
+
     return el;
   }
 
@@ -416,54 +437,68 @@
     });
   }
 
-  // Populate category bar
   categories.forEach(cat => categoryBar.appendChild(createCategoryIcon(cat)));
 
-  const searchInput = document.getElementById('searchBar');
   searchInput.addEventListener('input', () => {
     selectedCategory = 'Overall';
     updateCategorySelection();
     filterProducts();
   });
 
-  // Fetch products and display
-  let allProducts = [];
-
   async function loadProducts() {
     try {
-      const response = await fetch('products.json');
-      if (!response.ok) throw new Error('File not found');
+      const response = await fetch(`${BACKEND_URL}/api/products`);
+      if (!response.ok) throw new Error('API not reachable');
+
       allProducts = await response.json();
+
+      // Safety fallback so UI doesn't break if some fields are missing
+      allProducts = allProducts.map((p, index) => ({
+        id: p.id ?? (index + 1),
+        name: p.name || 'Unnamed Product',
+        price: p.price ?? 0,
+        image: p.image || 'https://via.placeholder.com/200',
+        description: p.description || 'No description available.',
+        category: p.category || 'Overall',
+        link: p.link || '#'
+      }));
+
       displayProducts(allProducts);
     } catch (err) {
-      document.getElementById('product-list').innerHTML = '<p style="text-align:center;color:red;">Error loading products. Check products.json</p>';
-      console.error(err);
+      productList.innerHTML = '<p style="text-align:center;color:red;">Error loading products from backend. Please try again later.</p>';
+      console.error('Backend fetch error:', err);
     }
   }
 
-  // Animate product card insert
   function displayProducts(products) {
-    const productList = document.getElementById('product-list');
     if (products.length === 0) {
       productList.innerHTML = '<p style="text-align:center;color:#888;">No products found.</p>';
       return;
     }
+
     productList.innerHTML = '';
+
     products.forEach((p, i) => {
       const card = document.createElement('div');
       card.className = 'product-card';
       card.style.opacity = 0;
       card.style.transform = 'translateY(20px)';
+
+      const buyNowButton = p.link && p.link !== '#'
+        ? `<a class="btn buy-now" href="${p.link}" target="_blank" rel="noopener noreferrer">Buy Now</a>`
+        : `<button class="btn buy-now" onclick="alert('Buy link not added yet for this product')">Buy Now</button>`;
+
       card.innerHTML = `
         <img src="${p.image}" alt="${p.name}" />
         <h2>${p.name}</h2>
         <div class="card-actions">
           <a class="btn view-details" href="product.html?id=${p.id}">View Details</a>
-          <a class="btn buy-now" href="${p.link}" target="_blank">Buy Now</a>
+          ${buyNowButton}
         </div>
       `;
+
       productList.appendChild(card);
-      // Animate with delay for smooth transition
+
       setTimeout(() => {
         card.style.opacity = 1;
         card.style.transform = 'none';
@@ -471,20 +506,24 @@
     });
   }
 
-  // Filtering products based on search and category
   function filterProducts() {
     const searchText = searchInput.value.trim().toLowerCase();
-    let filtered = allProducts.slice();
+    let filtered = [...allProducts];
+
     if (selectedCategory !== 'Overall') {
-      filtered = filtered.filter(p => p.category === selectedCategory);
+      filtered = filtered.filter(p => (p.category || '').toLowerCase() === selectedCategory.toLowerCase());
     }
+
     if (searchText.length > 0) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchText));
+      filtered = filtered.filter(p =>
+        (p.name || '').toLowerCase().includes(searchText) ||
+        (p.description || '').toLowerCase().includes(searchText)
+      );
     }
+
     displayProducts(filtered);
   }
 
-  // Dark mode toggle with persistence
   const darkToggleBtn = document.getElementById('darkModeToggle');
   const htmlEl = document.documentElement;
   const savedTheme = localStorage.getItem('theme');
@@ -496,6 +535,7 @@
 
   darkToggleBtn.addEventListener('click', () => {
     const currentTheme = htmlEl.getAttribute('data-theme');
+
     if (currentTheme === 'dark') {
       htmlEl.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
@@ -507,7 +547,6 @@
     }
   });
 
-  // Initial load
   window.addEventListener('DOMContentLoaded', () => {
     loadProducts();
   });
