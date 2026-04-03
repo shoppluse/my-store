@@ -16,6 +16,7 @@
       --btn-bg-view-hover: #38733b;
       --btn-bg-buy-hover: #006cc0;
     }
+
     [data-theme="dark"] {
       --bg-light: #121212;
       --bg-card: #191a2f;
@@ -25,6 +26,7 @@
       --btn-bg-view-hover: #1e8f3f;
       --btn-bg-buy-hover: #2a5e9d;
     }
+
     body {
       font-family: 'Poppins', Arial, sans-serif;
       background: var(--bg-light);
@@ -32,6 +34,7 @@
       color: #eaeaea;
       min-height: 100vh;
     }
+
     header {
       background: var(--gradient-light);
       color: white;
@@ -43,17 +46,20 @@
       top: 0;
       z-index: 10;
     }
+
     .product-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: 32px 0 80px 0;
     }
+
     .carousel-container {
       width: 98vw;
       max-width: 420px;
       margin-bottom: 10px;
     }
+
     .carousel-track {
       display: flex;
       overflow-x: auto;
@@ -65,6 +71,7 @@
       width: 100%;
       max-width: 420px;
     }
+
     .carousel-image {
       min-width: 100%;
       max-width: 420px;
@@ -77,13 +84,16 @@
       box-sizing: border-box;
       border: 2.5px solid transparent;
     }
+
     .carousel-thumbs {
       margin: 10px auto 0 auto;
       display: flex;
       justify-content: center;
       gap: 8px;
       width: 100%;
+      flex-wrap: wrap;
     }
+
     .carousel-thumb {
       width: 45px;
       height: 45px;
@@ -96,10 +106,13 @@
       opacity: 0.65;
       transition: border 0.17s, opacity 0.17s;
     }
-    .carousel-thumb.active, .carousel-thumb:hover {
+
+    .carousel-thumb.active,
+    .carousel-thumb:hover {
       border: 2.5px solid var(--accent-light);
       opacity: 1;
     }
+
     .details-card {
       margin-top: 28px;
       width: 99vw;
@@ -114,35 +127,44 @@
       align-items: flex-start;
       color: #fff;
     }
+
     .details-card .title {
       color: #c6eaff;
       font-size: 21px;
       font-weight: 700;
       margin-bottom: 8px;
     }
+
     .details-card .rating {
       color: #ffd700;
       font-size: 17px;
       font-weight: 600;
     }
+
     .details-card .desc {
       color: #d1d9eb;
       font-size: 15px;
       margin-bottom: 6px;
+      line-height: 1.6;
     }
+
     .details-card .price {
       font-size: 19px;
       color: var(--accent-light);
       font-weight: 700;
       margin-bottom: 10px;
     }
+
     .details-card .actions {
       display: flex;
       gap: 13px;
       width: 100%;
       margin-top: 6px;
+      flex-wrap: wrap;
     }
-    .details-card .actions a {
+
+    .details-card .actions a,
+    .details-card .actions button {
       flex: 1 1 110px;
       text-decoration: none;
       color: white;
@@ -156,24 +178,44 @@
       margin-top: 0;
       transition: background-color 0.23s, transform 0.2s;
       user-select: none;
+      border: none;
+      font-family: inherit;
     }
+
     .details-card .buy-btn {
       background-color: var(--btn-bg-buy);
     }
+
     .details-card .buy-btn:hover {
-      background-color: var(--btn-bg-buy-hover); transform: scale(1.03);
+      background-color: var(--btn-bg-buy-hover);
+      transform: scale(1.03);
     }
+
     .details-card .back-btn {
       background-color: var(--btn-bg-view);
     }
+
     .details-card .back-btn:hover {
-      background-color: var(--btn-bg-view-hover); transform: scale(1.03);
+      background-color: var(--btn-bg-view-hover);
+      transform: scale(1.03);
     }
+
     @media (max-width: 500px) {
-      .carousel-image { height: 160px; }
-      .details-card { max-width: 98vw; padding: 12px 5vw; }
-      .carousel-track, .carousel-container { max-width: 98vw; }
+      .carousel-image {
+        height: 180px;
+      }
+
+      .details-card {
+        max-width: 98vw;
+        padding: 12px 5vw;
+      }
+
+      .carousel-track,
+      .carousel-container {
+        max-width: 98vw;
+      }
     }
+
     footer {
       text-align: center;
       color: white;
@@ -183,17 +225,31 @@
       border-radius: 0 0 16px 16px;
       margin-top: 45px;
       position: fixed;
-      bottom: 0; left: 0; right: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 10;
     }
-    @media (max-width: 768px) { footer { position: static; } }
+
+    @media (max-width: 768px) {
+      footer {
+        position: static;
+      }
+    }
   </style>
 </head>
 <body>
   <header>ShopPlus Product Details</header>
-  <div class="product-wrapper" id="product-root"></div>
+
+  <div class="product-wrapper" id="product-root">
+    <p style="color:#fff; text-align:center;">Loading product details...</p>
+  </div>
+
   <footer>© 2025 ShopPlus. All rights reserved.</footer>
+
   <script>
+    const BACKEND_URL = "https://my-store-backend-9hra.onrender.com";
+
     const htmlEl = document.documentElement;
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) htmlEl.setAttribute('data-theme', savedTheme);
@@ -202,60 +258,105 @@
       const params = new URLSearchParams(window.location.search);
       const pid = params.get("id");
       const root = document.getElementById("product-root");
+
+      if (!pid) {
+        root.innerHTML = `
+          <div style="text-align:center; margin:38px 0 140px 0;">
+            <h2 style="color:white;">No product ID found</h2>
+            <a href="index.html" class="details-card back-btn" style="display:inline-block;margin:18px auto; padding:12px 20px; text-decoration:none; color:white;">Go Back</a>
+          </div>
+        `;
+        return;
+      }
+
       try {
-        const response = await fetch("products.json");
-        if (!response.ok) throw "JSON not found";
-        const products = await response.json();
-        const product = products.find(p => p.id == pid);
+        const response = await fetch(`${BACKEND_URL}/api/products/${pid}`);
+        if (!response.ok) throw new Error("Product not found");
 
-        if (!product) {
-          root.innerHTML = `<div style="text-align:center; margin:38px 0 140px 0;">
-            <h2>Product not found</h2>
-            <a href="index.html" class="details-card back-btn" style="display:inline-block;margin:18px auto;">Go Back</a>
-            </div>`;
-          return;
-        }
+        const product = await response.json();
 
-        // Images + thumbnail logic
-        const imgs = (product.images && product.images.length > 0) ? product.images : [product.image];
-        let thumbs = imgs.length > 1 ?
-          `<div class="carousel-thumbs">${imgs.map((src, i) => `<img class="carousel-thumb${i===0?' active':''}" src="${src}" data-idx="${i}">`).join('')}</div>`
+        const safeProduct = {
+          id: product.id ?? pid,
+          name: product.name || "Unnamed Product",
+          description: product.description || "No description available.",
+          price: product.price || "Price not available",
+          link: product.link || "#",
+          image: product.image || "https://via.placeholder.com/300",
+          images: (product.images && product.images.length > 0) ? product.images : [product.image || "https://via.placeholder.com/300"],
+          rating: product.rating || 4.5
+        };
+
+        const imgs = safeProduct.images;
+
+        const thumbs = imgs.length > 1
+          ? `
+            <div class="carousel-thumbs">
+              ${imgs.map((src, i) => `
+                <img class="carousel-thumb${i === 0 ? ' active' : ''}" src="${src}" data-idx="${i}" alt="Thumbnail ${i + 1}">
+              `).join('')}
+            </div>
+          `
           : "";
+
+        const buyButton = safeProduct.link && safeProduct.link !== "#"
+          ? `<a href="${safeProduct.link}" target="_blank" rel="noopener noreferrer" class="buy-btn">Buy on Amazon</a>`
+          : `<button class="buy-btn" onclick="alert('Buy link not available for this product yet')">Buy on Amazon</button>`;
 
         root.innerHTML = `
           <div class="carousel-container">
             <div class="carousel-track" id="carousel-track">
-              ${imgs.map((src) => `<img class="carousel-image" src="${src}">`).join('')}
+              ${imgs.map((src, i) => `
+                <img class="carousel-image" src="${src}" alt="${safeProduct.name} image ${i + 1}">
+              `).join('')}
             </div>
             ${thumbs}
           </div>
+
           <div class="details-card">
-            <div class="title">${product.name}</div>
-            <div class="rating">⭐ ${product.rating ? product.rating : "4.5"} <span style="color:#b9d9fd;">/ 5</span></div>
-            <div class="desc">${product.description}</div>
-            <div class="price">${product.price}</div>
+            <div class="title">${safeProduct.name}</div>
+            <div class="rating">⭐ ${safeProduct.rating} <span style="color:#b9d9fd;">/ 5</span></div>
+            <div class="desc">${safeProduct.description}</div>
+            <div class="price">${safeProduct.price}</div>
             <div class="actions">
-              <a href="${product.link}" target="_blank" class="buy-btn">Buy on Amazon</a>
+              ${buyButton}
               <a href="index.html" class="back-btn">Back to Store</a>
             </div>
           </div>
         `;
-        // Thumbnail JS logic
-        let imgElements = root.querySelectorAll('.carousel-image');
-        let thumbElements = root.querySelectorAll('.carousel-thumb');
-        let current = 0;
+
+        const imgElements = root.querySelectorAll('.carousel-image');
+        const thumbElements = root.querySelectorAll('.carousel-thumb');
+
         function setCurrent(index) {
-          imgElements[index].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
-          thumbElements.forEach((thumb, i) => thumb.classList.toggle("active", i === index));
-          current = index;
+          if (!imgElements[index]) return;
+
+          imgElements[index].scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+          });
+
+          thumbElements.forEach((thumb, i) => {
+            thumb.classList.toggle("active", i === index);
+          });
         }
+
         thumbElements.forEach((thumb, i) => {
           thumb.addEventListener("click", () => setCurrent(i));
         });
-      } catch {
-        root.innerHTML = "<p style='color:red;text-align:center;margin-top:40px;'>Error loading product details.</p>";
+
+      } catch (error) {
+        console.error("Error loading product:", error);
+
+        root.innerHTML = `
+          <div style="text-align:center; margin:38px 0 140px 0;">
+            <h2 style="color:white;">Product not found or failed to load</h2>
+            <a href="index.html" class="details-card back-btn" style="display:inline-block;margin:18px auto; padding:12px 20px; text-decoration:none; color:white;">Go Back</a>
+          </div>
+        `;
       }
     }
+
     loadProductDetails();
   </script>
 </body>
