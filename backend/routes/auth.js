@@ -39,19 +39,14 @@ router.post("/signup", async (req, res) => {
       emailOtpExpires: otpExpiry
     });
 
-    await sendEmail(
-      user.email,
-      "ShopPlus Email Verification OTP",
-      `
-        <div style="font-family: Arial, sans-serif; padding: 20px;">
-          <h2>Verify your ShopPlus account</h2>
-          <p>Hello ${user.name},</p>
-          <p>Your OTP for email verification is:</p>
-          <h1 style="color: #0047ab; letter-spacing: 4px;">${otp}</h1>
-          <p>This OTP is valid for 10 minutes.</p>
-        </div>
-      `
-    );
+    console.log("Generated OTP for testing:", otp);
+
+res.status(201).json({
+  message: "Signup successful (test mode). OTP generated.",
+  userId: user._id,
+  email: user.email,
+  otp: otp
+});
 
     res.status(201).json({
       message: "Signup successful. OTP sent to email.",
