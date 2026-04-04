@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ShopPlus - Profile</title>
+
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#0047ab" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
@@ -93,6 +99,10 @@
       padding: 10px 16px;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .dark-mode-toggle {
@@ -103,6 +113,9 @@
       color: #fff;
       padding: 6px 10px;
       border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .page-wrap {
@@ -372,7 +385,8 @@
       color: var(--success);
     }
 
-    .empty-box, .loading-box {
+    .empty-box,
+    .loading-box {
       padding: 18px;
       border-radius: 18px;
       border: 1px dashed var(--border);
@@ -383,181 +397,181 @@
     }
 
     @media (max-width: 950px) {
-  .profile-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
+      .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
 
-  .profile-card {
-    position: static;
-  }
+      .profile-card {
+        position: static;
+      }
 
-  .page-wrap {
-    margin: 24px auto;
-  }
-}
+      .page-wrap {
+        margin: 24px auto;
+      }
+    }
 
-@media (max-width: 700px) {
-  .main-header {
-    padding: 14px 14px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
+    @media (max-width: 700px) {
+      .main-header {
+        padding: 14px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
 
-  .shopplus-logo {
-    font-size: 1.35rem;
-    padding: 8px 14px;
-    justify-content: center;
-    width: 100%;
-  }
+      .shopplus-logo {
+        font-size: 1.35rem;
+        padding: 8px 14px;
+        justify-content: center;
+        width: 100%;
+      }
 
-  .shopplus-logo .plus {
-    font-size: 1.6rem;
-  }
+      .shopplus-logo .plus {
+        font-size: 1.6rem;
+      }
 
-  .header-actions {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
+      .header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
 
-  .header-btn,
-  .dark-mode-toggle {
-    width: 100%;
-    text-align: center;
-    justify-content: center;
-    padding: 10px 8px;
-    font-size: 0.8rem;
-    border-radius: 10px;
-  }
+      .header-btn,
+      .dark-mode-toggle {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 10px 8px;
+        font-size: 0.8rem;
+        border-radius: 10px;
+      }
 
-  .dark-mode-toggle {
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.15);
-  }
+      .dark-mode-toggle {
+        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.15);
+      }
 
-  .card {
-    padding: 18px 14px;
-    border-radius: 18px;
-  }
+      .card {
+        padding: 18px 14px;
+        border-radius: 18px;
+      }
 
-  .page-wrap {
-    padding: 0 12px 24px;
-    margin: 18px auto;
-  }
+      .page-wrap {
+        padding: 0 12px 24px;
+        margin: 18px auto;
+      }
 
-  .avatar {
-    width: 72px;
-    height: 72px;
-    font-size: 1.6rem;
-    margin-bottom: 14px;
-  }
+      .avatar {
+        width: 72px;
+        height: 72px;
+        font-size: 1.6rem;
+        margin-bottom: 14px;
+      }
 
-  .title {
-    font-size: 1.3rem;
-  }
+      .title {
+        font-size: 1.3rem;
+      }
 
-  .subtitle {
-    font-size: 0.88rem;
-    margin-bottom: 14px;
-  }
+      .subtitle {
+        font-size: 0.88rem;
+        margin-bottom: 14px;
+      }
 
-  .info-list {
-    gap: 10px;
-  }
+      .info-list {
+        gap: 10px;
+      }
 
-  .info-item {
-    padding: 12px;
-    border-radius: 14px;
-  }
+      .info-item {
+        padding: 12px;
+        border-radius: 14px;
+      }
 
-  .info-label {
-    font-size: 0.75rem;
-  }
+      .info-label {
+        font-size: 0.75rem;
+      }
 
-  .info-value {
-    font-size: 0.9rem;
-  }
+      .info-value {
+        font-size: 0.9rem;
+      }
 
-  .verified-badge {
-    font-size: 0.78rem;
-    padding: 7px 10px;
-  }
+      .verified-badge {
+        font-size: 0.78rem;
+        padding: 7px 10px;
+      }
 
-  .btn-group {
-    gap: 10px;
-    margin-top: 16px;
-  }
+      .btn-group {
+        gap: 10px;
+        margin-top: 16px;
+      }
 
-  .btn {
-    padding: 12px 14px;
-    font-size: 14px;
-    border-radius: 12px;
-  }
+      .btn {
+        padding: 12px 14px;
+        font-size: 14px;
+        border-radius: 12px;
+      }
 
-  .section-title {
-    font-size: 1.2rem;
-    text-align: center;
-  }
+      .section-title {
+        font-size: 1.2rem;
+        text-align: center;
+      }
 
-  .section-subtitle {
-    font-size: 0.88rem;
-    text-align: center;
-    margin-bottom: 16px;
-  }
+      .section-subtitle {
+        font-size: 0.88rem;
+        text-align: center;
+        margin-bottom: 16px;
+      }
 
-  .claim-card {
-    padding: 14px;
-    border-radius: 16px;
-  }
+      .claim-card {
+        padding: 14px;
+        border-radius: 16px;
+      }
 
-  .claim-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
+      .claim-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
 
-  .claim-product {
-    font-size: 0.95rem;
-    line-height: 1.4;
-  }
+      .claim-product {
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
 
-  .claim-id {
-    font-size: 0.78rem;
-  }
+      .claim-id {
+        font-size: 0.78rem;
+      }
 
-  .status-badge {
-    font-size: 0.75rem;
-    padding: 7px 10px;
-  }
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 7px 10px;
+      }
 
-  .claim-meta {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
+      .claim-meta {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
 
-  .meta-box {
-    padding: 10px;
-    border-radius: 12px;
-  }
+      .meta-box {
+        padding: 10px;
+        border-radius: 12px;
+      }
 
-  .meta-label {
-    font-size: 0.7rem;
-  }
+      .meta-label {
+        font-size: 0.7rem;
+      }
 
-  .meta-value {
-    font-size: 0.88rem;
-  }
+      .meta-value {
+        font-size: 0.88rem;
+      }
 
-  .empty-box,
-  .loading-box {
-    padding: 14px;
-    font-size: 0.9rem;
-    border-radius: 14px;
-  }
-}
+      .empty-box,
+      .loading-box {
+        padding: 14px;
+        font-size: 0.9rem;
+        border-radius: 14px;
+      }
+    }
   </style>
 </head>
 <body>
