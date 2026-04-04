@@ -59,7 +59,7 @@ res.status(201).json({
   }
 });
 
-// POST /api/auth/verify-email
+// VERIFY EMAIL
 router.post("/verify-email", async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -74,28 +74,40 @@ router.post("/verify-email", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.isEmailVerified) {
-      return res.status(400).json({ message: "Email already verified" });
+    if (user.isVerified) {
+      return res.status(200).json({ message: "Email already verified" });
     }
 
-    if (!user.emailOtp || user.emailOtp !== otp) {
+    if (!user.emailVerificationOtp || !user.emailVerificationOtpExpires) {
+      return res.status(400).json({ message: "No OTP found. Please signup again." });
+    }
+
+    if (user.emailVerificationOtp !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    if (!user.emailOtpExpires || user.emailOtpExpires < new Date()) {
+    if (new Date() > user.emailVerificationOtpExpires) {
       return res.status(400).json({ message: "OTP expired" });
     }
 
-    user.isEmailVerified = true;
-    user.emailOtp = null;
-    user.emailOtpExpires = null;
+    // IMPORTANT: mark verified
+    user.isVerified = true;
 
+    // clear OTP after success
+    user.emailVerificationOtp = null;
+    user.emailVerificationOtpExpires = null;
+
+    // IMPORTANT: save changes
     await user.save();
 
-    res.json({ message: "Email verified successfully" });
+    res.status(200).json({
+      message: "Email verified successfully"
+    });
   } catch (error) {
-    console.error("Verify email error:", error);
-    res.status(500).json({ message: "Email verification failed", error: error.message });
+    res.status(500).json({
+      message: "Email verification failed",
+      error: error.message
+    });
   }
 });
 
