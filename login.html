@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ShopPlus - Login</title>
+
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#0047ab" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
@@ -221,6 +227,12 @@
   </div>
 
   <script>
+    // If already logged in, go directly to home
+    const existingUser = localStorage.getItem("shopplusUser");
+    if (existingUser) {
+      window.location.href = "home.html";
+    }
+
     const BACKEND_URL = "https://my-store-e28j.onrender.com";
     const loginForm = document.getElementById("loginForm");
     const loginBtn = document.getElementById("loginBtn");
@@ -270,6 +282,19 @@
         loginBtn.textContent = "Login";
       }
     });
+
+    // Service Worker Registration for PWA
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
   </script>
 </body>
 </html>
