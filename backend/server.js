@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const productsRouter = require("./routes/products");
 const authRouter = require("./routes/auth");
 const rewardRoutes = require("./routes/rewardRoutes");
+const nodemailer = require("nodemailer");
 
 dotenv.config();
 connectDB();
@@ -15,6 +16,18 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Email transporter (for real OTP emails)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Make transporter available in routes if needed
+app.locals.transporter = transporter;
 
 // Test route
 app.get("/", (req, res) => {
