@@ -27,17 +27,18 @@
     --btn-bg-view-hover: #38733b;
     --btn-bg-buy: #0099ff;
     --btn-bg-buy-hover: #006cc0;
+    --card-bg-dark: #1c1c2b;
   }
 
   [data-theme="dark"] {
     --gradient-light: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
     --bg-light: #121212;
-    --bg-deep-light: #1a1a2e;
+    --bg-deep-light: #16213e;
     --text-dark-light: #eaeaea;
     --accent-light: #66b0ff;
     --accent-dark-light: #3a8dde;
     --logo-bg-light: #222;
-    --logo-shadow-light: rgba(51, 153, 255, 0.4);
+    --logo-shadow-light: rgba(51, 153, 255, 0.35);
     --btn-bg-view: #2abf6a;
     --btn-bg-view-hover: #1e8f3f;
     --btn-bg-buy: #3a8dde;
@@ -51,6 +52,7 @@
     margin: 0;
     min-height: 100vh;
     transition: background 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
   }
 
   .main-header {
@@ -65,26 +67,31 @@
   }
 
   .shopplus-logo {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--accent-dark-light);
     background: var(--logo-bg-light);
-    padding: 0 30px 0 22px;
+    padding: 10px 18px;
     border-radius: 16px;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.4px;
     user-select: none;
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     text-decoration: none;
+    max-width: 100%;
+    width: fit-content;
+    box-shadow: 0 4px 12px var(--logo-shadow-light);
   }
 
   .shopplus-logo .plus {
     color: var(--accent-light);
-    font-size: 2.6rem;
+    font-size: 2.4rem;
     font-weight: 900;
-    margin-left: 4px;
+    margin-left: 2px;
     user-select: none;
+    line-height: 1;
   }
 
   .header-actions {
@@ -92,9 +99,12 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-end;
   }
 
-  .profile-btn {
+  .profile-btn,
+  .install-btn {
     text-decoration: none;
     background: var(--logo-bg-light);
     color: var(--accent-dark-light);
@@ -103,50 +113,35 @@
     padding: 10px 18px;
     border-radius: 12px;
     box-shadow: 0 4px 12px var(--logo-shadow-light);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
   }
 
-  .profile-btn:hover {
+  .profile-btn:hover,
+  .install-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(0, 71, 171, 0.18);
   }
 
   .install-btn {
     display: none;
-    background: var(--logo-bg-light);
-    color: var(--accent-dark-light);
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding: 10px 18px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px var(--logo-shadow-light);
-    border: none;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    font-family: inherit;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .install-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0, 71, 171, 0.18);
   }
 
   .dark-mode-toggle {
     cursor: pointer;
-    font-size: 1.2rem;
-    background: transparent;
-    border: none;
-    color: var(--accent-light);
+    font-size: 1.15rem;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
     padding: 10px 14px;
     border-radius: 12px;
-    transition: background 0.3s ease;
+    transition: background 0.25s ease, transform 0.25s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -155,23 +150,42 @@
   }
 
   .dark-mode-toggle:hover {
-    background: rgba(255 255 255 / 0.25);
+    background: rgba(255,255,255,0.22);
+    transform: translateY(-2px);
   }
 
   .search-section {
     background: var(--bg-deep-light);
-    padding: 32px 24px 24px 24px;
+    padding: 28px 20px 22px;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
+  .search-form {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .search-form input {
+    flex-grow: 1;
+    border-radius: 12px;
+    border: none;
+    padding: 14px 16px;
+    font-size: 16px;
+    outline: none;
+    font-family: inherit;
+  }
+
   .category-icons {
-    margin: 18px 0 18px 0;
+    margin: 18px 0 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 16px;
+    max-width: 900px;
   }
 
   .category-icon {
@@ -181,20 +195,21 @@
     justify-content: center;
     background: var(--bg-light);
     border-radius: 50%;
-    width: 62px;
-    height: 62px;
+    width: 68px;
+    height: 68px;
     box-shadow: 0 2px 8px rgba(0,0,0,.08);
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: background 0.25s ease, transform 0.2s ease;
     user-select: none;
     color: var(--text-dark-light);
+    flex-shrink: 0;
   }
 
   .category-icon.selected,
   .category-icon:hover {
     background: var(--accent-light);
     color: white;
-    transform: scale(1.15);
+    transform: scale(1.08);
   }
 
   .category-icon svg {
@@ -204,34 +219,19 @@
   }
 
   .category-label {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     margin-top: 4px;
     font-weight: 600;
     color: inherit;
     text-align: center;
-  }
-
-  .search-form {
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    gap: 14px;
-  }
-
-  .search-form input {
-    flex-grow: 1;
-    border-radius: 8px;
-    border: none;
-    padding: 13px 18px;
-    font-size: 16px;
-    outline: none;
+    line-height: 1.1;
   }
 
   .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 22px;
-    padding: 24px 30px 48px 30px;
+    padding: 24px 24px 48px;
     max-width: 1280px;
     margin: 0 auto;
     min-height: 300px;
@@ -243,50 +243,49 @@
     }
   }
 
-  @media (max-width: 650px) {
+  @media (max-width: 780px) {
     .product-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   .product-card {
-    background: var(--bg-light);
-    border-radius: 14px;
+    background: #ffffff;
+    border-radius: 18px;
     box-shadow: 0 6px 20px rgba(0, 71, 171, 0.12);
-    padding: 18px 15px 20px 15px;
+    padding: 16px 14px 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
     opacity: 0;
     transform: translateY(20px);
-    height: 340px;
+    min-height: 340px;
   }
 
   .product-card:hover {
-    transform: translateY(-8px) scale(1.07);
-    box-shadow: 0 14px 36px rgba(0, 71, 171, 0.26);
+    transform: translateY(-6px);
+    box-shadow: 0 14px 36px rgba(0, 71, 171, 0.22);
   }
 
   .product-card img {
-    height: 70%;
-    width: auto;
-    max-width: 95%;
+    width: 100%;
+    height: 190px;
     object-fit: contain;
     border-radius: 12px;
     background: #f2f4fc;
-    padding: 9px;
-    box-sizing: border-box;
+    padding: 10px;
     margin-bottom: 14px;
   }
 
   .product-card h2 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--accent-dark-light);
-    margin: 0 0 14px 0;
+    margin: 0 0 14px;
     text-align: center;
-    line-height: 1.28;
+    line-height: 1.3;
+    min-height: 44px;
   }
 
   .card-actions {
@@ -294,29 +293,28 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 14px;
+    gap: 10px;
   }
 
   .btn {
-    flex: 1 1 auto;
-    max-width: 160px;
-    padding: 12px 0;
+    flex: 1;
+    padding: 11px 8px;
     border-radius: 10px;
     text-decoration: none;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 14px;
     text-align: center;
     cursor: pointer;
     border: none;
     outline: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
     user-select: none;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    font-family: inherit;
   }
 
   .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+    transform: translateY(-2px);
   }
 
   .view-details {
@@ -347,72 +345,75 @@
     margin-top: 40px;
   }
 
-  .loading-text {
-    color: #666;
-  }
+  .loading-text { color: #666; }
+  .empty-text { color: #888; }
+  .error-text { color: red; }
 
-  .empty-text {
-    color: #888;
-  }
-
-  .error-text {
-    color: red;
-  }
-
+  /* MOBILE PREMIUM */
   @media (max-width: 600px) {
     .main-header {
-      padding: 14px 14px;
+      padding: 12px;
       flex-direction: column;
       align-items: stretch;
-      gap: 12px;
+      gap: 10px;
+      overflow: hidden;
     }
 
     .shopplus-logo {
-      font-size: 1.35rem;
-      padding: 8px 14px;
-      letter-spacing: 0.4px;
-      justify-content: center;
       width: 100%;
+      max-width: 100%;
+      font-size: 1.35rem;
+      padding: 10px 12px;
+      border-radius: 14px;
+      justify-content: center;
+      text-align: center;
     }
 
     .shopplus-logo .plus {
-      font-size: 1.7rem;
+      font-size: 1.9rem;
+      margin-left: 2px;
     }
 
     .header-actions {
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      grid-template-columns: 1fr 56px;
+      gap: 10px;
+      align-items: stretch;
+      justify-content: stretch;
     }
 
-    .profile-btn,
-    .install-btn,
-    .dark-mode-toggle {
-      font-size: 0.82rem;
-      padding: 10px 8px;
+    .profile-btn {
       width: 100%;
-      text-align: center;
-      border-radius: 10px;
-      min-height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .install-btn[style*="display: inline-block"] {
-      display: flex !important;
+      min-width: 0;
+      min-height: 46px;
+      font-size: 0.95rem;
+      padding: 12px 10px;
+      border-radius: 12px;
     }
 
     .dark-mode-toggle {
-      font-size: 1rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.15);
-      color: #fff;
+      width: 56px;
+      min-width: 56px;
+      max-width: 56px;
+      min-height: 46px;
+      font-size: 1.1rem;
+      padding: 0;
+      border-radius: 12px;
+    }
+
+    .install-btn {
+      grid-column: 1 / -1;
+      width: 100%;
+      min-height: 46px;
+      font-size: 0.9rem;
+      padding: 12px 10px;
+      border-radius: 12px;
+      display: none;
     }
 
     .search-section {
-      padding: 20px 16px 16px 16px;
+      padding: 18px 14px 16px;
     }
 
     .search-form {
@@ -421,40 +422,64 @@
     }
 
     .search-form input {
-      padding: 10px 14px;
+      padding: 12px 14px;
       font-size: 15px;
+      border-radius: 12px;
+    }
+
+    .category-icons {
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .category-icon {
+      width: 60px;
+      height: 60px;
+    }
+
+    .category-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .category-label {
+      font-size: 0.62rem;
+      margin-top: 3px;
     }
 
     .product-grid {
-      padding: 18px 14px 36px 14px;
+      padding: 16px 12px 28px;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: 12px;
     }
 
     .product-card {
-      height: 280px;
-      padding: 14px 10px 14px 10px;
+      min-height: 280px;
+      padding: 12px 10px 14px;
+      border-radius: 16px;
     }
 
-    .product-card h2 {
-      font-size: 15px;
+    .product-card img {
+      height: 120px;
+      padding: 8px;
       margin-bottom: 10px;
     }
 
-    .btn {
-      max-width: 140px;
-      font-size: 13px;
-      padding: 10px 0;
+    .product-card h2 {
+      font-size: 14px;
+      min-height: 38px;
+      margin-bottom: 10px;
     }
 
     .card-actions {
       gap: 8px;
     }
-  }
 
-  [data-theme="dark"] {
-    background: #121212;
-    color: #eee;
+    .btn {
+      font-size: 12px;
+      padding: 10px 4px;
+      border-radius: 9px;
+    }
   }
 
   [data-theme="dark"] .main-header {
@@ -464,66 +489,43 @@
   [data-theme="dark"] .shopplus-logo {
     background: #222;
     color: #88b5ff;
-    box-shadow: 0 4px 14px rgba(51, 102, 255, 0.45);
+    box-shadow: 0 4px 14px rgba(51, 102, 255, 0.35);
   }
 
   [data-theme="dark"] .profile-btn,
   [data-theme="dark"] .install-btn {
     background: #222;
     color: #88b5ff;
-    box-shadow: 0 4px 14px rgba(51, 102, 255, 0.35);
-  }
-
-  [data-theme="dark"] .profile-btn:hover,
-  [data-theme="dark"] .install-btn:hover {
-    box-shadow: 0 8px 20px rgba(51, 102, 255, 0.5);
+    box-shadow: 0 4px 14px rgba(51, 102, 255, 0.28);
   }
 
   [data-theme="dark"] .search-section {
-    background: #16213e;
+    background: #0c1b47;
   }
 
   [data-theme="dark"] .product-card {
-    background: #1c1c2b;
-    box-shadow: 0 6px 22px rgba(10, 75, 200, 0.6);
+    background: var(--card-bg-dark);
+    box-shadow: 0 6px 22px rgba(10, 75, 200, 0.35);
+  }
+
+  [data-theme="dark"] .product-card img {
+    background: #25253a;
   }
 
   [data-theme="dark"] .product-card h2 {
     color: #a3bbff;
-  }
-
-  [data-theme="dark"] .btn.view-details {
-    background: #3caf70;
-    box-shadow: 0 4px 20px #238028;
-  }
-
-  [data-theme="dark"] .btn.view-details:hover {
-    background: #277129;
-  }
-
-  [data-theme="dark"] .btn.buy-now {
-    background: #4a8de7;
-    box-shadow: 0 4px 20px #205d99;
-  }
-
-  [data-theme="dark"] .btn.buy-now:hover {
-    background: #235885;
-  }
-
-  [data-theme="dark"] .product-card:hover {
-    box-shadow: 0 12px 36px rgba(12, 63, 150, 0.8);
   }
 </style>
 </head>
 
 <body>
   <div class="main-header">
-    <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+    <a href="home.html" class="shopplus-logo">Shop <span class="plus">+</span></a>
 
     <div class="header-actions">
       <a href="profile.html" class="profile-btn">Profile</a>
-      <button id="installAppBtn" class="install-btn">Install App</button>
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+      <button id="installAppBtn" class="install-btn">Install App</button>
     </div>
   </div>
 
@@ -566,7 +568,7 @@
 
   let selectedCategory = 'Overall';
   let allProducts = [];
-  let deferredPrompt;
+  let deferredPrompt = null;
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -660,7 +662,7 @@
       setTimeout(() => {
         card.style.opacity = 1;
         card.style.transform = 'none';
-      }, i * 70);
+      }, i * 60);
     });
   }
 
