@@ -5,9 +5,11 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// Email transporter
+// Gmail SMTP transporter (debug-friendly)
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -43,7 +45,9 @@ async function sendOtpEmail(toEmail, otp, userName = "User") {
     `
   };
 
-  await transporter.sendMail(mailOptions);
+  const info = await transporter.sendMail(mailOptions);
+  console.log("OTP email sent successfully:", info.messageId);
+  return info;
 }
 
 // SIGNUP
@@ -55,12 +59,15 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const existingEmail = await User.findOne({ email: email.toLowerCase() });
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanMobile = mobile.trim();
+
+    const existingEmail = await User.findOne({ email: cleanEmail });
     if (existingEmail) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    const existingMobile = await User.findOne({ mobile });
+    const existingMobile = await User.findOne({ mobile: cleanMobile });
     if (existingMobile) {
       return res.status(400).json({ message: "Mobile number already registered" });
     }
@@ -71,31 +78,46 @@ router.post("/signup", async (req, res) => {
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     const user = await User.create({
-  name,
-  email: email.toLowerCase(),
-  mobile,
-  password: hashedPassword,
-  isVerified: false,
-  emailOtp: otp,
-  emailOtpExpires: otpExpiry
-});
+      name: name.trim(),
+      email: cleanEmail,
+      mobile: cleanMobile,
+      password: hashedPassword,
+      isVerified: false,
+      emailOtp: otp,
+      emailOtpExpires: otpExpiry
+    });
 
-try {
-  await sendOtpEmail(user.email, otp, user.name);
-} catch (mailError) {
-  console.error("OTP email sending failed:", mailError);
+    console.log("User created successfully:", user.email);
+    console.log("Generated OTP:", otp);
 
-  return res.status(500).json({
-    message: "Signup created, but OTP email could not be sent. Please check email settings.",
-    error: mailError.message
-  });
-}
+    // OPTIONAL: verify transporter before sending (great for debugging)
+    try {
+      await transporter.verify();
+      console.log("SMTP transporter verified successfully");
+    } catch (verifyError) {
+      console.error("SMTP transporter verification failed:", verifyError);
+      return res.status(500).json({
+        message: "Signup created, but email server verification failed.",
+        error: verifyError.message
+      });
+    }
 
-res.status(201).json({
-  message: "Signup successful. OTP sent to your email.",
-  userId: user._id,
-  email: user.email
-});
+    // Send real OTP email
+    try {
+      await sendOtpEmail(user.email, otp, user.name);
+    } catch (mailError) {
+      console.error("OTP email sending failed:", mailError);
+      return res.status(500).json({
+        message: "Signup created, but OTP email could not be sent. Please check email settings.",
+        error: mailError.message
+      });
+    }
+
+    res.status(201).json({
+      message: "Signup successful. OTP sent to your email.",
+      userId: user._id,
+      email: user.email
+    });
   } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({
@@ -114,7 +136,7 @@ router.post("/verify-email", async (req, res) => {
       return res.status(400).json({ message: "Email and OTP are required" });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -163,10 +185,12 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Email/Mobile and password are required" });
     }
 
+    const cleanIdentifier = emailOrMobile.trim().toLowerCase();
+
     const user = await User.findOne({
       $or: [
-        { email: emailOrMobile.toLowerCase() },
-        { mobile: emailOrMobile }
+        { email: cleanIdentifier },
+        { mobile: emailOrMobile.trim() }
       ]
     });
 
