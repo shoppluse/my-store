@@ -1,9 +1,50 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 const User = require("../models/User");
-// const sendEmail = require("../utils/sendEmail"); // kept disabled for test mode
 
 const router = express.Router();
+
+// Email transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Send OTP email function
+async function sendOtpEmail(toEmail, otp, userName = "User") {
+  const mailOptions = {
+    from: `"ShopPlus" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: "ShopPlus Email Verification OTP",
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f8ff; color: #1f1f1f;">
+        <div style="max-width: 500px; margin: auto; background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid #dbe7ff;">
+          <h2 style="color: #0047ab; margin-top: 0;">Welcome to ShopPlus, ${userName} 👋</h2>
+          <p style="font-size: 15px; line-height: 1.6;">
+            Use the OTP below to verify your email address.
+          </p>
+          <div style="font-size: 32px; font-weight: 700; letter-spacing: 6px; color: #0099ff; text-align: center; margin: 24px 0;">
+            ${otp}
+          </div>
+          <p style="font-size: 14px; color: #64748b; line-height: 1.6;">
+            This OTP is valid for 10 minutes.<br />
+            If you did not create a ShopPlus account, you can ignore this email.
+          </p>
+          <hr style="border: none; border-top: 1px solid #e5edff; margin: 20px 0;" />
+          <p style="font-size: 12px; color: #94a3b8; margin-bottom: 0;">
+            © 2026 ShopPlus
+          </p>
+        </div>
+      </div>
+    `
+  };
+
+  await transporter.sendMail(mailOptions);
+}
 
 // SIGNUP
 router.post("/signup", async (req, res) => {
@@ -39,14 +80,13 @@ router.post("/signup", async (req, res) => {
       emailOtpExpires: otpExpiry
     });
 
-    // TEST MODE: return OTP directly instead of sending email
-    console.log("Generated OTP for testing:", otp);
+    // Send real OTP email
+    await sendOtpEmail(user.email, otp, user.name);
 
     res.status(201).json({
-      message: "Signup successful (test mode). OTP generated.",
+      message: "Signup successful. OTP sent to your email.",
       userId: user._id,
-      email: user.email,
-      otp: otp
+      email: user.email
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -80,7 +120,7 @@ router.post("/verify-email", async (req, res) => {
       return res.status(400).json({ message: "No OTP found. Please signup again." });
     }
 
-    if (user.emailOtp !== otp) {
+    if (user.emailOtp !== otp.trim()) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
