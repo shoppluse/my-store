@@ -383,47 +383,181 @@
     }
 
     @media (max-width: 950px) {
-      .profile-grid {
-        grid-template-columns: 1fr;
-      }
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
 
-      .profile-card {
-        position: static;
-      }
-    }
+  .profile-card {
+    position: static;
+  }
 
-    @media (max-width: 700px) {
-      .main-header {
-        padding: 14px 16px;
-      }
+  .page-wrap {
+    margin: 24px auto;
+  }
+}
 
-      .shopplus-logo {
-        font-size: 1.45rem;
-        padding: 8px 16px;
-      }
+@media (max-width: 700px) {
+  .main-header {
+    padding: 14px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
 
-      .shopplus-logo .plus {
-        font-size: 1.7rem;
-      }
+  .shopplus-logo {
+    font-size: 1.35rem;
+    padding: 8px 14px;
+    justify-content: center;
+    width: 100%;
+  }
 
-      .header-btn {
-        font-size: 0.82rem;
-        padding: 8px 12px;
-      }
+  .shopplus-logo .plus {
+    font-size: 1.6rem;
+  }
 
-      .card {
-        padding: 20px 16px;
-        border-radius: 20px;
-      }
+  .header-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
 
-      .claim-meta {
-        grid-template-columns: 1fr;
-      }
+  .header-btn,
+  .dark-mode-toggle {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    padding: 10px 8px;
+    font-size: 0.8rem;
+    border-radius: 10px;
+  }
 
-      .page-wrap {
-        padding: 0 14px 30px;
-      }
-    }
+  .dark-mode-toggle {
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15);
+  }
+
+  .card {
+    padding: 18px 14px;
+    border-radius: 18px;
+  }
+
+  .page-wrap {
+    padding: 0 12px 24px;
+    margin: 18px auto;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    font-size: 1.6rem;
+    margin-bottom: 14px;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+  }
+
+  .info-list {
+    gap: 10px;
+  }
+
+  .info-item {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .info-label {
+    font-size: 0.75rem;
+  }
+
+  .info-value {
+    font-size: 0.9rem;
+  }
+
+  .verified-badge {
+    font-size: 0.78rem;
+    padding: 7px 10px;
+  }
+
+  .btn-group {
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .btn {
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .claim-card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .claim-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .claim-product {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .claim-id {
+    font-size: 0.78rem;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 7px 10px;
+  }
+
+  .claim-meta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .meta-box {
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .meta-label {
+    font-size: 0.7rem;
+  }
+
+  .meta-value {
+    font-size: 0.88rem;
+  }
+
+  .empty-box,
+  .loading-box {
+    padding: 14px;
+    font-size: 0.9rem;
+    border-radius: 14px;
+  }
+}
   </style>
 </head>
 <body>
