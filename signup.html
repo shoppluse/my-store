@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Signup - ShopPlus</title>
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#0047ab" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
@@ -17,6 +21,10 @@
       --border: #d8e3f2;
       --success: #2e7d32;
       --error: #d32f2f;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -67,6 +75,7 @@
       color: #555;
       text-align: center;
       font-size: 14px;
+      line-height: 1.6;
     }
 
     .form-group {
@@ -89,7 +98,6 @@
       background: var(--input-bg);
       font-size: 15px;
       outline: none;
-      box-sizing: border-box;
       font-family: inherit;
     }
 
@@ -110,6 +118,7 @@
       cursor: pointer;
       transition: transform 0.2s ease, opacity 0.2s ease;
       margin-top: 8px;
+      font-family: inherit;
     }
 
     button:hover {
@@ -117,11 +126,19 @@
       opacity: 0.95;
     }
 
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .message {
       margin-top: 16px;
       font-size: 14px;
       text-align: center;
       font-weight: 600;
+      line-height: 1.5;
+      min-height: 20px;
     }
 
     .success {
@@ -144,16 +161,17 @@
       font-weight: 700;
     }
 
-    .otp-box {
+    .note-box {
       margin-top: 14px;
       background: #e8f4ff;
       color: #0047ab;
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
-      font-weight: 700;
-      display: none;
+      font-weight: 600;
+      line-height: 1.5;
+      border: 1px solid #cfe6ff;
     }
 
     footer {
@@ -162,6 +180,26 @@
       text-align: center;
       padding: 14px 10px;
       font-size: 14px;
+    }
+
+    @media (max-width: 520px) {
+      header {
+        font-size: 20px;
+        padding: 16px;
+      }
+
+      .container {
+        padding: 16px;
+      }
+
+      .auth-card {
+        padding: 22px 18px;
+        border-radius: 16px;
+      }
+
+      .auth-card h2 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -194,11 +232,14 @@
           <input type="password" id="password" placeholder="Create a password" required />
         </div>
 
-        <button type="submit">Create Account</button>
+        <button type="submit" id="signupBtn">Create Account</button>
       </form>
 
       <div id="message" class="message"></div>
-      <div id="otpBox" class="otp-box"></div>
+
+      <div class="note-box">
+        After signup, a verification OTP will be sent to your email.
+      </div>
 
       <div class="link-text">
         Already have an account? <a href="login.html">Login</a>
@@ -206,26 +247,28 @@
     </div>
   </div>
 
-  <footer>© 2025 ShopPlus. All rights reserved.</footer>
+  <footer>© 2026 ShopPlus. All rights reserved.</footer>
 
   <script>
     const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
     const form = document.getElementById("signupForm");
     const message = document.getElementById("message");
-    const otpBox = document.getElementById("otpBox");
+    const signupBtn = document.getElementById("signupBtn");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       message.textContent = "";
       message.className = "message";
-      otpBox.style.display = "none";
 
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const mobile = document.getElementById("mobile").value.trim();
       const password = document.getElementById("password").value.trim();
+
+      signupBtn.disabled = true;
+      signupBtn.textContent = "Creating Account...";
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
@@ -241,20 +284,15 @@
         if (!res.ok) {
           message.textContent = data.message || "Signup failed";
           message.classList.add("error");
+          signupBtn.disabled = false;
+          signupBtn.textContent = "Create Account";
           return;
         }
 
         localStorage.setItem("signupEmail", email);
 
-        message.textContent = "Signup successful! Redirecting to verify page...";
+        message.textContent = "Signup successful! OTP sent to your email. Redirecting to verification page...";
         message.classList.add("success");
-
-        // Test mode OTP display (temporary)
-        if (data.otp) {
-          otpBox.textContent = `Test Mode OTP: ${data.otp}`;
-          otpBox.style.display = "block";
-          localStorage.setItem("testOtp", data.otp);
-        }
 
         setTimeout(() => {
           window.location.href = "verify.html";
@@ -263,6 +301,8 @@
       } catch (error) {
         message.textContent = "Something went wrong. Please try again.";
         message.classList.add("error");
+        signupBtn.disabled = false;
+        signupBtn.textContent = "Create Account";
       }
     });
   </script>
