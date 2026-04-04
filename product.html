@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Product Details - ShopPlus</title>
+
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#0047ab" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
@@ -16,12 +22,12 @@
       --primary-2: #0099ff;
       --border: #dbe7ff;
       --shadow: rgba(0, 71, 171, 0.14);
-      --success: #16a34a;
-      --danger: #dc2626;
       --buy-bg: #0099ff;
       --buy-hover: #006cc0;
       --back-bg: #43a047;
       --back-hover: #38733b;
+      --claim-bg: #7c3aed;
+      --claim-hover: #6d28d9;
     }
 
     [data-theme="dark"] {
@@ -37,6 +43,8 @@
       --buy-hover: #2a5e9d;
       --back-bg: #2abf6a;
       --back-hover: #1e8f3f;
+      --claim-bg: #8b5cf6;
+      --claim-hover: #7c3aed;
     }
 
     * {
@@ -52,10 +60,6 @@
       transition: background 0.3s ease, color 0.3s ease;
     }
 
-    [data-theme="dark"] body {
-      background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
-    }
-
     .main-header {
       background: var(--gradient);
       display: flex;
@@ -66,6 +70,8 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .shopplus-logo {
@@ -94,6 +100,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .header-btn {
@@ -107,6 +114,10 @@
       border: 1px solid rgba(255,255,255,0.2);
       transition: 0.25s ease;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .header-btn:hover {
@@ -123,6 +134,9 @@
       padding: 6px 10px;
       border-radius: 50%;
       transition: 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .dark-mode-toggle:hover {
@@ -363,6 +377,15 @@
       transform: translateY(-2px);
     }
 
+    .claim-btn {
+      background-color: var(--claim-bg);
+    }
+
+    .claim-btn:hover {
+      background-color: var(--claim-hover);
+      transform: translateY(-2px);
+    }
+
     .back-btn {
       background-color: var(--back-bg);
     }
@@ -393,36 +416,54 @@
 
     @media (max-width: 700px) {
       .main-header {
-        padding: 14px 16px;
+        padding: 14px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
       }
 
       .shopplus-logo {
-        font-size: 1.45rem;
-        padding: 8px 16px;
+        font-size: 1.35rem;
+        padding: 8px 14px;
+        justify-content: center;
+        width: 100%;
       }
 
       .shopplus-logo .plus {
-        font-size: 1.7rem;
+        font-size: 1.6rem;
       }
 
-      .header-btn {
-        font-size: 0.82rem;
-        padding: 8px 12px;
+      .header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .header-btn,
+      .dark-mode-toggle {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 10px 8px;
+        font-size: 0.8rem;
+        border-radius: 10px;
+      }
+
+      .dark-mode-toggle {
+        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.15);
       }
 
       .page-wrap {
-        padding: 0 14px;
-        margin-top: 22px;
+        padding: 0 12px;
+        margin-top: 20px;
       }
 
       .gallery-card,
       .details-card {
-        border-radius: 20px;
-      }
-
-      .gallery-card,
-      .details-card {
-        padding: 18px;
+        border-radius: 18px;
+        padding: 16px;
       }
 
       .carousel-image {
@@ -436,11 +477,21 @@
       }
 
       .product-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
 
       .product-price {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .actions a,
+      .actions button {
+        width: 100%;
+        flex: 1 1 auto;
       }
     }
   </style>
@@ -495,6 +546,29 @@
       }
     });
 
+    function formatPrice(price) {
+      if (price === null || price === undefined || price === "") {
+        return "Price not available";
+      }
+
+      if (typeof price === "number") {
+        return `₹${price.toFixed(2)}`;
+      }
+
+      const numeric = Number(String(price).replace(/[^\d.]/g, ""));
+      if (!isNaN(numeric) && numeric > 0) {
+        return `₹${numeric.toFixed(2)}`;
+      }
+
+      return String(price);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text ?? "";
+      return div.innerHTML;
+    }
+
     async function loadProductDetails() {
       const params = new URLSearchParams(window.location.search);
       const pid = params.get("id");
@@ -518,34 +592,40 @@
 
         const product = await response.json();
 
+        const fallbackImage = "https://via.placeholder.com/600x600?text=No+Image";
+
+        const safeImages = Array.isArray(product.images) && product.images.length
+          ? product.images.filter(Boolean)
+          : [];
+
+        const finalImages = safeImages.length
+          ? safeImages
+          : [product.image || fallbackImage];
+
         const safeProduct = {
-          id: product.id ?? pid,
+          id: product.id ?? product._id ?? pid,
           name: product.name || "Unnamed Product",
           description: product.description || "No description available.",
-          price: product.price || "Price not available",
+          price: formatPrice(product.price),
           link: product.link || "#",
-          image: product.image || "https://via.placeholder.com/600x600?text=No+Image",
-          images: (product.images && product.images.length > 0)
-            ? product.images
-            : [product.image || "https://via.placeholder.com/600x600?text=No+Image"],
+          image: product.image || fallbackImage,
+          images: finalImages,
           rating: product.rating || 4.5,
           category: product.category || "General"
         };
 
-        const imgs = safeProduct.images;
-
-        const thumbs = imgs.length > 1
+        const thumbs = safeProduct.images.length > 1
           ? `
             <div class="carousel-thumbs">
-              ${imgs.map((src, i) => `
-                <img class="carousel-thumb${i === 0 ? ' active' : ''}" src="${src}" data-idx="${i}" alt="Thumbnail ${i + 1}">
+              ${safeProduct.images.map((src, i) => `
+                <img class="carousel-thumb${i === 0 ? ' active' : ''}" src="${escapeHtml(src)}" data-idx="${i}" alt="Thumbnail ${i + 1}">
               `).join('')}
             </div>
           `
           : "";
 
         const buyButton = safeProduct.link && safeProduct.link !== "#"
-          ? `<a href="${safeProduct.link}" target="_blank" rel="noopener noreferrer" class="buy-btn">Buy Now</a>`
+          ? `<a href="${escapeHtml(safeProduct.link)}" target="_blank" rel="noopener noreferrer" class="buy-btn">Buy Now</a>`
           : `<button class="buy-btn" onclick="alert('Buy link not available for this product yet')">Buy Now</button>`;
 
         root.className = "";
@@ -553,36 +633,36 @@
           <div class="product-layout">
             <div class="gallery-card">
               <div class="carousel-track" id="carousel-track">
-                ${imgs.map((src, i) => `
-                  <img class="carousel-image" src="${src}" alt="${safeProduct.name} image ${i + 1}">
+                ${safeProduct.images.map((src, i) => `
+                  <img class="carousel-image" src="${escapeHtml(src)}" alt="${escapeHtml(safeProduct.name)} image ${i + 1}">
                 `).join('')}
               </div>
               ${thumbs}
             </div>
 
             <div class="details-card">
-              <div class="product-category">${safeProduct.category}</div>
-              <h1 class="product-title">${safeProduct.name}</h1>
-              <div class="product-rating">⭐ ${safeProduct.rating} / 5</div>
-              <div class="product-price">${safeProduct.price}</div>
-              <div class="product-desc">${safeProduct.description}</div>
+              <div class="product-category">${escapeHtml(safeProduct.category)}</div>
+              <h1 class="product-title">${escapeHtml(safeProduct.name)}</h1>
+              <div class="product-rating">⭐ ${escapeHtml(String(safeProduct.rating))} / 5</div>
+              <div class="product-price">${escapeHtml(safeProduct.price)}</div>
+              <div class="product-desc">${escapeHtml(safeProduct.description)}</div>
 
               <div class="info-list">
                 <div class="info-item">
                   <div class="info-label">Product ID</div>
-                  <div class="info-value">${safeProduct.id}</div>
+                  <div class="info-value">${escapeHtml(String(safeProduct.id))}</div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Category</div>
-                  <div class="info-value">${safeProduct.category}</div>
+                  <div class="info-value">${escapeHtml(safeProduct.category)}</div>
                 </div>
               </div>
 
               <div class="actions">
-  ${buyButton}
-  <a href="claim-reward.html?productId=${encodeURIComponent(safeProduct.id)}&productName=${encodeURIComponent(safeProduct.name)}" class="buy-btn">Claim Reward</a>
-  <a href="home.html" class="back-btn">Back to Store</a>
-</div>
+                ${buyButton}
+                <a href="claim-reward.html?productId=${encodeURIComponent(safeProduct.id)}&productName=${encodeURIComponent(safeProduct.name)}" class="claim-btn">Claim Reward</a>
+                <a href="home.html" class="back-btn">Back to Store</a>
+              </div>
             </div>
           </div>
         `;
@@ -607,7 +687,6 @@
         thumbElements.forEach((thumb, i) => {
           thumb.addEventListener("click", () => setCurrent(i));
         });
-
       } catch (error) {
         console.error("Error loading product:", error);
 
@@ -623,6 +702,18 @@
     }
 
     loadProductDetails();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
   </script>
 </body>
 </html>
