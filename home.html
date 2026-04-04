@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Shop+</title>
+
 <link rel="manifest" href="/my-store/manifest.json" />
 <meta name="theme-color" content="#0047ab" />
 <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
@@ -15,30 +16,33 @@
   }
 
   :root {
-    --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-    --bg-light: #f8f9fb;
-    --bg-deep-light: #0e1a39;
-    --text-dark-light: #1f1f1f;
-    --accent-light: #0099ff;
-    --accent-dark-light: #0047ab;
-    --logo-bg-light: #fff;
-    --logo-shadow-light: rgba(0, 71, 171, 0.12);
+    --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+    --bg: #f8f9fb;
+    --bg-deep: #0e1a39;
+    --card-bg: #ffffff;
+    --text: #1f1f1f;
+    --muted: #64748b;
+    --primary: #0047ab;
+    --primary-2: #0099ff;
+    --border: #dbe7ff;
+    --shadow: rgba(0, 71, 171, 0.14);
     --btn-bg-view: #43a047;
     --btn-bg-view-hover: #38733b;
     --btn-bg-buy: #0099ff;
     --btn-bg-buy-hover: #006cc0;
-    --card-bg-dark: #1c1c2b;
   }
 
   [data-theme="dark"] {
-    --gradient-light: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
-    --bg-light: #121212;
-    --bg-deep-light: #16213e;
-    --text-dark-light: #eaeaea;
-    --accent-light: #66b0ff;
-    --accent-dark-light: #3a8dde;
-    --logo-bg-light: #222;
-    --logo-shadow-light: rgba(51, 153, 255, 0.35);
+    --gradient: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
+    --bg: #121212;
+    --bg-deep: #16213e;
+    --card-bg: #1c1c2b;
+    --text: #eaeaea;
+    --muted: #94a3b8;
+    --primary: #66b0ff;
+    --primary-2: #3a8dde;
+    --border: #1e3a8a;
+    --shadow: rgba(51, 153, 255, 0.22);
     --btn-bg-view: #2abf6a;
     --btn-bg-view-hover: #1e8f3f;
     --btn-bg-buy: #3a8dde;
@@ -47,8 +51,8 @@
 
   body {
     font-family: 'Poppins', Arial, sans-serif;
-    background: var(--bg-light);
-    color: var(--text-dark-light);
+    background: var(--bg);
+    color: var(--text);
     margin: 0;
     min-height: 100vh;
     transition: background 0.3s ease, color 0.3s ease;
@@ -56,41 +60,35 @@
   }
 
   .main-header {
-    background: var(--gradient-light);
+    background: var(--gradient);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 18px 24px;
-    box-shadow: 0 4px 12px var(--logo-shadow-light);
-    gap: 12px;
+    box-shadow: 0 6px 20px var(--shadow);
     flex-wrap: wrap;
+    gap: 12px;
   }
 
   .shopplus-logo {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--accent-dark-light);
-    background: var(--logo-bg-light);
-    padding: 10px 18px;
+    color: var(--primary);
+    background: #ffffff;
+    padding: 8px 22px;
     border-radius: 16px;
-    letter-spacing: 0.4px;
-    user-select: none;
-    display: flex;
+    text-decoration: none;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    text-decoration: none;
     max-width: 100%;
-    width: fit-content;
-    box-shadow: 0 4px 12px var(--logo-shadow-light);
   }
 
   .shopplus-logo .plus {
-    color: var(--accent-light);
-    font-size: 2.4rem;
+    color: var(--primary-2);
+    font-size: 2.2rem;
     font-weight: 900;
-    margin-left: 2px;
-    user-select: none;
     line-height: 1;
   }
 
@@ -99,64 +97,60 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    width: 100%;
-    justify-content: flex-end;
   }
 
-  .profile-btn,
+  .header-btn,
   .install-btn {
     text-decoration: none;
-    background: var(--logo-bg-light);
-    color: var(--accent-dark-light);
+    background: rgba(255,255,255,0.15);
+    color: #fff;
     font-weight: 700;
     font-size: 0.95rem;
-    padding: 10px 18px;
+    padding: 10px 16px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px var(--logo-shadow-light);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    border: 1px solid rgba(255,255,255,0.2);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    border: none;
     font-family: inherit;
     cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: none;
   }
 
-  .profile-btn:hover,
+  .header-btn:hover,
   .install-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0, 71, 171, 0.18);
+    background: rgba(255,255,255,0.22);
   }
 
   .install-btn {
     display: none;
+    border: 1px solid rgba(255,255,255,0.2);
   }
 
   .dark-mode-toggle {
     cursor: pointer;
-    font-size: 1.15rem;
-    background: rgba(255,255,255,0.14);
-    border: 1px solid rgba(255,255,255,0.18);
+    font-size: 1.4rem;
+    background: transparent;
+    border: none;
     color: #fff;
-    padding: 10px 14px;
-    border-radius: 12px;
-    transition: background 0.25s ease, transform 0.25s ease;
+    padding: 6px 10px;
+    border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 48px;
-    min-height: 44px;
+    transition: 0.25s ease;
   }
 
   .dark-mode-toggle:hover {
-    background: rgba(255,255,255,0.22);
-    transform: translateY(-2px);
+    background: rgba(255,255,255,0.15);
   }
 
   .search-section {
-    background: var(--bg-deep-light);
-    padding: 28px 20px 22px;
+    background: var(--bg-deep);
+    padding: 28px 20px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -193,33 +187,33 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: var(--bg-light);
+    background: #ffffff;
     border-radius: 50%;
-    width: 68px;
-    height: 68px;
+    width: 66px;
+    height: 66px;
     box-shadow: 0 2px 8px rgba(0,0,0,.08);
     cursor: pointer;
     transition: background 0.25s ease, transform 0.2s ease;
     user-select: none;
-    color: var(--text-dark-light);
+    color: #1f1f1f;
     flex-shrink: 0;
   }
 
   .category-icon.selected,
   .category-icon:hover {
-    background: var(--accent-light);
+    background: var(--primary-2);
     color: white;
     transform: scale(1.08);
   }
 
   .category-icon svg {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     fill: currentColor;
   }
 
   .category-label {
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     margin-top: 4px;
     font-weight: 600;
     color: inherit;
@@ -250,7 +244,7 @@
   }
 
   .product-card {
-    background: #ffffff;
+    background: var(--card-bg);
     border-radius: 18px;
     box-shadow: 0 6px 20px rgba(0, 71, 171, 0.12);
     padding: 16px 14px 18px;
@@ -278,10 +272,14 @@
     margin-bottom: 14px;
   }
 
+  [data-theme="dark"] .product-card img {
+    background: #25253a;
+  }
+
   .product-card h2 {
     font-size: 17px;
     font-weight: 600;
-    color: var(--accent-dark-light);
+    color: var(--primary);
     margin: 0 0 14px;
     text-align: center;
     line-height: 1.3;
@@ -307,10 +305,10 @@
     cursor: pointer;
     border: none;
     outline: none;
-    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    transition: background-color 0.25s ease, transform 0.25s ease;
     user-select: none;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     font-family: inherit;
+    color: white;
   }
 
   .btn:hover {
@@ -319,7 +317,6 @@
 
   .view-details {
     background-color: var(--btn-bg-view);
-    color: white;
   }
 
   .view-details:hover {
@@ -328,7 +325,6 @@
 
   .buy-now {
     background-color: var(--btn-bg-buy);
-    color: white;
   }
 
   .buy-now:hover {
@@ -349,71 +345,52 @@
   .empty-text { color: #888; }
   .error-text { color: red; }
 
-  /* MOBILE PREMIUM */
-  @media (max-width: 600px) {
+  @media (max-width: 700px) {
     .main-header {
-      padding: 12px;
+      padding: 14px 14px;
       flex-direction: column;
       align-items: stretch;
-      gap: 10px;
-      overflow: hidden;
+      gap: 12px;
     }
 
     .shopplus-logo {
-      width: 100%;
-      max-width: 100%;
       font-size: 1.35rem;
-      padding: 10px 12px;
-      border-radius: 14px;
+      padding: 8px 14px;
       justify-content: center;
-      text-align: center;
+      width: 100%;
     }
 
     .shopplus-logo .plus {
-      font-size: 1.9rem;
-      margin-left: 2px;
+      font-size: 1.6rem;
     }
 
     .header-actions {
       width: 100%;
       display: grid;
-      grid-template-columns: 1fr 56px;
-      gap: 10px;
-      align-items: stretch;
-      justify-content: stretch;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
-    .profile-btn {
+    .header-btn,
+    .install-btn,
+    .dark-mode-toggle {
       width: 100%;
-      min-width: 0;
-      min-height: 46px;
-      font-size: 0.95rem;
-      padding: 12px 10px;
-      border-radius: 12px;
+      text-align: center;
+      justify-content: center;
+      padding: 10px 8px;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      min-height: 42px;
     }
 
     .dark-mode-toggle {
-      width: 56px;
-      min-width: 56px;
-      max-width: 56px;
-      min-height: 46px;
-      font-size: 1.1rem;
-      padding: 0;
-      border-radius: 12px;
-    }
-
-    .install-btn {
-      grid-column: 1 / -1;
-      width: 100%;
-      min-height: 46px;
-      font-size: 0.9rem;
-      padding: 12px 10px;
-      border-radius: 12px;
-      display: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.15);
+      font-size: 1rem;
     }
 
     .search-section {
-      padding: 18px 14px 16px;
+      padding: 20px 14px 16px;
     }
 
     .search-form {
@@ -424,7 +401,6 @@
     .search-form input {
       padding: 12px 14px;
       font-size: 15px;
-      border-radius: 12px;
     }
 
     .category-icons {
@@ -433,17 +409,17 @@
     }
 
     .category-icon {
-      width: 60px;
-      height: 60px;
+      width: 58px;
+      height: 58px;
     }
 
     .category-icon svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
 
     .category-label {
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       margin-top: 3px;
     }
 
@@ -481,51 +457,17 @@
       border-radius: 9px;
     }
   }
-
-  [data-theme="dark"] .main-header {
-    background: linear-gradient(120deg, #121a2f 60%, #16213e 100%);
-  }
-
-  [data-theme="dark"] .shopplus-logo {
-    background: #222;
-    color: #88b5ff;
-    box-shadow: 0 4px 14px rgba(51, 102, 255, 0.35);
-  }
-
-  [data-theme="dark"] .profile-btn,
-  [data-theme="dark"] .install-btn {
-    background: #222;
-    color: #88b5ff;
-    box-shadow: 0 4px 14px rgba(51, 102, 255, 0.28);
-  }
-
-  [data-theme="dark"] .search-section {
-    background: #0c1b47;
-  }
-
-  [data-theme="dark"] .product-card {
-    background: var(--card-bg-dark);
-    box-shadow: 0 6px 22px rgba(10, 75, 200, 0.35);
-  }
-
-  [data-theme="dark"] .product-card img {
-    background: #25253a;
-  }
-
-  [data-theme="dark"] .product-card h2 {
-    color: #a3bbff;
-  }
 </style>
 </head>
 
 <body>
   <div class="main-header">
-    <a href="home.html" class="shopplus-logo">Shop <span class="plus">+</span></a>
+    <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
     <div class="header-actions">
-      <a href="profile.html" class="profile-btn">Profile</a>
-      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+      <a href="profile.html" class="header-btn">Profile</a>
       <button id="installAppBtn" class="install-btn">Install App</button>
+      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
     </div>
   </div>
 
@@ -603,9 +545,7 @@
   async function loadProducts() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/products`);
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
 
       const data = await response.json();
 
@@ -710,7 +650,7 @@
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.style.display = "flex";
+    installBtn.style.display = "inline-flex";
   });
 
   installBtn.addEventListener("click", async () => {
