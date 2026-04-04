@@ -1,11 +1,11 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
-const sendEmail = require("../utils/sendEmail");
+// const sendEmail = require("../utils/sendEmail"); // kept disabled for test mode
 
 const router = express.Router();
 
-// POST /api/auth/signup
+// SIGNUP
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, mobile, password } = req.body;
@@ -27,35 +27,33 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       mobile,
       password: hashedPassword,
-      isEmailVerified: false,
+      isVerified: false,
       emailOtp: otp,
       emailOtpExpires: otpExpiry
     });
 
+    // TEST MODE: return OTP directly instead of sending email
     console.log("Generated OTP for testing:", otp);
 
-res.status(201).json({
-  message: "Signup successful (test mode). OTP generated.",
-  userId: user._id,
-  email: user.email,
-  otp: otp
-});
-
     res.status(201).json({
-      message: "Signup successful. OTP sent to email.",
+      message: "Signup successful (test mode). OTP generated.",
       userId: user._id,
-      email: user.email
+      email: user.email,
+      otp: otp
     });
   } catch (error) {
     console.error("Signup error:", error);
-    res.status(500).json({ message: "Signup failed", error: error.message });
+    res.status(500).json({
+      message: "Signup failed",
+      error: error.message
+    });
   }
 });
 
@@ -78,32 +76,29 @@ router.post("/verify-email", async (req, res) => {
       return res.status(200).json({ message: "Email already verified" });
     }
 
-    if (!user.emailVerificationOtp || !user.emailVerificationOtpExpires) {
+    if (!user.emailOtp || !user.emailOtpExpires) {
       return res.status(400).json({ message: "No OTP found. Please signup again." });
     }
 
-    if (user.emailVerificationOtp !== otp) {
+    if (user.emailOtp !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    if (new Date() > user.emailVerificationOtpExpires) {
+    if (new Date() > user.emailOtpExpires) {
       return res.status(400).json({ message: "OTP expired" });
     }
 
-    // IMPORTANT: mark verified
     user.isVerified = true;
+    user.emailOtp = null;
+    user.emailOtpExpires = null;
 
-    // clear OTP after success
-    user.emailVerificationOtp = null;
-    user.emailVerificationOtpExpires = null;
-
-    // IMPORTANT: save changes
     await user.save();
 
     res.status(200).json({
       message: "Email verified successfully"
     });
   } catch (error) {
+    console.error("Verify email error:", error);
     res.status(500).json({
       message: "Email verification failed",
       error: error.message
@@ -152,6 +147,7 @@ router.post("/login", async (req, res) => {
       }
     });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({
       message: "Login failed",
       error: error.message
