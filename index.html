@@ -67,6 +67,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    text-decoration: none;
   }
 
   .shopplus-logo .plus {
@@ -144,6 +145,7 @@
     cursor: pointer;
     transition: background 0.3s ease, transform 0.2s ease;
     user-select: none;
+    color: var(--text-dark-light);
   }
 
   .category-icon.selected,
@@ -164,6 +166,7 @@
     margin-top: 4px;
     font-weight: 600;
     color: inherit;
+    text-align: center;
   }
 
   .search-form {
@@ -290,6 +293,28 @@
 
   .buy-now:hover {
     background-color: var(--btn-bg-buy-hover);
+  }
+
+  .loading-text,
+  .empty-text,
+  .error-text {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    grid-column: 1 / -1;
+    margin-top: 40px;
+  }
+
+  .loading-text {
+    color: #666;
+  }
+
+  .empty-text {
+    color: #888;
+  }
+
+  .error-text {
+    color: red;
   }
 
   @media (max-width: 600px) {
@@ -422,7 +447,7 @@
 
 <body>
   <div class="main-header">
-    <span class="shopplus-logo">Shop<span class="plus">+</span></span>
+    <a href="index.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
     <div class="header-actions">
       <a href="profile.html" class="profile-btn">Profile</a>
@@ -435,17 +460,15 @@
       <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
     </form>
 
-    <div class="category-icons" id="categoryBar">
-      <!-- Categories will be loaded here -->
-    </div>
+    <div class="category-icons" id="categoryBar"></div>
   </div>
 
   <div class="product-grid" id="product-list">
-    <p style="text-align:center; color:#777;">Loading products...</p>
+    <p class="loading-text">Loading products...</p>
   </div>
 
 <script>
-  const BACKEND_URL = "https://my-store-backend-9hra.onrender.com";
+  const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
   const categories = [
     { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
@@ -498,16 +521,21 @@
   async function loadProducts() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/products`);
-      if (!response.ok) throw new Error('API not reachable');
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
 
-      allProducts = await response.json();
+      const data = await response.json();
 
-      // Safety fallback so UI doesn't break if some fields are missing
-      allProducts = allProducts.map((p, index) => ({
-        id: p.id ?? (index + 1),
+      if (!Array.isArray(data)) {
+        throw new Error("Products response is not an array");
+      }
+
+      allProducts = data.map((p, index) => ({
+        id: p.id ?? p._id ?? (index + 1),
         name: p.name || 'Unnamed Product',
         price: p.price ?? 0,
-        image: p.image || 'https://via.placeholder.com/200',
+        image: p.image || (Array.isArray(p.images) && p.images.length ? p.images[0] : 'https://via.placeholder.com/200'),
         description: p.description || 'No description available.',
         category: p.category || 'Overall',
         link: p.link || '#'
@@ -515,14 +543,14 @@
 
       displayProducts(allProducts);
     } catch (err) {
-      productList.innerHTML = '<p style="text-align:center;color:red;">Error loading products from backend. Please try again later.</p>';
+      productList.innerHTML = '<p class="error-text">Error loading products from backend.<br>Please try again later.</p>';
       console.error('Backend fetch error:', err);
     }
   }
 
   function displayProducts(products) {
     if (products.length === 0) {
-      productList.innerHTML = '<p style="text-align:center;color:#888;">No products found.</p>';
+      productList.innerHTML = '<p class="empty-text">No products found.</p>';
       return;
     }
 
@@ -542,7 +570,7 @@
         <img src="${p.image}" alt="${p.name}" />
         <h2>${p.name}</h2>
         <div class="card-actions">
-          <a class="btn view-details" href="product.html?id=${p.id}">View Details</a>
+          <a class="btn view-details" href="product.html?id=${encodeURIComponent(p.id)}">View Details</a>
           ${buyNowButton}
         </div>
       `;
