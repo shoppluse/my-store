@@ -4,11 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Signup - ShopPlus</title>
-  <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#0047ab" />
-  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
@@ -75,7 +71,6 @@
       color: #555;
       text-align: center;
       font-size: 14px;
-      line-height: 1.6;
     }
 
     .form-group {
@@ -138,7 +133,7 @@
       text-align: center;
       font-weight: 600;
       line-height: 1.5;
-      min-height: 20px;
+      min-height: 22px;
     }
 
     .success {
@@ -161,19 +156,6 @@
       font-weight: 700;
     }
 
-    .note-box {
-      margin-top: 14px;
-      background: #e8f4ff;
-      color: #0047ab;
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      text-align: center;
-      font-weight: 600;
-      line-height: 1.5;
-      border: 1px solid #cfe6ff;
-    }
-
     footer {
       background: var(--gradient-light);
       color: white;
@@ -183,11 +165,6 @@
     }
 
     @media (max-width: 520px) {
-      header {
-        font-size: 20px;
-        padding: 16px;
-      }
-
       .container {
         padding: 16px;
       }
@@ -195,6 +172,11 @@
       .auth-card {
         padding: 22px 18px;
         border-radius: 16px;
+      }
+
+      header {
+        font-size: 20px;
+        padding: 16px;
       }
 
       .auth-card h2 {
@@ -237,10 +219,6 @@
 
       <div id="message" class="message"></div>
 
-      <div class="note-box">
-        After signup, a verification OTP will be sent to your email.
-      </div>
-
       <div class="link-text">
         Already have an account? <a href="login.html">Login</a>
       </div>
@@ -261,14 +239,13 @@
 
       message.textContent = "";
       message.className = "message";
+      signupBtn.disabled = true;
+      signupBtn.textContent = "Creating Account...";
 
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const mobile = document.getElementById("mobile").value.trim();
       const password = document.getElementById("password").value.trim();
-
-      signupBtn.disabled = true;
-      signupBtn.textContent = "Creating Account...";
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
@@ -291,7 +268,7 @@
 
         localStorage.setItem("signupEmail", email);
 
-        message.textContent = "Signup successful! OTP sent to your email. Redirecting to verification page...";
+        message.textContent = "Signup successful! OTP sent to your email. Redirecting to verify page...";
         message.classList.add("success");
 
         setTimeout(() => {
