@@ -71,23 +71,31 @@ router.post("/signup", async (req, res) => {
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     const user = await User.create({
-      name,
-      email: email.toLowerCase(),
-      mobile,
-      password: hashedPassword,
-      isVerified: false,
-      emailOtp: otp,
-      emailOtpExpires: otpExpiry
-    });
+  name,
+  email: email.toLowerCase(),
+  mobile,
+  password: hashedPassword,
+  isVerified: false,
+  emailOtp: otp,
+  emailOtpExpires: otpExpiry
+});
 
-    // Send real OTP email
-    await sendOtpEmail(user.email, otp, user.name);
+try {
+  await sendOtpEmail(user.email, otp, user.name);
+} catch (mailError) {
+  console.error("OTP email sending failed:", mailError);
 
-    res.status(201).json({
-      message: "Signup successful. OTP sent to your email.",
-      userId: user._id,
-      email: user.email
-    });
+  return res.status(500).json({
+    message: "Signup created, but OTP email could not be sent. Please check email settings.",
+    error: mailError.message
+  });
+}
+
+res.status(201).json({
+  message: "Signup successful. OTP sent to your email.",
+  userId: user._id,
+  email: user.email
+});
   } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({
