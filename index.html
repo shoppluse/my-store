@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop+ | Loading...</title>
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#0047ab" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
@@ -96,6 +100,32 @@
       color: #cbd5e1;
     }
 
+    .install-btn {
+      display: none;
+      width: 100%;
+      margin-top: 20px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
+      transition: 0.25s ease;
+    }
+
+    .install-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .install-btn:active {
+      transform: translateY(0);
+    }
+
     @media (max-width: 520px) {
       .splash-card {
         padding: 28px 18px;
@@ -114,6 +144,15 @@
       .title {
         font-size: 1.25rem;
       }
+
+      .subtitle {
+        font-size: 0.9rem;
+      }
+
+      .install-btn {
+        font-size: 14px;
+        padding: 12px 14px;
+      }
     }
   </style>
 </head>
@@ -124,9 +163,51 @@
     <p class="subtitle">Please wait while we redirect you to the right page.</p>
     <div class="loader"></div>
     <div class="small-text">Secure access for ShopPlus users</div>
+
+    <button id="installAppBtn" class="install-btn">Install ShopPlus</button>
   </div>
 
   <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById("installAppBtn");
+
+    // PWA Install Prompt
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "block";
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log("Install prompt result:", outcome);
+
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
+
+    window.addEventListener("appinstalled", () => {
+      console.log("ShopPlus installed successfully");
+      installBtn.style.display = "none";
+    });
+
+    // Service Worker Registration
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
+
+    // Auth Redirect Logic
     setTimeout(() => {
       const user = localStorage.getItem("shopplusUser");
 
