@@ -3,259 +3,271 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Verify Email - ShopPlus</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>ShopPlus - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-      --bg-light: #f8f9fb;
+      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --bg: #f4f8ff;
       --card-bg: #ffffff;
-      --text-dark: #1f1f1f;
-      --accent: #0099ff;
-      --accent-dark: #0047ab;
-      --input-bg: #f2f4fc;
-      --border: #d8e3f2;
-      --success: #2e7d32;
-      --error: #d32f2f;
+      --text: #1f1f1f;
+      --muted: #6b7280;
+      --primary: #0047ab;
+      --primary-2: #0099ff;
+      --border: #dbe7ff;
+      --shadow: rgba(0, 71, 171, 0.14);
+      --success: #16a34a;
+      --danger: #dc2626;
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg-light);
       min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #eef5ff 0%, #f8fbff 100%);
+      color: var(--text);
       display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: var(--gradient-light);
-      color: white;
-      padding: 18px 24px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: 700;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    }
-
-    .container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       padding: 24px;
     }
 
-    .auth-card {
-      background: var(--card-bg);
+    .auth-wrap {
       width: 100%;
-      max-width: 420px;
-      border-radius: 18px;
-      box-shadow: 0 10px 28px rgba(0, 71, 171, 0.15);
-      padding: 28px 24px;
+      max-width: 460px;
     }
 
-    .auth-card h2 {
-      margin: 0 0 8px;
-      color: var(--accent-dark);
+    .brand {
       text-align: center;
-      font-size: 28px;
+      margin-bottom: 18px;
     }
 
-    .auth-card p {
-      margin: 0 0 24px;
-      color: #555;
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #fff;
+      color: var(--primary);
+      padding: 10px 18px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1.6rem;
+      box-shadow: 0 10px 30px rgba(0, 71, 171, 0.14);
+    }
+
+    .brand-badge .plus {
+      color: var(--primary-2);
+      font-size: 1.9rem;
+      font-weight: 900;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 18px 50px rgba(0, 71, 171, 0.14);
+      border: 1px solid var(--border);
+    }
+
+    .title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+      color: var(--primary);
       text-align: center;
-      font-size: 14px;
     }
 
-    .form-group {
+    .subtitle {
+      text-align: center;
+      margin: 0 0 22px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .field {
       margin-bottom: 16px;
     }
 
-    label {
+    .label {
       display: block;
-      font-size: 14px;
+      font-size: 0.9rem;
       font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--text-dark);
+      margin-bottom: 8px;
+      color: #334155;
     }
 
-    input {
+    .input {
       width: 100%;
-      padding: 13px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--input-bg);
-      font-size: 15px;
+      padding: 14px 15px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
       outline: none;
-      box-sizing: border-box;
+      font-size: 15px;
       font-family: inherit;
+      transition: 0.25s ease;
+      background: #fff;
     }
 
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.12);
+    .input:focus {
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.12);
     }
 
-    button {
+    .btn {
       width: 100%;
-      padding: 14px;
       border: none;
-      border-radius: 10px;
-      background: var(--gradient-light);
-      color: white;
-      font-size: 16px;
-      font-weight: 700;
+      outline: none;
       cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      margin-top: 8px;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
+      transition: 0.25s ease;
+      margin-top: 4px;
     }
 
-    button:hover {
+    .btn:hover {
       transform: translateY(-2px);
-      opacity: 0.95;
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .message {
       margin-top: 16px;
-      font-size: 14px;
-      text-align: center;
-      font-weight: 600;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      display: none;
+      line-height: 1.5;
+      white-space: pre-line;
     }
 
-    .success {
+    .message.success {
+      display: block;
+      background: rgba(22, 163, 74, 0.08);
       color: var(--success);
+      border: 1px solid rgba(22, 163, 74, 0.2);
     }
 
-    .error {
-      color: var(--error);
+    .message.error {
+      display: block;
+      background: rgba(220, 38, 38, 0.08);
+      color: var(--danger);
+      border: 1px solid rgba(220, 38, 38, 0.2);
     }
 
-    .hint {
-      margin-top: 14px;
-      background: #e8f4ff;
-      color: #0047ab;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 13px;
+    .footer-link {
       text-align: center;
-      font-weight: 600;
-    }
-
-    .link-text {
       margin-top: 18px;
-      text-align: center;
-      font-size: 14px;
+      font-size: 0.92rem;
+      color: var(--muted);
     }
 
-    .link-text a {
-      color: var(--accent-dark);
+    .footer-link a {
+      color: var(--primary);
       text-decoration: none;
       font-weight: 700;
     }
 
-    footer {
-      background: var(--gradient-light);
-      color: white;
-      text-align: center;
-      padding: 14px 10px;
-      font-size: 14px;
+    @media (max-width: 520px) {
+      body { padding: 16px; }
+      .card { padding: 22px 18px; border-radius: 20px; }
+      .title { font-size: 1.45rem; }
+      .brand-badge { font-size: 1.35rem; }
+      .brand-badge .plus { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
-  <header>ShopPlus - Verify Email</header>
+  <div class="auth-wrap">
+    <div class="brand">
+      <div class="brand-badge">Shop<span class="plus">+</span></div>
+    </div>
 
-  <div class="container">
-    <div class="auth-card">
-      <h2>Verify Email</h2>
-      <p>Enter the OTP sent to your email</p>
+    <div class="card">
+      <h1 class="title">Welcome Back</h1>
+      <p class="subtitle">Login with your email or mobile</p>
 
-      <form id="verifyForm">
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" placeholder="Enter your email" required />
+      <form id="loginForm">
+        <div class="field">
+          <label class="label" for="identifier">Email or Mobile</label>
+          <input class="input" type="text" id="identifier" placeholder="Enter email or mobile" required />
         </div>
 
-        <div class="form-group">
-          <label for="otp">OTP</label>
-          <input type="text" id="otp" placeholder="Enter 6-digit OTP" required />
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <input class="input" type="password" id="password" placeholder="Enter your password" required />
         </div>
 
-        <button type="submit">Verify Email</button>
+        <button class="btn" type="submit" id="loginBtn">Login</button>
       </form>
 
-      <div id="message" class="message"></div>
+      <div id="messageBox" class="message"></div>
 
-      <div class="hint" id="hintBox" style="display:none;"></div>
-
-      <div class="link-text">
-        Already verified? <a href="login.html">Go to Login</a>
+      <div class="footer-link">
+        Don’t have an account? <a href="signup.html">Sign Up</a>
       </div>
     </div>
   </div>
 
-  <footer>© 2025 ShopPlus. All rights reserved.</footer>
-
   <script>
     const BACKEND_URL = "https://my-store-e28j.onrender.com";
+    const loginForm = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
+    const messageBox = document.getElementById("messageBox");
 
-    const form = document.getElementById("verifyForm");
-    const message = document.getElementById("message");
-    const emailInput = document.getElementById("email");
-    const hintBox = document.getElementById("hintBox");
-
-    const savedEmail = localStorage.getItem("signupEmail");
-    const savedOtp = localStorage.getItem("testOtp");
-
-    if (savedEmail) {
-      emailInput.value = savedEmail;
+    function showMessage(text, type = "success") {
+      messageBox.className = "message " + type;
+      messageBox.textContent = text;
     }
 
-    if (savedOtp) {
-      hintBox.textContent = `Test Mode OTP: ${savedOtp}`;
-      hintBox.style.display = "block";
-    }
-
-    form.addEventListener("submit", async (e) => {
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      message.textContent = "";
-      message.className = "message";
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Logging in...";
 
-      const email = document.getElementById("email").value.trim();
-      const otp = document.getElementById("otp").value.trim();
+      const identifier = document.getElementById("identifier").value.trim();
+      const password = document.getElementById("password").value.trim();
 
       try {
-        const res = await fetch(`${BACKEND_URL}/api/auth/verify-email`, {
+        const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ email, otp })
+          body: JSON.stringify({ identifier, password })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          message.textContent = data.message || "Verification failed";
-          message.classList.add("error");
-          return;
+          throw new Error(data.message || "Login failed");
         }
 
-        message.textContent = "Email verified successfully! Redirecting to login...";
-        message.classList.add("success");
+        localStorage.setItem("shopplusUser", JSON.stringify(data.user || data));
 
-        localStorage.removeItem("testOtp");
+        showMessage(data.message || "Login successful!", "success");
 
         setTimeout(() => {
-          window.location.href = "login.html";
-        }, 1800);
+          window.location.href = "home.html";
+        }, 1400);
 
       } catch (error) {
-        message.textContent = "Something went wrong. Please try again.";
-        message.classList.add("error");
+        showMessage(error.message || "Something went wrong", "error");
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Login";
       }
     });
   </script>
