@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Shop+</title>
+<link rel="manifest" href="/my-store/manifest.json" />
+<meta name="theme-color" content="#0047ab" />
+<link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
@@ -53,6 +56,8 @@
     align-items: center;
     padding: 18px 24px;
     box-shadow: 0 4px 12px var(--logo-shadow-light);
+    gap: 12px;
+    flex-wrap: wrap;
   }
 
   .shopplus-logo {
@@ -82,6 +87,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   .profile-btn {
@@ -97,6 +103,26 @@
   }
 
   .profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 71, 171, 0.18);
+  }
+
+  .install-btn {
+    display: none;
+    background: var(--logo-bg-light);
+    color: var(--accent-dark-light);
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 10px 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--logo-shadow-light);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: inherit;
+  }
+
+  .install-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(0, 71, 171, 0.18);
   }
@@ -319,13 +345,17 @@
 
   @media (max-width: 600px) {
     .main-header {
-      padding: 14px 20px;
+      padding: 14px 16px;
+      flex-direction: column;
+      align-items: stretch;
     }
 
     .shopplus-logo {
       font-size: 1.6rem;
-      padding: 0 20px 0 16px;
+      padding: 8px 16px;
       letter-spacing: 0.4px;
+      justify-content: center;
+      width: 100%;
     }
 
     .shopplus-logo .plus {
@@ -334,16 +364,26 @@
 
     .header-actions {
       gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
     }
 
-    .profile-btn {
-      font-size: 0.85rem;
-      padding: 8px 14px;
+    .profile-btn,
+    .install-btn,
+    .dark-mode-toggle {
+      font-size: 0.82rem;
+      padding: 10px 8px;
+      width: 100%;
+      text-align: center;
+      border-radius: 10px;
+      justify-content: center;
     }
 
     .dark-mode-toggle {
-      font-size: 1.3rem;
-      padding: 5px 10px;
+      font-size: 1.1rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.15);
     }
 
     .search-section {
@@ -351,7 +391,7 @@
     }
 
     .search-form {
-      max-width: 90%;
+      max-width: 100%;
       gap: 10px;
     }
 
@@ -361,25 +401,29 @@
     }
 
     .product-grid {
-      padding: 18px 20px 36px 20px;
+      padding: 18px 14px 36px 14px;
       grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
+      gap: 14px;
     }
 
     .product-card {
       height: 280px;
-      padding: 14px 12px 14px 12px;
+      padding: 14px 10px 14px 10px;
     }
 
     .product-card h2 {
-      font-size: 16px;
-      margin-bottom: 12px;
+      font-size: 15px;
+      margin-bottom: 10px;
     }
 
     .btn {
       max-width: 140px;
-      font-size: 14px;
+      font-size: 13px;
       padding: 10px 0;
+    }
+
+    .card-actions {
+      gap: 8px;
     }
   }
 
@@ -398,13 +442,15 @@
     box-shadow: 0 4px 14px rgba(51, 102, 255, 0.45);
   }
 
-  [data-theme="dark"] .profile-btn {
+  [data-theme="dark"] .profile-btn,
+  [data-theme="dark"] .install-btn {
     background: #222;
     color: #88b5ff;
     box-shadow: 0 4px 14px rgba(51, 102, 255, 0.35);
   }
 
-  [data-theme="dark"] .profile-btn:hover {
+  [data-theme="dark"] .profile-btn:hover,
+  [data-theme="dark"] .install-btn:hover {
     box-shadow: 0 8px 20px rgba(51, 102, 255, 0.5);
   }
 
@@ -451,6 +497,7 @@
 
     <div class="header-actions">
       <a href="profile.html" class="profile-btn">Profile</a>
+      <button id="installAppBtn" class="install-btn">Install App</button>
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
     </div>
   </div>
@@ -490,9 +537,11 @@
   const categoryBar = document.getElementById('categoryBar');
   const searchInput = document.getElementById('searchBar');
   const productList = document.getElementById('product-list');
+  const installBtn = document.getElementById("installAppBtn");
 
   let selectedCategory = 'Overall';
   let allProducts = [];
+  let deferredPrompt;
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -631,9 +680,43 @@
     }
   });
 
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "inline-block";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log("Install prompt result:", outcome);
+
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+  });
+
+  window.addEventListener("appinstalled", () => {
+    console.log("ShopPlus installed successfully");
+    installBtn.style.display = "none";
+  });
+
   window.addEventListener('DOMContentLoaded', () => {
     loadProducts();
   });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+        .then((registration) => {
+          console.log("Service Worker registered:", registration.scope);
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
+    });
+  }
 </script>
 </body>
 </html>
