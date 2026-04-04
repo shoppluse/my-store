@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const productsRouter = require("./routes/products");
 const authRouter = require("./routes/auth");
+const rewardRoutes = require("./routes/rewardRoutes");
 
 dotenv.config();
 connectDB();
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/products", productsRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/rewards", rewardRoutes);
 
 // Start server
 app.listen(PORT, () => {
