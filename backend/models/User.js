@@ -24,22 +24,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    isEmailVerified: {
+    isVerified: {
       type: Boolean,
       default: false
     },
-    emailOtp: {
-      type: String,
-      default: null
+    emailVerificationOtp: {
+      type: String
     },
-    emailOtpExpires: {
-      type: Date,
-      default: null
+    emailVerificationOtpExpires: {
+      type: Date
     }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("User", userSchema);
