@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop+ | Loading...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --bg: #0e1a39;
+      --card: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --muted: #dbeafe;
+      --glow: rgba(0, 153, 255, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #14275a 0%, #0b1633 55%, #071124 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .splash-card {
+      width: 100%;
+      max-width: 460px;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 36px 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: #0047ab;
+      padding: 12px 22px;
+      border-radius: 18px;
+      font-size: 2rem;
+      font-weight: 700;
+      box-shadow: 0 0 30px var(--glow);
+      margin-bottom: 18px;
+    }
+
+    .brand .plus {
+      color: #0099ff;
+      font-size: 2.3rem;
+      font-weight: 900;
+    }
+
+    .title {
+      margin: 8px 0 8px;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .loader {
+      width: 52px;
+      height: 52px;
+      border: 5px solid rgba(255,255,255,0.18);
+      border-top-color: #00a2ff;
+      border-radius: 50%;
+      margin: 24px auto 0;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .small-text {
+      margin-top: 18px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 520px) {
+      .splash-card {
+        padding: 28px 18px;
+        border-radius: 22px;
+      }
+
+      .brand {
+        font-size: 1.55rem;
+        padding: 10px 18px;
+      }
+
+      .brand .plus {
+        font-size: 1.85rem;
+      }
+
+      .title {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-card">
+    <div class="brand">Shop <span class="plus">+</span></div>
+    <h1 class="title">Checking your session...</h1>
+    <p class="subtitle">Please wait while we redirect you to the right page.</p>
+    <div class="loader"></div>
+    <div class="small-text">Secure access for ShopPlus users</div>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      const user = localStorage.getItem("shopplusUser");
+
+      if (user) {
+        window.location.href = "home.html";
+      } else {
+        window.location.href = "login.html";
+      }
+    }, 1200);
+  </script>
+</body>
+</html>
