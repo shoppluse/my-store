@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ShopPlus - Claim Reward</title>
+
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#0047ab" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
@@ -48,6 +54,8 @@
       align-items: center;
       padding: 18px 24px;
       box-shadow: 0 6px 20px var(--shadow);
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .shopplus-logo {
@@ -73,6 +81,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .header-btn {
@@ -84,6 +93,10 @@
       padding: 10px 16px;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .dark-mode-toggle {
@@ -94,6 +107,9 @@
       color: #fff;
       padding: 6px 10px;
       border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .page-wrap {
@@ -137,7 +153,8 @@
       color: var(--text);
     }
 
-    .input, .textarea {
+    .input,
+    .textarea {
       width: 100%;
       padding: 14px 15px;
       border-radius: 14px;
@@ -146,6 +163,7 @@
       font-size: 15px;
       font-family: inherit;
       background: #fff;
+      color: #111827;
     }
 
     .textarea {
@@ -153,9 +171,16 @@
       resize: vertical;
     }
 
-    .input:focus, .textarea:focus {
+    .input:focus,
+    .textarea:focus {
       border-color: var(--primary-2);
       box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.12);
+    }
+
+    [data-theme="dark"] .input,
+    [data-theme="dark"] .textarea {
+      background: #0b1220;
+      color: #f8fafc;
     }
 
     .grid {
@@ -231,27 +256,62 @@
         grid-template-columns: 1fr;
       }
 
-      .card {
-        padding: 22px 18px;
-        border-radius: 20px;
-      }
-
       .main-header {
-        padding: 14px 16px;
+        padding: 14px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
       }
 
       .shopplus-logo {
-        font-size: 1.45rem;
-        padding: 8px 16px;
+        font-size: 1.35rem;
+        padding: 8px 14px;
+        justify-content: center;
+        width: 100%;
       }
 
       .shopplus-logo .plus {
-        font-size: 1.7rem;
+        font-size: 1.6rem;
       }
 
-      .header-btn {
-        font-size: 0.82rem;
-        padding: 8px 12px;
+      .header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .header-btn,
+      .dark-mode-toggle {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 10px 8px;
+        font-size: 0.8rem;
+        border-radius: 10px;
+      }
+
+      .dark-mode-toggle {
+        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.15);
+      }
+
+      .page-wrap {
+        padding: 0 12px 24px;
+        margin: 20px auto;
+      }
+
+      .card {
+        padding: 20px 16px;
+        border-radius: 18px;
+      }
+
+      .title {
+        font-size: 1.45rem;
+      }
+
+      .subtitle {
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -398,14 +458,23 @@
     if (productIdFromUrl) productIdInput.value = productIdFromUrl;
     if (productNameFromUrl) productNameInput.value = productNameFromUrl;
 
+    const today = new Date().toISOString().split("T")[0];
+    purchaseDateInput.max = today;
+
     claimForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
+      showMessage("", "success");
+      messageBox.style.display = "none";
+
+      const userId = currentUser.id || currentUser._id;
+      if (!userId) {
+        showMessage("User ID not found. Please login again.", "error");
+        return;
+      }
 
       const payload = {
-        userId: currentUser.id || currentUser._id || "unknown-user",
+        userId: userId,
         name: nameInput.value.trim(),
         email: emailInput.value.trim(),
         mobile: mobileInput.value.trim(),
@@ -415,6 +484,14 @@
         purchaseDate: purchaseDateInput.value,
         proofNote: proofNoteInput.value.trim()
       };
+
+      if (!payload.productId || !payload.productName || !payload.orderReference || !payload.purchaseDate) {
+        showMessage("Please fill all required fields.", "error");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/rewards/claim`, {
@@ -431,14 +508,11 @@
           throw new Error(data.message || "Failed to submit reward claim");
         }
 
-        showMessage(data.message || "Reward claim submitted successfully!", "success");
-        claimForm.reset();
+        showMessage(data.message || "Reward claim submitted successfully! Redirecting to profile...", "success");
 
-        nameInput.value = currentUser.name || "";
-        emailInput.value = currentUser.email || "";
-        mobileInput.value = currentUser.mobile || "";
-        if (productIdFromUrl) productIdInput.value = productIdFromUrl;
-        if (productNameFromUrl) productNameInput.value = productNameFromUrl;
+        setTimeout(() => {
+          window.location.href = "profile.html";
+        }, 1800);
 
       } catch (error) {
         showMessage(error.message || "Something went wrong", "error");
@@ -447,6 +521,18 @@
         submitBtn.textContent = "Submit Reward Claim";
       }
     });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
   </script>
 </body>
 </html>
