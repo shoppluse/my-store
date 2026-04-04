@@ -92,10 +92,12 @@ router.post("/signup", async (req, res) => {
     try {
       await sendOtpEmail(user.email, otp, user.name);
     } catch (mailError) {
-      console.error("OTP email sending failed:", mailError);
+      console.error("OTP email sending failed FULL ERROR:", mailError);
       return res.status(500).json({
         message: "Signup created, but OTP email could not be sent. Please check email settings.",
-        error: mailError.message
+        error: mailError.message,
+        code: mailError.code,
+        response: mailError.response
       });
     }
 
