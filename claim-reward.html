@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopPlus - Claim Reward</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --bg: #eef5ff;
+      --card-bg: #ffffff;
+      --text: #1f1f1f;
+      --muted: #64748b;
+      --primary: #0047ab;
+      --primary-2: #0099ff;
+      --border: #dbe7ff;
+      --shadow: rgba(0, 71, 171, 0.14);
+      --success: #16a34a;
+      --danger: #dc2626;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card-bg: #111827;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #60a5fa;
+      --primary-2: #38bdf8;
+      --border: #1e3a8a;
+      --shadow: rgba(56, 189, 248, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, #f8fbff 100%);
+      color: var(--text);
+    }
+
+    .main-header {
+      background: var(--gradient);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    .shopplus-logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: #ffffff;
+      padding: 8px 22px;
+      border-radius: 16px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .shopplus-logo .plus {
+      color: var(--primary-2);
+      font-size: 2.2rem;
+      font-weight: 900;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-btn {
+      text-decoration: none;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .dark-mode-toggle {
+      cursor: pointer;
+      font-size: 1.4rem;
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 50%;
+    }
+
+    .page-wrap {
+      max-width: 760px;
+      margin: 36px auto;
+      padding: 0 18px 40px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 18px 50px var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0 0 8px;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 0 22px;
+      line-height: 1.6;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .input, .textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      outline: none;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    .textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .input:focus, .textarea:focus {
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.12);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
+      transition: 0.25s ease;
+      margin-top: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      display: none;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .message.success {
+      display: block;
+      background: rgba(22, 163, 74, 0.08);
+      color: var(--success);
+      border: 1px solid rgba(22, 163, 74, 0.2);
+    }
+
+    .message.error {
+      display: block;
+      background: rgba(220, 38, 38, 0.08);
+      color: var(--danger);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+
+    .note-box {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(0, 153, 255, 0.06);
+      border: 1px solid rgba(0, 153, 255, 0.14);
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 22px 18px;
+        border-radius: 20px;
+      }
+
+      .main-header {
+        padding: 14px 16px;
+      }
+
+      .shopplus-logo {
+        font-size: 1.45rem;
+        padding: 8px 16px;
+      }
+
+      .shopplus-logo .plus {
+        font-size: 1.7rem;
+      }
+
+      .header-btn {
+        font-size: 0.82rem;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-header">
+    <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+
+    <div class="header-actions">
+      <a href="profile.html" class="header-btn">Profile</a>
+      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="card">
+      <h1 class="title">Claim ShopPlus Reward</h1>
+      <p class="subtitle">
+        Submit your purchase details for manual verification.  
+        After review, eligible reward amounts can be processed.
+      </p>
+
+      <form id="claimForm">
+        <div class="grid">
+          <div class="field">
+            <label class="label">Full Name</label>
+            <input class="input" type="text" id="name" readonly />
+          </div>
+
+          <div class="field">
+            <label class="label">Email</label>
+            <input class="input" type="email" id="email" readonly />
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label class="label">Mobile Number</label>
+            <input class="input" type="text" id="mobile" readonly />
+          </div>
+
+          <div class="field">
+            <label class="label">Product ID</label>
+            <input class="input" type="text" id="productId" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Product Name</label>
+          <input class="input" type="text" id="productName" required />
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label class="label">Amazon Order Reference</label>
+            <input class="input" type="text" id="orderReference" placeholder="Example: AMZ-4587" required />
+          </div>
+
+          <div class="field">
+            <label class="label">Purchase Date</label>
+            <input class="input" type="date" id="purchaseDate" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Proof / Note</label>
+          <textarea class="textarea" id="proofNote" placeholder="Paste short proof details, screenshot note, or order info"></textarea>
+        </div>
+
+        <button class="btn" type="submit" id="submitBtn">Submit Reward Claim</button>
+      </form>
+
+      <div id="messageBox" class="message"></div>
+
+      <div class="note-box">
+        Tip: Keep your Product ID like <strong>SP1001</strong> and enter the exact order reference for faster manual verification.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const currentUserRaw = localStorage.getItem("shopplusUser");
+    if (!currentUserRaw) {
+      window.location.href = "login.html";
+    }
+
+    let currentUser = {};
+    try {
+      currentUser = JSON.parse(currentUserRaw);
+    } catch (error) {
+      localStorage.removeItem("shopplusUser");
+      window.location.href = "login.html";
+    }
+
+    const BACKEND_URL = "https://my-store-e28j.onrender.com";
+    const htmlEl = document.documentElement;
+    const darkToggleBtn = document.getElementById("darkModeToggle");
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme) {
+      htmlEl.setAttribute("data-theme", savedTheme);
+      darkToggleBtn.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+    }
+
+    darkToggleBtn.addEventListener("click", () => {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+
+      if (currentTheme === "dark") {
+        htmlEl.setAttribute("data-theme", "light");
+        localStorage.setItem("theme", "light");
+        darkToggleBtn.textContent = "🌙";
+      } else {
+        htmlEl.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+        darkToggleBtn.textContent = "☀️";
+      }
+    });
+
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const mobileInput = document.getElementById("mobile");
+    const productIdInput = document.getElementById("productId");
+    const productNameInput = document.getElementById("productName");
+    const orderReferenceInput = document.getElementById("orderReference");
+    const purchaseDateInput = document.getElementById("purchaseDate");
+    const proofNoteInput = document.getElementById("proofNote");
+    const claimForm = document.getElementById("claimForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const messageBox = document.getElementById("messageBox");
+
+    function showMessage(text, type = "success") {
+      messageBox.className = "message " + type;
+      messageBox.textContent = text;
+    }
+
+    nameInput.value = currentUser.name || "";
+    emailInput.value = currentUser.email || "";
+    mobileInput.value = currentUser.mobile || "";
+
+    const params = new URLSearchParams(window.location.search);
+    const productIdFromUrl = params.get("productId");
+    const productNameFromUrl = params.get("productName");
+
+    if (productIdFromUrl) productIdInput.value = productIdFromUrl;
+    if (productNameFromUrl) productNameInput.value = productNameFromUrl;
+
+    claimForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      const payload = {
+        userId: currentUser.id || currentUser._id || "unknown-user",
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim(),
+        mobile: mobileInput.value.trim(),
+        productId: productIdInput.value.trim(),
+        productName: productNameInput.value.trim(),
+        orderReference: orderReferenceInput.value.trim(),
+        purchaseDate: purchaseDateInput.value,
+        proofNote: proofNoteInput.value.trim()
+      };
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/rewards/claim`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to submit reward claim");
+        }
+
+        showMessage(data.message || "Reward claim submitted successfully!", "success");
+        claimForm.reset();
+
+        nameInput.value = currentUser.name || "";
+        emailInput.value = currentUser.email || "";
+        mobileInput.value = currentUser.mobile || "";
+        if (productIdFromUrl) productIdInput.value = productIdFromUrl;
+        if (productNameFromUrl) productNameInput.value = productNameFromUrl;
+
+      } catch (error) {
+        showMessage(error.message || "Something went wrong", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Reward Claim";
+      }
+    });
+  </script>
+</body>
+</html>
