@@ -579,9 +579,10 @@
               </div>
 
               <div class="actions">
-                ${buyButton}
-                <a href="home.html" class="back-btn">Back to Store</a>
-              </div>
+  ${buyButton}
+  <a href="claim-reward.html?productId=${encodeURIComponent(safeProduct.id)}&productName=${encodeURIComponent(safeProduct.name)}" class="buy-btn">Claim Reward</a>
+  <a href="home.html" class="back-btn">Back to Store</a>
+</div>
             </div>
           </div>
         `;
