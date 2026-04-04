@@ -246,7 +246,7 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ identifier, password })
+          body: JSON.stringify({ emailOrMobile: identifier, password })
         });
 
         const data = await res.json();
