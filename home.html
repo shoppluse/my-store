@@ -490,8 +490,6 @@
     window.location.href = "login.html";
   }
 
-  const BACKEND_URL = "https://my-store-e28j.onrender.com";
-
   const categories = [
     { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
     { name: 'Electronics', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
@@ -544,17 +542,17 @@
 
   async function loadProducts() {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/products`);
-      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      const response = await fetch("/my-store/products.json", { cache: "no-store" });
+      if (!response.ok) throw new Error(`JSON error: ${response.status}`);
 
       const data = await response.json();
 
       if (!Array.isArray(data)) {
-        throw new Error("Products response is not an array");
+        throw new Error("products.json must contain an array");
       }
 
       allProducts = data.map((p, index) => ({
-        id: p.id ?? p._id ?? (index + 1),
+        id: p.id ?? (index + 1),
         name: p.name || 'Unnamed Product',
         price: p.price ?? 0,
         image: p.image || (Array.isArray(p.images) && p.images.length ? p.images[0] : 'https://via.placeholder.com/200'),
@@ -565,8 +563,8 @@
 
       displayProducts(allProducts);
     } catch (err) {
-      productList.innerHTML = '<p class="error-text">Error loading products from backend.<br>Please try again later.</p>';
-      console.error('Backend fetch error:', err);
+      productList.innerHTML = '<p class="error-text">Error loading products from products.json.<br>Please check file path and JSON format.</p>';
+      console.error('products.json fetch error:', err);
     }
   }
 
