@@ -1,1 +1,263 @@
-.
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Email - ShopPlus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --bg-light: #f8f9fb;
+      --card-bg: #ffffff;
+      --text-dark: #1f1f1f;
+      --accent: #0099ff;
+      --accent-dark: #0047ab;
+      --input-bg: #f2f4fc;
+      --border: #d8e3f2;
+      --success: #2e7d32;
+      --error: #d32f2f;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--gradient-light);
+      color: white;
+      padding: 18px 24px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 420px;
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(0, 71, 171, 0.15);
+      padding: 28px 24px;
+    }
+
+    .auth-card h2 {
+      margin: 0 0 8px;
+      color: var(--accent-dark);
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .auth-card p {
+      margin: 0 0 24px;
+      color: #555;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.12);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: var(--gradient-light);
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    .message {
+      margin-top: 16px;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .success {
+      color: var(--success);
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+    .hint {
+      margin-top: 14px;
+      background: #e8f4ff;
+      color: #0047ab;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .link-text {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .link-text a {
+      color: var(--accent-dark);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    footer {
+      background: var(--gradient-light);
+      color: white;
+      text-align: center;
+      padding: 14px 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>ShopPlus - Verify Email</header>
+
+  <div class="container">
+    <div class="auth-card">
+      <h2>Verify Email</h2>
+      <p>Enter the OTP sent to your email</p>
+
+      <form id="verifyForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="otp">OTP</label>
+          <input type="text" id="otp" placeholder="Enter 6-digit OTP" required />
+        </div>
+
+        <button type="submit">Verify Email</button>
+      </form>
+
+      <div id="message" class="message"></div>
+
+      <div class="hint" id="hintBox" style="display:none;"></div>
+
+      <div class="link-text">
+        Already verified? <a href="login.html">Go to Login</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 ShopPlus. All rights reserved.</footer>
+
+  <script>
+    const BACKEND_URL = "https://my-store-e28j.onrender.com";
+
+    const form = document.getElementById("verifyForm");
+    const message = document.getElementById("message");
+    const emailInput = document.getElementById("email");
+    const hintBox = document.getElementById("hintBox");
+
+    const savedEmail = localStorage.getItem("signupEmail");
+    const savedOtp = localStorage.getItem("testOtp");
+
+    if (savedEmail) {
+      emailInput.value = savedEmail;
+    }
+
+    if (savedOtp) {
+      hintBox.textContent = `Test Mode OTP: ${savedOtp}`;
+      hintBox.style.display = "block";
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      message.textContent = "";
+      message.className = "message";
+
+      const email = document.getElementById("email").value.trim();
+      const otp = document.getElementById("otp").value.trim();
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/auth/verify-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, otp })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          message.textContent = data.message || "Verification failed";
+          message.classList.add("error");
+          return;
+        }
+
+        message.textContent = "Email verified successfully! Redirecting to login...";
+        message.classList.add("success");
+
+        localStorage.removeItem("testOtp");
+
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1800);
+
+      } catch (error) {
+        message.textContent = "Something went wrong. Please try again.";
+        message.classList.add("error");
+      }
+    });
+  </script>
+</body>
+</html>
