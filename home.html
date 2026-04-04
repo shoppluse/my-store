@@ -447,7 +447,7 @@
 
 <body>
   <div class="main-header">
-    <a href="index.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+    <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
     <div class="header-actions">
       <a href="profile.html" class="profile-btn">Profile</a>
@@ -468,6 +468,12 @@
   </div>
 
 <script>
+  const currentUser = localStorage.getItem("shopplusUser");
+
+  if (!currentUser) {
+    window.location.href = "login.html";
+  }
+
   const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
   const categories = [
