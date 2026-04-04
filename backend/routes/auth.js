@@ -5,7 +5,7 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// Gmail SMTP transporter (debug-friendly)
+// Gmail SMTP transporter
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -89,18 +89,6 @@ router.post("/signup", async (req, res) => {
 
     console.log("User created successfully:", user.email);
     console.log("Generated OTP:", otp);
-
-    // OPTIONAL: verify transporter before sending (great for debugging)
-    try {
-      await transporter.verify();
-      console.log("SMTP transporter verified successfully");
-    } catch (verifyError) {
-      console.error("SMTP transporter verification failed:", verifyError);
-      return res.status(500).json({
-        message: "Signup created, but email server verification failed.",
-        error: verifyError.message
-      });
-    }
 
     // Send real OTP email
     try {
