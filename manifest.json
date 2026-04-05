@@ -6,8 +6,8 @@
   "scope": "/my-store/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#eef5ff",
-  "theme_color": "#0047ab",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "/my-store/icons/icon-192.png",
