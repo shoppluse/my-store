@@ -111,6 +111,10 @@
     align-items: stretch;
   }
 
+  .header-actions.has-install {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .header-btn,
   .install-btn,
   .dark-mode-toggle,
@@ -432,12 +436,17 @@
       gap: 10px;
     }
 
+    .header-actions.has-install {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
     .header-btn,
+    .install-btn,
     .dark-mode-toggle,
     .brand-toggle-btn {
       min-height: 58px;
-      font-size: 0.92rem;
-      padding: 10px 8px;
+      font-size: 0.82rem;
+      padding: 10px 6px;
       border-radius: 14px;
     }
 
@@ -514,8 +523,8 @@
   <div class="main-header">
     <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-    <div class="header-actions">
-      <!-- LEFT: BRAND -->
+    <div class="header-actions" id="headerActions">
+      <!-- BRAND -->
       <div class="brand-filter-wrapper">
         <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
           <span id="brandBtnText">🏷️ Brand</span>
@@ -536,10 +545,13 @@
         </div>
       </div>
 
-      <!-- MIDDLE: DARK/LIGHT -->
+      <!-- INSTALL APP -->
+      <button id="installAppBtn" class="install-btn" type="button">Install</button>
+
+      <!-- DARK/LIGHT -->
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
 
-      <!-- RIGHT: PROFILE -->
+      <!-- PROFILE -->
       <a href="profile.html" class="header-btn">Profile</a>
     </div>
   </div>
@@ -571,6 +583,8 @@
   const categoryBar = document.getElementById('categoryBar');
   const searchInput = document.getElementById('searchBar');
   const productList = document.getElementById('product-list');
+  const installBtn = document.getElementById('installAppBtn');
+  const headerActions = document.getElementById('headerActions');
 
   // BRAND FILTER ELEMENTS
   const brandToggleBtn = document.getElementById('brandToggleBtn');
@@ -581,6 +595,15 @@
 
   let selectedCategory = 'Overall';
   let allProducts = [];
+  let deferredPrompt = null;
+
+  function updateHeaderLayout() {
+    if (installBtn && installBtn.style.display !== 'none') {
+      headerActions.classList.add('has-install');
+    } else {
+      headerActions.classList.remove('has-install');
+    }
+  }
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -763,6 +786,7 @@
     }
   });
 
+  // DARK MODE
   const darkToggleBtn = document.getElementById('darkModeToggle');
   const htmlEl = document.documentElement;
   const savedTheme = localStorage.getItem('theme');
@@ -786,7 +810,35 @@
     }
   });
 
+  // INSTALL APP LOGIC
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "inline-flex";
+    updateHeaderLayout();
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log("Install prompt result:", outcome);
+
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+    updateHeaderLayout();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    console.log("ShopPlus installed successfully");
+    installBtn.style.display = "none";
+    updateHeaderLayout();
+  });
+
   window.addEventListener('DOMContentLoaded', () => {
+    installBtn.style.display = "none";
+    updateHeaderLayout();
     loadProducts();
   });
 
