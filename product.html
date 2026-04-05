@@ -8,7 +8,6 @@
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#0047ab" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -22,12 +21,16 @@
       --primary-2: #0099ff;
       --border: #dbe7ff;
       --shadow: rgba(0, 71, 171, 0.14);
+
       --buy-bg: #0099ff;
       --buy-hover: #006cc0;
+
       --back-bg: #43a047;
       --back-hover: #38733b;
+
       --claim-bg: #7c3aed;
       --claim-hover: #6d28d9;
+
       --share-bg: #f59e0b;
       --share-hover: #d97706;
     }
@@ -41,12 +44,16 @@
       --primary-2: #38bdf8;
       --border: #1e3a8a;
       --shadow: rgba(56, 189, 248, 0.15);
+
       --buy-bg: #3a8dde;
       --buy-hover: #2a5e9d;
+
       --back-bg: #2abf6a;
       --back-hover: #1e8f3f;
+
       --claim-bg: #8b5cf6;
       --claim-hover: #7c3aed;
+
       --share-bg: #f59e0b;
       --share-hover: #d97706;
     }
@@ -268,6 +275,36 @@
       transform: translateY(-2px);
     }
 
+    /* NEW: Buttons under image */
+    .gallery-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .gallery-actions a,
+    .gallery-actions button {
+      width: 100%;
+      text-decoration: none;
+      color: white;
+      border-radius: 14px;
+      padding: 13px 10px;
+      text-align: center;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      font-size: 14px;
+      transition: background-color 0.23s ease, transform 0.2s ease;
+      user-select: none;
+      border: none;
+      font-family: inherit;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .details-card {
       padding: 26px 24px;
     }
@@ -303,20 +340,71 @@
       font-size: 1.8rem;
       color: var(--primary-2);
       font-weight: 700;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
-    .product-desc {
+    /* NEW: better description style */
+    .product-summary {
       color: var(--muted);
-      font-size: 0.98rem;
+      font-size: 1rem;
       line-height: 1.8;
       margin-bottom: 18px;
+      background: rgba(0, 153, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    [data-theme="dark"] .product-summary {
+      background: rgba(96, 165, 250, 0.05);
+    }
+
+    .highlights-box {
+      background: rgba(0, 71, 171, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    [data-theme="dark"] .highlights-box {
+      background: rgba(96, 165, 250, 0.05);
+    }
+
+    .highlights-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .highlights-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .highlights-list li {
+      color: var(--text);
+      font-size: 0.96rem;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .highlights-list li span {
+      flex: 1;
     }
 
     .info-list {
       display: grid;
       gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 8px;
     }
 
     .info-item {
@@ -344,32 +432,6 @@
       font-weight: 600;
       color: var(--text);
       word-break: break-word;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    .actions a,
-    .actions button {
-      width: 100%;
-      text-decoration: none;
-      color: white;
-      border-radius: 14px;
-      padding: 14px 16px;
-      text-align: center;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-      font-size: 15px;
-      transition: background-color 0.23s ease, transform 0.2s ease;
-      user-select: none;
-      border: none;
-      font-family: inherit;
     }
 
     .buy-btn {
@@ -424,6 +486,10 @@
 
       .carousel-image {
         height: 360px;
+      }
+
+      .gallery-actions {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -497,13 +563,25 @@
         font-size: 1.3rem;
       }
 
-      .actions {
-        grid-template-columns: 1fr;
+      .gallery-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
       }
 
-      .actions a,
-      .actions button {
-        width: 100%;
+      .gallery-actions a,
+      .gallery-actions button {
+        font-size: 13px;
+        padding: 12px 8px;
+        min-height: 48px;
+      }
+
+      .product-summary {
+        font-size: 0.95rem;
+        padding: 14px;
+      }
+
+      .highlights-list li {
+        font-size: 0.92rem;
       }
     }
   </style>
@@ -582,6 +660,40 @@
       return div.innerHTML;
     }
 
+    function splitDescription(description) {
+      const text = String(description || "No description available.").trim();
+
+      const sentences = text
+        .replace(/\s+/g, " ")
+        .split(/(?<=[.!?])\s+/)
+        .filter(Boolean);
+
+      const summary = sentences.slice(0, 2).join(" ");
+      const remaining = sentences.slice(2);
+
+      let highlights = remaining.slice(0, 5);
+
+      if (highlights.length === 0) {
+        highlights = [
+          "Premium quality product for daily use",
+          "Stylish and practical design",
+          "Suitable for home, office, or gifting",
+          "Reliable build with good usability",
+          "A smart addition to your collection"
+        ];
+      }
+
+      const icons = ["✨", "🔹", "💡", "📌", "⭐"];
+
+      return {
+        summary: summary || text,
+        highlights: highlights.map((item, index) => ({
+          icon: icons[index % icons.length],
+          text: item
+        }))
+      };
+    }
+
     async function shareProduct(productId, productName) {
       const decodedName = decodeURIComponent(productName);
 
@@ -618,22 +730,20 @@
         root.innerHTML = `
           <h2>No product ID found</h2>
           <p>Please open a product from the store page.</p>
-          <div class="actions" style="margin-top:18px; justify-content:center;">
-            <a href="home.html" class="back-btn" style="max-width:220px;">Back to Store</a>
+          <div style="margin-top:18px;">
+            <a href="home.html" class="back-btn" style="max-width:220px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:white; padding:14px 16px; border-radius:14px;">Back to Store</a>
           </div>
         `;
         return;
       }
 
       try {
-        // Load from SAME SOURCE as home.html -> products.json
         const response = await fetch("/my-store/products.json", { cache: "no-store" });
         if (!response.ok) throw new Error(`Failed to load products.json: ${response.status}`);
 
         const products = await response.json();
         if (!Array.isArray(products)) throw new Error("products.json must contain an array");
 
-        // Future-safe matching: supports numeric IDs + string IDs
         const product = products.find(p => String(p.id) === String(pid));
 
         if (!product) {
@@ -662,6 +772,8 @@
           category: product.category || "General"
         };
 
+        const descData = splitDescription(safeProduct.description);
+
         const thumbs = safeProduct.images.length > 1
           ? `
             <div class="carousel-thumbs">
@@ -686,6 +798,13 @@
                 `).join('')}
               </div>
               ${thumbs}
+
+              <div class="gallery-actions">
+                ${buyButton}
+                <button class="share-btn" onclick="shareProduct('${encodeURIComponent(safeProduct.id)}', '${encodeURIComponent(safeProduct.name)}')">Share Product</button>
+                <a href="claim-reward.html?productId=${encodeURIComponent(safeProduct.id)}&productName=${encodeURIComponent(safeProduct.name)}" class="claim-btn">Claim Reward</a>
+                <a href="home.html" class="back-btn">Back to Store</a>
+              </div>
             </div>
 
             <div class="details-card">
@@ -693,7 +812,19 @@
               <h1 class="product-title">${escapeHtml(safeProduct.name)}</h1>
               <div class="product-rating">⭐ ${escapeHtml(String(safeProduct.rating))} / 5</div>
               <div class="product-price">${escapeHtml(safeProduct.price)}</div>
-              <div class="product-desc">${escapeHtml(safeProduct.description)}</div>
+
+              <div class="product-summary">
+                ✨ ${escapeHtml(descData.summary)}
+              </div>
+
+              <div class="highlights-box">
+                <div class="highlights-title">Key Highlights</div>
+                <ul class="highlights-list">
+                  ${descData.highlights.map(item => `
+                    <li><strong>${item.icon}</strong><span>${escapeHtml(item.text)}</span></li>
+                  `).join('')}
+                </ul>
+              </div>
 
               <div class="info-list">
                 <div class="info-item">
@@ -704,13 +835,6 @@
                   <div class="info-label">Category</div>
                   <div class="info-value">${escapeHtml(safeProduct.category)}</div>
                 </div>
-              </div>
-
-              <div class="actions">
-                ${buyButton}
-                <button class="share-btn" onclick="shareProduct('${encodeURIComponent(safeProduct.id)}', '${encodeURIComponent(safeProduct.name)}')">Share Product</button>
-                <a href="claim-reward.html?productId=${encodeURIComponent(safeProduct.id)}&productName=${encodeURIComponent(safeProduct.name)}" class="claim-btn">Claim Reward</a>
-                <a href="home.html" class="back-btn">Back to Store</a>
               </div>
             </div>
           </div>
@@ -743,8 +867,8 @@
         root.innerHTML = `
           <h2>Product not found or failed to load</h2>
           <p>Please try again later or return to the store.</p>
-          <div class="actions" style="margin-top:18px; justify-content:center;">
-            <a href="home.html" class="back-btn" style="max-width:220px;">Back to Store</a>
+          <div style="margin-top:18px;">
+            <a href="home.html" class="back-btn" style="max-width:220px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:white; padding:14px 16px; border-radius:14px;">Back to Store</a>
           </div>
         `;
       }
