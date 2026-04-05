@@ -28,6 +28,8 @@
       --back-hover: #38733b;
       --claim-bg: #7c3aed;
       --claim-hover: #6d28d9;
+      --share-bg: #f59e0b;
+      --share-hover: #d97706;
     }
 
     [data-theme="dark"] {
@@ -45,6 +47,8 @@
       --back-hover: #1e8f3f;
       --claim-bg: #8b5cf6;
       --claim-hover: #7c3aed;
+      --share-bg: #f59e0b;
+      --share-hover: #d97706;
     }
 
     * {
@@ -343,16 +347,16 @@
     }
 
     .actions {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       width: 100%;
-      flex-wrap: wrap;
       margin-top: 10px;
     }
 
     .actions a,
     .actions button {
-      flex: 1 1 160px;
+      width: 100%;
       text-decoration: none;
       color: white;
       border-radius: 14px;
@@ -383,6 +387,15 @@
 
     .claim-btn:hover {
       background-color: var(--claim-hover);
+      transform: translateY(-2px);
+    }
+
+    .share-btn {
+      background-color: var(--share-bg);
+    }
+
+    .share-btn:hover {
+      background-color: var(--share-hover);
       transform: translateY(-2px);
     }
 
@@ -485,13 +498,12 @@
       }
 
       .actions {
-        flex-direction: column;
+        grid-template-columns: 1fr;
       }
 
       .actions a,
       .actions button {
         width: 100%;
-        flex: 1 1 auto;
       }
     }
   </style>
@@ -568,6 +580,32 @@
       const div = document.createElement("div");
       div.textContent = text ?? "";
       return div.innerHTML;
+    }
+
+    async function shareProduct(productId, productName) {
+      const decodedName = decodeURIComponent(productName);
+
+      const baseUrl = window.location.origin + "/my-store";
+      const productUrl = `${baseUrl}/product.html?id=${productId}`;
+
+      const shareData = {
+        title: decodedName,
+        text: `Check out this product on ShopPlus: ${decodedName}`,
+        url: productUrl
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(productUrl);
+          alert(`Product link copied!\n\n${decodedName}\n\n${productUrl}`);
+        } else {
+          prompt("Copy this product link:", productUrl);
+        }
+      } catch (error) {
+        console.log("Share cancelled or failed:", error);
+      }
     }
 
     async function loadProductDetails() {
@@ -670,6 +708,7 @@
 
               <div class="actions">
                 ${buyButton}
+                <button class="share-btn" onclick="shareProduct('${encodeURIComponent(safeProduct.id)}', '${encodeURIComponent(safeProduct.name)}')">Share Product</button>
                 <a href="claim-reward.html?productId=${encodeURIComponent(safeProduct.id)}&productName=${encodeURIComponent(safeProduct.name)}" class="claim-btn">Claim Reward</a>
                 <a href="home.html" class="back-btn">Back to Store</a>
               </div>
