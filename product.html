@@ -230,10 +230,11 @@
       border-radius: 999px;
     }
 
+    /* 10% MORE HEIGHT */
     .carousel-image {
       min-width: 100%;
       width: 100%;
-      height: 460px;
+      height: 506px;
       object-fit: contain;
       border-radius: 18px;
       scroll-snap-align: center;
@@ -275,7 +276,7 @@
       transform: translateY(-2px);
     }
 
-    /* NEW: Buttons under image */
+    /* 4 BUTTONS IN 1 ROW */
     .gallery-actions {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -289,7 +290,7 @@
       text-decoration: none;
       color: white;
       border-radius: 14px;
-      padding: 13px 10px;
+      padding: 13px 8px;
       text-align: center;
       font-weight: 700;
       cursor: pointer;
@@ -303,6 +304,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      white-space: nowrap;
     }
 
     .details-card {
@@ -343,7 +345,6 @@
       margin-bottom: 16px;
     }
 
-    /* NEW: better description style */
     .product-summary {
       color: var(--muted);
       font-size: 1rem;
@@ -485,11 +486,19 @@
       }
 
       .carousel-image {
-        height: 360px;
+        height: 420px;
       }
 
       .gallery-actions {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .gallery-actions a,
+      .gallery-actions button {
+        font-size: 12px;
+        padding: 12px 6px;
+        min-height: 48px;
       }
     }
 
@@ -545,8 +554,9 @@
         padding: 16px;
       }
 
+      /* MOBILE 10% MORE HEIGHT */
       .carousel-image {
-        height: 240px;
+        height: 264px;
         padding: 12px;
       }
 
@@ -563,16 +573,20 @@
         font-size: 1.3rem;
       }
 
+      /* FORCE 4 IN 1 ROW ON MOBILE */
       .gallery-actions {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
       }
 
       .gallery-actions a,
       .gallery-actions button {
-        font-size: 13px;
-        padding: 12px 8px;
-        min-height: 48px;
+        font-size: 10px;
+        padding: 10px 4px;
+        min-height: 44px;
+        border-radius: 10px;
+        white-space: normal;
+        line-height: 1.15;
       }
 
       .product-summary {
@@ -606,7 +620,6 @@
   <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
   <script>
-    // Protect page
     const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
     const currentUser = localStorage.getItem("shopplusUser");
 
@@ -696,7 +709,6 @@
 
     async function shareProduct(productId, productName) {
       const decodedName = decodeURIComponent(productName);
-
       const baseUrl = window.location.origin + "/my-store";
       const productUrl = `${baseUrl}/product.html?id=${productId}`;
 
