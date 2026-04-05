@@ -72,12 +72,11 @@
   .main-header {
     background: var(--gradient);
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 18px 24px;
+    padding: 18px 16px 20px;
     box-shadow: 0 6px 20px var(--shadow);
-    flex-wrap: wrap;
-    gap: 12px;
+    gap: 14px;
   }
 
   .shopplus-logo {
@@ -85,14 +84,15 @@
     font-weight: 700;
     color: var(--primary);
     background: #ffffff;
-    padding: 8px 22px;
-    border-radius: 16px;
+    padding: 10px 22px;
+    border-radius: 18px;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 700px;
   }
 
   .shopplus-logo .plus {
@@ -103,21 +103,27 @@
   }
 
   .header-actions {
-    display: flex;
-    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    flex-wrap: wrap;
+    align-items: stretch;
   }
 
   .header-btn,
-  .install-btn {
+  .install-btn,
+  .dark-mode-toggle,
+  .brand-toggle-btn {
+    width: 100%;
+    min-height: 64px;
     text-decoration: none;
     background: rgba(255,255,255,0.15);
     color: #fff;
     font-weight: 700;
-    font-size: 0.95rem;
-    padding: 10px 16px;
-    border-radius: 12px;
+    font-size: 1rem;
+    padding: 12px 10px;
+    border-radius: 16px;
     border: 1px solid rgba(255,255,255,0.2);
     display: inline-flex;
     align-items: center;
@@ -127,68 +133,42 @@
     cursor: pointer;
     transition: 0.25s ease;
     box-shadow: none;
+    backdrop-filter: blur(4px);
   }
 
   .header-btn:hover,
-  .install-btn:hover {
+  .install-btn:hover,
+  .brand-toggle-btn:hover,
+  .dark-mode-toggle:hover {
     transform: translateY(-2px);
     background: rgba(255,255,255,0.22);
   }
 
   .install-btn {
     display: none;
-    border: 1px solid rgba(255,255,255,0.2);
   }
 
   .dark-mode-toggle {
-    cursor: pointer;
-    font-size: 1.4rem;
-    background: transparent;
-    border: none;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.25s ease;
-  }
-
-  .dark-mode-toggle:hover {
+    font-size: 1.5rem;
     background: rgba(255,255,255,0.15);
   }
 
   /* BRAND FILTER */
   .brand-filter-wrapper {
     position: relative;
+    width: 100%;
   }
 
   .brand-toggle-btn {
-    background: rgba(255,255,255,0.15);
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding: 10px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.2);
-    display: inline-flex;
-    align-items: center;
     gap: 8px;
-    font-family: inherit;
-    cursor: pointer;
-    transition: 0.25s ease;
-  }
-
-  .brand-toggle-btn:hover {
-    transform: translateY(-2px);
-    background: rgba(255,255,255,0.22);
   }
 
   .brand-dropdown {
     position: absolute;
     top: calc(100% + 8px);
-    right: 0;
-    width: 180px;
+    left: 0;
+    width: 100%;
+    min-width: 170px;
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 14px;
@@ -223,7 +203,7 @@
 
   .search-section {
     background: var(--bg-deep);
-    padding: 28px 20px 20px;
+    padding: 22px 14px 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -231,16 +211,15 @@
 
   .search-form {
     width: 100%;
-    max-width: 560px;
+    max-width: 700px;
     display: flex;
-    gap: 12px;
   }
 
   .search-form input {
-    flex-grow: 1;
-    border-radius: 12px;
+    width: 100%;
+    border-radius: 16px;
     border: none;
-    padding: 14px 16px;
+    padding: 15px 16px;
     font-size: 16px;
     outline: none;
     font-family: inherit;
@@ -313,6 +292,8 @@
   @media (max-width: 780px) {
     .product-grid {
       grid-template-columns: repeat(2, 1fr);
+      padding: 16px 12px 28px;
+      gap: 12px;
     }
   }
 
@@ -320,14 +301,14 @@
     background: var(--card-bg);
     border-radius: 18px;
     box-shadow: 0 6px 20px rgba(0, 71, 171, 0.12);
-    padding: 16px 14px 18px;
+    padding: 14px 12px 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
     opacity: 0;
     transform: translateY(20px);
-    min-height: 340px;
+    min-height: 330px;
   }
 
   .product-card:hover {
@@ -335,28 +316,41 @@
     box-shadow: 0 14px 36px rgba(0, 71, 171, 0.22);
   }
 
-  .product-card img {
+  .product-image-box {
     width: 100%;
-    height: 190px;
-    object-fit: contain;
-    border-radius: 12px;
-    background: #f2f4fc;
-    padding: 10px;
-    margin-bottom: 14px;
+    height: 170px;
+    background: #eef2fb;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
   }
 
-  [data-theme="dark"] .product-card img {
+  [data-theme="dark"] .product-image-box {
     background: #25253a;
   }
 
+  .product-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
   .product-card h2 {
-    font-size: 17px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--primary);
-    margin: 0 0 14px;
+    margin: 0 0 12px;
     text-align: center;
     line-height: 1.3;
-    min-height: 44px;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .card-actions {
@@ -369,11 +363,11 @@
 
   .btn {
     flex: 1;
-    padding: 11px 8px;
-    border-radius: 10px;
+    padding: 11px 6px;
+    border-radius: 12px;
     text-decoration: none;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
     cursor: pointer;
     border: none;
@@ -420,66 +414,47 @@
 
   @media (max-width: 700px) {
     .main-header {
-      padding: 14px 14px;
-      flex-direction: column;
-      align-items: stretch;
+      padding: 14px 12px 18px;
       gap: 12px;
     }
 
     .shopplus-logo {
       font-size: 1.35rem;
       padding: 8px 14px;
-      justify-content: center;
-      width: 100%;
+      border-radius: 16px;
     }
 
     .shopplus-logo .plus {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
     }
 
     .header-actions {
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-
-    .header-btn,
-    .install-btn,
-    .dark-mode-toggle,
-    .brand-toggle-btn {
-      width: 100%;
-      text-align: center;
-      justify-content: center;
-      padding: 10px 8px;
-      font-size: 0.8rem;
-      border-radius: 10px;
-      min-height: 42px;
-    }
-
-    .dark-mode-toggle {
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.15);
-      font-size: 1rem;
-    }
-
-    .brand-dropdown {
-      right: auto;
-      left: 0;
-      width: 160px;
-    }
-
-    .search-section {
-      padding: 20px 14px 16px;
-    }
-
-    .search-form {
-      max-width: 100%;
       gap: 10px;
     }
 
+    .header-btn,
+    .dark-mode-toggle,
+    .brand-toggle-btn {
+      min-height: 58px;
+      font-size: 0.92rem;
+      padding: 10px 8px;
+      border-radius: 14px;
+    }
+
+    .dark-mode-toggle {
+      font-size: 1.25rem;
+    }
+
+    .brand-dropdown {
+      width: 100%;
+    }
+
+    .search-section {
+      padding: 18px 12px 16px;
+    }
+
     .search-form input {
-      padding: 12px 14px;
+      padding: 13px 14px;
       font-size: 15px;
     }
 
@@ -503,22 +478,17 @@
       margin-top: 3px;
     }
 
-    .product-grid {
-      padding: 16px 12px 28px;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
     .product-card {
-      min-height: 280px;
-      padding: 12px 10px 14px;
+      min-height: 290px;
+      padding: 10px 10px 14px;
       border-radius: 16px;
     }
 
-    .product-card img {
-      height: 120px;
-      padding: 8px;
+    .product-image-box {
+      height: 140px;
+      padding: 10px;
       margin-bottom: 10px;
+      border-radius: 12px;
     }
 
     .product-card h2 {
@@ -532,9 +502,9 @@
     }
 
     .btn {
-      font-size: 12px;
+      font-size: 11px;
       padding: 10px 4px;
-      border-radius: 9px;
+      border-radius: 10px;
     }
   }
 </style>
@@ -545,10 +515,7 @@
     <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
     <div class="header-actions">
-      <a href="profile.html" class="header-btn">Profile</a>
-      <button id="installAppBtn" class="install-btn">Install App</button>
-
-      <!-- BRAND FILTER BUTTON -->
+      <!-- LEFT: BRAND -->
       <div class="brand-filter-wrapper">
         <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
           <span id="brandBtnText">🏷️ Brand</span>
@@ -569,7 +536,11 @@
         </div>
       </div>
 
+      <!-- MIDDLE: DARK/LIGHT -->
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+
+      <!-- RIGHT: PROFILE -->
+      <a href="profile.html" class="header-btn">Profile</a>
     </div>
   </div>
 
@@ -600,7 +571,6 @@
   const categoryBar = document.getElementById('categoryBar');
   const searchInput = document.getElementById('searchBar');
   const productList = document.getElementById('product-list');
-  const installBtn = document.getElementById("installAppBtn");
 
   // BRAND FILTER ELEMENTS
   const brandToggleBtn = document.getElementById('brandToggleBtn');
@@ -611,7 +581,6 @@
 
   let selectedCategory = 'Overall';
   let allProducts = [];
-  let deferredPrompt = null;
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -692,7 +661,9 @@
         : `<button class="btn buy-now" onclick="alert('Buy link not added yet for this product')">Buy Now</button>`;
 
       card.innerHTML = `
-        <img src="${p.image}" alt="${p.name}" />
+        <div class="product-image-box">
+          <img src="${p.image}" alt="${p.name}" />
+        </div>
         <h2>${p.name}</h2>
         <div class="card-actions">
           <a class="btn view-details" href="product.html?id=${encodeURIComponent(p.id)}">View Details</a>
@@ -813,28 +784,6 @@
       localStorage.setItem('theme', 'dark');
       darkToggleBtn.textContent = '☀️';
     }
-  });
-
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = "inline-flex";
-  });
-
-  installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log("Install prompt result:", outcome);
-
-    deferredPrompt = null;
-    installBtn.style.display = "none";
-  });
-
-  window.addEventListener("appinstalled", () => {
-    console.log("ShopPlus installed successfully");
-    installBtn.style.display = "none";
   });
 
   window.addEventListener('DOMContentLoaded', () => {
