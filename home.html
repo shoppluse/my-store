@@ -10,6 +10,16 @@
 <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+<!-- LOGIN PROTECTION -->
+<script>
+  const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+  const currentUser = localStorage.getItem("shopplusUser");
+
+  if (isLoggedIn !== "true" || !currentUser) {
+    window.location.href = "login.html";
+  }
+</script>
+
 <style>
   * {
     box-sizing: border-box;
@@ -484,12 +494,6 @@
   </div>
 
 <script>
-  const currentUser = localStorage.getItem("shopplusUser");
-
-  if (!currentUser) {
-    window.location.href = "login.html";
-  }
-
   const categories = [
     { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
     { name: 'Electronics', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
