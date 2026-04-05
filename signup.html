@@ -259,12 +259,17 @@
         const data = await res.json();
 
         if (!res.ok) {
-          message.textContent = data.message || "Signup failed";
-          message.classList.add("error");
-          signupBtn.disabled = false;
-          signupBtn.textContent = "Create Account";
-          return;
-        }
+  message.textContent =
+    (data.message || "Signup failed") +
+    (data.error ? ` | Error: ${data.error}` : "") +
+    (data.code ? ` | Code: ${data.code}` : "") +
+    (data.response ? ` | Response: ${data.response}` : "");
+
+  message.classList.add("error");
+  signupBtn.disabled = false;
+  signupBtn.textContent = "Create Account";
+  return;
+}
 
         localStorage.setItem("signupEmail", email);
 
