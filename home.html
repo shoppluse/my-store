@@ -158,6 +158,69 @@
     background: rgba(255,255,255,0.15);
   }
 
+  /* BRAND FILTER */
+  .brand-filter-wrapper {
+    position: relative;
+  }
+
+  .brand-toggle-btn {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.25s ease;
+  }
+
+  .brand-toggle-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.22);
+  }
+
+  .brand-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 180px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    z-index: 1000;
+    padding: 8px 0;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .brand-dropdown.hidden {
+    display: none;
+  }
+
+  .brand-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+    transition: background 0.2s ease;
+  }
+
+  .brand-item:hover {
+    background: rgba(0, 153, 255, 0.1);
+  }
+
+  .brand-item.active {
+    background: rgba(0, 153, 255, 0.14);
+    color: var(--primary);
+    font-weight: 700;
+  }
+
   .search-section {
     background: var(--bg-deep);
     padding: 28px 20px 20px;
@@ -377,13 +440,14 @@
     .header-actions {
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
     }
 
     .header-btn,
     .install-btn,
-    .dark-mode-toggle {
+    .dark-mode-toggle,
+    .brand-toggle-btn {
       width: 100%;
       text-align: center;
       justify-content: center;
@@ -397,6 +461,12 @@
       border: 1px solid rgba(255,255,255,0.2);
       background: rgba(255,255,255,0.15);
       font-size: 1rem;
+    }
+
+    .brand-dropdown {
+      right: auto;
+      left: 0;
+      width: 160px;
     }
 
     .search-section {
@@ -477,6 +547,28 @@
     <div class="header-actions">
       <a href="profile.html" class="header-btn">Profile</a>
       <button id="installAppBtn" class="install-btn">Install App</button>
+
+      <!-- BRAND FILTER BUTTON -->
+      <div class="brand-filter-wrapper">
+        <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
+          <span id="brandBtnText">🏷️ Brand</span>
+          <span id="brandArrow">▼</span>
+        </button>
+
+        <div id="brandDropdown" class="brand-dropdown hidden">
+          <div class="brand-item active" data-brand="all">All Brands</div>
+          <div class="brand-item" data-brand="Apple">Apple</div>
+          <div class="brand-item" data-brand="Samsung">Samsung</div>
+          <div class="brand-item" data-brand="Nike">Nike</div>
+          <div class="brand-item" data-brand="Puma">Puma</div>
+          <div class="brand-item" data-brand="Boat">Boat</div>
+          <div class="brand-item" data-brand="Adidas">Adidas</div>
+          <div class="brand-item" data-brand="Sony">Sony</div>
+          <div class="brand-item" data-brand="Realme">Realme</div>
+          <div class="brand-item" data-brand="OnePlus">OnePlus</div>
+        </div>
+      </div>
+
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
     </div>
   </div>
@@ -510,6 +602,13 @@
   const productList = document.getElementById('product-list');
   const installBtn = document.getElementById("installAppBtn");
 
+  // BRAND FILTER ELEMENTS
+  const brandToggleBtn = document.getElementById('brandToggleBtn');
+  const brandDropdown = document.getElementById('brandDropdown');
+  const brandArrow = document.getElementById('brandArrow');
+  const brandBtnText = document.getElementById('brandBtnText');
+  const brandItems = document.querySelectorAll('.brand-item');
+
   let selectedCategory = 'Overall';
   let allProducts = [];
   let deferredPrompt = null;
@@ -541,6 +640,7 @@
   searchInput.addEventListener('input', () => {
     selectedCategory = 'Overall';
     updateCategorySelection();
+    syncBrandSelectionFromSearch();
     filterProducts();
   });
 
@@ -562,6 +662,7 @@
         image: p.image || (Array.isArray(p.images) && p.images.length ? p.images[0] : 'https://via.placeholder.com/200'),
         description: p.description || 'No description available.',
         category: p.category || 'Overall',
+        brand: p.brand || '',
         link: p.link || '#'
       }));
 
@@ -619,12 +720,77 @@
     if (searchText.length > 0) {
       filtered = filtered.filter(p =>
         (p.name || '').toLowerCase().includes(searchText) ||
-        (p.description || '').toLowerCase().includes(searchText)
+        (p.description || '').toLowerCase().includes(searchText) ||
+        (p.brand || '').toLowerCase().includes(searchText)
       );
     }
 
     displayProducts(filtered);
   }
+
+  // BRAND FILTER LOGIC
+  function setActiveBrand(selectedBrand) {
+    brandItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('data-brand').toLowerCase() === selectedBrand.toLowerCase());
+    });
+  }
+
+  function syncBrandSelectionFromSearch() {
+    const searchText = searchInput.value.trim().toLowerCase();
+
+    let matchedBrand = 'all';
+    brandItems.forEach(item => {
+      const brand = item.getAttribute('data-brand').toLowerCase();
+      if (brand !== 'all' && brand === searchText) {
+        matchedBrand = brand;
+      }
+    });
+
+    setActiveBrand(matchedBrand);
+
+    if (matchedBrand === 'all') {
+      brandBtnText.textContent = '🏷️ Brand';
+    } else {
+      const activeItem = Array.from(brandItems).find(item => item.getAttribute('data-brand').toLowerCase() === matchedBrand);
+      brandBtnText.textContent = `🏷️ ${activeItem.getAttribute('data-brand')}`;
+    }
+  }
+
+  brandToggleBtn.addEventListener('click', () => {
+    brandDropdown.classList.toggle('hidden');
+    brandArrow.textContent = brandDropdown.classList.contains('hidden') ? '▼' : '▲';
+  });
+
+  brandItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const selectedBrand = item.getAttribute('data-brand');
+
+      setActiveBrand(selectedBrand);
+
+      if (selectedBrand === 'all') {
+        searchInput.value = '';
+        brandBtnText.textContent = '🏷️ Brand';
+      } else {
+        searchInput.value = selectedBrand;
+        brandBtnText.textContent = `🏷️ ${selectedBrand}`;
+      }
+
+      selectedCategory = 'Overall';
+      updateCategorySelection();
+
+      searchInput.dispatchEvent(new Event('input'));
+
+      brandDropdown.classList.add('hidden');
+      brandArrow.textContent = '▼';
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.brand-filter-wrapper')) {
+      brandDropdown.classList.add('hidden');
+      brandArrow.textContent = '▼';
+    }
+  });
 
   const darkToggleBtn = document.getElementById('darkModeToggle');
   const htmlEl = document.documentElement;
