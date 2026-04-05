@@ -12,7 +12,8 @@
       "https://m.media-amazon.com/images/I/71DQpxuuP2L._SY450_.jpg"
     ],
     "rating": 3.6,
-    "category": "Home"
+    "category": "Home",
+    "brand": "All Brands"
   },
   {
     "id": 2,
@@ -27,7 +28,8 @@
       "https://m.media-amazon.com/images/I/81md1zWFYwL._SX425_.jpg"
     ],
     "rating": 4.2,
-    "category": "Accessories"
+    "category": "Accessories",
+    "brand": "All Brands"
   },
   {
     "id": 3,
@@ -42,7 +44,8 @@
       "https://m.media-amazon.com/images/I/71yKeV+0wLL._SY606_.jpg"
     ],
     "rating": 3.4,
-    "category": "Fashion"
+    "category": "Fashion",
+    "brand": "All Brands"
   },
   {
     "id": 4,
@@ -57,7 +60,8 @@
       "https://m.media-amazon.com/images/I/51jizpO5LZL._SY606_.jpg"
     ],
     "rating": 4.3,
-    "category": "Fashion"
+    "category": "Fashion",
+    "brand": "All Brands"
   },
   {
     "id": 5,
@@ -72,7 +76,8 @@
       "https://m.media-amazon.com/images/I/81O7quD7RPL._SY606_.jpg"
     ],
     "rating": 3.8,
-    "category": "Fashion"
+    "category": "Fashion",
+    "brand": "All Brands"
   },
   {
     "id": 6,
@@ -87,7 +92,8 @@
       "https://m.media-amazon.com/images/I/61gi7t80VfL._SY500_.jpg"
     ],
     "rating": 4.2,
-    "category": "Fashion"
+    "category": "Fashion",
+    "brand": "All Brands"
   },
   {
     "id": 7,
@@ -102,6 +108,7 @@
       "https://m.media-amazon.com/images/I/91Emjl4ntyL._SL1500_.jpg"
     ],
     "rating": 4.0,
-    "category": "Home"
+    "category": "Home",
+    "brand": "Apple"
   }
 ]
