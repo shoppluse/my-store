@@ -26,6 +26,8 @@
       --warning: #f59e0b;
       --danger: #dc2626;
       --paid: #7c3aed;
+      --share: #0ea5e9;
+      --share-hover: #0284c7;
     }
 
     [data-theme="dark"] {
@@ -41,6 +43,8 @@
       --warning: #fbbf24;
       --danger: #f87171;
       --paid: #a78bfa;
+      --share: #38bdf8;
+      --share-hover: #0ea5e9;
     }
 
     * { box-sizing: border-box; }
@@ -256,6 +260,17 @@
       transform: translateY(-2px);
     }
 
+    .btn-share {
+      background: var(--share);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(14, 165, 233, 0.22);
+    }
+
+    .btn-share:hover {
+      transform: translateY(-2px);
+      background: var(--share-hover);
+    }
+
     .btn-danger {
       background: #ef4444;
       color: #fff;
@@ -265,6 +280,15 @@
     .btn-danger:hover {
       transform: translateY(-2px);
       background: #dc2626;
+    }
+
+    .share-status {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--muted);
+      min-height: 20px;
     }
 
     .section-title {
@@ -615,8 +639,11 @@
 
         <div class="btn-group">
           <a href="home.html" class="btn btn-primary">Back to Store</a>
+          <button id="shareAppBtn" class="btn btn-share">Share App</button>
           <button id="logoutBtn" class="btn btn-danger">Logout</button>
         </div>
+
+        <div id="shareStatus" class="share-status"></div>
       </div>
 
       <div class="card">
@@ -679,6 +706,8 @@
     const avatarLetterEl = document.getElementById("avatarLetter");
     const verifiedBadgeEl = document.getElementById("verifiedBadge");
     const logoutBtn = document.getElementById("logoutBtn");
+    const shareAppBtn = document.getElementById("shareAppBtn");
+    const shareStatus = document.getElementById("shareStatus");
     const claimsContainer = document.getElementById("claimsContainer");
 
     const userName = currentUser.name || "User";
@@ -705,6 +734,44 @@
       localStorage.removeItem("shopplusUser");
       window.location.href = "login.html";
     });
+
+    function showShareStatus(message, isSuccess = true) {
+      shareStatus.textContent = message;
+      shareStatus.style.color = isSuccess ? "var(--success)" : "var(--danger)";
+
+      setTimeout(() => {
+        shareStatus.textContent = "";
+      }, 3000);
+    }
+
+    async function shareApp() {
+      const appUrl = window.location.origin + "/my-store/";
+
+      const shareData = {
+        title: "ShopPlus",
+        text: "Check out ShopPlus - discover awesome products and deals!",
+        url: appUrl
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+          showShareStatus("App shared successfully!");
+        } catch (error) {
+          console.log("Share cancelled or failed:", error);
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(appUrl);
+          showShareStatus("App link copied successfully!");
+        } catch (error) {
+          showShareStatus("Copy failed. Share this link: " + appUrl, false);
+          alert("Copy failed. App link: " + appUrl);
+        }
+      }
+    }
+
+    shareAppBtn.addEventListener("click", shareApp);
 
     function formatDate(dateString) {
       if (!dateString) return "Not available";
