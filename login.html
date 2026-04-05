@@ -3,147 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShopPlus - Login</title>
-
-  <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#0047ab" />
-  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
+  <title>Login - ShopPlus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-      --bg: #f4f8ff;
+      --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --bg-light: #f8f9fb;
       --card-bg: #ffffff;
-      --text: #1f1f1f;
-      --muted: #6b7280;
-      --primary: #0047ab;
-      --primary-2: #0099ff;
-      --border: #dbe7ff;
-      --shadow: rgba(0, 71, 171, 0.14);
-      --success: #16a34a;
-      --danger: #dc2626;
+      --text-dark: #1f1f1f;
+      --accent: #0099ff;
+      --accent-dark: #0047ab;
+      --input-bg: #f2f4fc;
+      --border: #d8e3f2;
+      --success: #2e7d32;
+      --error: #d32f2f;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      min-height: 100vh;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, #eef5ff 0%, #f8fbff 100%);
-      color: var(--text);
+      background: var(--bg-light);
+      min-height: 100vh;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--gradient-light);
+      color: white;
+      padding: 18px 24px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
       justify-content: center;
+      align-items: center;
       padding: 24px;
     }
 
-    .auth-wrap {
-      width: 100%;
-      max-width: 460px;
-    }
-
-    .brand {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #fff;
-      color: var(--primary);
-      padding: 10px 18px;
-      border-radius: 16px;
-      font-weight: 700;
-      font-size: 1.6rem;
-      box-shadow: 0 10px 30px rgba(0, 71, 171, 0.14);
-    }
-
-    .brand-badge .plus {
-      color: var(--primary-2);
-      font-size: 1.9rem;
-      font-weight: 900;
-    }
-
-    .card {
+    .auth-card {
       background: var(--card-bg);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 18px 50px rgba(0, 71, 171, 0.14);
-      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 420px;
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(0, 71, 171, 0.15);
+      padding: 28px 24px;
     }
 
-    .title {
-      font-size: 1.7rem;
-      font-weight: 700;
-      margin: 0 0 6px 0;
-      color: var(--primary);
+    .auth-card h2 {
+      margin: 0 0 8px;
+      color: var(--accent-dark);
       text-align: center;
+      font-size: 28px;
     }
 
-    .subtitle {
+    .auth-card p {
+      margin: 0 0 24px;
+      color: #555;
       text-align: center;
-      margin: 0 0 22px 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
+      font-size: 14px;
     }
 
-    .field {
+    .form-group {
       margin-bottom: 16px;
     }
 
-    .label {
+    label {
       display: block;
-      font-size: 0.9rem;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 8px;
-      color: #334155;
+      margin-bottom: 6px;
+      color: var(--text-dark);
     }
 
-    .input {
+    input {
       width: 100%;
-      padding: 14px 15px;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      outline: none;
+      padding: 13px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
       font-size: 15px;
+      outline: none;
       font-family: inherit;
-      transition: 0.25s ease;
-      background: #fff;
     }
 
-    .input:focus {
-      border-color: var(--primary-2);
-      box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.12);
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.12);
     }
 
-    .btn {
+    button {
       width: 100%;
+      padding: 14px;
       border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
+      border-radius: 10px;
+      background: var(--gradient-light);
+      color: white;
+      font-size: 16px;
       font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      margin-top: 8px;
       font-family: inherit;
-      background: var(--gradient);
-      color: #fff;
-      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
-      transition: 0.25s ease;
-      margin-top: 4px;
     }
 
-    .btn:hover {
+    button:hover {
       transform: translateY(-2px);
+      opacity: 0.95;
     }
 
-    .btn:disabled {
+    button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
       transform: none;
@@ -151,140 +129,112 @@
 
     .message {
       margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 0.92rem;
-      display: none;
-      line-height: 1.5;
-      white-space: pre-line;
-    }
-
-    .message.success {
-      display: block;
-      background: rgba(22, 163, 74, 0.08);
-      color: var(--success);
-      border: 1px solid rgba(22, 163, 74, 0.2);
-    }
-
-    .message.error {
-      display: block;
-      background: rgba(220, 38, 38, 0.08);
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.2);
-    }
-
-    .footer-link {
+      font-size: 14px;
       text-align: center;
-      margin-top: 18px;
-      font-size: 0.92rem;
-      color: var(--muted);
+      font-weight: 600;
       line-height: 1.5;
+      min-height: 22px;
+      word-break: break-word;
     }
 
-    .footer-link a {
-      color: var(--primary);
+    .success {
+      color: var(--success);
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+    .link-text {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .link-text a {
+      color: var(--accent-dark);
       text-decoration: none;
       font-weight: 700;
     }
 
+    footer {
+      background: var(--gradient-light);
+      color: white;
+      text-align: center;
+      padding: 14px 10px;
+      font-size: 14px;
+    }
+
     @media (max-width: 520px) {
-      body {
+      .container {
         padding: 16px;
       }
 
-      .card {
+      .auth-card {
         padding: 22px 18px;
-        border-radius: 20px;
+        border-radius: 16px;
       }
 
-      .title {
-        font-size: 1.45rem;
+      header {
+        font-size: 20px;
+        padding: 16px;
       }
 
-      .brand-badge {
-        font-size: 1.35rem;
-      }
-
-      .brand-badge .plus {
-        font-size: 1.6rem;
+      .auth-card h2 {
+        font-size: 24px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="auth-wrap">
-    <div class="brand">
-      <div class="brand-badge">Shop<span class="plus">+</span></div>
-    </div>
+  <header>ShopPlus - Welcome Back</header>
 
-    <div class="card">
-      <h1 class="title">Welcome Back</h1>
-      <p class="subtitle">Login with your email or mobile</p>
+  <div class="container">
+    <div class="auth-card">
+      <h2>Login</h2>
+      <p>Login with your Email or Mobile Number</p>
 
       <form id="loginForm">
-        <div class="field">
-          <label class="label" for="identifier">Email or Mobile</label>
-          <input class="input" type="text" id="identifier" placeholder="Enter email or mobile" required />
+        <div class="form-group">
+          <label for="emailOrMobile">Email or Mobile Number</label>
+          <input type="text" id="emailOrMobile" placeholder="Enter email or mobile number" required />
         </div>
 
-        <div class="field">
-          <label class="label" for="password">Password</label>
-          <input class="input" type="password" id="password" placeholder="Enter your password" required />
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
         </div>
 
-        <button class="btn" type="submit" id="loginBtn">Login</button>
+        <button type="submit" id="loginBtn">Login</button>
       </form>
 
-      <div id="messageBox" class="message"></div>
+      <div id="message" class="message"></div>
 
-      <div class="footer-link">
-        Don’t have an account? <a href="signup.html">Sign Up</a>
+      <div class="link-text">
+        New user? <a href="signup.html">Create Account</a>
       </div>
     </div>
   </div>
 
+  <footer>© 2026 ShopPlus. All rights reserved.</footer>
+
   <script>
     const BACKEND_URL = "https://my-store-e28j.onrender.com";
-    const loginForm = document.getElementById("loginForm");
+
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
     const loginBtn = document.getElementById("loginBtn");
-    const messageBox = document.getElementById("messageBox");
 
-    // Safe existing user check
-    const existingUserRaw = localStorage.getItem("shopplusUser");
-    if (existingUserRaw) {
-      try {
-        const parsedUser = JSON.parse(existingUserRaw);
-        if (parsedUser && (parsedUser.id || parsedUser._id || parsedUser.email)) {
-          window.location.href = "home.html";
-        } else {
-          localStorage.removeItem("shopplusUser");
-        }
-      } catch (error) {
-        localStorage.removeItem("shopplusUser");
-      }
-    }
-
-    function showMessage(text, type = "success") {
-      messageBox.className = "message " + type;
-      messageBox.textContent = text;
-    }
-
-    loginForm.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      messageBox.className = "message";
-      messageBox.textContent = "";
-
-      const identifier = document.getElementById("identifier").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!identifier || !password) {
-        showMessage("Please enter email/mobile and password", "error");
-        return;
-      }
-
+      message.textContent = "";
+      message.className = "message";
       loginBtn.disabled = true;
       loginBtn.textContent = "Logging in...";
+
+      const emailOrMobile = document.getElementById("emailOrMobile").value.trim();
+      const password = document.getElementById("password").value.trim();
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
@@ -292,47 +242,37 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ emailOrMobile: identifier, password })
+          body: JSON.stringify({ emailOrMobile, password })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.message || "Login failed");
+          message.textContent = data.message || "Login failed";
+          message.classList.add("error");
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Login";
+          return;
         }
 
-        if (!data.user) {
-          throw new Error("Invalid login response from server");
-        }
-
+        // Save login state and user data
+        localStorage.setItem("shopplusLoggedIn", "true");
         localStorage.setItem("shopplusUser", JSON.stringify(data.user));
 
-        showMessage(data.message || "Login successful!", "success");
+        message.textContent = "Login successful! Redirecting...";
+        message.classList.add("success");
 
         setTimeout(() => {
-          window.location.href = "home.html";
-        }, 1200);
+          window.location.href = "index.html";
+        }, 1500);
 
       } catch (error) {
-        showMessage(error.message || "Something went wrong", "error");
-      } finally {
+        message.textContent = "Something went wrong. Please try again.";
+        message.classList.add("error");
         loginBtn.disabled = false;
         loginBtn.textContent = "Login";
       }
     });
-
-    // Service Worker Registration for PWA
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
-          .then((registration) => {
-            console.log("Service Worker registered:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
-      });
-    }
   </script>
 </body>
 </html>
