@@ -509,19 +509,20 @@
   <div class="page-wrap">
     <div id="product-root" class="loading-box">
       <h2>Loading product details...</h2>
-      <p>Please wait while we fetch the product from backend.</p>
+      <p>Please wait while we fetch the product details.</p>
     </div>
   </div>
 
   <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
   <script>
+    // Protect page
+    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
     const currentUser = localStorage.getItem("shopplusUser");
-    if (!currentUser) {
+
+    if (isLoggedIn !== "true" || !currentUser) {
       window.location.href = "login.html";
     }
-
-    const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
     const htmlEl = document.documentElement;
     const darkToggleBtn = document.getElementById("darkModeToggle");
@@ -587,10 +588,19 @@
       }
 
       try {
-        const response = await fetch(`${BACKEND_URL}/api/products/${encodeURIComponent(pid)}`);
-        if (!response.ok) throw new Error("Product not found");
+        // Load from SAME SOURCE as home.html -> products.json
+        const response = await fetch("/my-store/products.json", { cache: "no-store" });
+        if (!response.ok) throw new Error(`Failed to load products.json: ${response.status}`);
 
-        const product = await response.json();
+        const products = await response.json();
+        if (!Array.isArray(products)) throw new Error("products.json must contain an array");
+
+        // Future-safe matching: supports numeric IDs + string IDs
+        const product = products.find(p => String(p.id) === String(pid));
+
+        if (!product) {
+          throw new Error("Product not found in products.json");
+        }
 
         const fallbackImage = "https://via.placeholder.com/600x600?text=No+Image";
 
@@ -603,7 +613,7 @@
           : [product.image || fallbackImage];
 
         const safeProduct = {
-          id: product.id ?? product._id ?? pid,
+          id: product.id ?? pid,
           name: product.name || "Unnamed Product",
           description: product.description || "No description available.",
           price: formatPrice(product.price),
