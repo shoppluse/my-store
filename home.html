@@ -74,7 +74,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 18px 16px 20px;
+    padding: calc(18px + env(safe-area-inset-top)) 16px 20px;
     box-shadow: 0 6px 20px var(--shadow);
     gap: 14px;
   }
@@ -418,7 +418,7 @@
 
   @media (max-width: 700px) {
     .main-header {
-      padding: 14px 12px 18px;
+      padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
       gap: 12px;
     }
 
