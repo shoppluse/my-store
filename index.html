@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop+ | Loading...</title>
+
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#0047ab" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
@@ -34,7 +35,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: calc(20px + env(safe-area-inset-top)) 20px 20px;
+      overflow-x: hidden;
     }
 
     .splash-wrap {
@@ -132,6 +134,10 @@
     }
 
     @media (max-width: 520px) {
+      body {
+        padding: calc(16px + env(safe-area-inset-top)) 16px 16px;
+      }
+
       .brand {
         font-size: 1.6rem;
         padding: 12px 20px;
@@ -169,7 +175,7 @@
   </div>
 
   <script>
-    let deferredPrompt;
+    let deferredPrompt = null;
     const installBtn = document.getElementById("installAppBtn");
 
     // PWA Install Prompt
@@ -214,9 +220,9 @@
       const user = localStorage.getItem("shopplusUser");
 
       if (isLoggedIn === "true" && user) {
-        window.location.href = "home.html";
+        window.location.href = "./home.html";
       } else {
-        window.location.href = "login.html";
+        window.location.href = "./login.html";
       }
     }, 1200);
   </script>
