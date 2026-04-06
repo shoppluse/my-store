@@ -115,41 +115,39 @@
   </div>
 
   <script>
-    let deferredPrompt;
-
-    // PWA Install Prompt (kept in background, no visible button)
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      console.log("PWA install prompt ready");
-    });
-
-    window.addEventListener("appinstalled", () => {
-      console.log("ShopPlus installed successfully");
-    });
-
-    // Service Worker Registration
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
-          .then((registration) => {
-            console.log("Service Worker registered:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
+    // Clear old service worker caches (one-time cleanup)
+    if ("caches" in window) {
+      caches.keys().then((names) => {
+        names.forEach((name) => caches.delete(name));
       });
     }
 
-    // Silent Auth Redirect after splash duration
+    // Register latest service worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const reg of registrations) {
+            await reg.unregister();
+          }
+
+          await navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" });
+          console.log("Fresh Service Worker registered");
+        } catch (error) {
+          console.error("Service Worker refresh failed:", error);
+        }
+      });
+    }
+
+    // Silent redirect after splash
     setTimeout(() => {
       const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
       const user = localStorage.getItem("shopplusUser");
 
       if (isLoggedIn === "true" && user) {
-        window.location.href = "home.html";
+        window.location.replace("home.html");
       } else {
-        window.location.href = "login.html";
+        window.location.replace("login.html");
       }
     }, 1200);
   </script>
