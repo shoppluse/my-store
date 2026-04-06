@@ -28,6 +28,8 @@
       --paid: #7c3aed;
       --share: #0ea5e9;
       --share-hover: #0284c7;
+      --support: #25d366;
+      --support-hover: #1da851;
     }
 
     [data-theme="dark"] {
@@ -45,6 +47,8 @@
       --paid: #a78bfa;
       --share: #38bdf8;
       --share-hover: #0ea5e9;
+      --support: #25d366;
+      --support-hover: #1da851;
     }
 
     * { box-sizing: border-box; }
@@ -269,6 +273,17 @@
     .btn-share:hover {
       transform: translateY(-2px);
       background: var(--share-hover);
+    }
+
+    .btn-support {
+      background: var(--support);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(37, 211, 102, 0.22);
+    }
+
+    .btn-support:hover {
+      transform: translateY(-2px);
+      background: var(--support-hover);
     }
 
     .btn-danger {
@@ -640,6 +655,7 @@
         <div class="btn-group">
           <a href="home.html" class="btn btn-primary">Back to Store</a>
           <button id="shareAppBtn" class="btn btn-share">Share App</button>
+          <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%20Support%2C%20I%20need%20help." target="_blank" class="btn btn-support">Support</a>
           <button id="logoutBtn" class="btn btn-danger">Logout</button>
         </div>
 
