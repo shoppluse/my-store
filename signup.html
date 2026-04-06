@@ -38,9 +38,7 @@
       --shadow: rgba(51, 153, 255, 0.22);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -50,94 +48,15 @@
       display: flex;
       flex-direction: column;
       color: var(--text);
-      overflow-x: hidden;
       transition: background 0.3s ease, color 0.3s ease;
     }
 
-    /* HOME.HTML STYLE HEADER */
-    .main-header {
-      background: var(--gradient);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: calc(18px + env(safe-area-inset-top)) 16px 20px;
-      box-shadow: 0 6px 20px var(--shadow);
-      gap: 14px;
-    }
-
-    .shopplus-logo {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-      background: #ffffff;
-      padding: 10px 22px;
-      border-radius: 18px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      max-width: 700px;
-    }
-
-    .shopplus-logo .plus {
-      color: var(--primary-2);
-      font-size: 2.2rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .header-actions {
-      width: 100%;
-      max-width: 700px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      align-items: stretch;
-    }
-
-    .header-btn,
-    .dark-mode-toggle {
-      width: 100%;
-      min-height: 64px;
-      text-decoration: none;
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 12px 10px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.2);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-family: inherit;
-      cursor: pointer;
-      transition: 0.25s ease;
-      box-shadow: none;
-      backdrop-filter: blur(4px);
-    }
-
-    .header-btn:hover,
-    .dark-mode-toggle:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.22);
-    }
-
-    .dark-mode-toggle {
-      font-size: 1.5rem;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .container {
+    .page-wrap {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 28px 24px;
+      padding: calc(28px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));
     }
 
     .auth-card {
@@ -150,14 +69,77 @@
       border: 1px solid var(--border);
     }
 
-    .auth-card h2 {
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #ffffff;
+      color: var(--primary);
+      padding: 10px 18px;
+      border-radius: 16px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 auto 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 22px rgba(0, 71, 171, 0.08);
+      width: 100%;
+    }
+
+    [data-theme="dark"] .brand {
+      background: #1c1c2b;
+    }
+
+    .brand .plus {
+      color: var(--primary-2);
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .top-actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .top-link,
+    .dark-mode-toggle {
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0, 153, 255, 0.08);
+      color: var(--primary);
+      font-weight: 700;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.25s ease;
+      padding: 0 14px;
+    }
+
+    .top-link:hover,
+    .dark-mode-toggle:hover {
+      transform: translateY(-2px);
+    }
+
+    .dark-mode-toggle {
+      width: 56px;
+      font-size: 1.2rem;
+    }
+
+    h2 {
       margin: 0 0 8px;
       color: var(--primary);
       text-align: center;
       font-size: 28px;
     }
 
-    .auth-card p {
+    .subtitle {
       margin: 0 0 24px;
       color: var(--muted);
       text-align: center;
@@ -229,13 +211,8 @@
       word-break: break-word;
     }
 
-    .success {
-      color: var(--success);
-    }
-
-    .error {
-      color: var(--error);
-    }
+    .success { color: var(--success); }
+    .error { color: var(--error); }
 
     .link-text {
       margin-top: 18px;
@@ -256,43 +233,11 @@
       text-align: center;
       padding: 14px 10px;
       font-size: 14px;
-      margin-top: auto;
     }
 
-    @media (max-width: 700px) {
-      .main-header {
-        padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
-        gap: 12px;
-      }
-
-      .shopplus-logo {
-        font-size: 1.35rem;
-        padding: 8px 14px;
-        border-radius: 16px;
-      }
-
-      .shopplus-logo .plus {
-        font-size: 1.7rem;
-      }
-
-      .header-actions {
-        gap: 10px;
-      }
-
-      .header-btn,
-      .dark-mode-toggle {
-        min-height: 58px;
-        font-size: 0.82rem;
-        padding: 10px 6px;
-        border-radius: 14px;
-      }
-
-      .dark-mode-toggle {
-        font-size: 1.25rem;
-      }
-
-      .container {
-        padding: 16px;
+    @media (max-width: 520px) {
+      .page-wrap {
+        padding: calc(34px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
       }
 
       .auth-card {
@@ -300,26 +245,32 @@
         border-radius: 18px;
       }
 
-      .auth-card h2 {
+      h2 {
         font-size: 24px;
+      }
+
+      .brand {
+        font-size: 1.3rem;
+      }
+
+      .brand .plus {
+        font-size: 1.55rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="main-header">
-    <a href="./index.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
-
-    <div class="header-actions">
-      <a href="./login.html" class="header-btn">Login</a>
-      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
-    </div>
-  </div>
-
-  <div class="container">
+  <div class="page-wrap">
     <div class="auth-card">
+      <div class="brand">Shop <span class="plus">+</span></div>
+
+      <div class="top-actions">
+        <a href="./login.html" class="top-link">Login</a>
+        <button id="darkModeToggle" class="dark-mode-toggle" type="button" title="Toggle dark mode">🌙</button>
+      </div>
+
       <h2>Sign Up</h2>
-      <p>Create your ShopPlus account to continue</p>
+      <p class="subtitle">Create your ShopPlus account to continue</p>
 
       <form id="signupForm">
         <div class="form-group">
@@ -362,7 +313,6 @@
     const message = document.getElementById("message");
     const signupBtn = document.getElementById("signupBtn");
 
-    // DARK MODE
     const htmlEl = document.documentElement;
     const darkToggleBtn = document.getElementById("darkModeToggle");
     const savedTheme = localStorage.getItem("theme");
@@ -402,9 +352,7 @@
       try {
         const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, mobile, password })
         });
 
@@ -418,11 +366,13 @@
           return;
         }
 
-        message.textContent = "Signup successful! Redirecting to login...";
+        message.textContent = "Signup successful! Redirecting to verify...";
         message.classList.add("success");
 
+        localStorage.setItem("signupEmail", email);
+
         setTimeout(() => {
-          window.location.href = "./login.html";
+          window.location.href = "./verify.html";
         }, 1800);
 
       } catch (error) {
@@ -433,7 +383,6 @@
       }
     });
 
-    // SERVICE WORKER
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
