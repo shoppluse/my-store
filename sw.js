@@ -1,11 +1,12 @@
 const CACHE_NAME = "shopplus-v2";
 
-const FILES_TO_CACHE = [
+const urlsToCache = [
   "/my-store/",
   "/my-store/index.html",
   "/my-store/home.html",
   "/my-store/login.html",
   "/my-store/signup.html",
+  "/my-store/verify.html",
   "/my-store/profile.html",
   "/my-store/product.html",
   "/my-store/claim-reward.html",
@@ -17,17 +18,17 @@ const FILES_TO_CACHE = [
 self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
   );
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
+    caches.keys().then((cacheNames) =>
       Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
           }
         })
       )
@@ -36,12 +37,14 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
-
   event.respondWith(
     fetch(event.request)
-      .then((networkResponse) => {
-        return networkResponse;
+      .then((response) => {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
       })
       .catch(() => caches.match(event.request))
   );
