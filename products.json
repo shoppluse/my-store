@@ -110,5 +110,27 @@
     "rating": 4.0,
     "category": "Home",
     "brand": "All Brands"
+  },
+    {
+    "id": 8,
+    "name": "Spigen DuraPro",
+    "description": "ManufacturerSpigen
+PackerSpigen India Private Limited / NO.295 - 296, Ecotech-1, Extension, Greater Noida, Uttar Pradesh 201310, India
+ImporterSpigen India Private Limited / NO.295 - 296, Ecotech-1, Extension, Greater Noida, Uttar Pradesh 201310, India
+Item Weight62 g
+Item Dimensions LxWxH19.1 x 7.4 x 1.7 Centimeters
+Net Quantity1.0 Set
+Generic NameWatch Band",
+    "price": "Just ₹2,699",
+    "link": "https://amzn.to/3NPk9uN",
+    "image": "https://m.media-amazon.com/images/I/61YMLdWk3CL._SY625_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/711BWWBhPQL._SY625_.jpg",
+      "https://m.media-amazon.com/images/I/71hVum9-9SL._SY625_.jpg",
+      "https://m.media-amazon.com/images/I/71gDNRKq3mL._SY625_.jpg"
+    ],
+    "rating": 4.1,
+    "category": "Fashion",
+    "brand": "Apple"
   }
 ]
