@@ -229,13 +229,28 @@
     font-family: inherit;
   }
 
+  /* UPDATED CATEGORY ROW */
   .category-icons {
     margin: 18px 0 0;
+    width: 100%;
+    max-width: 700px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-    max-width: 900px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 2px 10px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-icons::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-icons {
+    scrollbar-width: none;
   }
 
   .category-icon {
@@ -245,36 +260,44 @@
     justify-content: center;
     background: #ffffff;
     border-radius: 50%;
-    width: 66px;
-    height: 66px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    width: 78px;
+    height: 78px;
+    min-width: 78px;
+    min-height: 78px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.10);
     cursor: pointer;
-    transition: background 0.25s ease, transform 0.2s ease;
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
     user-select: none;
     color: #1f1f1f;
     flex-shrink: 0;
+    padding: 8px;
   }
 
   .category-icon.selected,
   .category-icon:hover {
     background: var(--primary-2);
     color: white;
-    transform: scale(1.08);
+    transform: scale(1.06);
+    box-shadow: 0 8px 18px rgba(0, 153, 255, 0.24);
   }
 
   .category-icon svg {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     fill: currentColor;
+    flex-shrink: 0;
   }
 
   .category-label {
-    font-size: 0.66rem;
-    margin-top: 4px;
-    font-weight: 600;
+    font-size: 0.7rem;
+    margin-top: 5px;
+    font-weight: 700;
     color: inherit;
     text-align: center;
     line-height: 1.1;
+    max-width: 68px;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .product-grid {
@@ -470,11 +493,15 @@
     .category-icons {
       gap: 12px;
       margin-top: 16px;
+      padding: 4px 2px 8px;
     }
 
     .category-icon {
-      width: 58px;
-      height: 58px;
+      width: 74px;
+      height: 74px;
+      min-width: 74px;
+      min-height: 74px;
+      padding: 7px;
     }
 
     .category-icon svg {
@@ -483,8 +510,9 @@
     }
 
     .category-label {
-      font-size: 0.6rem;
-      margin-top: 3px;
+      font-size: 0.66rem;
+      margin-top: 4px;
+      max-width: 62px;
     }
 
     .product-card {
