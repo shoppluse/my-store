@@ -238,5 +238,101 @@
     "rating": 4,
     "category": "Sports",
     "brand": "Puma"
+  },
+  {
+    "id": 16,
+    "name": "Timer Clock",
+    "description": "The SADRUCHI Timer Clock is a compact and multifunctional digital timer designed to help users stay punctual and focused during study, sports, cooking, or daily tasks. Made from durable plastic with a large 5.5 cm LCD display, it offers clear visibility and easy operation with 3-in-1 functions including clock, stopwatch, and timer modes. It features two alert modes—silent mode with flash light only and ring mode with loud beeping alarm plus flash light—making it suitable for different situations. With a tabletop stand, magnetic back, and easy mode switching, this multicolored timer clock is a practical and useful tool for students, athletes, and anyone managing time effectively.",
+    "price": "Just ₹199 ",
+    "link": "https://amzn.to/4vaDKGs",
+    "image": "https://m.media-amazon.com/images/I/61Um1Tiht8L._SL1280_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/41dCfyuBoiL.jpg",
+      "https://m.media-amazon.com/images/I/41ctDheZs5L.jpg",
+      "https://m.media-amazon.com/images/I/612IhLO9izL._SL1500_.jpg"
+    ],
+    "rating":4.4 ,
+    "category": "Accessories",
+    "brand": "All Brands"
+  },
+{
+    "id": 17,
+    "name": "Study Table Desk Lamp",
+    "description": "The LED Reading Lamp with Desk Organizer is a practical and stylish study lamp designed to provide comfortable lighting and better workspace organization. Made with a durable plastic base and shade, it features eye-caring LED technology with three color modes—White, Warm, and Warm White—along with adjustable brightness levels for reading, studying, working, or relaxing. Its flexible adjustable neck allows easy direction control, while the built-in pen and phone holders help keep the desk neat and organized. With USB rechargeable support, touch switch control, and 1.5 to 2 hours of runtime on full brightness, this lamp is a convenient and useful choice for daily study and work use.",
+    "price": "Just ₹385 ",
+    "link": "https://amzn.to/4vex2iO",
+    "image": "https://m.media-amazon.com/images/I/611AjN7Wq9L._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/71FmTbPDwgL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71PXzKTL5ML._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71ETOVGauzL._SL1500_.jpg"
+    ],
+    "rating":4.2 ,
+    "category": "Accessories",
+    "brand": "All Brands"
+  },
+{
+    "id": 18,
+    "name": "LCD Writing Pad",
+    "description": "The Portronics RuffPad 8.5E LCD Writing Tablet is a lightweight and reusable digital writing pad designed for writing, drawing, doodling, and note-taking for both kids and adults. It features an 8.5-inch anti-glare, glare-free LCD screen with pressure-sensitive technology that allows users to create thick and thin lines based on stylus pressure. With its one-button erase function, anti-erase lock feature, and the ability to rewrite over 100,000 times, it is an eco-friendly alternative to paper and pencils. Safe, non-toxic, and easy to use, the RuffPad 8.5E is ideal for students, office use, creative work, and everyday learning or entertainment.",
+    "price": "Just ₹149 ",
+    "link": "https://amzn.to/4v9iReV",
+    "image": "https://m.media-amazon.com/images/I/51wfrF6-1hL._SL1200_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/51s2fw7kOcL._SL1200_.jpg",
+      "https://m.media-amazon.com/images/I/611iQw-FTCL._SL1200_.jpg",
+      "https://m.media-amazon.com/images/I/610599fBAhL._SL1200_.jpg"
+    ],
+    "rating":4 ,
+    "category": "Accessories",
+    "brand": "All Brands"
+  },
+{
+    "id": 18,
+    "name": "YOUVA Case Bound Magnetic My Notes",
+    "description": "The YOUVA Hardcover Journal with Magnetic Flap is a stylish and practical notebook designed for writing, note-taking, and daily journaling. It features a sturdy hardcover with a magnetic flap closure that keeps the book securely closed and prevents pages from becoming loose. With a convenient A5 size, 192 pages, matte finish cover, and attractive trendy designs with spot UV effect, it offers both durability and a modern executive look. The journal also includes good quality paper and a bookmark ribbon, making it a useful and eco-friendly choice for students, professionals, and all age groups.",
+    "price": "Just ₹123",
+    "link": "https://amzn.to/3Q7UwWF",
+    "image": "https://m.media-amazon.com/images/I/51iw4La07GL._SL1100_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/613ojkLLV2L._SL1100_.jpg",
+      "https://m.media-amazon.com/images/I/51kX62xXpaL._SL1100_.jpg",
+      "https://m.media-amazon.com/images/I/41OgDgtBvXL._SL1100_.jpg"
+    ],
+    "rating":4.3 ,
+    "category": "Accessories",
+    "brand": "All Brands"
+  },
+{
+    "id": 19,
+    "name": "Book with Clip Holder with Pen for Gifting",
+    "description": "It is a diary style desk organizer,memo note pad with a closed size of 7.5 X 4.5 inch appox It has 3 sizes of sticky note pad & 1 pad of loose sheets with clip holder and a pen No. of sheets in sticky note pad of yellow(appox size 4 x 3 inch ) ,pink(appox size 3 x 2 inch ) are 50 approx No. of small strips / flags (size 2 x .5 inch ) are 20 approx.Each color and no.of loose sheets( size 7 x 4 inch ) are 50 apprx and the colored small stripes/flags will be arranged randomly Colored stripes and pen design is indicative and might show slight variations",
+    "price": "Just ₹198 ",
+    "link": "https://amzn.to/4sU7oOC",
+    "image": "https://m.media-amazon.com/images/I/41oLhpKArFL._SX450_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/71rI4rUJ52L._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/51rFOgX5SWL._SX450_.jpg",
+      "https://m.media-amazon.com/images/I/71zXSf-bL9L._SL1024_.jpg"
+    ],
+    "rating":4.1 ,
+    "category": "Accessories",
+    "brand": "All Brands"
+  },
+{
+    "id": 20,
+    "name": "3 in 1 Diary with Pen and Wooden Lifetime Calendar",
+    "description": "The Giftana Wooden Gift Set is a premium and elegant gift combo designed for both personal and professional gifting. This beautifully boxed set includes a wooden diary, a premium wooden metal pen, and a wooden lifetime calendar desk, making it a stylish and useful choice for daily writing and desk organization. The diary features an eco-friendly wooden cover with 160 pages of 80 GSM ivory paper, while the reusable wooden calendar offers long-lasting functionality with a timeless handcrafted design. Perfect for birthdays, festivals, corporate gifting, and special occasions, this modern brown-themed set is a thoughtful and practical gift suitable for all age groups and loved ones.",
+    "price": "Just ₹799 ",
+    "link": "https://amzn.to/4sVzqJy",
+    "image": "https://m.media-amazon.com/images/I/71GGQ0DWiDL._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/51ehYr8jacL._SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/51xifX-lTaL._SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/51wu-Kv6STL._SL1080_.jpg"
+    ],
+    "rating":4.6 ,
+    "category": "Accessories",
+    "brand": "All Brands"
   }
 ]
