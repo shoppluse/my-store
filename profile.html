@@ -59,6 +59,7 @@
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(180deg, var(--bg) 0%, #f8fbff 100%);
       color: var(--text);
+      padding-top: env(safe-area-inset-top, 0px);
     }
 
     .main-header {
@@ -70,6 +71,8 @@
       box-shadow: 0 6px 20px var(--shadow);
       flex-wrap: wrap;
       gap: 12px;
+      margin-top: 10px;
+      border-radius: 0 0 18px 18px;
     }
 
     .shopplus-logo {
@@ -451,11 +454,19 @@
     }
 
     @media (max-width: 700px) {
+      body {
+        padding-top: 8px;
+      }
+
       .main-header {
         padding: 14px 14px;
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
+        margin-top: 8px;
+        margin-left: 8px;
+        margin-right: 8px;
+        border-radius: 18px;
       }
 
       .shopplus-logo {
@@ -615,11 +626,11 @@
 </head>
 <body>
   <div class="main-header">
-    <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+    <a href="./home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
     <div class="header-actions">
-      <a href="home.html" class="header-btn">Home</a>
-      <a href="claim-reward.html" class="header-btn">Claim Reward</a>
+      <a href="./home.html" class="header-btn">Home</a>
+      <a href="./claim-reward.html" class="header-btn">Claim Reward</a>
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
     </div>
   </div>
@@ -653,7 +664,7 @@
         </div>
 
         <div class="btn-group">
-          <a href="home.html" class="btn btn-primary">Back to Store</a>
+          <a href="./home.html" class="btn btn-primary">Back to Store</a>
           <button id="shareAppBtn" class="btn btn-share">Share App</button>
           <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%20Support%2C%20I%20need%20help." target="_blank" class="btn btn-support">Support</a>
           <button id="logoutBtn" class="btn btn-danger">Logout</button>
@@ -679,7 +690,7 @@
     const currentUserRaw = localStorage.getItem("shopplusUser");
 
     if (!currentUserRaw) {
-      window.location.href = "login.html";
+      window.location.href = "./login.html";
     }
 
     let currentUser = {};
@@ -687,7 +698,7 @@
       currentUser = JSON.parse(currentUserRaw);
     } catch (error) {
       localStorage.removeItem("shopplusUser");
-      window.location.href = "login.html";
+      window.location.href = "./login.html";
     }
 
     const BACKEND_URL = "https://my-store-e28j.onrender.com";
@@ -748,7 +759,7 @@
 
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("shopplusUser");
-      window.location.href = "login.html";
+      window.location.href = "./login.html";
     });
 
     function showShareStatus(message, isSuccess = true) {
