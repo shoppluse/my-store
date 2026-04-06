@@ -126,5 +126,37 @@
     "rating": 4.1,
     "category": "Fashion",
     "brand": "Apple"
+  },
+    {
+    "id": 9,
+    "name": "Chinese Collor Straight Kurta",
+    "description": "Zombom Combo of Men's Solid Cotton Polyester Blend Full Sleeve Mandarin/Chinese Collor Straight Kurta (Pack of 4)",
+    "price": "Just ₹1395",
+    "link": "https://amzn.to/4vcpInP",
+    "image": "https://m.media-amazon.com/images/I/715GjpZpb9L._SX679_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/71P4kHxP+0L._SY741_.jpg",
+      "https://m.media-amazon.com/images/I/71oDfHrGqZL._SX569_.jpg",
+      "https://m.media-amazon.com/images/I/81OqRrRnAuL._SX569_.jpg"
+    ],
+    "rating":4.3 ,
+    "category": "Fashion",
+    "brand": "All Brands"
+  },
+  {
+    "id": 10,
+    "name": "Puma Running Shoe",
+    "description": "Puma Unisex-Adult Flexfocus Lite Modern Running Shoe ",
+    "price": "Just ₹3,615",
+    "link": "https://amzn.to/4sOC1oE ",
+    "image": "https://m.media-amazon.com/images/I/51NmcP-hGlL._SY695_.jpg ",
+    "images": [
+      " https://m.media-amazon.com/images/I/61JufmYFLbL._SY695_.jpg",
+      " https://m.media-amazon.com/images/I/514GgA8mQEL._SY695_.jpg",
+      " https://m.media-amazon.com/images/I/61d8z4WW6cL._SY695_.jpg"
+    ],
+    "rating":4.2 ,
+    "category": " Sports",
+    "brand": " Puma"
   }
 ]
