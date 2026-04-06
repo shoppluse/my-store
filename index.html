@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop+ | Loading...</title>
-
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#0047ab" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
@@ -26,25 +25,16 @@
       --shadow: rgba(0, 71, 171, 0.10);
     }
 
-    [data-theme="dark"] {
-      --bg: #121212;
-      --text: #eaeaea;
-      --muted: #94a3b8;
-      --border: #1e3a8a;
-      --shadow: rgba(51, 153, 255, 0.18);
-    }
-
     body {
       margin: 0;
       min-height: 100vh;
       font-family: 'Poppins', sans-serif;
-      background: var(--bg);
+      background: #ffffff;
       color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));
-      transition: background 0.3s ease, color 0.3s ease;
+      padding: calc(28px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
     }
 
     .splash-wrap {
@@ -72,11 +62,6 @@
       box-shadow: 0 10px 28px var(--shadow);
     }
 
-    [data-theme="dark"] .brand {
-      background: #1c1c2b;
-      color: #66b0ff;
-    }
-
     .brand .plus {
       color: #0099ff;
       font-size: 2.3rem;
@@ -89,10 +74,6 @@
       font-size: 1.35rem;
       font-weight: 700;
       color: var(--primary);
-    }
-
-    [data-theme="dark"] .title {
-      color: #66b0ff;
     }
 
     .subtitle {
@@ -111,11 +92,6 @@
       border-radius: 50%;
       margin: 24px auto 0;
       animation: spin 1s linear infinite;
-    }
-
-    [data-theme="dark"] .loader {
-      border-color: #1f2937;
-      border-top-color: #3a8dde;
     }
 
     @keyframes spin {
@@ -151,9 +127,13 @@
       transform: translateY(-2px);
     }
 
+    .install-btn:active {
+      transform: translateY(0);
+    }
+
     @media (max-width: 520px) {
       body {
-        padding: calc(32px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+        padding: calc(42px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
       }
 
       .brand {
@@ -196,12 +176,7 @@
     let deferredPrompt;
     const installBtn = document.getElementById("installAppBtn");
 
-    // Optional dark mode sync
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      document.documentElement.setAttribute("data-theme", savedTheme);
-    }
-
+    // PWA Install Prompt
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
@@ -224,6 +199,7 @@
       installBtn.style.display = "none";
     });
 
+    // Service Worker Registration
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
@@ -236,14 +212,15 @@
       });
     }
 
+    // Auth Redirect Logic
     setTimeout(() => {
       const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
       const user = localStorage.getItem("shopplusUser");
 
       if (isLoggedIn === "true" && user) {
-        window.location.href = "./home.html";
+        window.location.href = "home.html";
       } else {
-        window.location.href = "./login.html";
+        window.location.href = "login.html";
       }
     }, 1200);
   </script>
