@@ -334,5 +334,53 @@
     "rating":4.6 ,
     "category": "Accessories",
     "brand": "All Brands"
+  },
+  {
+    "id": 21,
+    "name": "Philips 2100-Watt Induction Cooktop",
+    "description": "The Philips HD4928/01 Induction Cooktop is a modern and efficient cooking appliance designed to make daily cooking faster, easier, and more convenient. Powered by advanced electromagnetic induction technology, it delivers high heating efficiency, cooks food quicker than a traditional gas stove, and helps retain nutrients by reducing vitamin loss during cooking. With a powerful 2100W performance, touch start operation, 0–3 hours timer setting, and 5 preset menus specially programmed for Indian cooking needs, it offers a smooth and user-friendly cooking experience. Its Smart Sense technology also detects suitable vessels for safe and efficient use, making it a practical choice for modern kitchens.",
+    "price": "Just ₹3,549 ",
+    "link": "https://amzn.to/4sli8Vj",
+    "image": "https://m.media-amazon.com/images/I/61TDmpQ6-2L._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/61l1SUFeS7L._SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61eSX3+CoiL._SL1000_.jpg",
+      "https://m.media-amazon.com/images/I/61na7WlAyFL._SL1000_.jpg"
+    ],
+    "rating":4.1 ,
+    "category": "Home",
+    "brand": "Philips"
+  },
+{
+    "id": 22,
+    "name": "Rico BIS-ISI Certified induction stove",
+    "description": "The Rico Induction Cooktop is a compact and efficient electric cooking appliance designed for fast, safe, and convenient everyday cooking. It features superfast heating technology that helps prepare meals quickly while saving time and energy. Built with a high-grade ceramic glass surface, it offers durability, heat resistance, and easy cleaning for regular kitchen use. With multiple cooking functions such as soup, fry, steam, and other Indian cooking modes, along with an LED digital display, portable design, and smart safety features like auto vessel detection, timer with auto shut-off, and shockproof body, this induction cooktop is a practical choice for homes, hostels, and travel.",
+    "price": "Just ₹3,699 ",
+    "link": "https://amzn.to/41exMXs",
+    "image": "https://m.media-amazon.com/images/I/71zz4k5bFiL._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/71iyqz7oO5L._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71l0NYQKZ4L._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81ksRg2WkwL._SL1500_.jpg"
+    ],
+    "rating": 4.4,
+    "category": "Home",
+    "brand": "Rico"
+  },
+{
+    "id": 23,
+    "name": "Cadlec CookMate 2000W Induction Cooktop",
+    "description": "The CADLEC Induction Cooktop is a powerful and efficient electric cooking appliance designed for fast, safe, and convenient everyday cooking. With 2000W high-power performance, it provides quick heating and energy-efficient operation, making it ideal for modern kitchens, small spaces, offices, and portable use. Built with a durable ABS plastic body, this induction stove is shock-proof, rust-proof, and designed for long-lasting safety and reliability. It also features an LED digital display, adjustable temperature control, automatic shut-off, and smart preset cooking functions for Indian dishes like chapati and dosa, making it a practical and user-friendly choice for daily cooking",
+    "price": "Just ₹ 3,149",
+    "link": "https://amzn.to/47PiT1w",
+    "image": "https://m.media-amazon.com/images/I/71JMUnpVOUL._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/81Se9fHwrgL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81R8wsFI+cL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81VCo7SyghL._SL1500_.jpg"
+    ],
+    "rating":4 ,
+    "category": "Home",
+    "brand": "All Brands"
   }
 ]
