@@ -382,5 +382,53 @@
     "rating":4 ,
     "category": "Home",
     "brand": "All Brands"
+  },
+  {
+    "id": 24,
+    "name": "WishCare Tinted Lip Balm",
+    "description": "The WishCare Ceramide Lip Balm SPF 50 PA+++ is a nourishing and protective lip care product designed to keep lips soft, moisturized, and shielded from sun damage. Enriched with broad-spectrum SPF 50 and PA+++ protection, it helps protect lips from harmful UVA and UVB rays, while ceramides lock in moisture and support healthy lips. Infused with Kojic Acid and Niacinamide, it helps lighten and brighten pigmented lips caused by sun exposure, pollution, or daily stress. With a natural pink tint, non-sticky texture, and ingredients like shea butter and cocoa butter, this cruelty-free, paraben-free, vegan lip balm offers smooth application, long-lasting hydration, and everyday lip repair.",
+    "price": "Just ₹239",
+    "link": "https://amzn.to/48vHyIw",
+    "image": "https://m.media-amazon.com/images/I/611r8U6QfFL._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/511emskZ4yL._SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/51jIxaaW9aL._SL1080_.jpg",
+      "https://m.media-amazon.com/images/I/51n7F6vCE8L._SL1080_.jpg"
+    ],
+    "rating":4.3 ,
+    "category": "Beauty",
+    "brand": "WishCare"
+  },
+{
+    "id": 25,
+    "name": "Super Bright Sunscreen",
+    "description": "The DOT & KEY Vitamin C + E Super Bright Sunscreen SPF 50 PA+++ is a lightweight and effective skincare product designed to protect the skin from harmful sun damage while enhancing glow and radiance. With broad-spectrum SPF 50 and PA+++ protection, it helps prevent tanning and shields the skin from UVA, UVB, and blue light rays during both indoor and outdoor use. Enriched with Triple Vitamin C, Vitamin E, and Sicilian Blood Orange, it helps fight dullness, pigmentation, and early signs of aging while supporting brighter and healthier-looking skin. Its water-light, non-sticky, fragrance-free formula provides zero white cast, making it suitable for all skin types, including sensitive skin.",
+    "price": "Just ₹263 ",
+    "link": "https://amzn.to/4si9y9O",
+    "image": "https://m.media-amazon.com/images/I/61KRXpuiC7L._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/714S6n3XRqL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71OLl7P93IL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71j1wbqnFkL._SL1500_.jpg"
+    ],
+    "rating":4.2 ,
+    "category": "Beauty",
+    "brand": "All Brands"
+  },
+{
+    "id": 26,
+    "name": "Hyphen Brightening Lip Balm for Dark Lips",
+    "description": "The Hyphen Peachy Nude Lip Balm is a glossy and nourishing tinted lip balm designed to provide hydration, softness, and a natural peachy nude finish. It offers up to 24-hour moisture lock while helping to repair the lip moisture barrier with the goodness of Linoleic Acid. Enriched with peptides, this non-sticky formula helps visibly plump and smooth the lips for a healthier and fuller look. With its paraben-free formula and buildable tint, this lip balm is a convenient all-in-one product for daily moisturization, brightening, and soft lip care.",
+    "price": "Just ₹ 375",
+    "link": "https://amzn.to/4caR7h0",
+    "image": "https://m.media-amazon.com/images/I/514F-YINiGL._SL1100_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/61Mg21avJML._SL1100_.jpg",
+      "https://m.media-amazon.com/images/I/61LF0h7cGtL._SL1100_.jpg",
+      "https://m.media-amazon.com/images/I/718H0U2yfsL._SL1100_.jpg"
+    ],
+    "rating":4 ,
+    "category": "Beauty",
+    "brand": "Hyphen"
   }
 ]
