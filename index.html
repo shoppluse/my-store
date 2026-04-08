@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="PASTE_YOUR_REAL_GOOGLE_CODE_HERE" />
 
   <!-- Primary SEO -->
   <title>ShopPlus - Smart Shopping & Rewards</title>
@@ -108,7 +109,6 @@
       line-height: 1;
     }
 
-    /* SEO text for search engines (hidden visually but crawlable) */
     .seo-content {
       position: absolute;
       left: -9999px;
@@ -163,12 +163,10 @@
   </style>
 </head>
 <body>
-  <!-- Visible splash -->
   <div class="splash-wrap">
     <div class="brand">Shop<span class="plus">Plus</span></div>
   </div>
 
-  <!-- SEO-readable content for Google -->
   <main class="seo-content" aria-hidden="false">
     <h1>ShopPlus - Smart Shopping & Rewards</h1>
     <p>
@@ -198,14 +196,12 @@
   </main>
 
   <script>
-    // Clear old service worker caches (one-time cleanup)
     if ("caches" in window) {
       caches.keys().then((names) => {
         names.forEach((name) => caches.delete(name));
       });
     }
 
-    // Register latest service worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
         try {
@@ -222,7 +218,6 @@
       });
     }
 
-    // Redirect after splash
     setTimeout(() => {
       const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
       const user = localStorage.getItem("shopplusUser");
