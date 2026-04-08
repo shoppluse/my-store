@@ -3,11 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shop+ | Loading...</title>
+
+  <!-- Primary SEO -->
+  <title>ShopPlus - Smart Shopping & Rewards</title>
+  <meta name="description" content="ShopPlus is a smart shopping and rewards platform to discover premium products, explore deals, and manage reward claims easily." />
+  <meta name="keywords" content="ShopPlus, ShopPlus app, ShopPlus rewards, smart shopping, product discovery, affiliate shopping, rewards app" />
+  <meta name="author" content="ShopPlus" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://shoppluse.github.io/my-store/" />
+
+  <!-- PWA -->
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ShopPlus - Smart Shopping & Rewards" />
+  <meta property="og:description" content="Discover products, explore smart shopping options, and manage reward claims with ShopPlus." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://shoppluse.github.io/my-store/" />
+  <meta property="og:image" content="https://shoppluse.github.io/my-store/icons/icon-512.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ShopPlus - Smart Shopping & Rewards" />
+  <meta name="twitter:description" content="Discover products, explore smart shopping options, and manage reward claims with ShopPlus." />
+  <meta name="twitter:image" content="https://shoppluse.github.io/my-store/icons/icon-512.png" />
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ShopPlus",
+    "url": "https://shoppluse.github.io/my-store/",
+    "description": "ShopPlus is a smart shopping and rewards platform to discover products and manage reward claims.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://shoppluse.github.io/my-store/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 
   <style>
     * {
@@ -32,6 +72,7 @@
       justify-content: center;
       padding: calc(28px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
       overflow: hidden;
+      position: relative;
     }
 
     .splash-wrap {
@@ -42,6 +83,7 @@
       align-items: center;
       justify-content: center;
       animation: fadeIn 0.5s ease;
+      z-index: 2;
     }
 
     .brand {
@@ -64,6 +106,17 @@
       font-size: 2.5rem;
       font-weight: 900;
       line-height: 1;
+    }
+
+    /* SEO text for search engines (hidden visually but crawlable) */
+    .seo-content {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      white-space: normal;
     }
 
     @keyframes fadeIn {
@@ -110,9 +163,39 @@
   </style>
 </head>
 <body>
+  <!-- Visible splash -->
   <div class="splash-wrap">
-    <div class="brand">Shop <span class="plus">+</span></div>
+    <div class="brand">Shop<span class="plus">Plus</span></div>
   </div>
+
+  <!-- SEO-readable content for Google -->
+  <main class="seo-content" aria-hidden="false">
+    <h1>ShopPlus - Smart Shopping & Rewards</h1>
+    <p>
+      ShopPlus is a smart shopping and rewards platform that helps users discover premium products,
+      explore trusted deals, and manage reward claims easily.
+    </p>
+
+    <h2>Features of ShopPlus</h2>
+    <ul>
+      <li>Discover premium and trending products</li>
+      <li>Smart shopping experience with clean app-style interface</li>
+      <li>Easy login and personalized user access</li>
+      <li>Reward claim support and shopping convenience</li>
+      <li>Mobile-friendly progressive web app experience</li>
+    </ul>
+
+    <h2>Why choose ShopPlus?</h2>
+    <p>
+      ShopPlus is designed to provide a simple, fast, and user-friendly shopping experience.
+      It combines product discovery, smart browsing, and rewards support in one platform.
+    </p>
+
+    <nav>
+      <a href="/my-store/login.html">Login to ShopPlus</a>
+      <a href="/my-store/home.html">Open ShopPlus Home</a>
+    </nav>
+  </main>
 
   <script>
     // Clear old service worker caches (one-time cleanup)
@@ -139,7 +222,7 @@
       });
     }
 
-    // Silent redirect after splash
+    // Redirect after splash
     setTimeout(() => {
       const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
       const user = localStorage.getItem("shopplusUser");
