@@ -289,10 +289,23 @@
   }
 
   .app-shortcuts-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    align-items: start;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    align-items: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 2px 8px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .app-shortcuts-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app-shortcuts-row {
+    scrollbar-width: none;
   }
 
   .app-shortcut-card {
@@ -302,7 +315,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 4px 2px;
+    flex: 0 0 auto;
+    min-width: 82px;
+    max-width: 82px;
+    padding: 2px 0;
     background: transparent;
     border: none;
     box-shadow: none;
@@ -340,10 +356,11 @@
     text-align: center;
     color: var(--primary);
     line-height: 1.1;
+    word-break: break-word;
   }
 
   .app-shortcut-fallback {
-    grid-column: 1 / -1;
+    min-width: 100%;
     text-align: center;
     padding: 10px;
     color: var(--muted);
@@ -353,7 +370,7 @@
   /* PRODUCTS */
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     padding: 8px 6px 18px;
     max-width: 1280px;
@@ -456,6 +473,83 @@
     word-break: break-all;
   }
 
+  /* TABLET */
+  @media (min-width: 701px) and (max-width: 1024px) {
+    .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 10px 10px 22px;
+    }
+
+    .app-shortcuts-section {
+      padding: 0 16px;
+    }
+  }
+
+  /* LAPTOP / DESKTOP */
+  @media (min-width: 1025px) {
+    .main-header {
+      padding: 10px 18px 14px;
+      gap: 12px;
+    }
+
+    .shopplus-logo {
+      max-width: 680px;
+    }
+
+    .header-actions {
+      max-width: 680px;
+    }
+
+    .search-form,
+    .category-icons {
+      max-width: 680px;
+    }
+
+    .app-shortcuts-section {
+      max-width: 1280px;
+      padding: 0 18px;
+      margin-top: 12px;
+    }
+
+    .app-shortcuts-title {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .app-shortcuts-row {
+      gap: 20px;
+      padding-bottom: 10px;
+    }
+
+    .app-shortcut-card {
+      min-width: 90px;
+      max-width: 90px;
+    }
+
+    .app-shortcut-logo-wrap {
+      width: 58px;
+      height: 58px;
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      padding: 12px 18px 28px;
+      max-width: 1280px;
+    }
+
+    .product-card h2 {
+      font-size: 14px;
+      min-height: 36px;
+    }
+
+    .product-rating {
+      font-size: 12px;
+    }
+  }
+
+  /* MOBILE */
   @media (max-width: 700px) {
     .main-header {
       padding: calc(12px + env(safe-area-inset-top)) 12px 14px;
@@ -542,11 +636,13 @@
     }
 
     .app-shortcuts-row {
-      gap: 4px;
+      gap: 14px;
+      padding-bottom: 6px;
     }
 
     .app-shortcut-card {
-      padding: 2px 1px;
+      min-width: 76px;
+      max-width: 76px;
     }
 
     .app-shortcut-logo-wrap {
