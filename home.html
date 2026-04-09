@@ -161,7 +161,6 @@
     outline: none;
   }
 
-  /* BRAND FILTER */
   .brand-filter-wrapper {
     position: relative;
     width: 100%;
@@ -613,7 +612,6 @@
   const searchInput = document.getElementById('searchBar');
   const productList = document.getElementById('product-list');
 
-  // BRAND FILTER ELEMENTS
   const brandToggleBtn = document.getElementById('brandToggleBtn');
   const brandDropdown = document.getElementById('brandDropdown');
   const brandArrow = document.getElementById('brandArrow');
@@ -740,7 +738,6 @@
     displayProducts(filtered);
   }
 
-  // BRAND FILTER LOGIC
   function setActiveBrand(selectedBrand) {
     brandItems.forEach(item => {
       item.classList.toggle('active', item.getAttribute('data-brand').toLowerCase() === selectedBrand.toLowerCase());
@@ -804,7 +801,6 @@
     }
   });
 
-  // DARK MODE
   const darkToggleBtn = document.getElementById('darkModeToggle');
   const htmlEl = document.documentElement;
   const savedTheme = localStorage.getItem('theme');
@@ -828,12 +824,10 @@
     }
   });
 
-  // Load products on start
   window.addEventListener('DOMContentLoaded', () => {
     loadProducts();
   });
 
-  // Register your existing PWA service worker
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
@@ -847,10 +841,12 @@
   }
 </script>
 
-<!-- FIREBASE NOTIFICATION MODULE -->
+<!-- FIREBASE NOTIFICATION MODULE (DEBUG VERSION) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
   import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js";
+
+  console.log("Firebase module loaded successfully");
 
   const firebaseConfig = {
     apiKey: "AIzaSyC9nL5__J6cEhaQvl2kcAT0m2A2op7-F_c",
@@ -865,40 +861,41 @@
   const messaging = getMessaging(app);
 
   const notifyBtn = document.getElementById("notifyBtn");
+  console.log("Notify button found:", notifyBtn);
 
   notifyBtn.addEventListener("click", async () => {
+    console.log("Notify button clicked");
+
     try {
-      // Request browser notification permission
       const permission = await Notification.requestPermission();
+      console.log("Permission result:", permission);
 
       if (permission !== "granted") {
         alert("Notification permission denied.");
         return;
       }
 
-      // Register Firebase messaging service worker
       const registration = await navigator.serviceWorker.register("/my-store/firebase-messaging-sw.js");
+      console.log("Firebase messaging SW registered:", registration);
 
-      // Get FCM token
       const currentToken = await getToken(messaging, {
         vapidKey: "BHBCBJemVUSgH6NRQYODZi6J6PgL7CFdIh4rgxvSw5aphNG9_OkJeMKLXD8AyKjrY-7Tk_PusaAQYZtn7OAWQx4",
         serviceWorkerRegistration: registration
       });
 
+      console.log("FCM Token:", currentToken);
+
       if (currentToken) {
-        console.log("FCM Token:", currentToken);
-        alert("Notifications enabled successfully! Check browser console for FCM token.");
+        alert("Notifications enabled successfully!");
       } else {
-        console.warn("No registration token available.");
         alert("No FCM token generated.");
       }
     } catch (error) {
-      console.error("Error getting notification token:", error);
+      console.error("Notification setup failed:", error);
       alert("Notification setup failed. Check console.");
     }
   });
 
-  // Foreground message handling
   onMessage(messaging, (payload) => {
     console.log("Foreground message:", payload);
 
