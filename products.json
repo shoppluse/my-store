@@ -559,5 +559,22 @@
     "rating":3.9 ,
     "category": "Fashion",
     "brand": "All Brands"
+  },
+  {
+    "id": 33,
+    "name": "THREAD BOX Ethnic Motifs Linen Blend Saree",
+    "description": "The mauve and white ethnic motifs printed saree is a beautiful and elegant traditional outfit designed for festive occasions and graceful everyday ethnic wear. Made from a comfortable linen blend fabric, this saree offers a soft feel and stylish drape for easy wear. It features attractive ethnic motif prints with a zari border that adds a classic and refined touch to its overall look. With a length of 5.5 metres and an additional 0.8 metre unstitched blouse piece, this saree is a complete and versatile choice for women who want a blend of comfort, tradition, and timeless style.",
+    "price": "Just ₹498 ",
+    "rating":4.3 ,
+    "link": "https://myntr.it/d1QMHo5",
+    "image": "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2025/NOVEMBER/22/secveLtR_7760ebcf798c46799cb16f96ad955760.jpg",
+    "images": [
+      "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2025/NOVEMBER/22/secveLtR_7760ebcf798c46799cb16f96ad955760.jpg",
+      "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2025/NOVEMBER/22/secveLtR_7760ebcf798c46799cb16f96ad955760.jpg",
+      "https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/2025/NOVEMBER/22/secveLtR_7760ebcf798c46799cb16f96ad955760.jpg"
+    ],
+    "rating":4.3 ,
+    "category": "Fashion",
+    "brand": "THREAD BOX"
   }
 ]
