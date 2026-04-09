@@ -16,5 +16,11 @@
     "name": "Myntra",
     "image": "/my-store/images/myntra.png",
     "link": "https://myntr.it/WzO3EA9"
+  },
+  {
+    "id": "app4",
+    "name": "AJIO",
+    "image": "/my-store/images/ajio.png",
+    "link": "https://ajiio.in/8uY5OSJ"
   }
 ]
