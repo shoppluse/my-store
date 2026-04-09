@@ -275,59 +275,58 @@
     word-break: break-word;
   }
 
-  /* APP SHORTCUTS */
+  /* APP SHORTCUTS - NO OUTER BLOCK */
   .app-shortcuts-section {
     width: 100%;
     max-width: 1280px;
-    margin: 18px auto 8px;
-    padding: 0 24px;
+    margin: 14px auto 6px;
+    padding: 0 16px;
   }
 
   .app-shortcuts-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--primary);
-    margin: 0 0 14px;
+    margin: 0 0 10px;
   }
 
   .app-shortcuts-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 8px;
+    align-items: start;
   }
 
   .app-shortcut-card {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 18px 14px;
     text-decoration: none;
     color: inherit;
-    box-shadow: 0 8px 24px rgba(0, 71, 171, 0.12);
-    border: 1px solid rgba(0, 71, 171, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 150px;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-  }
-
-  .app-shortcut-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 30px rgba(0, 71, 171, 0.18);
+    justify-content: flex-start;
+    padding: 4px 2px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
 
   .app-shortcut-logo-wrap {
-    width: 78px;
-    height: 78px;
-    border-radius: 22px;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
     background: #eef4ff;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    margin-bottom: 12px;
-    padding: 12px;
+    margin-bottom: 6px;
+    padding: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .app-shortcut-card:hover .app-shortcut-logo-wrap {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 71, 171, 0.14);
   }
 
   .app-shortcut-logo {
@@ -338,21 +337,19 @@
   }
 
   .app-shortcut-name {
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-align: center;
     color: var(--primary);
+    line-height: 1.15;
   }
 
   .app-shortcut-fallback {
     grid-column: 1 / -1;
     text-align: center;
-    background: var(--card-bg);
-    padding: 18px;
-    border-radius: 16px;
+    padding: 10px;
     color: var(--muted);
     font-weight: 600;
-    box-shadow: 0 6px 18px rgba(0, 71, 171, 0.08);
   }
 
   .product-grid {
@@ -506,18 +503,18 @@
 
   @media (max-width: 700px) {
     .main-header {
-      padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
-      gap: 12px;
+      padding: calc(14px + env(safe-area-inset-top)) 12px 16px;
+      gap: 10px;
     }
 
     .shopplus-logo {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       padding: 8px 14px;
       border-radius: 16px;
     }
 
     .shopplus-logo .plus {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
     }
 
     .header-actions {
@@ -527,15 +524,15 @@
 
     .header-btn,
     .brand-toggle-btn {
-      min-height: 58px;
-      font-size: 0.82rem;
+      min-height: 54px;
+      font-size: 0.8rem;
       padding: 10px 6px;
       border-radius: 14px;
     }
 
     .icon-only-btn,
     .profile-btn {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
     }
 
     .brand-dropdown {
@@ -543,17 +540,18 @@
     }
 
     .search-section {
-      padding: 18px 12px 16px;
+      padding: 16px 12px 14px;
     }
 
     .search-form input {
       padding: 13px 14px;
       font-size: 15px;
+      border-radius: 14px;
     }
 
     .category-icons {
       gap: 12px;
-      margin-top: 16px;
+      margin-top: 14px;
       padding: 4px 2px 8px;
     }
 
@@ -578,35 +576,34 @@
 
     .app-shortcuts-section {
       padding: 0 12px;
-      margin-top: 14px;
+      margin-top: 12px;
+      margin-bottom: 2px;
     }
 
     .app-shortcuts-title {
-      font-size: 1.05rem;
-      margin-bottom: 10px;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
     }
 
     .app-shortcuts-row {
-      gap: 10px;
+      gap: 6px;
     }
 
     .app-shortcut-card {
-      min-height: 128px;
-      padding: 14px 8px;
-      border-radius: 16px;
+      padding: 2px 1px;
     }
 
     .app-shortcut-logo-wrap {
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
-      margin-bottom: 10px;
-      padding: 10px;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      margin-bottom: 5px;
+      padding: 7px;
     }
 
     .app-shortcut-name {
-      font-size: 0.86rem;
-      line-height: 1.2;
+      font-size: 0.72rem;
+      line-height: 1.1;
     }
 
     .product-card {
