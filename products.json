@@ -430,5 +430,21 @@
     "rating":4 ,
     "category": "Beauty",
     "brand": "Hyphen"
+  },
+  {
+    "id": 27,
+    "name": "Puma Pant",
+    "description": "The Myntra Fashion Carnival Deal is a special affiliate promotion that allows users to share exciting fashion offers with friends and family, earn money on successful purchases, and transfer earnings directly to their bank account. Through this deal, customers can get a minimum of 70% off on Puma clothing on Myntra, while promoters can earn up to 8% profit on eligible Myntra app transactions. Myntra offers a wide range of fashion, footwear, accessories, personal care, and lifestyle products for men, women, and kids, along with genuine products, regular flash sales, and a 30-day return policy. However, profit is not applicable on transactions made using Myntra credits or cash, cancelled or returned orders, bulk orders, referral earnings, or purchases of gold, silver, jewelry, and idols.",
+    "price": "Just ₹239 ",
+    "link": "https://myntr.it/BA53toO",
+    "image": "https://asset22.ckassets.com/resources/image/staticpage_images/04%2014-1737105860.jpg",
+    "images": [
+      "https://asset22.ckassets.com/resources/image/staticpage_images/04%2014-1737105860.jpg",
+      "https://asset22.ckassets.com/resources/image/staticpage_images/04%2014-1737105860.jpg",
+      "https://asset22.ckassets.com/resources/image/staticpage_images/04%2014-1737105860.jpg"
+    ],
+    "rating": 4.4,
+    "category": "Fashion",
+    "brand": "Puma"
   }
 ]
