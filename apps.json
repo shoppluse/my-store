@@ -1,0 +1,20 @@
+[
+  {
+    "id": "app1",
+    "name": "Amazon",
+    "image": "/my-store/images/amazon.png",
+    "link": "amazon.html"
+  },
+  {
+    "id": "app2",
+    "name": "Flipkart",
+    "image": "/my-store/images/flipkart.png",
+    "link": "https://fktr.in/cgDMxQj"
+  },
+  {
+    "id": "app3",
+    "name": "Myntra",
+    "image": "/my-store/images/myntra.png",
+    "link": "https://myntr.it/WzO3EA9"
+  }
+]
