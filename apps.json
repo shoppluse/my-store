@@ -22,5 +22,11 @@
     "name": "AJIO",
     "image": "/my-store/images/ajio.png",
     "link": "https://ajiio.in/JvD8p3Y"
+  },
+    {
+    "id": "app5",
+    "name": "mamaearth",
+    "image": "/my-store/images/mamaearth.png",
+    "link": "https://bitli.in/q4aU65m"
   }
 ]
