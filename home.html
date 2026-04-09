@@ -28,7 +28,7 @@
 
   :root {
     --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-    --bg: #f8f9fb;
+    --bg: #f5f7fb;
     --bg-deep: #0e1a39;
     --card-bg: #ffffff;
     --text: #1f1f1f;
@@ -37,10 +37,6 @@
     --primary-2: #0099ff;
     --border: #dbe7ff;
     --shadow: rgba(0, 71, 171, 0.14);
-    --btn-bg-view: #43a047;
-    --btn-bg-view-hover: #38733b;
-    --btn-bg-buy: #0099ff;
-    --btn-bg-buy-hover: #006cc0;
   }
 
   body {
@@ -49,7 +45,6 @@
     color: var(--text);
     margin: 0;
     min-height: 100vh;
-    transition: background 0.3s ease, color 0.3s ease;
     overflow-x: hidden;
   }
 
@@ -58,30 +53,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: calc(18px + env(safe-area-inset-top)) 16px 20px;
-    box-shadow: 0 6px 20px var(--shadow);
-    gap: 14px;
+    padding: calc(12px + env(safe-area-inset-top)) 12px 14px;
+    box-shadow: 0 4px 14px var(--shadow);
+    gap: 10px;
   }
 
   .shopplus-logo {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary);
     background: #ffffff;
-    padding: 10px 22px;
+    padding: 8px 16px;
     border-radius: 18px;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     width: 100%;
     max-width: 700px;
+    min-height: 52px;
   }
 
   .shopplus-logo .plus {
     color: var(--primary-2);
-    font-size: 2.2rem;
+    font-size: 1.9rem;
     font-weight: 900;
     line-height: 1;
   }
@@ -90,21 +86,21 @@
     width: 100%;
     max-width: 700px;
     display: grid;
-    grid-template-columns: 1.6fr 0.9fr;
-    gap: 12px;
+    grid-template-columns: 1.5fr 0.9fr;
+    gap: 10px;
     align-items: stretch;
   }
 
   .header-btn,
   .brand-toggle-btn {
     width: 100%;
-    min-height: 64px;
+    min-height: 54px;
     text-decoration: none;
     background: rgba(255,255,255,0.15);
     color: #fff;
     font-weight: 700;
-    font-size: 1rem;
-    padding: 12px 10px;
+    font-size: 0.9rem;
+    padding: 10px 8px;
     border-radius: 16px;
     border: 1px solid rgba(255,255,255,0.2);
     display: inline-flex;
@@ -114,7 +110,6 @@
     font-family: inherit;
     cursor: pointer;
     transition: 0.25s ease;
-    box-shadow: none;
     backdrop-filter: blur(4px);
     outline: none;
   }
@@ -126,12 +121,12 @@
   }
 
   .icon-only-btn {
-    font-size: 1.7rem;
+    font-size: 1.45rem;
     padding: 0;
   }
 
   .profile-btn {
-    font-size: 1.7rem;
+    font-size: 1.45rem;
   }
 
   .brand-filter-wrapper {
@@ -183,7 +178,7 @@
 
   .search-section {
     background: var(--bg-deep);
-    padding: 22px 14px 18px;
+    padding: 14px 12px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -199,23 +194,23 @@
     width: 100%;
     border-radius: 16px;
     border: none;
-    padding: 15px 16px;
-    font-size: 16px;
+    padding: 13px 14px;
+    font-size: 15px;
     outline: none;
     font-family: inherit;
   }
 
   .category-icons {
-    margin: 18px 0 0;
+    margin: 12px 0 0;
     width: 100%;
     max-width: 700px;
     display: flex;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    gap: 14px;
+    gap: 12px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 6px 2px 10px;
+    padding: 2px 2px 8px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
   }
@@ -235,59 +230,59 @@
     justify-content: center;
     background: #ffffff;
     border-radius: 50%;
-    width: 78px;
-    height: 78px;
-    min-width: 78px;
-    min-height: 78px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.10);
+    width: 74px;
+    height: 74px;
+    min-width: 74px;
+    min-height: 74px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
     cursor: pointer;
     transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
     user-select: none;
     color: #1f1f1f;
     flex-shrink: 0;
-    padding: 8px;
+    padding: 7px;
   }
 
   .category-icon.selected,
   .category-icon:hover {
     background: var(--primary-2);
     color: white;
-    transform: scale(1.06);
+    transform: scale(1.05);
     box-shadow: 0 8px 18px rgba(0, 153, 255, 0.24);
   }
 
   .category-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     fill: currentColor;
     flex-shrink: 0;
   }
 
   .category-label {
-    font-size: 0.7rem;
-    margin-top: 5px;
+    font-size: 0.66rem;
+    margin-top: 4px;
     font-weight: 700;
     color: inherit;
     text-align: center;
-    line-height: 1.1;
-    max-width: 68px;
+    line-height: 1.05;
+    max-width: 62px;
     white-space: normal;
     word-break: break-word;
   }
 
-  /* APP SHORTCUTS - NO OUTER BLOCK */
+  /* APP SHORTCUTS */
   .app-shortcuts-section {
     width: 100%;
     max-width: 1280px;
-    margin: 14px auto 6px;
-    padding: 0 16px;
+    margin: 10px auto 4px;
+    padding: 0 12px;
   }
 
   .app-shortcuts-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--primary);
-    margin: 0 0 10px;
+    margin: 0 0 8px;
   }
 
   .app-shortcuts-row {
@@ -311,16 +306,16 @@
   }
 
   .app-shortcut-logo-wrap {
-    width: 58px;
-    height: 58px;
-    border-radius: 16px;
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
     background: #eef4ff;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    margin-bottom: 6px;
-    padding: 8px;
+    margin-bottom: 5px;
+    padding: 7px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
@@ -337,11 +332,11 @@
   }
 
   .app-shortcut-name {
-    font-size: 0.8rem;
+    font-size: 0.74rem;
     font-weight: 700;
     text-align: center;
     color: var(--primary);
-    line-height: 1.15;
+    line-height: 1.1;
   }
 
   .app-shortcut-fallback {
@@ -352,59 +347,47 @@
     font-weight: 600;
   }
 
+  /* PRODUCTS - AMAZON STYLE */
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 22px;
-    padding: 24px 24px 48px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    padding: 8px 6px 18px;
     max-width: 1280px;
     margin: 0 auto;
     min-height: 300px;
   }
 
-  @media (max-width: 1100px) {
-    .product-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (max-width: 780px) {
-    .product-grid {
-      grid-template-columns: repeat(2, 1fr);
-      padding: 16px 12px 28px;
-      gap: 12px;
-    }
-  }
-
   .product-card {
-    background: var(--card-bg);
-    border-radius: 18px;
-    box-shadow: 0 6px 20px rgba(0, 71, 171, 0.12);
-    padding: 14px 12px 16px;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
+    align-items: stretch;
+    transition: opacity 0.25s ease;
     opacity: 0;
-    transform: translateY(20px);
-    min-height: 330px;
+    transform: none;
+    min-height: auto;
+    text-decoration: none;
   }
 
   .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 36px rgba(0, 71, 171, 0.22);
+    transform: none;
+    box-shadow: none;
   }
 
   .product-image-box {
     width: 100%;
-    height: 170px;
-    background: #eef2fb;
-    border-radius: 14px;
+    aspect-ratio: 1 / 1;
+    background: #ffffff;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 4px;
+    margin-bottom: 4px;
     overflow: hidden;
   }
 
@@ -416,61 +399,15 @@
   }
 
   .product-card h2 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--primary);
-    margin: 0 0 12px;
-    text-align: center;
-    line-height: 1.3;
-    min-height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .card-actions {
-    margin-top: auto;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .btn {
-    flex: 1;
-    padding: 11px 6px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 13px;
-    text-align: center;
-    cursor: pointer;
-    border: none;
-    outline: none;
-    transition: background-color 0.25s ease, transform 0.25s ease;
-    user-select: none;
-    font-family: inherit;
-    color: white;
-  }
-
-  .btn:hover {
-    transform: translateY(-2px);
-  }
-
-  .view-details {
-    background-color: var(--btn-bg-view);
-  }
-
-  .view-details:hover {
-    background-color: var(--btn-bg-view-hover);
-  }
-
-  .buy-now {
-    background-color: var(--btn-bg-buy);
-  }
-
-  .buy-now:hover {
-    background-color: var(--btn-bg-buy-hover);
+    font-size: 11px;
+    font-weight: 600;
+    color: #1f1f1f;
+    margin: 0;
+    text-align: left;
+    line-height: 1.25;
+    min-height: 28px;
+    display: block;
+    padding: 0 2px 2px;
   }
 
   .loading-text,
@@ -503,7 +440,7 @@
 
   @media (max-width: 700px) {
     .main-header {
-      padding: calc(14px + env(safe-area-inset-top)) 12px 16px;
+      padding: calc(12px + env(safe-area-inset-top)) 12px 14px;
       gap: 10px;
     }
 
@@ -511,6 +448,7 @@
       font-size: 1.3rem;
       padding: 8px 14px;
       border-radius: 16px;
+      min-height: 50px;
     }
 
     .shopplus-logo .plus {
@@ -524,9 +462,9 @@
 
     .header-btn,
     .brand-toggle-btn {
-      min-height: 54px;
-      font-size: 0.8rem;
-      padding: 10px 6px;
+      min-height: 50px;
+      font-size: 0.82rem;
+      padding: 8px 6px;
       border-radius: 14px;
     }
 
@@ -540,53 +478,53 @@
     }
 
     .search-section {
-      padding: 16px 12px 14px;
+      padding: 14px 12px 12px;
     }
 
     .search-form input {
-      padding: 13px 14px;
-      font-size: 15px;
+      padding: 12px 14px;
+      font-size: 14px;
       border-radius: 14px;
     }
 
     .category-icons {
-      gap: 12px;
-      margin-top: 14px;
-      padding: 4px 2px 8px;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 2px 2px 6px;
     }
 
     .category-icon {
-      width: 74px;
-      height: 74px;
-      min-width: 74px;
-      min-height: 74px;
-      padding: 7px;
+      width: 70px;
+      height: 70px;
+      min-width: 70px;
+      min-height: 70px;
+      padding: 6px;
     }
 
     .category-icon svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
     }
 
     .category-label {
-      font-size: 0.66rem;
+      font-size: 0.62rem;
       margin-top: 4px;
-      max-width: 62px;
+      max-width: 58px;
     }
 
     .app-shortcuts-section {
-      padding: 0 12px;
-      margin-top: 12px;
+      padding: 0 10px;
+      margin-top: 8px;
       margin-bottom: 2px;
     }
 
     .app-shortcuts-title {
-      font-size: 0.95rem;
-      margin-bottom: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
     }
 
     .app-shortcuts-row {
-      gap: 6px;
+      gap: 4px;
     }
 
     .app-shortcut-card {
@@ -594,45 +532,33 @@
     }
 
     .app-shortcut-logo-wrap {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      margin-bottom: 5px;
-      padding: 7px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      margin-bottom: 4px;
+      padding: 6px;
     }
 
     .app-shortcut-name {
-      font-size: 0.72rem;
-      line-height: 1.1;
+      font-size: 0.68rem;
+      line-height: 1.05;
     }
 
-    .product-card {
-      min-height: 290px;
-      padding: 10px 10px 14px;
-      border-radius: 16px;
+    .product-grid {
+      gap: 4px;
+      padding: 6px 4px 14px;
     }
 
     .product-image-box {
-      height: 140px;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 12px;
+      padding: 2px;
+      margin-bottom: 3px;
     }
 
     .product-card h2 {
-      font-size: 14px;
-      min-height: 38px;
-      margin-bottom: 10px;
-    }
-
-    .card-actions {
-      gap: 8px;
-    }
-
-    .btn {
-      font-size: 11px;
-      padding: 10px 4px;
-      border-radius: 10px;
+      font-size: 10px;
+      min-height: 24px;
+      line-height: 1.2;
+      padding: 0 1px 2px;
     }
   }
 </style>
@@ -832,32 +758,23 @@
     productList.innerHTML = '';
 
     products.forEach((p, i) => {
-      const card = document.createElement('div');
+      const card = document.createElement('a');
       card.className = 'product-card';
       card.style.opacity = 0;
-      card.style.transform = 'translateY(20px)';
-
-      const buyNowButton = p.link && p.link !== '#'
-        ? `<a class="btn buy-now" href="${p.link}" target="_blank" rel="noopener noreferrer">Buy Now</a>`
-        : `<button class="btn buy-now" onclick="alert('Buy link not added yet for this product')">Buy Now</button>`;
+      card.href = `product.html?id=${encodeURIComponent(p.id)}`;
 
       card.innerHTML = `
         <div class="product-image-box">
           <img src="${p.image}" alt="${p.name}" />
         </div>
         <h2>${p.name}</h2>
-        <div class="card-actions">
-          <a class="btn view-details" href="product.html?id=${encodeURIComponent(p.id)}">View Details</a>
-          ${buyNowButton}
-        </div>
       `;
 
       productList.appendChild(card);
 
       setTimeout(() => {
         card.style.opacity = 1;
-        card.style.transform = 'none';
-      }, i * 60);
+      }, i * 40);
     });
   }
 
@@ -979,9 +896,6 @@
 
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
-
-  const tokenBox = document.getElementById("tokenBox");
-  const tokenText = document.getElementById("tokenText");
 
   onMessage(messaging, (payload) => {
     console.log("Foreground message:", payload);
