@@ -491,5 +491,22 @@
     "rating":4.1 ,
     "category": "Fashion",
     "brand": "Royal Son"
+  },
+  {
+    "id": 29,
+    "name": "SDSUN-Polarized Aviators",
+    "description": "The men's polarised sunglasses are a classic and stylish eyewear accessory designed to offer both eye protection and everyday fashion appeal. Featuring polarised lenses with a 5 cm lens width, these sunglasses help reduce glare and provide a more comfortable visual experience in bright outdoor conditions. Built with a durable full-rim metal frame, they offer a sturdy fit along with a sleek and timeless look suitable for regular use. Made in India, these sunglasses are a practical choice for men who want a combination of comfort, protection, and classic style in their daily accessories.",
+    "price": "Just ₹679",
+    "rating":3.6 ,
+    "link": "https://ajiio.in/JCnt2gf",
+    "image": "https://assets.ajio.com/medias/sys_master/root/h5f/hc3/15882675847198/-473Wx593H-460599524-brown-MODEL.jpg",
+    "images": [
+      "https://assets.ajio.com/medias/sys_master/root/h3a/hc0/15882688364574/-473Wx593H-460599524-brown-MODEL4.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/hf7/h4f/15882673422366/-473Wx593H-460599524-brown-MODEL2.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/h5f/hc3/15882675847198/-473Wx593H-460599524-brown-MODEL.jpg"
+    ],
+    "rating":3.6 ,
+    "category": "Fashion",
+    "brand": "AJIO"
   }
 ]
