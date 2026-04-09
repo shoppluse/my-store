@@ -457,5 +457,22 @@
     "rating":4 ,
     "category": "Beauty",
     "brand": "Hyphen"
+  },
+  {
+    "id": 27,
+    "name": "Clothes Drying Stand",
+    "description": "The Amazon Basics Foldable Cloth Drying Stand is a durable and practical laundry solution designed for convenient drying of clothes in all weather conditions. Made from premium quality powder-coated alloy steel, it is resistant to corrosion and built to withstand rain, storm, and sunshine for long-lasting use. Its foldable dual-tier design provides ample space for drying daily laundry while allowing proper airflow, and it can be easily folded and stored when not in use. With arm locks for drying heavier items like bedsheets and blankets, a multi-level structure for handling both small and large clothes, and a 2-year warranty, this drying stand is a reliable and space-saving choice for everyday household use.",
+    "price": "Just ₹1,798",
+    "rating":4.2 ,
+    "link": "https://amzn.to/4tFzRI8",
+    "image": "https://m.media-amazon.com/images/I/71+d1-b824L._SL1500_.jpg",
+    "images": [
+      "https://m.media-amazon.com/images/I/71G9IHadh4L._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/711kX+8L4AL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/21CFk8uHuyL.jpg"
+    ],
+    "rating":4.2 ,
+    "category": "Home",
+    "brand": "All Brands"
   }
 ]
