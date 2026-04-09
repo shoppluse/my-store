@@ -43,23 +43,6 @@
     --btn-bg-buy-hover: #006cc0;
   }
 
-  [data-theme="dark"] {
-    --gradient: linear-gradient(120deg, #1a1a2e 60%, #16213e 100%);
-    --bg: #121212;
-    --bg-deep: #16213e;
-    --card-bg: #1c1c2b;
-    --text: #eaeaea;
-    --muted: #94a3b8;
-    --primary: #66b0ff;
-    --primary-2: #3a8dde;
-    --border: #1e3a8a;
-    --shadow: rgba(51, 153, 255, 0.22);
-    --btn-bg-view: #2abf6a;
-    --btn-bg-view-hover: #1e8f3f;
-    --btn-bg-buy: #3a8dde;
-    --btn-bg-buy-hover: #2a5e9d;
-  }
-
   body {
     font-family: 'Poppins', Arial, sans-serif;
     background: var(--bg);
@@ -103,75 +86,17 @@
     line-height: 1;
   }
 
-  .notify-prompt-bar {
-    width: 100%;
-    max-width: 700px;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.22);
-    color: #fff;
-    border-radius: 14px;
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    backdrop-filter: blur(4px);
-  }
-
-  .notify-prompt-bar.hidden {
-    display: none;
-  }
-
-  .notify-prompt-text {
-    font-size: 0.88rem;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-
-  .notify-prompt-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .notify-mini-btn,
-  .notify-close-btn {
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 700;
-    border-radius: 10px;
-  }
-
-  .notify-mini-btn {
-    background: #ffffff;
-    color: #0047ab;
-    padding: 7px 12px;
-    font-size: 0.82rem;
-  }
-
-  .notify-close-btn {
-    background: rgba(255,255,255,0.18);
-    color: #fff;
-    padding: 6px 8px;
-    font-size: 0.9rem;
-  }
-
   .header-actions {
     width: 100%;
     max-width: 700px;
     display: grid;
-    grid-template-columns: 1.4fr 0.9fr 0.9fr 0.9fr;
+    grid-template-columns: 1.6fr 0.9fr;
     gap: 12px;
     align-items: stretch;
   }
 
   .header-btn,
-  .dark-mode-toggle,
-  .brand-toggle-btn,
-  .notify-btn {
+  .brand-toggle-btn {
     width: 100%;
     min-height: 64px;
     text-decoration: none;
@@ -195,9 +120,7 @@
   }
 
   .header-btn:hover,
-  .brand-toggle-btn:hover,
-  .dark-mode-toggle:hover,
-  .notify-btn:hover {
+  .brand-toggle-btn:hover {
     transform: translateY(-2px);
     background: rgba(255,255,255,0.22);
   }
@@ -209,16 +132,6 @@
 
   .profile-btn {
     font-size: 1.7rem;
-  }
-
-  .dark-mode-toggle,
-  .notify-btn {
-    border: none;
-    outline: none;
-  }
-
-  .notify-enabled {
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.12), 0 0 16px rgba(255, 215, 0, 0.35);
   }
 
   .brand-filter-wrapper {
@@ -362,6 +275,86 @@
     word-break: break-word;
   }
 
+  /* APP SHORTCUTS */
+  .app-shortcuts-section {
+    width: 100%;
+    max-width: 1280px;
+    margin: 18px auto 8px;
+    padding: 0 24px;
+  }
+
+  .app-shortcuts-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 14px;
+  }
+
+  .app-shortcuts-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .app-shortcut-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 18px 14px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 8px 24px rgba(0, 71, 171, 0.12);
+    border: 1px solid rgba(0, 71, 171, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .app-shortcut-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0, 71, 171, 0.18);
+  }
+
+  .app-shortcut-logo-wrap {
+    width: 78px;
+    height: 78px;
+    border-radius: 22px;
+    background: #eef4ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 12px;
+    padding: 12px;
+  }
+
+  .app-shortcut-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .app-shortcut-name {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary);
+  }
+
+  .app-shortcut-fallback {
+    grid-column: 1 / -1;
+    text-align: center;
+    background: var(--card-bg);
+    padding: 18px;
+    border-radius: 16px;
+    color: var(--muted);
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(0, 71, 171, 0.08);
+  }
+
   .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -416,10 +409,6 @@
     padding: 12px;
     margin-bottom: 12px;
     overflow: hidden;
-  }
-
-  [data-theme="dark"] .product-image-box {
-    background: #25253a;
   }
 
   .product-card img {
@@ -533,13 +522,11 @@
 
     .header-actions {
       gap: 10px;
-      grid-template-columns: 1.35fr 0.9fr 0.9fr 0.9fr;
+      grid-template-columns: 1.45fr 0.9fr;
     }
 
     .header-btn,
-    .dark-mode-toggle,
-    .brand-toggle-btn,
-    .notify-btn {
+    .brand-toggle-btn {
       min-height: 58px;
       font-size: 0.82rem;
       padding: 10px 6px;
@@ -553,18 +540,6 @@
 
     .brand-dropdown {
       width: 100%;
-    }
-
-    .notify-prompt-bar {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 10px;
-      gap: 8px;
-    }
-
-    .notify-prompt-actions {
-      width: 100%;
-      justify-content: flex-end;
     }
 
     .search-section {
@@ -599,6 +574,39 @@
       font-size: 0.66rem;
       margin-top: 4px;
       max-width: 62px;
+    }
+
+    .app-shortcuts-section {
+      padding: 0 12px;
+      margin-top: 14px;
+    }
+
+    .app-shortcuts-title {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .app-shortcuts-row {
+      gap: 10px;
+    }
+
+    .app-shortcut-card {
+      min-height: 128px;
+      padding: 14px 8px;
+      border-radius: 16px;
+    }
+
+    .app-shortcut-logo-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+
+    .app-shortcut-name {
+      font-size: 0.86rem;
+      line-height: 1.2;
     }
 
     .product-card {
@@ -637,14 +645,6 @@
   <div class="main-header">
     <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-    <div id="notifyPromptBar" class="notify-prompt-bar hidden">
-      <span class="notify-prompt-text">🔔 Enable notifications for latest ShopPlus updates</span>
-      <div class="notify-prompt-actions">
-        <button id="enableNotifyNowBtn" class="notify-mini-btn" type="button">Enable</button>
-        <button id="closeNotifyPromptBtn" class="notify-close-btn" type="button">❌</button>
-      </div>
-    </div>
-
     <div class="header-actions" id="headerActions">
       <!-- BRAND -->
       <div class="brand-filter-wrapper">
@@ -667,12 +667,6 @@
         </div>
       </div>
 
-      <!-- DARK/LIGHT -->
-      <button id="darkModeToggle" class="dark-mode-toggle icon-only-btn" title="Toggle dark mode" type="button">🌙</button>
-
-      <!-- NOTIFY -->
-      <button id="notifyBtn" class="notify-btn icon-only-btn" type="button" title="Notifications">🔕</button>
-
       <!-- PROFILE -->
       <a href="profile.html" class="header-btn icon-only-btn profile-btn" title="Profile">👤</a>
     </div>
@@ -685,6 +679,14 @@
 
     <div class="category-icons" id="categoryBar"></div>
   </div>
+
+  <!-- APP SHORTCUTS -->
+  <section class="app-shortcuts-section">
+    <h2 class="app-shortcuts-title">Top Shopping Apps</h2>
+    <div class="app-shortcuts-row" id="appShortcutsRow">
+      <div class="app-shortcut-fallback">Loading app shortcuts...</div>
+    </div>
+  </section>
 
   <div class="product-grid" id="product-list">
     <p class="loading-text">Loading products...</p>
@@ -710,20 +712,13 @@
   const categoryBar = document.getElementById('categoryBar');
   const searchInput = document.getElementById('searchBar');
   const productList = document.getElementById('product-list');
+  const appShortcutsRow = document.getElementById('appShortcutsRow');
 
   const brandToggleBtn = document.getElementById('brandToggleBtn');
   const brandDropdown = document.getElementById('brandDropdown');
   const brandArrow = document.getElementById('brandArrow');
   const brandBtnText = document.getElementById('brandBtnText');
   const brandItems = document.querySelectorAll('.brand-item');
-
-  const darkToggleBtn = document.getElementById('darkModeToggle');
-  const htmlEl = document.documentElement;
-  const savedTheme = localStorage.getItem('theme');
-
-  const notifyPromptBar = document.getElementById("notifyPromptBar");
-  const enableNotifyNowBtn = document.getElementById("enableNotifyNowBtn");
-  const closeNotifyPromptBtn = document.getElementById("closeNotifyPromptBtn");
 
   let selectedCategory = 'Overall';
   let allProducts = [];
@@ -758,6 +753,49 @@
     syncBrandSelectionFromSearch();
     filterProducts();
   });
+
+  async function loadAppShortcuts() {
+    try {
+      const response = await fetch("/my-store/apps.json", { cache: "no-store" });
+      if (!response.ok) throw new Error(`apps.json error: ${response.status}`);
+
+      const apps = await response.json();
+
+      if (!Array.isArray(apps)) {
+        throw new Error("apps.json must contain an array");
+      }
+
+      if (apps.length === 0) {
+        appShortcutsRow.innerHTML = '<div class="app-shortcut-fallback">No apps added yet.</div>';
+        return;
+      }
+
+      appShortcutsRow.innerHTML = '';
+
+      apps.forEach(app => {
+        const appCard = document.createElement('a');
+        appCard.className = 'app-shortcut-card';
+        appCard.href = app.link || '#';
+
+        if (/^https?:\/\//i.test(app.link || '')) {
+          appCard.target = '_blank';
+          appCard.rel = 'noopener noreferrer';
+        }
+
+        appCard.innerHTML = `
+          <div class="app-shortcut-logo-wrap">
+            <img src="${app.image || 'https://via.placeholder.com/100'}" alt="${app.name || 'App'}" class="app-shortcut-logo" />
+          </div>
+          <div class="app-shortcut-name">${app.name || 'App'}</div>
+        `;
+
+        appShortcutsRow.appendChild(appCard);
+      });
+    } catch (error) {
+      console.error("apps.json fetch error:", error);
+      appShortcutsRow.innerHTML = '<div class="app-shortcut-fallback">Error loading app shortcuts.</div>';
+    }
+  }
 
   async function loadProducts() {
     try {
@@ -908,51 +946,10 @@
     }
   });
 
-  if (savedTheme) {
-    htmlEl.setAttribute('data-theme', savedTheme);
-    darkToggleBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-  }
-
-  darkToggleBtn.addEventListener('click', () => {
-    const currentTheme = htmlEl.getAttribute('data-theme');
-
-    if (currentTheme === 'dark') {
-      htmlEl.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-      darkToggleBtn.textContent = '🌙';
-    } else {
-      htmlEl.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-      darkToggleBtn.textContent = '☀️';
-    }
-  });
-
-  function shouldShowNotifyPrompt() {
-    const dismissed = localStorage.getItem("shopplusNotifyPromptDismissed");
-    const enabled = localStorage.getItem("shopplusNotificationsEnabled");
-    return enabled !== "true" && dismissed !== "true";
-  }
-
   window.addEventListener("DOMContentLoaded", () => {
+    loadAppShortcuts();
     loadProducts();
-
-    if (shouldShowNotifyPrompt() && notifyPromptBar) {
-      notifyPromptBar.classList.remove("hidden");
-    }
   });
-
-  if (closeNotifyPromptBtn) {
-    closeNotifyPromptBtn.addEventListener("click", () => {
-      localStorage.setItem("shopplusNotifyPromptDismissed", "true");
-      notifyPromptBar?.classList.add("hidden");
-    });
-  }
-
-  if (enableNotifyNowBtn) {
-    enableNotifyNowBtn.addEventListener("click", () => {
-      document.getElementById("notifyBtn")?.click();
-    });
-  }
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
@@ -970,7 +967,7 @@
 <!-- FIREBASE NOTIFICATION MODULE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js";
+  import { getMessaging, onMessage } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js";
 
   console.log("Firebase module loaded successfully");
 
@@ -986,116 +983,8 @@
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
-  const notifyBtn = document.getElementById("notifyBtn");
   const tokenBox = document.getElementById("tokenBox");
   const tokenText = document.getElementById("tokenText");
-  const notifyPromptBar = document.getElementById("notifyPromptBar");
-
-  console.log("Notify button found:", notifyBtn);
-
-  if (localStorage.getItem("shopplusNotificationsEnabled") === "true" && Notification.permission === "granted") {
-    notifyBtn.textContent = "🔔";
-    notifyBtn.classList.add("notify-enabled");
-  } else {
-    notifyBtn.textContent = "🔕";
-    notifyBtn.classList.remove("notify-enabled");
-  }
-
-  notifyBtn.addEventListener("click", async () => {
-    console.log("Notify button clicked");
-
-    try {
-      let permission = Notification.permission;
-      console.log("Current permission:", permission);
-
-      if (permission === "default") {
-        permission = await Notification.requestPermission();
-        console.log("Requested permission result:", permission);
-      }
-
-      if (permission === "denied") {
-        notifyBtn.textContent = "🔕";
-        notifyBtn.classList.remove("notify-enabled");
-        localStorage.setItem("shopplusNotificationsEnabled", "false");
-        alert("Notifications are blocked for this app.\n\nPlease allow notifications in browser/site settings.");
-        return;
-      }
-
-      if (permission !== "granted") {
-        notifyBtn.textContent = "🔕";
-        notifyBtn.classList.remove("notify-enabled");
-        localStorage.setItem("shopplusNotificationsEnabled", "false");
-        alert("Notification permission not granted.");
-        return;
-      }
-
-      const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js");
-      console.log("Firebase messaging SW registered:", registration);
-
-      const currentToken = await getToken(messaging, {
-        vapidKey: "BHBCBJemVUSgH6NRQYODZi6J6PgL7CFdIh4rgxvSw5aphNG9_OkJeMKLXD8AyKjrY-7Tk_PusaAQYZtn7OAWQx4",
-        serviceWorkerRegistration: registration
-      });
-
-      console.log("FCM Token:", currentToken);
-
-      if (currentToken) {
-        tokenBox.style.display = "block";
-        tokenText.textContent = currentToken;
-
-        const currentUser = localStorage.getItem("shopplusUser") || "guest";
-
-        try {
-          const saveResponse = await fetch("https://my-store-e28j.onrender.com/api/save-token", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              token: currentToken,
-              user: currentUser,
-              platform: "web"
-            })
-          });
-
-          const saveResult = await saveResponse.json();
-          console.log("Save token response:", saveResult);
-
-          if (!saveResult.success) {
-            console.warn("Token save issue:", saveResult.message);
-          }
-        } catch (saveError) {
-          console.error("Error saving token to backend:", saveError);
-        }
-
-        localStorage.setItem("shopplusNotificationsEnabled", "true");
-        localStorage.removeItem("shopplusNotifyPromptDismissed");
-
-        notifyBtn.textContent = "🔔";
-        notifyBtn.classList.add("notify-enabled");
-
-        notifyPromptBar?.classList.add("hidden");
-
-        try {
-          await navigator.clipboard.writeText(currentToken);
-          alert("Notifications enabled successfully! 🔔");
-        } catch (copyErr) {
-          alert("Notifications enabled successfully! 🔔");
-        }
-      } else {
-        notifyBtn.textContent = "🔕";
-        notifyBtn.classList.remove("notify-enabled");
-        localStorage.setItem("shopplusNotificationsEnabled", "false");
-        alert("No FCM token generated.");
-      }
-    } catch (error) {
-      console.error("Notification setup failed:", error);
-      notifyBtn.textContent = "🔕";
-      notifyBtn.classList.remove("notify-enabled");
-      localStorage.setItem("shopplusNotificationsEnabled", "false");
-      alert("Notification setup failed:\n\n" + (error?.message || error));
-    }
-  });
 
   onMessage(messaging, (payload) => {
     console.log("Foreground message:", payload);
