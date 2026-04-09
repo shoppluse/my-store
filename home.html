@@ -932,7 +932,7 @@
       }
 
       // ✅ IMPORTANT FIX: use MAIN sw.js, NOT firebase-messaging-sw.js
-      const registration = await navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" });
+      const registration = await navigator.serviceWorker.register("/my-store/firebase-messaging-sw.js");
       console.log("Firebase messaging SW registered:", registration);
 
       const currentToken = await getToken(messaging, {
