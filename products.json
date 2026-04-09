@@ -508,5 +508,23 @@
     "rating":3.6 ,
     "category": "Fashion",
     "brand": "AJIO"
-  }
+  },
+  {
+    "id": 30,
+    "name": "Men Black Analogue Watch Daniel Klein",
+    "description": "The Daniel Klein Analogue Watch is a stylish and reliable timepiece designed for everyday wear with a modern and elegant look. It features a solid round stainless steel dial with quartz movement and battery power for accurate timekeeping. The watch includes useful features such as reset time, date aperture, and glow-in-the-dark inlays for added convenience and visibility. Paired with a black regular leather strap and tang closure, it offers both comfort and a classic appearance. With 50-meter water resistance, a 35 mm dial, and a 2-year warranty, this watch is a practical and fashionable accessory for daily use.",
+    "price": "Just ₹2860",
+    "rating":4.4,
+    "link": "https://myntr.it/n3Wu9EK",
+    "image": "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/9767519/2019/6/7/fd510449-a196-4150-b789-6bcd007b1eb51559905181612-Daniel-Klein-Men-Black-Analogue-Watch-6061559905180813-1.jpg",
+    "images": [
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/9767519/2019/6/7/41f6004e-6c41-4b92-bd72-324063ea15f31559905181579-Daniel-Klein-Men-Black-Analogue-Watch-6061559905180813-2.jpg",
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/9767519/2019/6/7/a20b0c4f-c5af-4cce-afda-c0bca2f1c6ab1559905181562-Daniel-Klein-Men-Black-Analogue-Watch-6061559905180813-3.jpg",
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/9767519/2019/6/7/305b6a12-478f-497c-8be4-ae9b266d4a961559905181547-Daniel-Klein-Men-Black-Analogue-Watch-6061559905180813-4.jpg"
+    ],
+    "rating":4.4 ,
+    "category": "Fashion",
+    "brand": "Men Black Analogue Watch"
+  },
+  
 ]
