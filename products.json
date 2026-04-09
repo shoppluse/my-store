@@ -542,5 +542,22 @@
     "rating":4.5 ,
     "category": "Fashion",
     "brand": "VAN HEUSEN"
+  },
+  {
+    "id": 32,
+    "name": "Navy Blue & Golden Embellished Saree",
+    "description": "The Ishin Navy Blue and Golden Embellished Saree is a graceful and stylish ethnic wear piece designed to add elegance to special occasions and events. Made from lightweight poly chiffon fabric, both the saree and blouse piece offer a soft, comfortable, and flowy drape for a refined look. This saree features a beautiful navy blue base with golden embellishments and a woven design border that enhances its traditional appeal. With a length of 5.3 metres plus a 70 cm blouse piece, it provides a complete and fashionable outfit option, making it a perfect choice for festive gatherings, functions, and celebrations.",
+    "price": "Just ₹659 ",
+    "rating":3.9 ,
+    "link": "https://myntr.it/GXVqJKf",
+    "image": "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/11234832/2020/1/9/8cbcecab-9477-49ac-bc04-3969cc83f0001578552676367-Ishin-Poly-Chiffon-Navy-Blue-Foil-Printed-Womens-Saree-18115-1.jpg",
+    "images": [
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/11234832/2020/1/9/a27bf51c-d177-4ae3-ad9c-b81c387d63941578552676320-Ishin-Poly-Chiffon-Navy-Blue-Foil-Printed-Womens-Saree-18115-2.jpg",
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/11234832/2020/1/9/f058ce44-d7c8-4f4e-a171-91abca53fc241578552676211-Ishin-Poly-Chiffon-Navy-Blue-Foil-Printed-Womens-Saree-18115-4.jpg",
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/11234832/2020/1/9/b1a97567-2b2d-4e1d-9a7b-0377b9f46c741578552676277-Ishin-Poly-Chiffon-Navy-Blue-Foil-Printed-Womens-Saree-18115-3.jpg"
+    ],
+    "rating":3.9 ,
+    "category": "Fashion",
+    "brand": "All Brands"
   }
 ]
