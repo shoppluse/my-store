@@ -3,7 +3,7 @@
     "id": "app1",
     "name": "Amazon",
     "image": "/my-store/images/amazon.png",
-    "link": "amazon.html"
+    "link": "https://amzn.to/4cf3pVH"
   },
   {
     "id": "app2",
@@ -28,5 +28,18 @@
     "name": "mamaearth",
     "image": "/my-store/images/mamaearth.png",
     "link": "https://bitli.in/q4aU65m"
+  },
+    {
+    "id": "app6",
+    "name": "Body Cupid",
+    "image": "/my-store/images/bodycupid.png",
+    "link": "https://bitli.in/6KCjonx"
+  },
+    },
+    {
+    "id": "app7",
+    "name": "noise",
+    "image": "/my-store/images/noise.png",
+    "link": "https://bitli.in/kkoVX4A"
   }
 ]
