@@ -857,7 +857,10 @@
         throw new Error("products.json must contain an array");
       }
 
-      allProducts = data.map((p, index) => ({
+      // 🔥 LATEST ADDED PRODUCT FIRST
+      const latestFirstData = [...data].reverse();
+
+      allProducts = latestFirstData.map((p, index) => ({
         id: p.id ?? (index + 1),
         name: p.name || 'Unnamed Product',
         price: p.price ?? 0,
