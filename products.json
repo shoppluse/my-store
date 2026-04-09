@@ -474,5 +474,22 @@
     "rating":4.2 ,
     "category": "Home",
     "brand": "All Brands"
+  },
+  {
+    "id": 28,
+    "name": "ROYAL SON",
+    "description": "The ROYAL SON Round Sunglasses are a stylish and fashionable eyewear accessory designed to provide both eye protection and a trendy look. Featuring black polarised and UV-protected lenses, these sunglasses help reduce glare and protect the eyes from harmful sun rays. Built with a durable metal full-rim frame in a sleek black finish, they offer a modern and comfortable fit, especially suitable for diamond face shapes. With a classic round style, 49 mm lens width, and an included ROYAL SON cover or soft pouch for storage, these sunglasses are a practical and stylish choice for everyday outdoor wear and casual fashion looks.",
+    "price": "Just ₹679",
+    "rating":4.1 ,
+    "link": "https://myntr.it/l07hPt0",
+    "image": "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/productimage/2020/2/5/7c89ad06-aaed-42db-9d15-6f7c8d7897871580857575646-1.jpg",
+    "images": [
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/productimage/2020/2/5/d9c54bcf-5b20-4241-842d-51444c513ab91580857575693-2.jpg",
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/productimage/2020/2/5/56579414-5b9a-49da-bf27-7730db0eed101580857575742-3.jpg",
+      "https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/productimage/2020/2/5/8d252c76-9f20-4a15-b8b7-2c62ed4204631580857575784-4.jpg"
+    ],
+    "rating":4.1 ,
+    "category": "Fashion",
+    "brand": "Royal Son"
   }
 ]
