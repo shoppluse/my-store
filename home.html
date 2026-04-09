@@ -981,10 +981,10 @@
       } else {
         alert("No FCM token generated.");
       }
-    } catch (error) {
-      console.error("Notification setup failed:", error);
-      alert("Notification setup failed. Check console.");
-    }
+   } catch (error) {
+  console.error("Notification setup failed:", error);
+  alert("Notification setup failed:\n\n" + (error?.message || error));
+}
   });
 
   onMessage(messaging, (payload) => {
