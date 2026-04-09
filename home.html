@@ -103,17 +103,72 @@
     line-height: 1;
   }
 
+  .notify-prompt-bar {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff;
+    border-radius: 14px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    backdrop-filter: blur(4px);
+  }
+
+  .notify-prompt-bar.hidden {
+    display: none;
+  }
+
+  .notify-prompt-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .notify-prompt-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .notify-mini-btn,
+  .notify-close-btn {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    border-radius: 10px;
+  }
+
+  .notify-mini-btn {
+    background: #ffffff;
+    color: #0047ab;
+    padding: 7px 12px;
+    font-size: 0.82rem;
+  }
+
+  .notify-close-btn {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    padding: 6px 8px;
+    font-size: 0.9rem;
+  }
+
   .header-actions {
     width: 100%;
     max-width: 700px;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 1.4fr 0.9fr 0.9fr 0.9fr;
     gap: 12px;
     align-items: stretch;
   }
 
   .header-btn,
-  .install-btn,
   .dark-mode-toggle,
   .brand-toggle-btn,
   .notify-btn {
@@ -136,10 +191,10 @@
     transition: 0.25s ease;
     box-shadow: none;
     backdrop-filter: blur(4px);
+    outline: none;
   }
 
   .header-btn:hover,
-  .install-btn:hover,
   .brand-toggle-btn:hover,
   .dark-mode-toggle:hover,
   .notify-btn:hover {
@@ -147,20 +202,23 @@
     background: rgba(255,255,255,0.22);
   }
 
-  .install-btn {
-    display: none;
-    border: none;
-    outline: none;
+  .icon-only-btn {
+    font-size: 1.7rem;
+    padding: 0;
   }
 
-  .dark-mode-toggle {
-    font-size: 1.5rem;
-    background: rgba(255,255,255,0.15);
+  .profile-btn {
+    font-size: 1.7rem;
   }
 
+  .dark-mode-toggle,
   .notify-btn {
     border: none;
     outline: none;
+  }
+
+  .notify-enabled {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.12), 0 0 16px rgba(255, 215, 0, 0.35);
   }
 
   .brand-filter-wrapper {
@@ -475,26 +533,38 @@
 
     .header-actions {
       gap: 10px;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: 1.35fr 0.9fr 0.9fr 0.9fr;
     }
 
     .header-btn,
-    .install-btn,
     .dark-mode-toggle,
     .brand-toggle-btn,
     .notify-btn {
       min-height: 58px;
-      font-size: 0.75rem;
-      padding: 10px 4px;
+      font-size: 0.82rem;
+      padding: 10px 6px;
       border-radius: 14px;
     }
 
-    .dark-mode-toggle {
-      font-size: 1.25rem;
+    .icon-only-btn,
+    .profile-btn {
+      font-size: 1.4rem;
     }
 
     .brand-dropdown {
       width: 100%;
+    }
+
+    .notify-prompt-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px;
+      gap: 8px;
+    }
+
+    .notify-prompt-actions {
+      width: 100%;
+      justify-content: flex-end;
     }
 
     .search-section {
@@ -567,6 +637,14 @@
   <div class="main-header">
     <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
+    <div id="notifyPromptBar" class="notify-prompt-bar hidden">
+      <span class="notify-prompt-text">🔔 Enable notifications for latest ShopPlus updates</span>
+      <div class="notify-prompt-actions">
+        <button id="enableNotifyNowBtn" class="notify-mini-btn" type="button">Enable</button>
+        <button id="closeNotifyPromptBtn" class="notify-close-btn" type="button">❌</button>
+      </div>
+    </div>
+
     <div class="header-actions" id="headerActions">
       <!-- BRAND -->
       <div class="brand-filter-wrapper">
@@ -589,17 +667,14 @@
         </div>
       </div>
 
-      <!-- NOTIFY -->
-      <button id="notifyBtn" class="notify-btn" type="button">Notify</button>
-
-      <!-- INSTALL -->
-      <button id="installBtn" class="install-btn" type="button">Install</button>
-
       <!-- DARK/LIGHT -->
-      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+      <button id="darkModeToggle" class="dark-mode-toggle icon-only-btn" title="Toggle dark mode" type="button">🌙</button>
+
+      <!-- NOTIFY -->
+      <button id="notifyBtn" class="notify-btn icon-only-btn" type="button" title="Notifications">🔕</button>
 
       <!-- PROFILE -->
-      <a href="profile.html" class="header-btn">Profile</a>
+      <a href="profile.html" class="header-btn icon-only-btn profile-btn" title="Profile">👤</a>
     </div>
   </div>
 
@@ -642,8 +717,13 @@
   const brandBtnText = document.getElementById('brandBtnText');
   const brandItems = document.querySelectorAll('.brand-item');
 
-  const installBtn = document.getElementById("installBtn");
-  let deferredPrompt = null;
+  const darkToggleBtn = document.getElementById('darkModeToggle');
+  const htmlEl = document.documentElement;
+  const savedTheme = localStorage.getItem('theme');
+
+  const notifyPromptBar = document.getElementById("notifyPromptBar");
+  const enableNotifyNowBtn = document.getElementById("enableNotifyNowBtn");
+  const closeNotifyPromptBtn = document.getElementById("closeNotifyPromptBtn");
 
   let selectedCategory = 'Overall';
   let allProducts = [];
@@ -828,10 +908,6 @@
     }
   });
 
-  const darkToggleBtn = document.getElementById('darkModeToggle');
-  const htmlEl = document.documentElement;
-  const savedTheme = localStorage.getItem('theme');
-
   if (savedTheme) {
     htmlEl.setAttribute('data-theme', savedTheme);
     darkToggleBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
@@ -851,9 +927,32 @@
     }
   });
 
-  window.addEventListener('DOMContentLoaded', () => {
+  function shouldShowNotifyPrompt() {
+    const dismissed = localStorage.getItem("shopplusNotifyPromptDismissed");
+    const enabled = localStorage.getItem("shopplusNotificationsEnabled");
+    return enabled !== "true" && dismissed !== "true";
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
     loadProducts();
+
+    if (shouldShowNotifyPrompt() && notifyPromptBar) {
+      notifyPromptBar.classList.remove("hidden");
+    }
   });
+
+  if (closeNotifyPromptBtn) {
+    closeNotifyPromptBtn.addEventListener("click", () => {
+      localStorage.setItem("shopplusNotifyPromptDismissed", "true");
+      notifyPromptBar?.classList.add("hidden");
+    });
+  }
+
+  if (enableNotifyNowBtn) {
+    enableNotifyNowBtn.addEventListener("click", () => {
+      document.getElementById("notifyBtn")?.click();
+    });
+  }
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
@@ -866,32 +965,6 @@
         });
     });
   }
-
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = "inline-flex";
-    console.log("Install prompt available");
-  });
-
-  installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) {
-      alert("Install option is not available right now. Please use Chrome menu > Add to Home screen.");
-      return;
-    }
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log("Install prompt result:", outcome);
-    deferredPrompt = null;
-    installBtn.style.display = "none";
-  });
-
-  window.addEventListener("appinstalled", () => {
-    console.log("PWA installed successfully");
-    installBtn.style.display = "none";
-    deferredPrompt = null;
-  });
 </script>
 
 <!-- FIREBASE NOTIFICATION MODULE -->
@@ -916,87 +989,53 @@
   const notifyBtn = document.getElementById("notifyBtn");
   const tokenBox = document.getElementById("tokenBox");
   const tokenText = document.getElementById("tokenText");
+  const notifyPromptBar = document.getElementById("notifyPromptBar");
 
   console.log("Notify button found:", notifyBtn);
 
-  notifyBtn.addEventListener("click", async () => {
-  console.log("Notify button clicked");
-
-  try {
-    // Check current permission first
-    let permission = Notification.permission;
-    console.log("Current permission:", permission);
-
-    if (permission === "default") {
-      permission = await Notification.requestPermission();
-      console.log("Requested permission result:", permission);
-    }
-
-    if (permission === "denied") {
-      alert("Notifications are blocked for this app.\n\nPlease uninstall old app, clear Chrome site settings for shoppluse.github.io, reinstall from Chrome, then open ONLY the installed app and tap Notify again.");
-      return;
-    }
-
-    if (permission !== "granted") {
-      alert("Notification permission not granted.");
-      return;
-    }
-
-    // IMPORTANT: use relative path inside PWA
-    const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js");
-    console.log("Firebase messaging SW registered:", registration);
-
-    const currentToken = await getToken(messaging, {
-      vapidKey: "BHBCBJemVUSgH6NRQYODZi6J6PgL7CFdIh4rgxvSw5aphNG9_OkJeMKLXD8AyKjrY-7Tk_PusaAQYZtn7OAWQx4",
-      serviceWorkerRegistration: registration
-    });
-
-    console.log("FCM Token:", currentToken);
-
-    if (currentToken) {
-      tokenBox.style.display = "block";
-      tokenText.textContent = currentToken;
-
-      // Save token to backend
-      try {
-        const currentUser = localStorage.getItem("shopplusUser") || "guest";
-
-        const saveResponse = await fetch("https://my-store-e28j.onrender.com/api/save-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            token: currentToken,
-            user: currentUser,
-            platform: "web"
-          })
-        });
-
-        const saveResult = await saveResponse.json();
-        console.log("Save token response:", saveResult);
-
-        if (!saveResult.success) {
-          console.warn("Token save issue:", saveResult.message);
-        }
-      } catch (saveError) {
-        console.error("Error saving token to backend:", saveError);
-      }
-
-      try {
-        await navigator.clipboard.writeText(currentToken);
-        alert("Notifications enabled successfully! Token saved to server and copied to clipboard.");
-      } catch (copyErr) {
-        alert("Notifications enabled successfully! Token saved to server.");
-      }
-    } else {
-      alert("No FCM token generated.");
-    }
-  } catch (error) {
-    console.error("Notification setup failed:", error);
-    alert("Notification setup failed:\n\n" + (error?.message || error));
+  if (localStorage.getItem("shopplusNotificationsEnabled") === "true" && Notification.permission === "granted") {
+    notifyBtn.textContent = "🔔";
+    notifyBtn.classList.add("notify-enabled");
+  } else {
+    notifyBtn.textContent = "🔕";
+    notifyBtn.classList.remove("notify-enabled");
   }
-});
+
+  notifyBtn.addEventListener("click", async () => {
+    console.log("Notify button clicked");
+
+    try {
+      let permission = Notification.permission;
+      console.log("Current permission:", permission);
+
+      if (permission === "default") {
+        permission = await Notification.requestPermission();
+        console.log("Requested permission result:", permission);
+      }
+
+      if (permission === "denied") {
+        notifyBtn.textContent = "🔕";
+        notifyBtn.classList.remove("notify-enabled");
+        localStorage.setItem("shopplusNotificationsEnabled", "false");
+        alert("Notifications are blocked for this app.\n\nPlease allow notifications in browser/site settings.");
+        return;
+      }
+
+      if (permission !== "granted") {
+        notifyBtn.textContent = "🔕";
+        notifyBtn.classList.remove("notify-enabled");
+        localStorage.setItem("shopplusNotificationsEnabled", "false");
+        alert("Notification permission not granted.");
+        return;
+      }
+
+      const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js");
+      console.log("Firebase messaging SW registered:", registration);
+
+      const currentToken = await getToken(messaging, {
+        vapidKey: "BHBCBJemVUSgH6NRQYODZi6J6PgL7CFdIh4rgxvSw5aphNG9_OkJeMKLXD8AyKjrY-7Tk_PusaAQYZtn7OAWQx4",
+        serviceWorkerRegistration: registration
+      });
 
       console.log("FCM Token:", currentToken);
 
@@ -1004,10 +1043,9 @@
         tokenBox.style.display = "block";
         tokenText.textContent = currentToken;
 
-        // Save token to backend (MongoDB)
-        try {
-          const currentUser = localStorage.getItem("shopplusUser") || "guest";
+        const currentUser = localStorage.getItem("shopplusUser") || "guest";
 
+        try {
           const saveResponse = await fetch("https://my-store-e28j.onrender.com/api/save-token", {
             method: "POST",
             headers: {
@@ -1030,19 +1068,33 @@
           console.error("Error saving token to backend:", saveError);
         }
 
+        localStorage.setItem("shopplusNotificationsEnabled", "true");
+        localStorage.removeItem("shopplusNotifyPromptDismissed");
+
+        notifyBtn.textContent = "🔔";
+        notifyBtn.classList.add("notify-enabled");
+
+        notifyPromptBar?.classList.add("hidden");
+
         try {
           await navigator.clipboard.writeText(currentToken);
-          alert("Notifications enabled successfully! Token saved to server and copied to clipboard.");
+          alert("Notifications enabled successfully! 🔔");
         } catch (copyErr) {
-          alert("Notifications enabled successfully! Token saved to server.");
+          alert("Notifications enabled successfully! 🔔");
         }
       } else {
+        notifyBtn.textContent = "🔕";
+        notifyBtn.classList.remove("notify-enabled");
+        localStorage.setItem("shopplusNotificationsEnabled", "false");
         alert("No FCM token generated.");
       }
-   } catch (error) {
-  console.error("Notification setup failed:", error);
-  alert("Notification setup failed:\n\n" + (error?.message || error));
-}
+    } catch (error) {
+      console.error("Notification setup failed:", error);
+      notifyBtn.textContent = "🔕";
+      notifyBtn.classList.remove("notify-enabled");
+      localStorage.setItem("shopplusNotificationsEnabled", "false");
+      alert("Notification setup failed:\n\n" + (error?.message || error));
+    }
   });
 
   onMessage(messaging, (payload) => {
