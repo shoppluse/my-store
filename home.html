@@ -920,25 +920,83 @@
   console.log("Notify button found:", notifyBtn);
 
   notifyBtn.addEventListener("click", async () => {
-    console.log("Notify button clicked");
+  console.log("Notify button clicked");
 
-    try {
-      const permission = await Notification.requestPermission();
-      console.log("Permission result:", permission);
+  try {
+    // Check current permission first
+    let permission = Notification.permission;
+    console.log("Current permission:", permission);
 
-      if (permission !== "granted") {
-        alert("Notification permission denied.");
-        return;
+    if (permission === "default") {
+      permission = await Notification.requestPermission();
+      console.log("Requested permission result:", permission);
+    }
+
+    if (permission === "denied") {
+      alert("Notifications are blocked for this app.\n\nPlease uninstall old app, clear Chrome site settings for shoppluse.github.io, reinstall from Chrome, then open ONLY the installed app and tap Notify again.");
+      return;
+    }
+
+    if (permission !== "granted") {
+      alert("Notification permission not granted.");
+      return;
+    }
+
+    // IMPORTANT: use relative path inside PWA
+    const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js");
+    console.log("Firebase messaging SW registered:", registration);
+
+    const currentToken = await getToken(messaging, {
+      vapidKey: "BHBCBJemVUSgH6NRQYODZi6J6PgL7CFdIh4rgxvSw5aphNG9_OkJeMKLXD8AyKjrY-7Tk_PusaAQYZtn7OAWQx4",
+      serviceWorkerRegistration: registration
+    });
+
+    console.log("FCM Token:", currentToken);
+
+    if (currentToken) {
+      tokenBox.style.display = "block";
+      tokenText.textContent = currentToken;
+
+      // Save token to backend
+      try {
+        const currentUser = localStorage.getItem("shopplusUser") || "guest";
+
+        const saveResponse = await fetch("https://my-store-e28j.onrender.com/api/save-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            token: currentToken,
+            user: currentUser,
+            platform: "web"
+          })
+        });
+
+        const saveResult = await saveResponse.json();
+        console.log("Save token response:", saveResult);
+
+        if (!saveResult.success) {
+          console.warn("Token save issue:", saveResult.message);
+        }
+      } catch (saveError) {
+        console.error("Error saving token to backend:", saveError);
       }
 
-      // ✅ IMPORTANT FIX: use MAIN sw.js, NOT firebase-messaging-sw.js
-      const registration = await navigator.serviceWorker.register("/my-store/firebase-messaging-sw.js");
-      console.log("Firebase messaging SW registered:", registration);
-
-      const currentToken = await getToken(messaging, {
-        vapidKey: "BHBCBJemVUSgH6NRQYODZi6J6PgL7CFdIh4rgxvSw5aphNG9_OkJeMKLXD8AyKjrY-7Tk_PusaAQYZtn7OAWQx4",
-        serviceWorkerRegistration: registration
-      });
+      try {
+        await navigator.clipboard.writeText(currentToken);
+        alert("Notifications enabled successfully! Token saved to server and copied to clipboard.");
+      } catch (copyErr) {
+        alert("Notifications enabled successfully! Token saved to server.");
+      }
+    } else {
+      alert("No FCM token generated.");
+    }
+  } catch (error) {
+    console.error("Notification setup failed:", error);
+    alert("Notification setup failed:\n\n" + (error?.message || error));
+  }
+});
 
       console.log("FCM Token:", currentToken);
 
