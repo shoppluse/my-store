@@ -106,19 +106,20 @@
     width: 100%;
     max-width: 700px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     align-items: stretch;
   }
 
   .header-actions.has-install {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .header-btn,
   .install-btn,
   .dark-mode-toggle,
-  .brand-toggle-btn {
+  .brand-toggle-btn,
+  .notify-btn {
     width: 100%;
     min-height: 64px;
     text-decoration: none;
@@ -143,7 +144,8 @@
   .header-btn:hover,
   .install-btn:hover,
   .brand-toggle-btn:hover,
-  .dark-mode-toggle:hover {
+  .dark-mode-toggle:hover,
+  .notify-btn:hover {
     transform: translateY(-2px);
     background: rgba(255,255,255,0.22);
   }
@@ -457,18 +459,20 @@
 
     .header-actions {
       gap: 10px;
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .header-actions.has-install {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
 
     .header-btn,
     .install-btn,
     .dark-mode-toggle,
-    .brand-toggle-btn {
+    .brand-toggle-btn,
+    .notify-btn {
       min-height: 58px;
-      font-size: 0.82rem;
+      font-size: 0.74rem;
       padding: 10px 6px;
       border-radius: 14px;
     }
@@ -575,6 +579,9 @@
 
       <!-- INSTALL APP -->
       <button id="installAppBtn" class="install-btn" type="button">Install</button>
+
+      <!-- NOTIFICATIONS -->
+      <button id="enableNotificationsBtn" class="notify-btn" type="button">Notify</button>
 
       <!-- DARK/LIGHT -->
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
@@ -881,6 +888,69 @@
         });
     });
   }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC9nL5__J6cEhaQvl2kcAT0m2A2op7-F_c",
+    authDomain: "shopplus-108.firebaseapp.com",
+    projectId: "shopplus-108",
+    storageBucket: "shopplus-108.firebasestorage.app",
+    messagingSenderId: "250259887977",
+    appId: "1:250259887977:web:cdddd39da04a5575fd8ff8"
+  };
+
+  const VAPID_KEY = "BHBCBJemVUSgH6NRQYODZi6J6PgL7CFdIh4rgxvSw5aphNG9_OkJeMKLXD8AyKjrY-7Tk_PusaAQYZtn7OAWQx4";
+
+  const app = initializeApp(firebaseConfig);
+  const messaging = getMessaging(app);
+
+  const btn = document.getElementById("enableNotificationsBtn");
+
+  async function enableNotifications() {
+    try {
+      const permission = await Notification.requestPermission();
+
+      if (permission !== "granted") {
+        alert("Notification permission denied.");
+        return;
+      }
+
+      const registration = await navigator.serviceWorker.register("/my-store/firebase-messaging-sw.js", {
+        scope: "/my-store/"
+      });
+
+      const currentToken = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: registration
+      });
+
+      if (currentToken) {
+        console.log("FCM Token:", currentToken);
+        alert("Notifications enabled successfully! Check console for token.");
+        localStorage.setItem("shopplusFcmToken", currentToken);
+      } else {
+        alert("No registration token available.");
+      }
+    } catch (error) {
+      console.error("Notification setup error:", error);
+      alert("Notification setup failed. Check console.");
+    }
+  }
+
+  btn?.addEventListener("click", enableNotifications);
+
+  onMessage(messaging, (payload) => {
+    console.log("Foreground message received:", payload);
+
+    const title = payload.notification?.title || "ShopPlus";
+    const body = payload.notification?.body || "You have a new ShopPlus update.";
+
+    alert(`${title}\n\n${body}`);
+  });
 </script>
 </body>
 </html>
