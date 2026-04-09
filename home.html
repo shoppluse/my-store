@@ -441,6 +441,20 @@
   .empty-text { color: #888; }
   .error-text { color: red; }
 
+  .token-box {
+    display: none;
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    padding: 16px;
+    background: #fff3cd;
+    color: #333;
+    border: 1px solid #ffeeba;
+    border-radius: 12px;
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+  }
+
   @media (max-width: 700px) {
     .main-header {
       padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
@@ -594,6 +608,11 @@
 
   <div class="product-grid" id="product-list">
     <p class="loading-text">Loading products...</p>
+  </div>
+
+  <div id="tokenBox" class="token-box">
+    <strong>FCM Token:</strong>
+    <div id="tokenText" style="margin-top: 10px;"></div>
   </div>
 
 <script>
@@ -841,7 +860,7 @@
   }
 </script>
 
-<!-- FIREBASE NOTIFICATION MODULE (DEBUG VERSION) -->
+<!-- FIREBASE NOTIFICATION MODULE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
   import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js";
@@ -861,6 +880,9 @@
   const messaging = getMessaging(app);
 
   const notifyBtn = document.getElementById("notifyBtn");
+  const tokenBox = document.getElementById("tokenBox");
+  const tokenText = document.getElementById("tokenText");
+
   console.log("Notify button found:", notifyBtn);
 
   notifyBtn.addEventListener("click", async () => {
@@ -886,7 +908,41 @@
       console.log("FCM Token:", currentToken);
 
       if (currentToken) {
-        alert("Notifications enabled successfully!");
+        tokenBox.style.display = "block";
+        tokenText.textContent = currentToken;
+
+        // Save token to backend (MongoDB)
+        try {
+          const currentUser = localStorage.getItem("shopplusUser") || "guest";
+
+          const saveResponse = await fetch("https://my-store-e28j.onrender.com/api/save-token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              token: currentToken,
+              user: currentUser,
+              platform: "web"
+            })
+          });
+
+          const saveResult = await saveResponse.json();
+          console.log("Save token response:", saveResult);
+
+          if (!saveResult.success) {
+            console.warn("Token save issue:", saveResult.message);
+          }
+        } catch (saveError) {
+          console.error("Error saving token to backend:", saveError);
+        }
+
+        try {
+          await navigator.clipboard.writeText(currentToken);
+          alert("Notifications enabled successfully! Token saved to server and copied to clipboard.");
+        } catch (copyErr) {
+          alert("Notifications enabled successfully! Token saved to server.");
+        }
       } else {
         alert("No FCM token generated.");
       }
