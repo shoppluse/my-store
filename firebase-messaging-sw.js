@@ -12,31 +12,39 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// Background messages from Firebase
 messaging.onBackgroundMessage((payload) => {
   console.log("[firebase-messaging-sw.js] Background message received:", payload);
 
   const notificationTitle = payload.notification?.title || "ShopPlus";
   const notificationOptions = {
-    body: payload.notification?.body || "You have a new notification!",
+    body: payload.notification?.body || "You have a new ShopPlus update!",
     icon: "/my-store/icons/icon-192.png",
     badge: "/my-store/icons/icon-192.png",
     data: {
-      url: "https://shoppluse.github.io/my-store/home.html"
+      url:
+        payload.fcmOptions?.link ||
+        payload.data?.url ||
+        "https://shoppluse.github.io/my-store/home.html"
     }
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
+// When user clicks notification
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  const targetUrl = event.notification?.data?.url || "https://shoppluse.github.io/my-store/home.html";
+  const targetUrl =
+    event.notification.data?.url ||
+    "https://shoppluse.github.io/my-store/home.html";
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
         if (client.url.includes("/my-store/") && "focus" in client) {
+          client.navigate(targetUrl);
           return client.focus();
         }
       }
