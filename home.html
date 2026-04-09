@@ -107,7 +107,7 @@
     width: 100%;
     max-width: 700px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
     align-items: stretch;
   }
@@ -149,6 +149,8 @@
 
   .install-btn {
     display: none;
+    border: none;
+    outline: none;
   }
 
   .dark-mode-toggle {
@@ -473,7 +475,7 @@
 
     .header-actions {
       gap: 10px;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
 
     .header-btn,
@@ -482,8 +484,8 @@
     .brand-toggle-btn,
     .notify-btn {
       min-height: 58px;
-      font-size: 0.82rem;
-      padding: 10px 6px;
+      font-size: 0.75rem;
+      padding: 10px 4px;
       border-radius: 14px;
     }
 
@@ -590,6 +592,9 @@
       <!-- NOTIFY -->
       <button id="notifyBtn" class="notify-btn" type="button">Notify</button>
 
+      <!-- INSTALL -->
+      <button id="installBtn" class="install-btn" type="button">Install</button>
+
       <!-- DARK/LIGHT -->
       <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
 
@@ -636,6 +641,9 @@
   const brandArrow = document.getElementById('brandArrow');
   const brandBtnText = document.getElementById('brandBtnText');
   const brandItems = document.querySelectorAll('.brand-item');
+
+  const installBtn = document.getElementById("installBtn");
+  let deferredPrompt = null;
 
   let selectedCategory = 'Overall';
   let allProducts = [];
@@ -858,6 +866,32 @@
         });
     });
   }
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "inline-flex";
+    console.log("Install prompt available");
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) {
+      alert("Install option is not available right now. Please use Chrome menu > Add to Home screen.");
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log("Install prompt result:", outcome);
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+  });
+
+  window.addEventListener("appinstalled", () => {
+    console.log("PWA installed successfully");
+    installBtn.style.display = "none";
+    deferredPrompt = null;
+  });
 </script>
 
 <!-- FIREBASE NOTIFICATION MODULE -->
@@ -897,7 +931,8 @@
         return;
       }
 
-      const registration = await navigator.serviceWorker.register("/my-store/firebase-messaging-sw.js");
+      // ✅ IMPORTANT FIX: use MAIN sw.js, NOT firebase-messaging-sw.js
+      const registration = await navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" });
       console.log("Firebase messaging SW registered:", registration);
 
       const currentToken = await getToken(messaging, {
