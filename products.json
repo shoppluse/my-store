@@ -657,5 +657,21 @@
   ],
   "category": "Fashion",
   "brand": "All Brands"
+},
+  {
+  "id": 39,
+  "name": "Trending Headsets from ₹699",
+  "description": "Headsets are essential audio accessories designed to deliver clear sound and comfortable communication for music, gaming, online classes, office work, and calls. They provide an immersive listening experience with features like good sound quality, noise isolation, and a built-in microphone for smooth voice interaction. Designed for long hours of use, headsets usually come with soft ear cushions, adjustable headbands, and lightweight construction for maximum comfort. Whether used for entertainment, study, or professional tasks, a good headset offers convenience, better audio clarity, and an overall improved user experience.",
+  "price": "Just ₹ 699",
+  "rating": 4.5,
+  "link": "https://fktr.in/i4y8J1S",
+  "image": "https://asset22.ckassets.com/resources/image/staticpage_images/92-1771233493.png",
+  "images": [
+    "https://rukminim2.flixcart.com/image/612/612/xif0q/headphone/i/k/r/-original-imahks8k4b7zhghx.jpeg?q=70",
+    "https://rukminim2.flixcart.com/image/612/612/xif0q/headphone/d/t/6/-original-imahej2rqywvghwh.jpeg?q=70",
+    "https://rukminim2.flixcart.com/image/612/612/xif0q/headphone/a/b/b/-original-imahhnzvqmsvbtvp.jpeg?q=70"
+  ],
+  "category": "Gadgets",
+  "brand": "All Brands"
 }
 ]
