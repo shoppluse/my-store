@@ -27,9 +27,9 @@
   }
 
   :root {
-    --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-    --bg: #f5f7fb;
-    --bg-deep: #0e1a39;
+    --gradient: linear-gradient(120deg, #0047ab 55%, #0099ff 100%);
+    --bg: #f4f7fc;
+    --bg-deep: #0b1a45;
     --card-bg: #ffffff;
     --text: #1f1f1f;
     --muted: #64748b;
@@ -40,6 +40,8 @@
     --product-border: #2f80ed;
     --product-name-red: #d62828;
     --rating-color: #ff9800;
+    --desktop-max: 1680px;
+    --section-pad: clamp(12px, 2vw, 28px);
   }
 
   body {
@@ -56,26 +58,36 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: calc(12px + env(safe-area-inset-top)) 12px 14px;
+    padding: calc(12px + env(safe-area-inset-top)) var(--section-pad) 16px;
     box-shadow: 0 4px 14px var(--shadow);
-    gap: 10px;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .header-inner {
+    width: 100%;
+    max-width: var(--desktop-max);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
   }
 
   .shopplus-logo {
-    font-size: 1.5rem;
+    font-size: 1.55rem;
     font-weight: 700;
     color: var(--primary);
     background: #ffffff;
-    padding: 8px 16px;
+    padding: 10px 18px;
     border-radius: 18px;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    width: 100%;
-    max-width: 700px;
-    min-height: 52px;
+    width: min(100%, 660px);
+    min-height: 54px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   }
 
   .shopplus-logo .plus {
@@ -86,11 +98,10 @@
   }
 
   .header-actions {
-    width: 100%;
-    max-width: 700px;
+    width: min(100%, 660px);
     display: grid;
-    grid-template-columns: 1.5fr 0.9fr;
-    gap: 10px;
+    grid-template-columns: 1.6fr 0.95fr;
+    gap: 12px;
     align-items: stretch;
   }
 
@@ -99,10 +110,10 @@
     width: 100%;
     min-height: 54px;
     text-decoration: none;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.14);
     color: #fff;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     padding: 10px 8px;
     border-radius: 16px;
     border: 1px solid rgba(255,255,255,0.2);
@@ -181,15 +192,23 @@
 
   .search-section {
     background: var(--bg-deep);
-    padding: 14px 12px 12px;
+    padding: 14px var(--section-pad) 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .search-inner {
+    width: 100%;
+    max-width: var(--desktop-max);
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
   .search-form {
-    width: 100%;
-    max-width: 700px;
+    width: min(100%, 660px);
     display: flex;
   }
 
@@ -197,16 +216,16 @@
     width: 100%;
     border-radius: 16px;
     border: none;
-    padding: 13px 14px;
+    padding: 14px 16px;
     font-size: 15px;
     outline: none;
     font-family: inherit;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
 
   .category-icons {
-    margin: 12px 0 0;
-    width: 100%;
-    max-width: 700px;
+    margin: 14px 0 0;
+    width: min(100%, 660px);
     display: flex;
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -276,13 +295,13 @@
   /* APP SHORTCUTS */
   .app-shortcuts-section {
     width: 100%;
-    max-width: 1280px;
+    max-width: var(--desktop-max);
     margin: 10px auto 4px;
-    padding: 0 12px;
+    padding: 0 var(--section-pad);
   }
 
   .app-shortcuts-title {
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--primary);
     margin: 0 0 8px;
@@ -291,7 +310,7 @@
   .app-shortcuts-row {
     display: flex;
     flex-wrap: nowrap;
-    gap: 16px;
+    gap: 18px;
     align-items: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
@@ -316,8 +335,8 @@
     align-items: center;
     justify-content: flex-start;
     flex: 0 0 auto;
-    min-width: 82px;
-    max-width: 82px;
+    min-width: 88px;
+    max-width: 88px;
     padding: 2px 0;
     background: transparent;
     border: none;
@@ -325,8 +344,8 @@
   }
 
   .app-shortcut-logo-wrap {
-    width: 54px;
-    height: 54px;
+    width: 56px;
+    height: 56px;
     border-radius: 14px;
     background: #eef4ff;
     display: flex;
@@ -351,7 +370,7 @@
   }
 
   .app-shortcut-name {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-align: center;
     color: var(--primary);
@@ -370,24 +389,25 @@
   /* PRODUCTS */
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    padding: 8px 6px 18px;
-    max-width: 1280px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+    padding: 12px var(--section-pad) 28px;
+    max-width: var(--desktop-max);
     margin: 0 auto;
     min-height: 300px;
+    width: 100%;
   }
 
   .product-card {
     background: #ffffff;
     border: 1.4px solid var(--product-border);
-    border-radius: 10px;
-    box-shadow: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 71, 171, 0.04);
     padding: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    transition: transform 0.18s ease, opacity 0.25s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.25s ease;
     opacity: 0;
     transform: translateY(8px);
     min-height: auto;
@@ -396,7 +416,8 @@
   }
 
   .product-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 71, 171, 0.1);
   }
 
   .product-image-box {
@@ -407,7 +428,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
+    padding: 6px;
     margin-bottom: 0;
     overflow: hidden;
   }
@@ -420,18 +441,18 @@
   }
 
   .product-info {
-    padding: 6px 6px 8px;
+    padding: 8px 8px 10px;
     border-top: 1px solid rgba(47, 128, 237, 0.18);
   }
 
   .product-card h2 {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--product-name-red);
-    margin: 0 0 4px;
+    margin: 0 0 5px;
     text-align: center;
-    line-height: 1.2;
-    min-height: 32px;
+    line-height: 1.22;
+    min-height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -439,7 +460,7 @@
 
   .product-rating {
     text-align: center;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--rating-color);
     line-height: 1.1;
@@ -473,75 +494,49 @@
     word-break: break-all;
   }
 
-  /* TABLET */
-  @media (min-width: 701px) and (max-width: 1024px) {
-    .product-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      padding: 10px 10px 22px;
-    }
-
-    .app-shortcuts-section {
-      padding: 0 16px;
-    }
-  }
-
-  /* LAPTOP / DESKTOP */
-  @media (min-width: 1025px) {
-    .main-header {
-      padding: 10px 18px 14px;
-      gap: 12px;
-    }
-
+  /* LARGE DESKTOP / LAPTOP */
+  @media (min-width: 1200px) {
     .shopplus-logo {
-      max-width: 680px;
+      width: min(100%, 680px);
     }
 
     .header-actions {
-      max-width: 680px;
+      width: min(100%, 680px);
     }
 
     .search-form,
     .category-icons {
-      max-width: 680px;
-    }
-
-    .app-shortcuts-section {
-      max-width: 1280px;
-      padding: 0 18px;
-      margin-top: 12px;
+      width: min(100%, 680px);
     }
 
     .app-shortcuts-title {
-      font-size: 1rem;
+      font-size: 1.05rem;
       margin-bottom: 10px;
     }
 
     .app-shortcuts-row {
-      gap: 20px;
+      gap: 22px;
       padding-bottom: 10px;
     }
 
     .app-shortcut-card {
-      min-width: 90px;
-      max-width: 90px;
+      min-width: 92px;
+      max-width: 92px;
     }
 
     .app-shortcut-logo-wrap {
-      width: 58px;
-      height: 58px;
+      width: 60px;
+      height: 60px;
     }
 
     .product-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      padding: 12px 18px 28px;
-      max-width: 1280px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
     }
 
     .product-card h2 {
       font-size: 14px;
-      min-height: 36px;
+      min-height: 40px;
     }
 
     .product-rating {
@@ -549,14 +544,43 @@
     }
   }
 
+  /* TABLET */
+  @media (min-width: 701px) and (max-width: 1199px) {
+    .shopplus-logo,
+    .header-actions,
+    .search-form,
+    .category-icons {
+      width: min(100%, 760px);
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      padding: 10px var(--section-pad) 22px;
+    }
+
+    .app-shortcuts-section {
+      padding: 0 var(--section-pad);
+    }
+  }
+
   /* MOBILE */
   @media (max-width: 700px) {
+    :root {
+      --section-pad: 10px;
+    }
+
     .main-header {
       padding: calc(12px + env(safe-area-inset-top)) 12px 14px;
       gap: 10px;
     }
 
+    .header-inner {
+      gap: 10px;
+    }
+
     .shopplus-logo {
+      width: 100%;
       font-size: 1.3rem;
       padding: 8px 14px;
       border-radius: 16px;
@@ -568,6 +592,7 @@
     }
 
     .header-actions {
+      width: 100%;
       gap: 10px;
       grid-template-columns: 1.45fr 0.9fr;
     }
@@ -593,6 +618,14 @@
       padding: 14px 12px 12px;
     }
 
+    .search-inner {
+      width: 100%;
+    }
+
+    .search-form {
+      width: 100%;
+    }
+
     .search-form input {
       padding: 12px 14px;
       font-size: 14px;
@@ -600,6 +633,7 @@
     }
 
     .category-icons {
+      width: 100%;
       gap: 10px;
       margin-top: 12px;
       padding: 2px 2px 6px;
@@ -659,6 +693,7 @@
     }
 
     .product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 6px;
       padding: 6px 4px 14px;
     }
@@ -666,6 +701,7 @@
     .product-card {
       border-radius: 8px;
       border-width: 1.2px;
+      box-shadow: none;
     }
 
     .product-image-box {
@@ -692,41 +728,45 @@
 
 <body>
   <div class="main-header">
-    <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+    <div class="header-inner">
+      <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-    <div class="header-actions" id="headerActions">
-      <!-- BRAND -->
-      <div class="brand-filter-wrapper">
-        <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
-          <span id="brandBtnText">🏷️ Brand</span>
-          <span id="brandArrow">▼</span>
-        </button>
+      <div class="header-actions" id="headerActions">
+        <!-- BRAND -->
+        <div class="brand-filter-wrapper">
+          <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
+            <span id="brandBtnText">🏷️ Brand</span>
+            <span id="brandArrow">▼</span>
+          </button>
 
-        <div id="brandDropdown" class="brand-dropdown hidden">
-          <div class="brand-item active" data-brand="all">All Brands</div>
-          <div class="brand-item" data-brand="Apple">Apple</div>
-          <div class="brand-item" data-brand="Samsung">Samsung</div>
-          <div class="brand-item" data-brand="Nike">Nike</div>
-          <div class="brand-item" data-brand="Puma">Puma</div>
-          <div class="brand-item" data-brand="Boat">Boat</div>
-          <div class="brand-item" data-brand="Adidas">Adidas</div>
-          <div class="brand-item" data-brand="Sony">Sony</div>
-          <div class="brand-item" data-brand="Realme">Realme</div>
-          <div class="brand-item" data-brand="OnePlus">OnePlus</div>
+          <div id="brandDropdown" class="brand-dropdown hidden">
+            <div class="brand-item active" data-brand="all">All Brands</div>
+            <div class="brand-item" data-brand="Apple">Apple</div>
+            <div class="brand-item" data-brand="Samsung">Samsung</div>
+            <div class="brand-item" data-brand="Nike">Nike</div>
+            <div class="brand-item" data-brand="Puma">Puma</div>
+            <div class="brand-item" data-brand="Boat">Boat</div>
+            <div class="brand-item" data-brand="Adidas">Adidas</div>
+            <div class="brand-item" data-brand="Sony">Sony</div>
+            <div class="brand-item" data-brand="Realme">Realme</div>
+            <div class="brand-item" data-brand="OnePlus">OnePlus</div>
+          </div>
         </div>
-      </div>
 
-      <!-- PROFILE -->
-      <a href="profile.html" class="header-btn icon-only-btn profile-btn" title="Profile">👤</a>
+        <!-- PROFILE -->
+        <a href="profile.html" class="header-btn icon-only-btn profile-btn" title="Profile">👤</a>
+      </div>
     </div>
   </div>
 
   <div class="search-section">
-    <form class="search-form" onsubmit="event.preventDefault();">
-      <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
-    </form>
+    <div class="search-inner">
+      <form class="search-form" onsubmit="event.preventDefault();">
+        <input id="searchBar" type="text" placeholder="Search for phones, gadgets, etc." />
+      </form>
 
-    <div class="category-icons" id="categoryBar"></div>
+      <div class="category-icons" id="categoryBar"></div>
+    </div>
   </div>
 
   <!-- APP SHORTCUTS -->
@@ -897,7 +937,7 @@
 
       card.innerHTML = `
         <div class="product-image-box">
-          <img src="${p.image}" alt="${p.name}" />
+          <img src="${p.image}" alt="${p.name}" loading="lazy" />
         </div>
         <div class="product-info">
           <h2>${p.name}</h2>
@@ -910,7 +950,7 @@
       setTimeout(() => {
         card.style.opacity = 1;
         card.style.transform = 'translateY(0)';
-      }, i * 40);
+      }, i * 30);
     });
   }
 
