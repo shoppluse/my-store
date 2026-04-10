@@ -609,5 +609,54 @@
   ],
   "category": "Home",
   "brand": "Amazon"
-}
+},
+  {
+  "id": 36,
+  "name": "Maxi Dress for Women",
+  "description": "The women’s V-neckline waist-cinched short sleeve dress is a stylish and elegant western wear outfit designed for ceremonies, parties, office wear, and casual outings. Made from a premium blend of 95% polyester and 5% spandex, it offers a soft feel, comfortable stretch, and excellent drape for all-day wear. This midi-length dress features a flattering V-neckline, short puff sleeves, a ruched waistband, and a waist-cinched A-line silhouette that enhances the overall fit while providing graceful movement. With its modern and versatile design, this dress is a fashionable choice for women looking for comfort, elegance, and trendy style in one outfit.",
+  "price": "Just ₹ 599",
+  "rating": 4.5,
+  "link": "https://amzn.to/4cCfx4A",
+  "image": "https://m.media-amazon.com/images/I/619C3riffyL._SY741_.jpg",
+  "images": [
+    "https://m.media-amazon.com/images/I/61NMvFH8ynL._SY741_.jpg",
+    "https://m.media-amazon.com/images/I/71kSD7DfrkL._SY741_.jpg",
+    "https://m.media-amazon.com/images/I/71uKpfKKjhL._SY741_.jpg"
+  ],
+  "category": "Fashion",
+  "brand": "All Brands"
+},
+  {
+  "id": 37,
+  "name": "Chandheri Saree",
+  "description": "The Floral Digital Print Chandheri Saree is an elegant and lightweight ethnic wear piece designed for weddings, festivals, parties, and special occasions. Made from 100% Chandheri fabric, it offers a breathable feel, graceful drape, and comfortable all-day wear while maintaining a rich traditional look. Featuring a beautiful floral digital print, this saree blends modern sophistication with classic charm to create a flattering and stylish silhouette. It also comes with unstitched blouse material, allowing customization according to personal style, making it a versatile and timeless choice for festive and celebratory wear.",
+  "price": "Just ₹ 799",
+  "rating": 4.3,
+  "link": "https://amzn.to/4c5p04l",
+  "image": "https://m.media-amazon.com/images/I/618kRzYBYlL._SY741_.jpg",
+  "images": [
+    "https://m.media-amazon.com/images/I/81JsmjnqS7L._SY741_.jpg",
+    "https://m.media-amazon.com/images/I/81FDokd2svL._SY741_.jpg",
+    "https://m.media-amazon.com/images/I/71eDr8sfbrL._SY741_.jpg"
+  ],
+  "category": "Fashion",
+  "brand": "All Brands"
+},
+  {
+  "id": 38,
+  "name": "Polycarbonate lenses",
+  "description": "Brand Name- HAYDEN haiza.UV Protection: The lenses are equipped with UV400 protection, blocking 100% of harmful UVA and UVB rays. This ensures your eyes are shielded from the sun's damaging effects.",
+  "price": "Just ₹ 184",
+  "rating": 3.9,
+  "link": "https://fktr.in/ygBbsxv",
+  "image": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sunglass/y/u/r/medium-combo-hayden-haiza-original-imahg2fy74t8zqva.jpeg?q=90",
+  "images": [
+    "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sunglass/j/9/d/medium-combo-hayden-haiza-original-imahg2fyqmwbzuza.jpeg?q=90",
+    "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sunglass/p/p/t/k9-q3-hayden-haiza-original-imahg2emcynnaq2a.jpeg?q=90",
+    "https://rukminim2.flixcart.com/image/1536/1536/xif0q/sunglass/w/m/q/medium-combo-hayden-haiza-original-imahg2fyhdszyaqd.jpeg?q=90"
+  ],
+  "category": "Fashion",
+  "brand": "All Brands"
+},
+  
 ]
