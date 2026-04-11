@@ -384,7 +384,7 @@
     font-weight: 600;
   }
 
-  /* ADS SECTION - NO TITLE, ONLY SHOWS IF ads.json EXISTS */
+  /* ADS SECTION */
   .ads-section {
     width: 100%;
     max-width: var(--desktop-max);
@@ -404,10 +404,16 @@
     min-height: 120px;
   }
 
+  .ads-viewport {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
   .ads-track {
     display: flex;
     width: 100%;
-    transition: transform 0.6s ease-in-out;
+    transition: transform 0.55s ease-in-out;
   }
 
   .ad-slide {
@@ -429,6 +435,41 @@
     object-fit: cover;
     aspect-ratio: 16 / 4;
     background: #ffffff;
+  }
+
+  .ad-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 71, 171, 0.78);
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: 0.2s ease;
+    user-select: none;
+  }
+
+  .ad-nav:hover {
+    background: rgba(0, 71, 171, 0.95);
+    transform: translateY(-50%) scale(1.06);
+  }
+
+  .ad-nav.prev {
+    left: 10px;
+  }
+
+  .ad-nav.next {
+    right: 10px;
   }
 
   /* PRODUCTS */
@@ -743,6 +784,20 @@
       aspect-ratio: 16 / 5;
     }
 
+    .ad-nav {
+      width: 28px;
+      height: 28px;
+      font-size: 16px;
+    }
+
+    .ad-nav.prev {
+      left: 6px;
+    }
+
+    .ad-nav.next {
+      right: 6px;
+    }
+
     .product-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 6px;
@@ -829,10 +884,16 @@
     </div>
   </section>
 
-  <!-- ADS SECTION (NO TITLE) -->
+  <!-- ADS SECTION -->
   <section class="ads-section" id="adsSection">
     <div class="ads-slider" id="adsSlider">
-      <div class="ads-track" id="adsTrack"></div>
+      <button class="ad-nav prev" id="adPrevBtn" aria-label="Previous Ad">&lt;</button>
+
+      <div class="ads-viewport">
+        <div class="ads-track" id="adsTrack"></div>
+      </div>
+
+      <button class="ad-nav next" id="adNextBtn" aria-label="Next Ad">&gt;</button>
     </div>
   </section>
 
@@ -871,11 +932,14 @@
 
   const adsSection = document.getElementById('adsSection');
   const adsTrack = document.getElementById('adsTrack');
+  const adPrevBtn = document.getElementById('adPrevBtn');
+  const adNextBtn = document.getElementById('adNextBtn');
 
   let selectedCategory = 'Overall';
   let allProducts = [];
   let adsInterval = null;
   let currentAdIndex = 0;
+  let totalAdsCount = 0;
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -955,7 +1019,6 @@
     try {
       const response = await fetch("/my-store/ads.json", { cache: "no-store" });
 
-      /* If file doesn't exist, keep ads hidden silently */
       if (!response.ok) {
         adsSection.style.display = 'none';
         return;
@@ -970,6 +1033,7 @@
 
       adsTrack.innerHTML = '';
       adsSection.style.display = 'block';
+      totalAdsCount = ads.length;
 
       ads.forEach(ad => {
         const slide = document.createElement('div');
@@ -994,28 +1058,61 @@
         adsTrack.appendChild(slide);
       });
 
-      startAdsSlider(ads.length);
+      updateAdSlider(false);
+      startAdsAutoSlide();
+
+      adPrevBtn.onclick = () => {
+        prevAd();
+      };
+
+      adNextBtn.onclick = () => {
+        nextAd();
+      };
+
     } catch (error) {
       console.error("ads.json fetch error:", error);
       adsSection.style.display = 'none';
     }
   }
 
-  function startAdsSlider(totalAds) {
+  function updateAdSlider(animated = true) {
+    adsTrack.style.transition = animated ? 'transform 0.55s ease-in-out' : 'none';
+    adsTrack.style.transform = `translateX(-${currentAdIndex * 100}%)`;
+  }
+
+  function nextAd() {
+    if (totalAdsCount <= 1) return;
+
+    currentAdIndex = (currentAdIndex + 1) % totalAdsCount;
+    updateAdSlider(true);
+    restartAdsAutoSlide();
+  }
+
+  function prevAd() {
+    if (totalAdsCount <= 1) return;
+
+    currentAdIndex = (currentAdIndex - 1 + totalAdsCount) % totalAdsCount;
+    updateAdSlider(true);
+    restartAdsAutoSlide();
+  }
+
+  function startAdsAutoSlide() {
+    if (adsInterval) clearInterval(adsInterval);
+
+    if (totalAdsCount <= 1) return;
+
+    adsInterval = setInterval(() => {
+      currentAdIndex = (currentAdIndex + 1) % totalAdsCount;
+      updateAdSlider(true);
+    }, 3000);
+  }
+
+  function restartAdsAutoSlide() {
     if (adsInterval) {
       clearInterval(adsInterval);
       adsInterval = null;
     }
-
-    currentAdIndex = 0;
-    adsTrack.style.transform = 'translateX(0%)';
-
-    if (totalAds <= 1) return;
-
-    adsInterval = setInterval(() => {
-      currentAdIndex = (currentAdIndex + 1) % totalAds;
-      adsTrack.style.transform = `translateX(-${currentAdIndex * 100}%)`;
-    }, 3000);
+    startAdsAutoSlide();
   }
 
   async function loadProducts() {
@@ -1170,7 +1267,7 @@
 
   window.addEventListener("DOMContentLoaded", () => {
     loadAppShortcuts();
-    loadAds();      // ads show ONLY if ads.json exists and has data
+    loadAds();
     loadProducts();
   });
 
