@@ -53,6 +53,7 @@
     overflow-x: hidden;
   }
 
+  /* HEADER */
   .main-header {
     background: var(--gradient);
     display: flex;
@@ -73,6 +74,15 @@
     gap: 12px;
   }
 
+  /* SINGLE ROW HEADER: Shop+ 50%, Brand 25%, Profile 25% */
+  .header-top-row {
+    width: min(100%, 980px);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+
   .shopplus-logo {
     font-size: 1.55rem;
     font-weight: 700;
@@ -85,7 +95,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    width: min(100%, 660px);
+    width: 100%;
     min-height: 54px;
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   }
@@ -95,14 +105,6 @@
     font-size: 1.9rem;
     font-weight: 900;
     line-height: 1;
-  }
-
-  .header-actions {
-    width: min(100%, 660px);
-    display: grid;
-    grid-template-columns: 1.6fr 0.95fr;
-    gap: 12px;
-    align-items: stretch;
   }
 
   .header-btn,
@@ -132,11 +134,6 @@
   .brand-toggle-btn:hover {
     transform: translateY(-2px);
     background: rgba(255,255,255,0.22);
-  }
-
-  .icon-only-btn {
-    font-size: 1.45rem;
-    padding: 0;
   }
 
   .profile-btn {
@@ -190,6 +187,7 @@
     font-weight: 700;
   }
 
+  /* SEARCH SECTION */
   .search-section {
     background: var(--bg-deep);
     padding: 14px var(--section-pad) 14px;
@@ -208,7 +206,7 @@
   }
 
   .search-form {
-    width: min(100%, 660px);
+    width: min(100%, 980px);
     display: flex;
   }
 
@@ -225,7 +223,7 @@
 
   .category-icons {
     margin: 14px 0 0;
-    width: min(100%, 660px);
+    width: min(100%, 980px);
     display: flex;
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -386,6 +384,53 @@
     font-weight: 600;
   }
 
+  /* ADS SECTION - NO TITLE, ONLY SHOWS IF ads.json EXISTS */
+  .ads-section {
+    width: 100%;
+    max-width: var(--desktop-max);
+    margin: 2px auto 8px;
+    padding: 0 var(--section-pad);
+    display: none;
+  }
+
+  .ads-slider {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border: 1.4px solid var(--product-border);
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 71, 171, 0.04);
+    min-height: 120px;
+  }
+
+  .ads-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.6s ease-in-out;
+  }
+
+  .ad-slide {
+    min-width: 100%;
+    width: 100%;
+    flex: 0 0 100%;
+  }
+
+  .ad-slide a,
+  .ad-slide .ad-no-link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  .ad-slide img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 16 / 4;
+    background: #ffffff;
+  }
+
   /* PRODUCTS */
   .product-grid {
     display: grid;
@@ -496,17 +541,10 @@
 
   /* LARGE DESKTOP / LAPTOP */
   @media (min-width: 1200px) {
-    .shopplus-logo {
-      width: min(100%, 680px);
-    }
-
-    .header-actions {
-      width: min(100%, 680px);
-    }
-
+    .header-top-row,
     .search-form,
     .category-icons {
-      width: min(100%, 680px);
+      width: min(100%, 980px);
     }
 
     .app-shortcuts-title {
@@ -546,8 +584,7 @@
 
   /* TABLET */
   @media (min-width: 701px) and (max-width: 1199px) {
-    .shopplus-logo,
-    .header-actions,
+    .header-top-row,
     .search-form,
     .category-icons {
       width: min(100%, 760px);
@@ -579,35 +616,33 @@
       gap: 10px;
     }
 
-    .shopplus-logo {
+    .header-top-row {
       width: 100%;
-      font-size: 1.3rem;
-      padding: 8px 14px;
+      gap: 8px;
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+
+    .shopplus-logo {
+      font-size: 1.15rem;
+      padding: 8px 10px;
       border-radius: 16px;
       min-height: 50px;
     }
 
     .shopplus-logo .plus {
-      font-size: 1.6rem;
-    }
-
-    .header-actions {
-      width: 100%;
-      gap: 10px;
-      grid-template-columns: 1.45fr 0.9fr;
+      font-size: 1.45rem;
     }
 
     .header-btn,
     .brand-toggle-btn {
       min-height: 50px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       padding: 8px 6px;
       border-radius: 14px;
     }
 
-    .icon-only-btn,
     .profile-btn {
-      font-size: 1.35rem;
+      font-size: 1.2rem;
     }
 
     .brand-dropdown {
@@ -692,6 +727,22 @@
       line-height: 1.05;
     }
 
+    .ads-section {
+      padding: 0 10px;
+      margin-top: 2px;
+      margin-bottom: 6px;
+    }
+
+    .ads-slider {
+      border-radius: 8px;
+      border-width: 1.2px;
+      min-height: 90px;
+    }
+
+    .ad-slide img {
+      aspect-ratio: 16 / 5;
+    }
+
     .product-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 6px;
@@ -729,9 +780,10 @@
 <body>
   <div class="main-header">
     <div class="header-inner">
-      <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+      <div class="header-top-row">
+        <!-- SHOP+ -->
+        <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-      <div class="header-actions" id="headerActions">
         <!-- BRAND -->
         <div class="brand-filter-wrapper">
           <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
@@ -754,7 +806,7 @@
         </div>
 
         <!-- PROFILE -->
-        <a href="profile.html" class="header-btn icon-only-btn profile-btn" title="Profile">👤</a>
+        <a href="profile.html" class="header-btn profile-btn" title="Profile">👤</a>
       </div>
     </div>
   </div>
@@ -777,6 +829,14 @@
     </div>
   </section>
 
+  <!-- ADS SECTION (NO TITLE) -->
+  <section class="ads-section" id="adsSection">
+    <div class="ads-slider" id="adsSlider">
+      <div class="ads-track" id="adsTrack"></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
   <div class="product-grid" id="product-list">
     <p class="loading-text">Loading products...</p>
   </div>
@@ -809,8 +869,13 @@
   const brandBtnText = document.getElementById('brandBtnText');
   const brandItems = document.querySelectorAll('.brand-item');
 
+  const adsSection = document.getElementById('adsSection');
+  const adsTrack = document.getElementById('adsTrack');
+
   let selectedCategory = 'Overall';
   let allProducts = [];
+  let adsInterval = null;
+  let currentAdIndex = 0;
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -886,6 +951,73 @@
     }
   }
 
+  async function loadAds() {
+    try {
+      const response = await fetch("/my-store/ads.json", { cache: "no-store" });
+
+      /* If file doesn't exist, keep ads hidden silently */
+      if (!response.ok) {
+        adsSection.style.display = 'none';
+        return;
+      }
+
+      const ads = await response.json();
+
+      if (!Array.isArray(ads) || ads.length === 0) {
+        adsSection.style.display = 'none';
+        return;
+      }
+
+      adsTrack.innerHTML = '';
+      adsSection.style.display = 'block';
+
+      ads.forEach(ad => {
+        const slide = document.createElement('div');
+        slide.className = 'ad-slide';
+
+        const imageSrc = ad.image || 'https://via.placeholder.com/1200x280/ffffff/0047ab?text=Advertisement';
+
+        if (ad.link && ad.link.trim() !== '') {
+          slide.innerHTML = `
+            <a href="${ad.link}" ${/^https?:\/\//i.test(ad.link) ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+              <img src="${imageSrc}" alt="Advertisement" loading="lazy" />
+            </a>
+          `;
+        } else {
+          slide.innerHTML = `
+            <div class="ad-no-link">
+              <img src="${imageSrc}" alt="Advertisement" loading="lazy" />
+            </div>
+          `;
+        }
+
+        adsTrack.appendChild(slide);
+      });
+
+      startAdsSlider(ads.length);
+    } catch (error) {
+      console.error("ads.json fetch error:", error);
+      adsSection.style.display = 'none';
+    }
+  }
+
+  function startAdsSlider(totalAds) {
+    if (adsInterval) {
+      clearInterval(adsInterval);
+      adsInterval = null;
+    }
+
+    currentAdIndex = 0;
+    adsTrack.style.transform = 'translateX(0%)';
+
+    if (totalAds <= 1) return;
+
+    adsInterval = setInterval(() => {
+      currentAdIndex = (currentAdIndex + 1) % totalAds;
+      adsTrack.style.transform = `translateX(-${currentAdIndex * 100}%)`;
+    }, 3000);
+  }
+
   async function loadProducts() {
     try {
       const response = await fetch("/my-store/products.json", { cache: "no-store" });
@@ -897,7 +1029,7 @@
         throw new Error("products.json must contain an array");
       }
 
-      // 🔥 LATEST ADDED PRODUCT FIRST
+      // LATEST ADDED PRODUCT FIRST
       const latestFirstData = [...data].reverse();
 
       allProducts = latestFirstData.map((p, index) => ({
@@ -1038,6 +1170,7 @@
 
   window.addEventListener("DOMContentLoaded", () => {
     loadAppShortcuts();
+    loadAds();      // ads show ONLY if ads.json exists and has data
     loadProducts();
   });
 
