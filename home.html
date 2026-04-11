@@ -402,6 +402,7 @@
     background: #ffffff;
     box-shadow: 0 2px 10px rgba(0, 71, 171, 0.04);
     min-height: 120px;
+    touch-action: pan-y;
   }
 
   .ads-viewport {
@@ -412,7 +413,7 @@
 
   .ads-track {
     display: flex;
-    width: 100%;
+    will-change: transform;
     transition: transform 0.55s ease-in-out;
   }
 
@@ -420,6 +421,7 @@
     min-width: 100%;
     width: 100%;
     flex: 0 0 100%;
+    user-select: none;
   }
 
   .ad-slide a,
@@ -435,41 +437,8 @@
     object-fit: cover;
     aspect-ratio: 16 / 4;
     background: #ffffff;
-  }
-
-  .ad-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 34px;
-    height: 34px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(0, 71, 171, 0.78);
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 5;
-    transition: 0.2s ease;
-    user-select: none;
-  }
-
-  .ad-nav:hover {
-    background: rgba(0, 71, 171, 0.95);
-    transform: translateY(-50%) scale(1.06);
-  }
-
-  .ad-nav.prev {
-    left: 10px;
-  }
-
-  .ad-nav.next {
-    right: 10px;
+    pointer-events: none;
+    -webkit-user-drag: none;
   }
 
   /* PRODUCTS */
@@ -784,20 +753,6 @@
       aspect-ratio: 16 / 5;
     }
 
-    .ad-nav {
-      width: 28px;
-      height: 28px;
-      font-size: 16px;
-    }
-
-    .ad-nav.prev {
-      left: 6px;
-    }
-
-    .ad-nav.next {
-      right: 6px;
-    }
-
     .product-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 6px;
@@ -887,13 +842,9 @@
   <!-- ADS SECTION -->
   <section class="ads-section" id="adsSection">
     <div class="ads-slider" id="adsSlider">
-      <button class="ad-nav prev" id="adPrevBtn" aria-label="Previous Ad">&lt;</button>
-
       <div class="ads-viewport">
         <div class="ads-track" id="adsTrack"></div>
       </div>
-
-      <button class="ad-nav next" id="adNextBtn" aria-label="Next Ad">&gt;</button>
     </div>
   </section>
 
@@ -931,15 +882,22 @@
   const brandItems = document.querySelectorAll('.brand-item');
 
   const adsSection = document.getElementById('adsSection');
+  const adsSlider = document.getElementById('adsSlider');
   const adsTrack = document.getElementById('adsTrack');
-  const adPrevBtn = document.getElementById('adPrevBtn');
-  const adNextBtn = document.getElementById('adNextBtn');
 
   let selectedCategory = 'Overall';
   let allProducts = [];
+
+  /* ADS STATE */
   let adsInterval = null;
-  let currentAdIndex = 0;
-  let totalAdsCount = 0;
+  let realAdsCount = 0;
+  let currentSlideIndex = 1; // because of clones
+  let isDragging = false;
+  let startX = 0;
+  let currentTranslate = 0;
+  let prevTranslate = 0;
+  let animationFrame = null;
+  let adSlides = [];
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -1033,41 +991,36 @@
 
       adsTrack.innerHTML = '';
       adsSection.style.display = 'block';
-      totalAdsCount = ads.length;
+      realAdsCount = ads.length;
 
-      ads.forEach(ad => {
-        const slide = document.createElement('div');
-        slide.className = 'ad-slide';
-
-        const imageSrc = ad.image || 'https://via.placeholder.com/1200x280/ffffff/0047ab?text=Advertisement';
-
-        if (ad.link && ad.link.trim() !== '') {
-          slide.innerHTML = `
-            <a href="${ad.link}" ${/^https?:\/\//i.test(ad.link) ? 'target="_blank" rel="noopener noreferrer"' : ''}>
-              <img src="${imageSrc}" alt="Advertisement" loading="lazy" />
-            </a>
-          `;
-        } else {
-          slide.innerHTML = `
-            <div class="ad-no-link">
-              <img src="${imageSrc}" alt="Advertisement" loading="lazy" />
-            </div>
-          `;
-        }
-
+      // If only 1 ad, no need for clones/loop/swipe
+      if (realAdsCount === 1) {
+        const slide = createAdSlide(ads[0]);
         adsTrack.appendChild(slide);
+        currentSlideIndex = 0;
+        updateAdPosition(false);
+        return;
+      }
+
+      // Clone last ad at beginning
+      adsTrack.appendChild(createAdSlide(ads[realAdsCount - 1], true));
+
+      // Real ads
+      ads.forEach(ad => {
+        adsTrack.appendChild(createAdSlide(ad));
       });
 
-      updateAdSlider(false);
+      // Clone first ad at end
+      adsTrack.appendChild(createAdSlide(ads[0], true));
+
+      currentSlideIndex = 1;
+      updateAdPosition(false);
+
+      adSlides = Array.from(adsTrack.children);
+
+      setupAdInfiniteLoop();
+      setupAdSwipe();
       startAdsAutoSlide();
-
-      adPrevBtn.onclick = () => {
-        prevAd();
-      };
-
-      adNextBtn.onclick = () => {
-        nextAd();
-      };
 
     } catch (error) {
       console.error("ads.json fetch error:", error);
@@ -1075,44 +1028,176 @@
     }
   }
 
-  function updateAdSlider(animated = true) {
+  function createAdSlide(ad, isClone = false) {
+    const slide = document.createElement('div');
+    slide.className = 'ad-slide';
+    if (isClone) slide.setAttribute('data-clone', 'true');
+
+    const imageSrc = ad.image || 'https://via.placeholder.com/1200x280/ffffff/0047ab?text=Advertisement';
+
+    if (ad.link && ad.link.trim() !== '') {
+      slide.innerHTML = `
+        <a href="${ad.link}" ${/^https?:\/\//i.test(ad.link) ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+          <img src="${imageSrc}" alt="Advertisement" loading="lazy" draggable="false" />
+        </a>
+      `;
+    } else {
+      slide.innerHTML = `
+        <div class="ad-no-link">
+          <img src="${imageSrc}" alt="Advertisement" loading="lazy" draggable="false" />
+        </div>
+      `;
+    }
+
+    return slide;
+  }
+
+  function getAdWidth() {
+    return adsSlider.clientWidth;
+  }
+
+  function updateAdPosition(animated = true) {
+    const offset = -currentSlideIndex * getAdWidth();
     adsTrack.style.transition = animated ? 'transform 0.55s ease-in-out' : 'none';
-    adsTrack.style.transform = `translateX(-${currentAdIndex * 100}%)`;
+    adsTrack.style.transform = `translateX(${offset}px)`;
+    currentTranslate = offset;
+    prevTranslate = offset;
   }
 
   function nextAd() {
-    if (totalAdsCount <= 1) return;
-
-    currentAdIndex = (currentAdIndex + 1) % totalAdsCount;
-    updateAdSlider(true);
-    restartAdsAutoSlide();
+    if (realAdsCount <= 1) return;
+    currentSlideIndex++;
+    updateAdPosition(true);
   }
 
   function prevAd() {
-    if (totalAdsCount <= 1) return;
+    if (realAdsCount <= 1) return;
+    currentSlideIndex--;
+    updateAdPosition(true);
+  }
 
-    currentAdIndex = (currentAdIndex - 1 + totalAdsCount) % totalAdsCount;
-    updateAdSlider(true);
-    restartAdsAutoSlide();
+  function setupAdInfiniteLoop() {
+    adsTrack.addEventListener('transitionend', () => {
+      // If moved to cloned first slide at end
+      if (currentSlideIndex === realAdsCount + 1) {
+        currentSlideIndex = 1;
+        updateAdPosition(false);
+      }
+
+      // If moved to cloned last slide at beginning
+      if (currentSlideIndex === 0) {
+        currentSlideIndex = realAdsCount;
+        updateAdPosition(false);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      updateAdPosition(false);
+    });
   }
 
   function startAdsAutoSlide() {
-    if (adsInterval) clearInterval(adsInterval);
+    stopAdsAutoSlide();
 
-    if (totalAdsCount <= 1) return;
+    if (realAdsCount <= 1) return;
 
     adsInterval = setInterval(() => {
-      currentAdIndex = (currentAdIndex + 1) % totalAdsCount;
-      updateAdSlider(true);
+      nextAd();
     }, 3000);
   }
 
-  function restartAdsAutoSlide() {
+  function stopAdsAutoSlide() {
     if (adsInterval) {
       clearInterval(adsInterval);
       adsInterval = null;
     }
+  }
+
+  function restartAdsAutoSlide() {
+    stopAdsAutoSlide();
     startAdsAutoSlide();
+  }
+
+  /* SWIPE SUPPORT */
+  function setupAdSwipe() {
+    adsSlider.addEventListener('touchstart', touchStart, { passive: true });
+    adsSlider.addEventListener('touchmove', touchMove, { passive: false });
+    adsSlider.addEventListener('touchend', touchEnd);
+
+    adsSlider.addEventListener('mousedown', mouseStart);
+    adsSlider.addEventListener('mousemove', mouseMove);
+    adsSlider.addEventListener('mouseup', mouseEnd);
+    adsSlider.addEventListener('mouseleave', mouseEnd);
+
+    adsSlider.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+
+  function touchStart(e) {
+    if (realAdsCount <= 1) return;
+    isDragging = true;
+    startX = e.touches[0].clientX;
+    stopAdsAutoSlide();
+    adsTrack.style.transition = 'none';
+  }
+
+  function touchMove(e) {
+    if (!isDragging) return;
+
+    const currentX = e.touches[0].clientX;
+    const diff = currentX - startX;
+
+    if (Math.abs(diff) > 6) {
+      e.preventDefault();
+    }
+
+    currentTranslate = prevTranslate + diff;
+    setSliderPosition();
+  }
+
+  function touchEnd(e) {
+    if (!isDragging) return;
+    finishSwipe(e.changedTouches[0].clientX);
+  }
+
+  function mouseStart(e) {
+    if (realAdsCount <= 1) return;
+    isDragging = true;
+    startX = e.clientX;
+    stopAdsAutoSlide();
+    adsTrack.style.transition = 'none';
+  }
+
+  function mouseMove(e) {
+    if (!isDragging) return;
+    const currentX = e.clientX;
+    const diff = currentX - startX;
+    currentTranslate = prevTranslate + diff;
+    setSliderPosition();
+  }
+
+  function mouseEnd(e) {
+    if (!isDragging) return;
+    finishSwipe(e.clientX);
+  }
+
+  function finishSwipe(endX) {
+    isDragging = false;
+
+    const movedBy = endX - startX;
+    const threshold = Math.max(50, getAdWidth() * 0.12);
+
+    if (movedBy < -threshold) {
+      currentSlideIndex++;
+    } else if (movedBy > threshold) {
+      currentSlideIndex--;
+    }
+
+    updateAdPosition(true);
+    restartAdsAutoSlide();
+  }
+
+  function setSliderPosition() {
+    adsTrack.style.transform = `translateX(${currentTranslate}px)`;
   }
 
   async function loadProducts() {
