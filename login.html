@@ -262,6 +262,9 @@
         localStorage.setItem("shopplusLoggedIn", "true");
         localStorage.setItem("shopplusUser", JSON.stringify(data.user));
 
+        // Mark that user has just logged in
+        sessionStorage.setItem("shopplusJustLoggedIn", "true");
+
         message.textContent = "Login successful! Redirecting...";
         message.classList.add("success");
 
@@ -270,6 +273,7 @@
         }, 1500);
 
       } catch (error) {
+        console.error("Login error:", error);
         message.textContent = "Something went wrong. Please try again.";
         message.classList.add("error");
         loginBtn.disabled = false;
@@ -277,14 +281,15 @@
       }
     });
 
+    // Register Firebase messaging service worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+        navigator.serviceWorker.register("/my-store/firebase-messaging-sw.js", { scope: "/my-store/" })
           .then((registration) => {
-            console.log("Service Worker registered:", registration.scope);
+            console.log("Firebase Messaging Service Worker registered:", registration.scope);
           })
           .catch((error) => {
-            console.error("Service Worker registration failed:", error);
+            console.error("Firebase Messaging Service Worker registration failed:", error);
           });
       });
     }
