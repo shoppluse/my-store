@@ -33,7 +33,8 @@ router.post("/signup", async (req, res) => {
       email: cleanEmail,
       mobile: cleanMobile,
       password: hashedPassword,
-      isVerified: true
+      isVerified: true,
+      fcmTokens: []
     });
 
     console.log("User created successfully:", user.email);
@@ -94,7 +95,8 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
         mobile: user.mobile,
-        isVerified: true
+        isVerified: true,
+        fcmTokens: user.fcmTokens || []
       }
     });
   } catch (error) {
