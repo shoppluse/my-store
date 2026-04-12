@@ -21,12 +21,12 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: ["https://shoppluse.github.io"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // ===============================
@@ -64,7 +64,7 @@ app.post("/api/save-token", async (req, res) => {
       });
     }
 
-    const cleanToken = token.trim();
+    const cleanToken = String(token).trim();
 
     if (!cleanToken) {
       return res.status(400).json({
@@ -79,8 +79,8 @@ app.post("/api/save-token", async (req, res) => {
       existingToken.user = userEmail || existingToken.user || "guest";
       existingToken.platform = platform || existingToken.platform || "web";
 
-      // Optional: attach userId if your FcmToken schema supports it
-      if (userId && "userId" in existingToken) {
+      // Optional support if schema later contains userId
+      if (userId && existingToken.schema.path("userId")) {
         existingToken.userId = userId;
       }
 
@@ -89,6 +89,7 @@ app.post("/api/save-token", async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "Token already exists, updated successfully",
+        tokenExists: true,
       });
     }
 
@@ -98,7 +99,7 @@ app.post("/api/save-token", async (req, res) => {
       platform: platform || "web",
     };
 
-    // Optional: attach userId if your FcmToken schema supports it
+    // Optional support if schema later contains userId
     if (userId) {
       tokenPayload.userId = userId;
     }
@@ -108,6 +109,7 @@ app.post("/api/save-token", async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "FCM token saved successfully",
+      tokenExists: false,
     });
   } catch (error) {
     console.error("Save token error:", error);
@@ -149,7 +151,7 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
       });
     }
 
-    const tokenDocs = await FcmToken.find({}, "token");
+    const tokenDocs = await FcmToken.find({}, "token user platform createdAt updatedAt");
 
     if (!tokenDocs.length) {
       return res.status(404).json({
@@ -159,8 +161,8 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
     }
 
     const allTokens = tokenDocs
-      .map((doc) => doc.token)
-      .filter((token) => typeof token === "string" && token.trim() !== "");
+      .map((doc) => (typeof doc.token === "string" ? doc.token.trim() : ""))
+      .filter(Boolean);
 
     if (!allTokens.length) {
       return res.status(404).json({
@@ -173,6 +175,7 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
     let totalSuccess = 0;
     let totalFailure = 0;
     const invalidTokens = [];
+    const failedTokens = [];
 
     for (let i = 0; i < allTokens.length; i += CHUNK_SIZE) {
       const chunk = allTokens.slice(i, i + CHUNK_SIZE);
@@ -182,12 +185,20 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
           title,
           body,
         },
+        data: {
+          url: url || "https://shoppluse.github.io/my-store/home.html",
+          click_action: url || "https://shoppluse.github.io/my-store/home.html",
+        },
         webpush: {
+          headers: {
+            Urgency: "high",
+          },
           notification: {
             title,
             body,
             icon: "https://shoppluse.github.io/my-store/icons/icon-192.png",
             badge: "https://shoppluse.github.io/my-store/icons/icon-192.png",
+            requireInteraction: true,
           },
           fcmOptions: {
             link: url || "https://shoppluse.github.io/my-store/home.html",
@@ -204,9 +215,14 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
       response.responses.forEach((resp, index) => {
         if (!resp.success) {
           const failedToken = chunk[index];
-          const errorCode = resp.error?.code || "";
+          const errorCode = resp.error?.code || "unknown";
 
           console.error("FCM send error:", failedToken, errorCode);
+
+          failedTokens.push({
+            token: failedToken,
+            errorCode,
+          });
 
           if (
             errorCode === "messaging/registration-token-not-registered" ||
@@ -230,6 +246,7 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
       successCount: totalSuccess,
       failureCount: totalFailure,
       removedInvalidTokens: invalidTokens.length,
+      sampleFailedTokens: failedTokens.slice(0, 10), // for debugging only
     });
   } catch (error) {
     console.error("Send notification error:", error);
