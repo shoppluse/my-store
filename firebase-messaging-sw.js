@@ -12,6 +12,7 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// Handle background notifications
 messaging.onBackgroundMessage((payload) => {
   console.log("[firebase-messaging-sw.js] Background message received:", payload);
 
@@ -21,17 +22,23 @@ messaging.onBackgroundMessage((payload) => {
     icon: "/my-store/icons/icon-192.png",
     badge: "/my-store/icons/icon-192.png",
     data: {
-      url: payload.fcmOptions?.link || "https://shoppluse.github.io/my-store/home.html"
+      url:
+        payload?.fcmOptions?.link ||
+        payload?.data?.url ||
+        "https://shoppluse.github.io/my-store/home.html"
     }
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
+// Handle notification click
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  const targetUrl = event.notification.data?.url || "https://shoppluse.github.io/my-store/home.html";
+  const targetUrl =
+    event.notification?.data?.url ||
+    "https://shoppluse.github.io/my-store/home.html";
 
   event.waitUntil(
     clients.matchAll({
@@ -39,11 +46,14 @@ self.addEventListener("notificationclick", (event) => {
       includeUncontrolled: true
     }).then((clientList) => {
       for (const client of clientList) {
-        if (client.url.includes("/my-store/") && "focus" in client) {
-          client.navigate(targetUrl);
-          return client.focus();
+        if ("focus" in client) {
+          if (client.url.includes("/my-store/")) {
+            client.navigate(targetUrl);
+            return client.focus();
+          }
         }
       }
+
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }
