@@ -549,6 +549,68 @@
     word-break: break-all;
   }
 
+  /* WELCOME MODAL */
+  .welcome-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+  }
+
+  .welcome-modal-card {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    color: #111827;
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  }
+
+  .welcome-modal-card h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    color: var(--primary);
+  }
+
+  .welcome-modal-card p {
+    margin: 0 0 18px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #374151;
+  }
+
+  .welcome-btn {
+    background: var(--gradient);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+  }
+
+  .welcome-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+  }
+
+  .welcome-status {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #6b7280;
+    min-height: 18px;
+    line-height: 1.4;
+  }
+
   /* LARGE DESKTOP / LAPTOP */
   @media (min-width: 1200px) {
     .header-top-row,
@@ -783,6 +845,19 @@
     .product-rating {
       font-size: 10px;
     }
+
+    .welcome-modal-card {
+      border-radius: 18px;
+      padding: 20px 16px;
+    }
+
+    .welcome-modal-card h2 {
+      font-size: 22px;
+    }
+
+    .welcome-modal-card p {
+      font-size: 14px;
+    }
   }
 </style>
 </head>
@@ -853,12 +928,27 @@
     <p class="loading-text">Loading products...</p>
   </div>
 
+  <!-- DEBUG TOKEN BOX (hidden) -->
   <div id="tokenBox" class="token-box">
     <strong>FCM Token:</strong>
     <div id="tokenText" style="margin-top: 10px;"></div>
   </div>
 
+  <!-- WELCOME NOTIFICATION MODAL -->
+  <div id="shopplusWelcomeModal" class="welcome-modal-overlay">
+    <div class="welcome-modal-card">
+      <h2>Welcome to ShopPlus 🎉</h2>
+      <p>
+        Regular updates for offers, rewards, and new arrivals will be enabled for your account.
+      </p>
+      <button id="shopplusThankYouBtn" class="welcome-btn" type="button">Thank You</button>
+      <div id="shopplusNotifyStatus" class="welcome-status"></div>
+    </div>
+  </div>
+
 <script>
+  const BACKEND_URL = "https://my-store-e28j.onrender.com";
+
   const categories = [
     { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
     { name: 'Electronics', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><rect x="9" y="10" width="6" height="10" rx="2"/></svg>' },
@@ -884,6 +974,13 @@
   const adsSection = document.getElementById('adsSection');
   const adsSlider = document.getElementById('adsSlider');
   const adsTrack = document.getElementById('adsTrack');
+
+  const tokenBox = document.getElementById("tokenBox");
+  const tokenText = document.getElementById("tokenText");
+
+  const welcomeModal = document.getElementById("shopplusWelcomeModal");
+  const thankYouBtn = document.getElementById("shopplusThankYouBtn");
+  const notifyStatus = document.getElementById("shopplusNotifyStatus");
 
   let selectedCategory = 'Overall';
   let allProducts = [];
@@ -1355,26 +1452,14 @@
     loadAds();
     loadProducts();
   });
-
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
-        .then((registration) => {
-          console.log("Service Worker registered:", registration.scope);
-        })
-        .catch((error) => {
-          console.error("Service Worker registration failed:", error);
-        });
-    });
-  }
 </script>
 
 <!-- FIREBASE NOTIFICATION MODULE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-  import { getMessaging, onMessage } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js";
 
-  console.log("Firebase module loaded successfully");
+  const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
   const firebaseConfig = {
     apiKey: "AIzaSyC9nL5__J6cEhaQvl2kcAT0m2A2op7-F_c",
@@ -1385,15 +1470,154 @@
     appId: "1:250259887977:web:cdddd39da04a5575fd8ff8"
   };
 
+  const VAPID_KEY = "PASTE_YOUR_FIREBASE_WEB_PUSH_CERTIFICATE_KEY_HERE";
+
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
+  const tokenBox = document.getElementById("tokenBox");
+  const tokenText = document.getElementById("tokenText");
+
+  const welcomeModal = document.getElementById("shopplusWelcomeModal");
+  const thankYouBtn = document.getElementById("shopplusThankYouBtn");
+  const notifyStatus = document.getElementById("shopplusNotifyStatus");
+
+  function getStoredUser() {
+    try {
+      return JSON.parse(localStorage.getItem("shopplusUser") || "null");
+    } catch {
+      return null;
+    }
+  }
+
+  function shouldShowWelcomeModal() {
+    const justLoggedIn = sessionStorage.getItem("shopplusJustLoggedIn") === "true";
+    const alreadyShown = localStorage.getItem("shopplusWelcomeShown") === "true";
+    const permission = Notification.permission;
+
+    return justLoggedIn && !alreadyShown && permission === "default";
+  }
+
+  async function registerMessagingServiceWorker() {
+    if (!("serviceWorker" in navigator)) {
+      throw new Error("Service Worker not supported");
+    }
+
+    const existingRegistration = await navigator.serviceWorker.getRegistration("/my-store/");
+    if (existingRegistration) {
+      return existingRegistration;
+    }
+
+    return await navigator.serviceWorker.register("/my-store/firebase-messaging-sw.js", {
+      scope: "/my-store/"
+    });
+  }
+
+  async function saveTokenToBackend(token) {
+    const user = getStoredUser();
+
+    const payload = {
+      token,
+      userId: user?.id || null,
+      userEmail: user?.email || null,
+      platform: "web"
+    };
+
+    const response = await fetch(`${BACKEND_URL}/api/save-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to save FCM token");
+    }
+
+    return data;
+  }
+
+  async function enableNotificationsFlow() {
+    try {
+      thankYouBtn.disabled = true;
+      notifyStatus.textContent = "Activating updates...";
+
+      const permission = await Notification.requestPermission();
+
+      if (permission !== "granted") {
+        notifyStatus.textContent = "Notifications not enabled. You can allow them later from browser settings.";
+        localStorage.setItem("shopplusWelcomeShown", "true");
+        sessionStorage.removeItem("shopplusJustLoggedIn");
+        thankYouBtn.disabled = false;
+        return;
+      }
+
+      const registration = await registerMessagingServiceWorker();
+
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: registration
+      });
+
+      if (!token) {
+        throw new Error("No FCM token received");
+      }
+
+      tokenText.textContent = token;
+      tokenBox.style.display = "none"; // keep hidden in production
+
+      await saveTokenToBackend(token);
+
+      notifyStatus.textContent = "Updates enabled successfully 🔔";
+      localStorage.setItem("shopplusWelcomeShown", "true");
+      sessionStorage.removeItem("shopplusJustLoggedIn");
+
+      setTimeout(() => {
+        welcomeModal.style.display = "none";
+      }, 1200);
+
+    } catch (error) {
+      console.error("Notification enable error:", error);
+      notifyStatus.textContent = "Could not enable updates right now. Please try again later.";
+      localStorage.setItem("shopplusWelcomeShown", "true");
+      sessionStorage.removeItem("shopplusJustLoggedIn");
+      thankYouBtn.disabled = false;
+    }
+  }
+
+  thankYouBtn?.addEventListener("click", enableNotificationsFlow);
+
+  window.addEventListener("load", async () => {
+    try {
+      // Register Firebase messaging service worker early
+      await registerMessagingServiceWorker();
+      console.log("Firebase Messaging Service Worker ready");
+
+      // Show welcome popup only for fresh login and first permission request
+      if ("Notification" in window && shouldShowWelcomeModal()) {
+        welcomeModal.style.display = "flex";
+      } else {
+        sessionStorage.removeItem("shopplusJustLoggedIn");
+      }
+    } catch (error) {
+      console.error("Service worker registration error:", error);
+    }
+  });
+
+  // FOREGROUND NOTIFICATION HANDLER
   onMessage(messaging, (payload) => {
     console.log("Foreground message:", payload);
 
     const title = payload.notification?.title || "ShopPlus";
     const body = payload.notification?.body || "You have a new notification!";
     const icon = "/my-store/icons/icon-192.png";
+    const targetUrl =
+      payload?.fcmOptions?.link ||
+      payload?.data?.url ||
+      "home.html";
 
     if (Notification.permission === "granted") {
       const notification = new Notification(title, {
@@ -1403,7 +1627,7 @@
 
       notification.onclick = () => {
         window.focus();
-        window.location.href = "home.html";
+        window.location.href = targetUrl;
       };
     } else {
       alert(`${title}\n\n${body}`);
