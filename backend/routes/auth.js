@@ -88,6 +88,8 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    const existingTokenCount = Array.isArray(user.fcmTokens) ? user.fcmTokens.length : 0;
+
     res.status(200).json({
       message: "Login successful",
       user: {
@@ -96,7 +98,7 @@ router.post("/login", async (req, res) => {
         email: user.email,
         mobile: user.mobile,
         isVerified: true,
-        fcmTokens: user.fcmTokens || []
+        existingTokenCount
       }
     });
   } catch (error) {
