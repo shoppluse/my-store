@@ -866,10 +866,8 @@
   <div class="main-header">
     <div class="header-inner">
       <div class="header-top-row">
-        <!-- SHOP+ -->
         <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-        <!-- BRAND -->
         <div class="brand-filter-wrapper">
           <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
             <span id="brandBtnText">🏷️ Brand</span>
@@ -890,7 +888,6 @@
           </div>
         </div>
 
-        <!-- PROFILE -->
         <a href="profile.html" class="header-btn profile-btn" title="Profile">👤</a>
       </div>
     </div>
@@ -906,7 +903,6 @@
     </div>
   </div>
 
-  <!-- APP SHORTCUTS -->
   <section class="app-shortcuts-section">
     <h2 class="app-shortcuts-title">Top Shopping Apps</h2>
     <div class="app-shortcuts-row" id="appShortcutsRow">
@@ -914,7 +910,6 @@
     </div>
   </section>
 
-  <!-- ADS SECTION -->
   <section class="ads-section" id="adsSection">
     <div class="ads-slider" id="adsSlider">
       <div class="ads-viewport">
@@ -923,18 +918,15 @@
     </div>
   </section>
 
-  <!-- PRODUCTS -->
   <div class="product-grid" id="product-list">
     <p class="loading-text">Loading products...</p>
   </div>
 
-  <!-- DEBUG TOKEN BOX (hidden) -->
   <div id="tokenBox" class="token-box">
     <strong>FCM Token:</strong>
     <div id="tokenText" style="margin-top: 10px;"></div>
   </div>
 
-  <!-- WELCOME NOTIFICATION MODAL -->
   <div id="shopplusWelcomeModal" class="welcome-modal-overlay">
     <div class="welcome-modal-card">
       <h2>Welcome to ShopPlus 🎉</h2>
@@ -975,26 +967,16 @@
   const adsSlider = document.getElementById('adsSlider');
   const adsTrack = document.getElementById('adsTrack');
 
-  const tokenBox = document.getElementById("tokenBox");
-  const tokenText = document.getElementById("tokenText");
-
-  const welcomeModal = document.getElementById("shopplusWelcomeModal");
-  const thankYouBtn = document.getElementById("shopplusThankYouBtn");
-  const notifyStatus = document.getElementById("shopplusNotifyStatus");
-
   let selectedCategory = 'Overall';
   let allProducts = [];
 
-  /* ADS STATE */
   let adsInterval = null;
   let realAdsCount = 0;
-  let currentSlideIndex = 1; // because of clones
+  let currentSlideIndex = 1;
   let isDragging = false;
   let startX = 0;
   let currentTranslate = 0;
   let prevTranslate = 0;
-  let animationFrame = null;
-  let adSlides = [];
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -1090,7 +1072,6 @@
       adsSection.style.display = 'block';
       realAdsCount = ads.length;
 
-      // If only 1 ad, no need for clones/loop/swipe
       if (realAdsCount === 1) {
         const slide = createAdSlide(ads[0]);
         adsTrack.appendChild(slide);
@@ -1099,21 +1080,12 @@
         return;
       }
 
-      // Clone last ad at beginning
       adsTrack.appendChild(createAdSlide(ads[realAdsCount - 1], true));
-
-      // Real ads
-      ads.forEach(ad => {
-        adsTrack.appendChild(createAdSlide(ad));
-      });
-
-      // Clone first ad at end
+      ads.forEach(ad => adsTrack.appendChild(createAdSlide(ad)));
       adsTrack.appendChild(createAdSlide(ads[0], true));
 
       currentSlideIndex = 1;
       updateAdPosition(false);
-
-      adSlides = Array.from(adsTrack.children);
 
       setupAdInfiniteLoop();
       setupAdSwipe();
@@ -1175,13 +1147,11 @@
 
   function setupAdInfiniteLoop() {
     adsTrack.addEventListener('transitionend', () => {
-      // If moved to cloned first slide at end
       if (currentSlideIndex === realAdsCount + 1) {
         currentSlideIndex = 1;
         updateAdPosition(false);
       }
 
-      // If moved to cloned last slide at beginning
       if (currentSlideIndex === 0) {
         currentSlideIndex = realAdsCount;
         updateAdPosition(false);
@@ -1215,7 +1185,6 @@
     startAdsAutoSlide();
   }
 
-  /* SWIPE SUPPORT */
   function setupAdSwipe() {
     adsSlider.addEventListener('touchstart', touchStart, { passive: true });
     adsSlider.addEventListener('touchmove', touchMove, { passive: false });
@@ -1308,7 +1277,6 @@
         throw new Error("products.json must contain an array");
       }
 
-      // LATEST ADDED PRODUCT FIRST
       const latestFirstData = [...data].reverse();
 
       allProducts = latestFirstData.map((p, index) => ({
@@ -1490,12 +1458,23 @@
     }
   }
 
+  function getDeviceKey(userId) {
+    return `shopplusWelcomeShown_${userId}`;
+  }
+
+  function getDeviceTokenKey(userId) {
+    return `shopplusFcmTokenSaved_${userId}`;
+  }
+
   function shouldShowWelcomeModal() {
+    const user = getStoredUser();
+    if (!user?.id) return false;
+
     const justLoggedIn = sessionStorage.getItem("shopplusJustLoggedIn") === "true";
-    const alreadyShown = localStorage.getItem("shopplusWelcomeShown") === "true";
+    const alreadyShownForThisUser = localStorage.getItem(getDeviceKey(user.id)) === "true";
     const permission = Notification.permission;
 
-    return justLoggedIn && !alreadyShown && permission === "default";
+    return justLoggedIn && !alreadyShownForThisUser && permission === "default";
   }
 
   async function registerMessagingServiceWorker() {
@@ -1516,14 +1495,16 @@
   async function saveTokenToBackend(token) {
     const user = getStoredUser();
 
+    if (!user?.id) {
+      throw new Error("User not found in localStorage");
+    }
+
     const payload = {
-      token,
-      userId: user?.id || null,
-      userEmail: user?.email || null,
-      platform: "web"
+      userId: user.id,
+      token: token
     };
 
-    const response = await fetch(`${BACKEND_URL}/api/save-token`, {
+    const response = await fetch(`${BACKEND_URL}/api/save-user-fcm-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -1540,16 +1521,56 @@
     return data;
   }
 
+  async function silentlyEnsureTokenForGrantedPermission() {
+    try {
+      const user = getStoredUser();
+      if (!user?.id) return;
+
+      if (Notification.permission !== "granted") return;
+
+      const savedFlag = localStorage.getItem(getDeviceTokenKey(user.id));
+      if (savedFlag === "true") return;
+
+      const registration = await registerMessagingServiceWorker();
+
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: registration
+      });
+
+      if (!token) return;
+
+      tokenText.textContent = token;
+      tokenBox.style.display = "none";
+
+      await saveTokenToBackend(token);
+
+      localStorage.setItem(getDeviceTokenKey(user.id), "true");
+      localStorage.setItem(getDeviceKey(user.id), "true");
+
+      console.log("Silent token save success");
+    } catch (error) {
+      console.error("Silent token save error:", error);
+    }
+  }
+
   async function enableNotificationsFlow() {
     try {
+      const user = getStoredUser();
+
+      if (!user?.id) {
+        notifyStatus.textContent = "User session missing. Please login again.";
+        return;
+      }
+
       thankYouBtn.disabled = true;
       notifyStatus.textContent = "Activating updates...";
 
       const permission = await Notification.requestPermission();
 
       if (permission !== "granted") {
-        notifyStatus.textContent = "Notifications not enabled. You can allow them later from browser settings.";
-        localStorage.setItem("shopplusWelcomeShown", "true");
+        notifyStatus.textContent = "Notifications were not allowed. You can enable them later from browser settings.";
+        localStorage.setItem(getDeviceKey(user.id), "true");
         sessionStorage.removeItem("shopplusJustLoggedIn");
         thankYouBtn.disabled = false;
         return;
@@ -1567,13 +1588,15 @@
       }
 
       tokenText.textContent = token;
-      tokenBox.style.display = "none"; // keep hidden in production
+      tokenBox.style.display = "none";
 
       await saveTokenToBackend(token);
 
-      notifyStatus.textContent = "Updates enabled successfully 🔔";
-      localStorage.setItem("shopplusWelcomeShown", "true");
+      localStorage.setItem(getDeviceTokenKey(user.id), "true");
+      localStorage.setItem(getDeviceKey(user.id), "true");
       sessionStorage.removeItem("shopplusJustLoggedIn");
+
+      notifyStatus.textContent = "Updates enabled successfully 🔔";
 
       setTimeout(() => {
         welcomeModal.style.display = "none";
@@ -1582,8 +1605,6 @@
     } catch (error) {
       console.error("Notification enable error:", error);
       notifyStatus.textContent = "Could not enable updates right now. Please try again later.";
-      localStorage.setItem("shopplusWelcomeShown", "true");
-      sessionStorage.removeItem("shopplusJustLoggedIn");
       thankYouBtn.disabled = false;
     }
   }
@@ -1592,22 +1613,20 @@
 
   window.addEventListener("load", async () => {
     try {
-      // Register Firebase messaging service worker early
       await registerMessagingServiceWorker();
       console.log("Firebase Messaging Service Worker ready");
 
-      // Show welcome popup only for fresh login and first permission request
       if ("Notification" in window && shouldShowWelcomeModal()) {
         welcomeModal.style.display = "flex";
       } else {
         sessionStorage.removeItem("shopplusJustLoggedIn");
+        await silentlyEnsureTokenForGrantedPermission();
       }
     } catch (error) {
       console.error("Service worker registration error:", error);
     }
   });
 
-  // FOREGROUND NOTIFICATION HANDLER
   onMessage(messaging, (payload) => {
     console.log("Foreground message:", payload);
 
