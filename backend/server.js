@@ -81,7 +81,21 @@ app.post("/api/save-token", async (req, res) => {
       });
     }
 
-    // Add token only if not already present
+    if (!Array.isArray(user.fcmTokens)) {
+      user.fcmTokens = [];
+    }
+
+    // Check if token already exists in ANY user (avoid duplicates across accounts)
+    const existingTokenUser = await User.findOne({ fcmTokens: cleanToken });
+
+    if (existingTokenUser && String(existingTokenUser._id) !== String(userId)) {
+      existingTokenUser.fcmTokens = existingTokenUser.fcmTokens.filter(
+        (t) => t !== cleanToken
+      );
+      await existingTokenUser.save();
+    }
+
+    // Add token only if not already present in this user
     if (!user.fcmTokens.includes(cleanToken)) {
       user.fcmTokens.push(cleanToken);
       await user.save();
