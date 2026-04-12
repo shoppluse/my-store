@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
+
     email: {
       type: String,
       required: true,
@@ -14,26 +15,26 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true
     },
+
     mobile: {
       type: String,
       required: true,
       unique: true,
       trim: true
     },
+
     password: {
       type: String,
       required: true
     },
 
-    // Since email OTP verification is removed,
-    // keep users verified by default
+    // Since email OTP verification is removed
     isVerified: {
       type: Boolean,
       default: true
     },
 
-    // Store multiple device notification tokens (for all logged-in devices)
-    // Best for future Firebase FCM integration
+    // Store multiple device FCM tokens directly inside user document
     fcmTokens: {
       type: [String],
       default: []
