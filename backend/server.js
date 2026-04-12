@@ -6,7 +6,7 @@ const productsRouter = require("./routes/products");
 const authRouter = require("./routes/auth");
 const rewardRoutes = require("./routes/rewardRoutes");
 const nodemailer = require("nodemailer");
-const FcmToken = require("./models/FcmToken");
+const User = require("./models/User");
 const admin = require("./config/firebaseAdmin");
 
 dotenv.config();
@@ -30,7 +30,7 @@ app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // ===============================
-// EMAIL TRANSPORTER (kept for future use if needed)
+// EMAIL TRANSPORTER (kept for future use)
 // ===============================
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -40,7 +40,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Make transporter available in routes if needed
 app.locals.transporter = transporter;
 
 // ===============================
@@ -51,16 +50,16 @@ app.get("/", (req, res) => {
 });
 
 // ===============================
-// SAVE FCM TOKEN ROUTE
+// SAVE FCM TOKEN INSIDE USER
 // ===============================
 app.post("/api/save-token", async (req, res) => {
   try {
-    const { token, userId, userEmail, platform } = req.body;
+    const { token, userId } = req.body;
 
-    if (!token) {
+    if (!token || !userId) {
       return res.status(400).json({
         success: false,
-        message: "FCM token is required",
+        message: "FCM token and userId are required",
       });
     }
 
@@ -73,43 +72,31 @@ app.post("/api/save-token", async (req, res) => {
       });
     }
 
-    const existingToken = await FcmToken.findOne({ token: cleanToken });
+    const user = await User.findById(userId);
 
-    if (existingToken) {
-      existingToken.user = userEmail || existingToken.user || "guest";
-      existingToken.platform = platform || existingToken.platform || "web";
-
-      // Optional support if schema later contains userId
-      if (userId && existingToken.schema.path("userId")) {
-        existingToken.userId = userId;
-      }
-
-      await existingToken.save();
-
-      return res.status(200).json({
-        success: true,
-        message: "Token already exists, updated successfully",
-        tokenExists: true,
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
 
-    const tokenPayload = {
-      token: cleanToken,
-      user: userEmail || "guest",
-      platform: platform || "web",
-    };
+    // Add token only if not already present
+    if (!user.fcmTokens.includes(cleanToken)) {
+      user.fcmTokens.push(cleanToken);
+      await user.save();
 
-    // Optional support if schema later contains userId
-    if (userId) {
-      tokenPayload.userId = userId;
+      return res.status(200).json({
+        success: true,
+        message: "FCM token saved inside user successfully",
+        totalUserTokens: user.fcmTokens.length
+      });
     }
 
-    await FcmToken.create(tokenPayload);
-
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "FCM token saved successfully",
-      tokenExists: false,
+      message: "FCM token already exists for this user",
+      totalUserTokens: user.fcmTokens.length
     });
   } catch (error) {
     console.error("Save token error:", error);
@@ -117,6 +104,36 @@ app.post("/api/save-token", async (req, res) => {
       success: false,
       message: "Server error while saving token",
       error: error.message,
+    });
+  }
+});
+
+// ===============================
+// GET USER TOKEN COUNT (for frontend new-device logic)
+// ===============================
+app.get("/api/user/:userId/token-count", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId).select("fcmTokens");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      totalTokens: Array.isArray(user.fcmTokens) ? user.fcmTokens.length : 0
+    });
+  } catch (error) {
+    console.error("User token count error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching user token count",
+      error: error.message
     });
   }
 });
@@ -138,7 +155,7 @@ function verifyOwner(req, res, next) {
 }
 
 // ===============================
-// SEND NOTIFICATION TO ALL TOKENS
+// SEND NOTIFICATION TO ALL USERS' TOKENS
 // ===============================
 app.post("/api/send-notification", verifyOwner, async (req, res) => {
   try {
@@ -151,23 +168,28 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
       });
     }
 
-    const tokenDocs = await FcmToken.find({}, "token user platform createdAt updatedAt");
+    const users = await User.find({}, "fcmTokens");
 
-    if (!tokenDocs.length) {
+    if (!users.length) {
       return res.status(404).json({
         success: false,
-        message: "No FCM tokens found in database",
+        message: "No users found in database",
       });
     }
 
-    const allTokens = tokenDocs
-      .map((doc) => (typeof doc.token === "string" ? doc.token.trim() : ""))
+    // Collect all tokens from all users
+    const allTokens = users
+      .flatMap((user) => Array.isArray(user.fcmTokens) ? user.fcmTokens : [])
+      .map((token) => (typeof token === "string" ? token.trim() : ""))
       .filter(Boolean);
 
-    if (!allTokens.length) {
+    // Remove duplicates
+    const uniqueTokens = [...new Set(allTokens)];
+
+    if (!uniqueTokens.length) {
       return res.status(404).json({
         success: false,
-        message: "No valid FCM tokens available",
+        message: "No valid FCM tokens available in users collection",
       });
     }
 
@@ -177,8 +199,8 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
     const invalidTokens = [];
     const failedTokens = [];
 
-    for (let i = 0; i < allTokens.length; i += CHUNK_SIZE) {
-      const chunk = allTokens.slice(i, i + CHUNK_SIZE);
+    for (let i = 0; i < uniqueTokens.length; i += CHUNK_SIZE) {
+      const chunk = uniqueTokens.slice(i, i + CHUNK_SIZE);
 
       const message = {
         notification: {
@@ -234,19 +256,22 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
       });
     }
 
-    // Remove invalid tokens from MongoDB
+    // Remove invalid tokens from all users
     if (invalidTokens.length > 0) {
-      await FcmToken.deleteMany({ token: { $in: invalidTokens } });
+      await User.updateMany(
+        { fcmTokens: { $in: invalidTokens } },
+        { $pull: { fcmTokens: { $in: invalidTokens } } }
+      );
     }
 
     return res.status(200).json({
       success: true,
       message: "Notification broadcast completed",
-      totalTokens: allTokens.length,
+      totalTokens: uniqueTokens.length,
       successCount: totalSuccess,
       failureCount: totalFailure,
       removedInvalidTokens: invalidTokens.length,
-      sampleFailedTokens: failedTokens.slice(0, 10), // for debugging only
+      sampleFailedTokens: failedTokens.slice(0, 10)
     });
   } catch (error) {
     console.error("Send notification error:", error);
@@ -259,15 +284,22 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
 });
 
 // ===============================
-// GET TOKEN COUNT (OWNER ONLY)
+// GET TOTAL TOKEN COUNT (OWNER ONLY)
 // ===============================
 app.get("/api/token-count", verifyOwner, async (req, res) => {
   try {
-    const count = await FcmToken.countDocuments();
+    const users = await User.find({}, "fcmTokens");
+
+    const allTokens = users
+      .flatMap((user) => Array.isArray(user.fcmTokens) ? user.fcmTokens : [])
+      .map((token) => (typeof token === "string" ? token.trim() : ""))
+      .filter(Boolean);
+
+    const uniqueTokens = [...new Set(allTokens)];
 
     return res.status(200).json({
       success: true,
-      totalTokens: count,
+      totalTokens: uniqueTokens.length,
     });
   } catch (error) {
     console.error("Token count error:", error);
