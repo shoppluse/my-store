@@ -1,6 +1,9 @@
 importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js");
 
+// ===============================
+// FIREBASE INIT
+// ===============================
 firebase.initializeApp({
   apiKey: "AIzaSyC9nL5__J6cEhaQvl2kcAT0m2A2op7-F_c",
   authDomain: "shopplus-108.firebaseapp.com",
@@ -12,50 +15,107 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Handle background notifications
+const DEFAULT_URL = "https://shoppluse.github.io/my-store/home.html";
+const DEFAULT_ICON = "https://shoppluse.github.io/my-store/icons/icon-192.png";
+const DEFAULT_BADGE = "https://shoppluse.github.io/my-store/icons/icon-192.png";
+
+// ===============================
+// SAFE URL HELPER
+// ===============================
+function getSafeUrl(url) {
+  try {
+    if (!url || typeof url !== "string") return DEFAULT_URL;
+
+    const trimmed = url.trim();
+    if (!trimmed) return DEFAULT_URL;
+
+    // If relative path is passed like "home.html" or "/my-store/home.html"
+    if (!/^https?:\/\//i.test(trimmed)) {
+      return new URL(trimmed, "https://shoppluse.github.io/my-store/").href;
+    }
+
+    const parsed = new URL(trimmed);
+
+    // Optional safety: allow only your own domain
+    if (parsed.origin !== "https://shoppluse.github.io") {
+      return DEFAULT_URL;
+    }
+
+    return parsed.href;
+  } catch (error) {
+    console.error("[firebase-messaging-sw.js] Invalid URL:", url, error);
+    return DEFAULT_URL;
+  }
+}
+
+// ===============================
+// BACKGROUND MESSAGE HANDLER
+// ===============================
 messaging.onBackgroundMessage((payload) => {
   console.log("[firebase-messaging-sw.js] Background message received:", payload);
 
-  const notificationTitle = payload.notification?.title || "ShopPlus";
+  const title = payload?.notification?.title || "ShopPlus";
+  const body = payload?.notification?.body || "You have a new update!";
+
+  const targetUrl = getSafeUrl(
+    payload?.fcmOptions?.link ||
+    payload?.data?.url ||
+    DEFAULT_URL
+  );
+
   const notificationOptions = {
-    body: payload.notification?.body || "You have a new update!",
-    icon: "/my-store/icons/icon-192.png",
-    badge: "/my-store/icons/icon-192.png",
+    body,
+    icon: payload?.notification?.icon || DEFAULT_ICON,
+    badge: DEFAULT_BADGE,
     data: {
-      url:
-        payload?.fcmOptions?.link ||
-        payload?.data?.url ||
-        "https://shoppluse.github.io/my-store/home.html"
-    }
+      url: targetUrl
+    },
+    requireInteraction: true
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(title, notificationOptions);
 });
 
-// Handle notification click
+// ===============================
+// NOTIFICATION CLICK HANDLER
+// ===============================
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  const targetUrl =
-    event.notification?.data?.url ||
-    "https://shoppluse.github.io/my-store/home.html";
+  const targetUrl = getSafeUrl(
+    event?.notification?.data?.url || DEFAULT_URL
+  );
 
   event.waitUntil(
     clients.matchAll({
       type: "window",
       includeUncontrolled: true
     }).then((clientList) => {
+      // First try: exact same page already open
       for (const client of clientList) {
-        if ("focus" in client) {
-          if (client.url.includes("/my-store/")) {
-            client.navigate(targetUrl);
-            return client.focus();
-          }
+        if (client.url === targetUrl && "focus" in client) {
+          return client.focus();
         }
       }
 
+      // Second try: any ShopPlus tab open -> navigate it
+      for (const client of clientList) {
+        if ("focus" in client && client.url.includes("/my-store/")) {
+          if ("navigate" in client) {
+            return client.navigate(targetUrl).then(() => client.focus());
+          }
+          return client.focus();
+        }
+      }
+
+      // Third: open new tab/window
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
+      }
+    }).catch((error) => {
+      console.error("[firebase-messaging-sw.js] notificationclick error:", error);
+      if (clients.openWindow) {
+        return clients.openWindow(DEFAULT_URL);
       }
     })
   );
