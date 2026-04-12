@@ -131,7 +131,7 @@
 <body>
   <h1>📢 ShopPlus Owner Notification Panel</h1>
   <div class="subtitle">
-    Send push notifications to all stored ShopPlus devices from the <b>fcmtokens</b> collection.
+    Send push notifications to all stored ShopPlus devices from the <b>users</b> collection.
   </div>
 
   <div class="box">
@@ -183,7 +183,7 @@
           return;
         }
 
-        statsBox.textContent = `✅ Total active tokens in database: ${data.totalTokens}`;
+        statsBox.textContent = `✅ Total active tokens in users collection: ${data.totalTokens}`;
       } catch (error) {
         console.error("Token count error:", error);
         statsBox.textContent = `❌ Error checking token count: ${error.message}`;
@@ -224,7 +224,7 @@
         resultBox.textContent = JSON.stringify(data, null, 2);
 
         if (response.ok && data.success) {
-          alert("✅ Notification broadcast completed successfully!");
+          alert("✅ Notification broadcast completed!");
           fetchTokenCount();
         } else {
           alert("⚠️ Notification broadcast failed. Check result box.");
@@ -238,7 +238,6 @@
       }
     });
 
-    // Auto check token count on page load
     fetchTokenCount();
   </script>
 </body>
