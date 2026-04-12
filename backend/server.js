@@ -15,7 +15,9 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// ===============================
+// MIDDLEWARE
+// ===============================
 app.use(
   cors({
     origin: ["https://shoppluse.github.io"],
@@ -23,24 +25,29 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Email transporter (for real OTP emails)
+// ===============================
+// EMAIL TRANSPORTER (kept for future use if needed)
+// ===============================
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 // Make transporter available in routes if needed
 app.locals.transporter = transporter;
 
-// Test route
+// ===============================
+// TEST ROUTE
+// ===============================
 app.get("/", (req, res) => {
-  res.send("My Store Backend is running...");
+  res.send("ShopPlus Backend is running...");
 });
 
 // ===============================
@@ -48,7 +55,7 @@ app.get("/", (req, res) => {
 // ===============================
 app.post("/api/save-token", async (req, res) => {
   try {
-    const { token, user, platform } = req.body;
+    const { token, userId, userEmail, platform } = req.body;
 
     if (!token) {
       return res.status(400).json({
@@ -57,11 +64,26 @@ app.post("/api/save-token", async (req, res) => {
       });
     }
 
-    const existingToken = await FcmToken.findOne({ token });
+    const cleanToken = token.trim();
+
+    if (!cleanToken) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid FCM token",
+      });
+    }
+
+    const existingToken = await FcmToken.findOne({ token: cleanToken });
 
     if (existingToken) {
-      existingToken.user = user || existingToken.user || "guest";
+      existingToken.user = userEmail || existingToken.user || "guest";
       existingToken.platform = platform || existingToken.platform || "web";
+
+      // Optional: attach userId if your FcmToken schema supports it
+      if (userId && "userId" in existingToken) {
+        existingToken.userId = userId;
+      }
+
       await existingToken.save();
 
       return res.status(200).json({
@@ -70,11 +92,18 @@ app.post("/api/save-token", async (req, res) => {
       });
     }
 
-    await FcmToken.create({
-      token,
-      user: user || "guest",
+    const tokenPayload = {
+      token: cleanToken,
+      user: userEmail || "guest",
       platform: platform || "web",
-    });
+    };
+
+    // Optional: attach userId if your FcmToken schema supports it
+    if (userId) {
+      tokenPayload.userId = userId;
+    }
+
+    await FcmToken.create(tokenPayload);
 
     return res.status(201).json({
       success: true,
@@ -129,7 +158,16 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
       });
     }
 
-    const allTokens = tokenDocs.map((doc) => doc.token).filter(Boolean);
+    const allTokens = tokenDocs
+      .map((doc) => doc.token)
+      .filter((token) => typeof token === "string" && token.trim() !== "");
+
+    if (!allTokens.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No valid FCM tokens available",
+      });
+    }
 
     const CHUNK_SIZE = 500;
     let totalSuccess = 0;
@@ -204,11 +242,12 @@ app.post("/api/send-notification", verifyOwner, async (req, res) => {
 });
 
 // ===============================
-// OPTIONAL: GET TOKEN COUNT (OWNER)
+// GET TOKEN COUNT (OWNER ONLY)
 // ===============================
 app.get("/api/token-count", verifyOwner, async (req, res) => {
   try {
     const count = await FcmToken.countDocuments();
+
     return res.status(200).json({
       success: true,
       totalTokens: count,
@@ -223,12 +262,16 @@ app.get("/api/token-count", verifyOwner, async (req, res) => {
   }
 });
 
-// Routes
+// ===============================
+// APP ROUTES
+// ===============================
 app.use("/api/products", productsRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/rewards", rewardRoutes);
 
-// Start server
+// ===============================
+// START SERVER
+// ===============================
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`ShopPlus backend running on port ${PORT}`);
 });
