@@ -24,17 +24,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+
+    // Since email OTP verification is removed,
+    // keep users verified by default
     isVerified: {
       type: Boolean,
-      default: false
+      default: true
     },
-    emailOtp: {
-      type: String,
-      default: null
-    },
-    emailOtpExpires: {
-      type: Date,
-      default: null
+
+    // Store multiple device notification tokens (for all logged-in devices)
+    // Best for future Firebase FCM integration
+    fcmTokens: {
+      type: [String],
+      default: []
     }
   },
   {
