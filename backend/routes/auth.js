@@ -33,8 +33,7 @@ router.post("/signup", async (req, res) => {
       email: cleanEmail,
       mobile: cleanMobile,
       password: hashedPassword,
-      isVerified: true,
-      fcmTokens: []
+      isVerified: true
     });
 
     console.log("User created successfully:", user.email);
@@ -88,8 +87,6 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const existingTokenCount = Array.isArray(user.fcmTokens) ? user.fcmTokens.length : 0;
-
     res.status(200).json({
       message: "Login successful",
       user: {
@@ -97,8 +94,7 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
         mobile: user.mobile,
-        isVerified: true,
-        existingTokenCount
+        isVerified: true
       }
     });
   } catch (error) {
