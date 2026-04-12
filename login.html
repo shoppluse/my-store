@@ -104,7 +104,37 @@
       box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.12);
     }
 
-    button {
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 50px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      margin: 0;
+      width: auto;
+      color: #555;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .toggle-password:hover {
+      transform: translateY(-50%);
+      opacity: 0.8;
+    }
+
+    button[type="submit"] {
       width: 100%;
       padding: 14px;
       border: none;
@@ -119,12 +149,12 @@
       font-family: inherit;
     }
 
-    button:hover {
+    button[type="submit"]:hover {
       transform: translateY(-2px);
       opacity: 0.95;
     }
 
-    button:disabled {
+    button[type="submit"]:disabled {
       opacity: 0.7;
       cursor: not-allowed;
       transform: none;
@@ -205,7 +235,10 @@
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter your password" required />
+          <div class="password-wrapper">
+            <input type="password" id="password" placeholder="Enter your password" required />
+            <button type="button" id="togglePassword" class="toggle-password" aria-label="Show password">👁️</button>
+          </div>
         </div>
 
         <button type="submit" id="loginBtn">Login</button>
@@ -227,6 +260,23 @@
     const form = document.getElementById("loginForm");
     const message = document.getElementById("message");
     const loginBtn = document.getElementById("loginBtn");
+    const passwordInput = document.getElementById("password");
+    const togglePasswordBtn = document.getElementById("togglePassword");
+
+    // SHOW / HIDE PASSWORD
+    togglePasswordBtn.addEventListener("click", () => {
+      const isPassword = passwordInput.type === "password";
+
+      if (isPassword) {
+        passwordInput.type = "text";
+        togglePasswordBtn.textContent = "🙈";
+        togglePasswordBtn.setAttribute("aria-label", "Hide password");
+      } else {
+        passwordInput.type = "password";
+        togglePasswordBtn.textContent = "👁️";
+        togglePasswordBtn.setAttribute("aria-label", "Show password");
+      }
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -237,7 +287,7 @@
       loginBtn.textContent = "Logging in...";
 
       const emailOrMobile = document.getElementById("emailOrMobile").value.trim();
-      const password = document.getElementById("password").value.trim();
+      const password = passwordInput.value.trim();
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
@@ -258,19 +308,16 @@
           return;
         }
 
-        // Save login state + user data
+        // Save login state and user data
         localStorage.setItem("shopplusLoggedIn", "true");
         localStorage.setItem("shopplusUser", JSON.stringify(data.user));
-
-        // This tells home.html user just logged in
-        sessionStorage.setItem("shopplusJustLoggedIn", "true");
 
         message.textContent = "Login successful! Redirecting...";
         message.classList.add("success");
 
         setTimeout(() => {
           window.location.href = "home.html";
-        }, 1200);
+        }, 1500);
 
       } catch (error) {
         console.error("Login error:", error);
@@ -280,21 +327,6 @@
         loginBtn.textContent = "Login";
       }
     });
-
-    // Register Firebase Messaging Service Worker
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try {
-          const registration = await navigator.serviceWorker.register(
-            "/my-store/firebase-messaging-sw.js",
-            { scope: "/my-store/" }
-          );
-          console.log("Firebase Messaging Service Worker registered:", registration.scope);
-        } catch (error) {
-          console.error("Firebase Messaging Service Worker registration failed:", error);
-        }
-      });
-    }
   </script>
 </body>
 </html>
