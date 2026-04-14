@@ -10,8 +10,7 @@ const router = express.Router();
 // =======================================
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find({ status: "active" })
-      .sort({ createdAt: -1 });
+    const products = await Product.find({ status: "active" }).sort({ createdAt: -1 });
 
     const formattedProducts = products.map((p) => ({
       id: p._id,
@@ -31,48 +30,6 @@ router.get("/", async (req, res) => {
     console.error("Get all products error:", error);
     res.status(500).json({
       message: "Failed to fetch products",
-      error: error.message
-    });
-  }
-});
-
-// =======================================
-// GET SINGLE PRODUCT BY ID (Public)
-// =======================================
-router.get("/:id", async (req, res) => {
-  try {
-    const productId = req.params.id;
-
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({
-        message: "Invalid product ID"
-      });
-    }
-
-    const product = await Product.findById(productId);
-
-    if (!product || product.status !== "active") {
-      return res.status(404).json({
-        message: "Product not found"
-      });
-    }
-
-    res.status(200).json({
-      id: product._id,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      link: product.link,
-      image: product.image,
-      images: product.images,
-      rating: product.rating,
-      category: product.category,
-      ownerId: product.ownerId
-    });
-  } catch (error) {
-    console.error("Get single product error:", error);
-    res.status(500).json({
-      message: "Failed to fetch product",
       error: error.message
     });
   }
@@ -115,34 +72,29 @@ router.post("/add", async (req, res) => {
       });
     }
 
-    // Must be approved affiliate
     if (user.affiliateStatus !== "approved") {
       return res.status(403).json({
         message: "Only approved affiliates can add products"
       });
     }
 
-    // Must have active plan
     if (user.planStatus !== "active") {
       return res.status(403).json({
         message: "Please activate a plan before adding products"
       });
     }
 
-    // Must have valid plan
     if (!["starter", "growth", "elite"].includes(user.affiliatePlan)) {
       return res.status(403).json({
         message: "Invalid or missing affiliate plan"
       });
     }
 
-    // Count current products by this user
     const currentProductCount = await Product.countDocuments({
       ownerId: user._id,
       status: "active"
     });
 
-    // maxProducts = -1 => unlimited
     if (user.maxProducts !== -1 && currentProductCount >= user.maxProducts) {
       return res.status(403).json({
         message: `Product limit reached for your ${user.affiliatePlan} plan`,
@@ -151,9 +103,7 @@ router.post("/add", async (req, res) => {
       });
     }
 
-    const safeImages = Array.isArray(images)
-      ? images.filter(Boolean)
-      : [];
+    const safeImages = Array.isArray(images) ? images.filter(Boolean) : [];
 
     const product = await Product.create({
       ownerId: user._id,
@@ -259,7 +209,10 @@ router.post("/delete", async (req, res) => {
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(productId)) {
+    if (
+      !mongoose.Types.ObjectId.isValid(userId) ||
+      !mongoose.Types.ObjectId.isValid(productId)
+    ) {
       return res.status(400).json({
         message: "Invalid userId or productId"
       });
@@ -347,6 +300,49 @@ router.post("/plan-usage", async (req, res) => {
     console.error("Plan usage error:", error);
     res.status(500).json({
       message: "Failed to fetch plan usage",
+      error: error.message
+    });
+  }
+});
+
+// =======================================
+// GET SINGLE PRODUCT BY ID (Public)
+// KEEP THIS AT BOTTOM
+// =======================================
+router.get("/:id", async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        message: "Invalid product ID"
+      });
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product || product.status !== "active") {
+      return res.status(404).json({
+        message: "Product not found"
+      });
+    }
+
+    res.status(200).json({
+      id: product._id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      link: product.link,
+      image: product.image,
+      images: product.images,
+      rating: product.rating,
+      category: product.category,
+      ownerId: product.ownerId
+    });
+  } catch (error) {
+    console.error("Get single product error:", error);
+    res.status(500).json({
+      message: "Failed to fetch product",
       error: error.message
     });
   }
