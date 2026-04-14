@@ -520,7 +520,7 @@
   <script>
     const API_BASE = "https://my-store-e28j.onrender.com";
 
-    const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+    let storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
     const loadingBox = document.getElementById("loadingBox");
     const messageArea = document.getElementById("messageArea");
@@ -569,6 +569,7 @@
       user.affiliateStatus = status;
       user.isAffiliate = status === "approved";
       localStorage.setItem("shopplusUser", JSON.stringify(user));
+      storedUser = user;
     }
 
     function renderState(status) {
@@ -620,48 +621,28 @@
       clearMessage();
     }
 
-    async function fetchAffiliateStatus() {
+    // FIXED: backend status route does not exist, so use localStorage only
+    function fetchAffiliateStatus() {
       try {
         setLoading(true, "⏳ Checking your affiliate status...");
 
-        console.log("Checking affiliate status for user:", storedUser);
+        storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
-        const response = await fetch(`${API_BASE}/api/affiliate/status`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            userId: storedUser.id
-          })
-        });
-
-        const data = await response.json();
-
-        console.log("Affiliate status response:", response.status, data);
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch affiliate status");
+        if (!storedUser || !storedUser.id) {
+          showMessage("danger", "User session invalid. Please login again.");
+          setTimeout(() => {
+            localStorage.removeItem("shopplusLoggedIn");
+            localStorage.removeItem("shopplusUser");
+            window.location.href = "login.html";
+          }, 1200);
+          return;
         }
 
-        const backendStatus = data?.user?.affiliateStatus || "none";
-
-        updateLocalUserAffiliate(backendStatus);
-        renderState(backendStatus);
+        const localStatus = (storedUser.affiliateStatus || "none").toLowerCase();
+        renderState(localStatus);
       } catch (error) {
-        console.error("Affiliate status fetch error:", error);
-
-        // fallback to localStorage if backend sleeping or temporary issue
-        const fallbackStatus = storedUser.affiliateStatus || "none";
-        renderState(fallbackStatus);
-
-        showMessage(
-          "info",
-          `
-            Could not fetch latest status from server right now. Showing saved local status.<br>
-            <strong>Current visible status:</strong> ${fallbackStatus}
-          `
-        );
+        console.error("Affiliate status local read error:", error);
+        renderState("none");
       } finally {
         setLoading(false);
       }
@@ -672,21 +653,20 @@
 
       clearMessage();
 
+      storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+
       const payload = {
         userId: storedUser.id,
-        name: (storedUser.name || "").trim(),
-        email: (storedUser.email || "").trim(),
-        mobile: (storedUser.mobile || "").trim(),
-        instagram: instagramInput.value.trim(),
-        youtube: youtubeInput.value.trim(),
-        telegram: telegramInput.value.trim(),
-        audienceType: audienceTypeInput.value.trim(),
-        experience: experienceInput.value.trim(),
         reason: reasonInput.value.trim()
       };
 
-      if (!payload.userId || !payload.name || !payload.email || !payload.mobile) {
-        showMessage("danger", "Missing required user account details. Please logout and login again.");
+      if (!payload.userId) {
+        showMessage("danger", "Missing user session. Please logout and login again.");
+        return;
+      }
+
+      if (!payload.reason) {
+        showMessage("danger", "Please tell us why you want to join the ShopPlus affiliate program.");
         return;
       }
 
@@ -698,7 +678,7 @@
 
         console.log("Submitting affiliate payload:", payload);
 
-        const response = await fetch(`${API_BASE}/api/affiliate/apply`, {
+        const response = await fetch(`${API_BASE}/api/auth/apply-affiliate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
