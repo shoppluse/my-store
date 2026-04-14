@@ -28,49 +28,28 @@ const userSchema = new mongoose.Schema(
       required: true
     },
 
-    // Since email OTP verification is removed
+    // Email verification not used
     isVerified: {
       type: Boolean,
       default: true
     },
 
-    // Store multiple device FCM tokens directly inside user document
+    // Store multiple FCM tokens directly inside user doc
     fcmTokens: {
       type: [String],
       default: []
     },
 
-    // Affiliate application status
+    // AFFILIATE STATUS
+    isAffiliate: {
+      type: Boolean,
+      default: false
+    },
+
     affiliateStatus: {
       type: String,
       enum: ["none", "pending", "approved", "rejected"],
       default: "none"
-    },
-
-    // Why user wants to join affiliate program
-    affiliateReason: {
-      type: String,
-      default: "",
-      trim: true
-    },
-
-    // When user applied for affiliate program
-    affiliateAppliedAt: {
-      type: Date,
-      default: null
-    },
-
-    // When admin reviewed the affiliate application
-    affiliateReviewedAt: {
-      type: Date,
-      default: null
-    },
-
-    // Optional admin note for approval/rejection
-    affiliateReviewNote: {
-      type: String,
-      default: "",
-      trim: true
     }
   },
   {
