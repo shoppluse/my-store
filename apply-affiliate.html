@@ -680,9 +680,11 @@
         const response = await fetch(`${API_BASE}/api/auth/apply-affiliate`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache"
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
+          cache: "no-store"
         });
 
         const data = await response.json();
@@ -737,20 +739,17 @@
       );
     });
 
-    fillUserDetails();
-    fetchAffiliateStatus();
-
+    // FORCE REMOVE OLD SERVICE WORKERS (important)
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
-          .then((registration) => {
-            console.log("Service Worker registered:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister();
+        });
       });
     }
+
+    fillUserDetails();
+    fetchAffiliateStatus();
   </script>
 </body>
 </html>
