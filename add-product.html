@@ -376,8 +376,8 @@
 <body>
   <div class="main-header">
     <div class="header-actions">
-      <a href="./profile.html" class="header-btn">← Profile</a>
-      <a href="./my-products.html" class="header-btn">My Products</a>
+      <a href="/my-store/profile.html" class="header-btn">← Profile</a>
+      <a href="/my-store/my-products.html" class="header-btn">My Products</a>
     </div>
   </div>
 
@@ -463,7 +463,7 @@
 
         <div class="btn-row">
           <button type="submit" id="submitBtn" class="btn btn-primary">Add Product</button>
-          <button type="button" class="btn btn-back" onclick="window.location.href='./profile.html'">Back to Profile</button>
+          <button type="button" class="btn btn-back" onclick="window.location.href='/my-store/profile.html'">Back to Profile</button>
         </div>
       </form>
     </div>
@@ -484,17 +484,13 @@
       currentUser = {};
     }
 
-    // support BOTH id and _id
     const currentUserId = currentUser.id || currentUser._id || "";
-
-    console.log("DEBUG shopplusUser:", currentUser);
-    console.log("DEBUG currentUserId:", currentUserId);
 
     if (isLoggedIn !== "true" || !currentUserRaw || !currentUserId) {
       alert("User session invalid. Please login again.");
       localStorage.removeItem("shopplusLoggedIn");
       localStorage.removeItem("shopplusUser");
-      window.location.href = "./login.html";
+      window.location.href = "/my-store/login.html";
       throw new Error("Invalid session");
     }
 
@@ -675,7 +671,7 @@
           throw new Error(result.message || "Failed to add product");
         }
 
-        showStatus("Product added successfully! It will now appear on ShopPlus home page.", "success");
+        alert("Product added successfully!");
 
         addProductForm.reset();
         renderImagePreview();
@@ -689,8 +685,8 @@
         }
 
         setTimeout(() => {
-          window.location.href = "./my-products.html";
-        }, 1400);
+          window.location.href = "/my-store/home.html";
+        }, 300);
 
       } catch (error) {
         console.error("Add product error:", error);
@@ -704,7 +700,6 @@
 
     checkPlanAndLimit();
 
-    // TEMP: unregister old service workers to avoid stale cached files
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         registrations.forEach((registration) => registration.unregister());
