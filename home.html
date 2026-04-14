@@ -19,6 +19,12 @@
   if (isLoggedIn !== "true" || !currentUser) {
     window.location.href = "login.html";
   }
+
+  // GLOBAL THEME SUPPORT (controlled from profile.html)
+  (function () {
+    const savedTheme = localStorage.getItem("theme");
+    document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+  })();
 </script>
 
 <style>
@@ -42,6 +48,22 @@
     --rating-color: #ff9800;
     --desktop-max: 1680px;
     --section-pad: clamp(12px, 2vw, 28px);
+  }
+
+  [data-theme="dark"] {
+    --gradient: linear-gradient(120deg, #0f2d6b 55%, #0ea5e9 100%);
+    --bg: #0f172a;
+    --bg-deep: #081226;
+    --card-bg: #111827;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --primary: #60a5fa;
+    --primary-2: #38bdf8;
+    --border: #1e3a8a;
+    --shadow: rgba(56, 189, 248, 0.12);
+    --product-border: #2563eb;
+    --product-name-red: #f87171;
+    --rating-color: #fbbf24;
   }
 
   body {
@@ -98,6 +120,10 @@
     width: 100%;
     min-height: 54px;
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+
+  [data-theme="dark"] .shopplus-logo {
+    background: #f8fafc;
   }
 
   .shopplus-logo .plus {
@@ -219,6 +245,13 @@
     outline: none;
     font-family: inherit;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background: #ffffff;
+    color: #1f1f1f;
+  }
+
+  [data-theme="dark"] .search-form input {
+    background: #f8fafc;
+    color: #0f172a;
   }
 
   .category-icons {
@@ -355,6 +388,10 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
+  [data-theme="dark"] .app-shortcut-logo-wrap {
+    background: #1e293b;
+  }
+
   .app-shortcut-card:hover .app-shortcut-logo-wrap {
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(0, 71, 171, 0.14);
@@ -399,7 +436,7 @@
     overflow: hidden;
     border: 1.4px solid var(--product-border);
     border-radius: 12px;
-    background: #ffffff;
+    background: var(--card-bg);
     box-shadow: 0 2px 10px rgba(0, 71, 171, 0.04);
     min-height: 120px;
     touch-action: pan-y;
@@ -454,7 +491,7 @@
   }
 
   .product-card {
-    background: #ffffff;
+    background: var(--card-bg);
     border: 1.4px solid var(--product-border);
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 71, 171, 0.04);
@@ -486,6 +523,10 @@
     padding: 6px;
     margin-bottom: 0;
     overflow: hidden;
+  }
+
+  [data-theme="dark"] .product-image-box {
+    background: #ffffff;
   }
 
   .product-card img {
@@ -534,6 +575,11 @@
   .loading-text { color: #666; }
   .empty-text { color: #888; }
   .error-text { color: red; }
+
+  [data-theme="dark"] .loading-text,
+  [data-theme="dark"] .empty-text {
+    color: var(--muted);
+  }
 
   /* LARGE DESKTOP / LAPTOP */
   @media (min-width: 1200px) {
