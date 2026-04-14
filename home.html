@@ -1072,7 +1072,7 @@
     return isNaN(time) ? 0 : time;
   }
 
-  function normalizeProduct(p, source, index, totalCount) {
+  function normalizeProduct(p, source, index, totalCount, jsonBaseTime = 0) {
     const rawId = p._id || p.id || `fallback-${source}-${index}`;
     const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
 
@@ -1088,10 +1088,11 @@
     const updatedTime = getTimestampValue(p.updatedAt);
     let sortTime = Math.max(createdTime, updatedTime);
 
-    // If products.json has no createdAt/updatedAt, last item in file should be treated as latest
+    // FINAL FIX:
+    // If products.json has no real timestamp, generate a strong artificial timestamp
+    // based on current time so last item in products.json becomes newest OVERALL
     if (sortTime === 0 && source === "json") {
-      sortTime = index + 1; 
-      // later we use original file order, and higher index = later added
+      sortTime = jsonBaseTime + index;
     }
 
     return {
@@ -1134,22 +1135,29 @@
       const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
       const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
+      // Find latest backend time
+      let latestBackendTime = 0;
+      backendProducts.forEach(p => {
+        const t = Math.max(getTimestampValue(p.createdAt), getTimestampValue(p.updatedAt));
+        if (t > latestBackendTime) latestBackendTime = t;
+      });
+
+      // Create a base time for products.json that is GREATER than backend
+      // so newest item in products.json can come first if it was added latest in file
+      const jsonBaseTime = Math.max(Date.now(), latestBackendTime + 1000);
+
       const normalizedJson = jsonProducts.map((p, index) =>
-        normalizeProduct(p, "json", index, jsonProducts.length)
+        normalizeProduct(p, "json", index, jsonProducts.length, jsonBaseTime)
       );
 
       const normalizedBackend = backendProducts.map((p, index) =>
-        normalizeProduct(p, "backend", index, backendProducts.length)
+        normalizeProduct(p, "backend", index, backendProducts.length, 0)
       );
 
-      // NO DISCRIMINATION:
-      // Merge both first, then sort by latest time across BOTH sources
       allProducts = [...normalizedJson, ...normalizedBackend].sort((a, b) => {
         if (b.sortTime !== a.sortTime) {
           return b.sortTime - a.sortTime;
         }
-
-        // Tie-breaker: if same time, latest index wins
         return (b.originalIndex || 0) - (a.originalIndex || 0);
       });
 
