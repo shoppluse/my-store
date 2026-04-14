@@ -94,13 +94,85 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
         mobile: user.mobile,
-        isVerified: true
+        isVerified: true,
+        affiliateStatus: user.affiliateStatus || "none",
+        affiliateReason: user.affiliateReason || "",
+        affiliateAppliedAt: user.affiliateAppliedAt || null
       }
     });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({
       message: "Login failed",
+      error: error.message
+    });
+  }
+});
+
+// APPLY FOR AFFILIATE PROGRAM
+router.post("/apply-affiliate", async (req, res) => {
+  try {
+    const { userId, reason } = req.body;
+
+    if (!userId || !reason) {
+      return res.status(400).json({
+        message: "User ID and reason are required"
+      });
+    }
+
+    const cleanReason = reason.trim();
+
+    if (!cleanReason) {
+      return res.status(400).json({
+        message: "Reason is required"
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    if (user.affiliateStatus === "pending") {
+      return res.status(400).json({
+        message: "Your affiliate application is already pending review."
+      });
+    }
+
+    if (user.affiliateStatus === "approved") {
+      return res.status(400).json({
+        message: "You are already an approved affiliate member."
+      });
+    }
+
+    user.affiliateStatus = "pending";
+    user.affiliateReason = cleanReason;
+    user.affiliateAppliedAt = new Date();
+    user.affiliateReviewedAt = null;
+    user.affiliateReviewNote = "";
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Affiliate application submitted successfully. Your request is now pending review.",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        isVerified: true,
+        affiliateStatus: user.affiliateStatus,
+        affiliateReason: user.affiliateReason,
+        affiliateAppliedAt: user.affiliateAppliedAt
+      }
+    });
+  } catch (error) {
+    console.error("Apply affiliate error:", error);
+    res.status(500).json({
+      message: "Failed to submit affiliate application",
       error: error.message
     });
   }
