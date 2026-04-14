@@ -11,7 +11,6 @@
 <link rel="icon" href="/my-store/icons/icon-192.png" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-<!-- LOGIN PROTECTION -->
 <script>
   const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
   const currentUser = localStorage.getItem("shopplusUser");
@@ -20,7 +19,6 @@
     window.location.href = "login.html";
   }
 
-  // GLOBAL THEME SUPPORT (controlled from profile.html)
   (function () {
     const savedTheme = localStorage.getItem("theme");
     document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
@@ -28,9 +26,7 @@
 </script>
 
 <style>
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   :root {
     --gradient: linear-gradient(120deg, #0047ab 55%, #0099ff 100%);
@@ -75,7 +71,6 @@
     overflow-x: hidden;
   }
 
-  /* HEADER */
   .main-header {
     background: var(--gradient);
     display: flex;
@@ -96,7 +91,6 @@
     gap: 12px;
   }
 
-  /* SINGLE ROW HEADER: Shop+ 50%, Brand 25%, Profile 25% */
   .header-top-row {
     width: min(100%, 980px);
     display: grid;
@@ -122,9 +116,7 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   }
 
-  [data-theme="dark"] .shopplus-logo {
-    background: #f8fafc;
-  }
+  [data-theme="dark"] .shopplus-logo { background: #f8fafc; }
 
   .shopplus-logo .plus {
     color: var(--primary-2);
@@ -162,18 +154,10 @@
     background: rgba(255,255,255,0.22);
   }
 
-  .profile-btn {
-    font-size: 1.45rem;
-  }
+  .profile-btn { font-size: 1.45rem; }
 
-  .brand-filter-wrapper {
-    position: relative;
-    width: 100%;
-  }
-
-  .brand-toggle-btn {
-    gap: 8px;
-  }
+  .brand-filter-wrapper { position: relative; width: 100%; }
+  .brand-toggle-btn { gap: 8px; }
 
   .brand-dropdown {
     position: absolute;
@@ -191,9 +175,7 @@
     overflow-y: auto;
   }
 
-  .brand-dropdown.hidden {
-    display: none;
-  }
+  .brand-dropdown.hidden { display: none; }
 
   .brand-item {
     padding: 10px 14px;
@@ -203,9 +185,7 @@
     transition: background 0.2s ease;
   }
 
-  .brand-item:hover {
-    background: rgba(0, 153, 255, 0.1);
-  }
+  .brand-item:hover { background: rgba(0, 153, 255, 0.1); }
 
   .brand-item.active {
     background: rgba(0, 153, 255, 0.14);
@@ -213,7 +193,6 @@
     font-weight: 700;
   }
 
-  /* SEARCH SECTION */
   .search-section {
     background: var(--bg-deep);
     padding: 14px var(--section-pad) 14px;
@@ -266,15 +245,10 @@
     padding: 2px 2px 8px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-  }
-
-  .category-icons::-webkit-scrollbar {
-    display: none;
-  }
-
-  .category-icons {
     scrollbar-width: none;
   }
+
+  .category-icons::-webkit-scrollbar { display: none; }
 
   .category-icon {
     display: flex;
@@ -323,7 +297,6 @@
     word-break: break-word;
   }
 
-  /* APP SHORTCUTS */
   .app-shortcuts-section {
     width: 100%;
     max-width: var(--desktop-max);
@@ -348,15 +321,10 @@
     padding: 4px 2px 8px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-  }
-
-  .app-shortcuts-row::-webkit-scrollbar {
-    display: none;
-  }
-
-  .app-shortcuts-row {
     scrollbar-width: none;
   }
+
+  .app-shortcuts-row::-webkit-scrollbar { display: none; }
 
   .app-shortcut-card {
     text-decoration: none;
@@ -388,9 +356,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  [data-theme="dark"] .app-shortcut-logo-wrap {
-    background: #1e293b;
-  }
+  [data-theme="dark"] .app-shortcut-logo-wrap { background: #1e293b; }
 
   .app-shortcut-card:hover .app-shortcut-logo-wrap {
     transform: translateY(-2px);
@@ -421,7 +387,6 @@
     font-weight: 600;
   }
 
-  /* ADS SECTION */
   .ads-section {
     width: 100%;
     max-width: var(--desktop-max);
@@ -478,7 +443,6 @@
     -webkit-user-drag: none;
   }
 
-  /* PRODUCTS */
   .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -525,9 +489,7 @@
     overflow: hidden;
   }
 
-  [data-theme="dark"] .product-image-box {
-    background: #ffffff;
-  }
+  [data-theme="dark"] .product-image-box { background: #ffffff; }
 
   .product-card img {
     width: 100%;
@@ -577,86 +539,17 @@
   .error-text { color: red; }
 
   [data-theme="dark"] .loading-text,
-  [data-theme="dark"] .empty-text {
-    color: var(--muted);
-  }
+  [data-theme="dark"] .empty-text { color: var(--muted); }
 
-  /* LARGE DESKTOP / LAPTOP */
-  @media (min-width: 1200px) {
-    .header-top-row,
-    .search-form,
-    .category-icons {
-      width: min(100%, 980px);
-    }
-
-    .app-shortcuts-title {
-      font-size: 1.05rem;
-      margin-bottom: 10px;
-    }
-
-    .app-shortcuts-row {
-      gap: 22px;
-      padding-bottom: 10px;
-    }
-
-    .app-shortcut-card {
-      min-width: 92px;
-      max-width: 92px;
-    }
-
-    .app-shortcut-logo-wrap {
-      width: 60px;
-      height: 60px;
-    }
-
-    .product-grid {
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .product-card h2 {
-      font-size: 14px;
-      min-height: 40px;
-    }
-
-    .product-rating {
-      font-size: 12px;
-    }
-  }
-
-  /* TABLET */
-  @media (min-width: 701px) and (max-width: 1199px) {
-    .header-top-row,
-    .search-form,
-    .category-icons {
-      width: min(100%, 760px);
-    }
-
-    .product-grid {
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 12px;
-      padding: 10px var(--section-pad) 22px;
-    }
-
-    .app-shortcuts-section {
-      padding: 0 var(--section-pad);
-    }
-  }
-
-  /* MOBILE */
   @media (max-width: 700px) {
-    :root {
-      --section-pad: 10px;
-    }
+    :root { --section-pad: 10px; }
 
     .main-header {
       padding: calc(12px + env(safe-area-inset-top)) 12px 14px;
       gap: 10px;
     }
 
-    .header-inner {
-      gap: 10px;
-    }
+    .header-inner { gap: 10px; }
 
     .header-top-row {
       width: 100%;
@@ -671,9 +564,7 @@
       min-height: 50px;
     }
 
-    .shopplus-logo .plus {
-      font-size: 1.45rem;
-    }
+    .shopplus-logo .plus { font-size: 1.45rem; }
 
     .header-btn,
     .brand-toggle-btn {
@@ -683,25 +574,10 @@
       border-radius: 14px;
     }
 
-    .profile-btn {
-      font-size: 1.2rem;
-    }
+    .profile-btn { font-size: 1.2rem; }
 
-    .brand-dropdown {
-      width: 100%;
-    }
-
-    .search-section {
-      padding: 14px 12px 12px;
-    }
-
-    .search-inner {
-      width: 100%;
-    }
-
-    .search-form {
-      width: 100%;
-    }
+    .search-section { padding: 14px 12px 12px; }
+    .search-form { width: 100%; }
 
     .search-form input {
       padding: 12px 14px;
@@ -781,9 +657,7 @@
       min-height: 90px;
     }
 
-    .ad-slide img {
-      aspect-ratio: 16 / 5;
-    }
+    .ad-slide img { aspect-ratio: 16 / 5; }
 
     .product-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -797,13 +671,9 @@
       box-shadow: none;
     }
 
-    .product-image-box {
-      padding: 3px;
-    }
+    .product-image-box { padding: 3px; }
 
-    .product-info {
-      padding: 5px 5px 7px;
-    }
+    .product-info { padding: 5px 5px 7px; }
 
     .product-card h2 {
       font-size: 12px;
@@ -812,9 +682,7 @@
       margin-bottom: 3px;
     }
 
-    .product-rating {
-      font-size: 10px;
-    }
+    .product-rating { font-size: 10px; }
   }
 </style>
 </head>
@@ -823,10 +691,8 @@
   <div class="main-header">
     <div class="header-inner">
       <div class="header-top-row">
-        <!-- SHOP+ -->
         <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-        <!-- BRAND -->
         <div class="brand-filter-wrapper">
           <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
             <span id="brandBtnText">🏷️ Brand</span>
@@ -847,7 +713,6 @@
           </div>
         </div>
 
-        <!-- PROFILE -->
         <a href="profile.html" class="header-btn profile-btn" title="Profile">👤</a>
       </div>
     </div>
@@ -863,7 +728,6 @@
     </div>
   </div>
 
-  <!-- APP SHORTCUTS -->
   <section class="app-shortcuts-section">
     <h2 class="app-shortcuts-title">Top Shopping Apps</h2>
     <div class="app-shortcuts-row" id="appShortcutsRow">
@@ -871,7 +735,6 @@
     </div>
   </section>
 
-  <!-- ADS SECTION -->
   <section class="ads-section" id="adsSection">
     <div class="ads-slider" id="adsSlider">
       <div class="ads-viewport">
@@ -880,13 +743,12 @@
     </div>
   </section>
 
-  <!-- PRODUCTS -->
   <div class="product-grid" id="product-list">
     <p class="loading-text">Loading products...</p>
   </div>
 
 <script>
-  const API_BASE = "https://my-store-e28j.onrender.com";
+  const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
   const categories = [
     { name: 'Overall', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>' },
@@ -917,7 +779,6 @@
   let selectedCategory = 'Overall';
   let allProducts = [];
 
-  /* ADS STATE */
   let adsInterval = null;
   let realAdsCount = 0;
   let currentSlideIndex = 1;
@@ -964,9 +825,7 @@
 
       const apps = await response.json();
 
-      if (!Array.isArray(apps)) {
-        throw new Error("apps.json must contain an array");
-      }
+      if (!Array.isArray(apps)) throw new Error("apps.json must contain an array");
 
       if (apps.length === 0) {
         appShortcutsRow.innerHTML = '<div class="app-shortcut-fallback">No apps added yet.</div>';
@@ -1029,11 +888,7 @@
       }
 
       adsTrack.appendChild(createAdSlide(ads[realAdsCount - 1], true));
-
-      ads.forEach(ad => {
-        adsTrack.appendChild(createAdSlide(ad));
-      });
-
+      ads.forEach(ad => adsTrack.appendChild(createAdSlide(ad)));
       adsTrack.appendChild(createAdSlide(ads[0], true));
 
       currentSlideIndex = 1;
@@ -1073,9 +928,7 @@
     return slide;
   }
 
-  function getAdWidth() {
-    return adsSlider.clientWidth;
-  }
+  function getAdWidth() { return adsSlider.clientWidth; }
 
   function updateAdPosition(animated = true) {
     const offset = -currentSlideIndex * getAdWidth();
@@ -1104,19 +957,13 @@
       }
     });
 
-    window.addEventListener('resize', () => {
-      updateAdPosition(false);
-    });
+    window.addEventListener('resize', () => updateAdPosition(false));
   }
 
   function startAdsAutoSlide() {
     stopAdsAutoSlide();
-
     if (realAdsCount <= 1) return;
-
-    adsInterval = setInterval(() => {
-      nextAd();
-    }, 3000);
+    adsInterval = setInterval(() => nextAd(), 3000);
   }
 
   function stopAdsAutoSlide() {
@@ -1154,13 +1001,10 @@
 
   function touchMove(e) {
     if (!isDragging) return;
-
     const currentX = e.touches[0].clientX;
     const diff = currentX - startX;
 
-    if (Math.abs(diff) > 6) {
-      e.preventDefault();
-    }
+    if (Math.abs(diff) > 6) e.preventDefault();
 
     currentTranslate = prevTranslate + diff;
     setSliderPosition();
@@ -1194,7 +1038,6 @@
 
   function finishSwipe(endX) {
     isDragging = false;
-
     const movedBy = endX - startX;
     const threshold = Math.max(50, getAdWidth() * 0.12);
 
@@ -1212,33 +1055,71 @@
     adsTrack.style.transform = `translateX(${currentTranslate}px)`;
   }
 
+  function normalizeProduct(p, source, index) {
+    const rawId = p._id || p.id || `fallback-${source}-${index}`;
+    const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
+
+    let image = fallbackImage;
+
+    if (p.image && String(p.image).trim()) {
+      image = String(p.image).trim();
+    } else if (Array.isArray(p.images) && p.images.length && p.images[0]) {
+      image = String(p.images[0]).trim();
+    }
+
+    return {
+      id: String(rawId),
+      source,
+      name: p.name || 'Unnamed Product',
+      price: p.price ?? '',
+      image,
+      description: p.description || 'No description available.',
+      category: p.category || 'Overall',
+      brand: p.brand || '',
+      rating: p.rating ?? 4.5,
+      link: p.link || '#'
+    };
+  }
+
   async function loadProducts() {
     try {
-      const response = await fetch(`${API_BASE}/api/products`, { cache: "no-store" });
-      if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+      const [jsonResult, backendResult] = await Promise.allSettled([
+        fetch("/my-store/products.json", { cache: "no-store" }).then(async res => {
+          if (!res.ok) throw new Error(`products.json error: ${res.status}`);
+          const data = await res.json();
+          if (!Array.isArray(data)) throw new Error("products.json must be an array");
+          return data;
+        }),
+        fetch(`${BACKEND_URL}/api/products`, { cache: "no-store" }).then(async res => {
+          if (!res.ok) throw new Error(`backend products error: ${res.status}`);
+          const data = await res.json();
+          if (!Array.isArray(data)) throw new Error("backend products must be an array");
+          return data;
+        })
+      ]);
 
-      const data = await response.json();
+      const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
+      const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
-      if (!Array.isArray(data)) {
-        throw new Error("Backend products response must be an array");
+      const normalizedJson = [...jsonProducts]
+        .reverse()
+        .map((p, index) => normalizeProduct(p, "json", index));
+
+      const normalizedBackend = [...backendProducts]
+        .reverse()
+        .map((p, index) => normalizeProduct(p, "backend", index));
+
+      allProducts = [...normalizedBackend, ...normalizedJson];
+
+      if (!allProducts.length) {
+        productList.innerHTML = '<p class="empty-text">No products found.</p>';
+        return;
       }
-
-      allProducts = data.map((p, index) => ({
-        id: p.id || p._id || (index + 1),
-        name: p.name || 'Unnamed Product',
-        price: p.price ?? '',
-        image: p.image || (Array.isArray(p.images) && p.images.length ? p.images[0] : 'https://via.placeholder.com/200'),
-        description: p.description || 'No description available.',
-        category: p.category || 'Overall',
-        brand: p.brand || '',
-        rating: p.rating ?? 4.0,
-        link: p.link || '#'
-      }));
 
       displayProducts(allProducts);
     } catch (err) {
-      productList.innerHTML = '<p class="error-text">Error loading products from backend.<br>Please check backend API and CORS settings.</p>';
-      console.error('Backend products fetch error:', err);
+      console.error("Product loading error:", err);
+      productList.innerHTML = '<p class="error-text">Error loading products. Please check products.json and backend API.</p>';
     }
   }
 
@@ -1254,13 +1135,14 @@
       const card = document.createElement('a');
       card.className = 'product-card';
       card.style.opacity = 0;
-      card.href = `product.html?id=${encodeURIComponent(p.id)}`;
+
+      card.href = `product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;
 
       const ratingValue = Number(p.rating || 4.0).toFixed(1);
 
       card.innerHTML = `
         <div class="product-image-box">
-          <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/200';" />
+          <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x300?text=No+Image';" />
         </div>
         <div class="product-info">
           <h2>${p.name}</h2>
@@ -1289,8 +1171,7 @@
       filtered = filtered.filter(p =>
         (p.name || '').toLowerCase().includes(searchText) ||
         (p.description || '').toLowerCase().includes(searchText) ||
-        (p.brand || '').toLowerCase().includes(searchText) ||
-        (p.category || '').toLowerCase().includes(searchText)
+        (p.brand || '').toLowerCase().includes(searchText)
       );
     }
 
@@ -1309,9 +1190,7 @@
     let matchedBrand = 'all';
     brandItems.forEach(item => {
       const brand = item.getAttribute('data-brand').toLowerCase();
-      if (brand !== 'all' && brand === searchText) {
-        matchedBrand = brand;
-      }
+      if (brand !== 'all' && brand === searchText) matchedBrand = brand;
     });
 
     setActiveBrand(matchedBrand);
