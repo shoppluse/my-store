@@ -38,6 +38,39 @@ const userSchema = new mongoose.Schema(
     fcmTokens: {
       type: [String],
       default: []
+    },
+
+    // Affiliate application status
+    affiliateStatus: {
+      type: String,
+      enum: ["none", "pending", "approved", "rejected"],
+      default: "none"
+    },
+
+    // Why user wants to join affiliate program
+    affiliateReason: {
+      type: String,
+      default: "",
+      trim: true
+    },
+
+    // When user applied for affiliate program
+    affiliateAppliedAt: {
+      type: Date,
+      default: null
+    },
+
+    // When admin reviewed the affiliate application
+    affiliateReviewedAt: {
+      type: Date,
+      default: null
+    },
+
+    // Optional admin note for approval/rejection
+    affiliateReviewNote: {
+      type: String,
+      default: "",
+      trim: true
     }
   },
   {
