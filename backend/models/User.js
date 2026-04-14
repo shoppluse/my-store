@@ -38,7 +38,9 @@ const userSchema = new mongoose.Schema(
       default: []
     },
 
-    // AFFILIATE STATUS
+    // =========================
+    // AFFILIATE SYSTEM FIELDS
+    // =========================
     isAffiliate: {
       type: Boolean,
       default: false
@@ -50,7 +52,6 @@ const userSchema = new mongoose.Schema(
       default: "none"
     },
 
-    // PLAN FIELDS
     affiliatePlan: {
       type: String,
       enum: ["", "starter", "growth", "elite"],
@@ -59,7 +60,7 @@ const userSchema = new mongoose.Schema(
 
     planStatus: {
       type: String,
-      enum: ["", "inactive", "active", "expired"],
+      enum: ["", "inactive", "active"],
       default: ""
     },
 
