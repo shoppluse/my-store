@@ -673,7 +673,6 @@
         addProductForm.reset();
         renderImagePreview();
 
-        // Update local user object if backend sends refreshed user
         if (result.user) {
           localStorage.setItem("shopplusUser", JSON.stringify(result.user));
         }
