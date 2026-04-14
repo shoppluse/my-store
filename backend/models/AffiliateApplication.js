@@ -8,7 +8,7 @@ const affiliateApplicationSchema = new mongoose.Schema(
       required: true
     },
 
-    name: {
+    fullName: {
       type: String,
       required: true,
       trim: true
@@ -27,37 +27,25 @@ const affiliateApplicationSchema = new mongoose.Schema(
       trim: true
     },
 
-    instagram: {
+    socialPlatform: {
       type: String,
       default: "",
       trim: true
     },
 
-    youtube: {
+    socialLink: {
       type: String,
       default: "",
       trim: true
     },
 
-    telegram: {
+    promoMethod: {
       type: String,
       default: "",
       trim: true
     },
 
-    audienceType: {
-      type: String,
-      default: "",
-      trim: true
-    },
-
-    experience: {
-      type: String,
-      default: "",
-      trim: true
-    },
-
-    reason: {
+    whyJoin: {
       type: String,
       default: "",
       trim: true
