@@ -1066,8 +1066,13 @@
     return null;
   }
 
+  function getSafeTimestamp(value) {
+    if (!value) return 0;
+    const time = new Date(value).getTime();
+    return Number.isFinite(time) ? time : 0;
+  }
+
   function normalizeProduct(p, source, index) {
-    const rawId = p._id || p.id || `fallback-${source}-${index}`;
     const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
 
     let image = fallbackImage;
@@ -1078,19 +1083,33 @@
       image = String(p.images[0]).trim();
     }
 
-    let productCreatedAt = p.createdAt || null;
-    let productUpdatedAt = p.updatedAt || null;
+    // STRONG unique id (prevents conflict between json and backend)
+    const rawId = p._id || p.id || `${source}-${Date.now()}-${index}`;
 
-    // For products.json items with no timestamps, use index as fallback ordering
-    if (!productCreatedAt && !productUpdatedAt && source === "json") {
-      const fakeTime = Date.now() - ((index + 1) * 1000);
-      productCreatedAt = new Date(fakeTime).toISOString();
-      productUpdatedAt = new Date(fakeTime).toISOString();
+    // STRONG timestamp logic
+    let createdAt = p.createdAt || p.created_at || p.dateAdded || p.date || null;
+    let updatedAt = p.updatedAt || p.updated_at || p.lastUpdated || null;
+
+    // if local JSON has no time, keep old products lower priority than backend latest
+    if (!createdAt && !updatedAt && source === "json") {
+      const fakeOldTime = Date.now() - ((100000 + index) * 1000);
+      createdAt = new Date(fakeOldTime).toISOString();
+      updatedAt = new Date(fakeOldTime).toISOString();
     }
+
+    // if backend has no time, still give recent fallback so affiliate products appear
+    if (!createdAt && !updatedAt && source === "backend") {
+      const fakeRecentTime = Date.now() - (index * 1000);
+      createdAt = new Date(fakeRecentTime).toISOString();
+      updatedAt = new Date(fakeRecentTime).toISOString();
+    }
+
+    const sortTime = Math.max(getSafeTimestamp(updatedAt), getSafeTimestamp(createdAt));
 
     return {
       id: String(rawId),
       source,
+      uniqueKey: `${source}-${String(rawId)}`,
       name: p.name || 'Unnamed Product',
       price: p.price ?? '',
       image,
@@ -1100,13 +1119,16 @@
       rating: p.rating,
       displayRating: getDisplayRating(p.rating),
       link: p.link || '#',
-      createdAt: productCreatedAt,
-      updatedAt: productUpdatedAt
+      createdAt,
+      updatedAt,
+      sortTime
     };
   }
 
   async function loadProducts() {
     try {
+      productList.innerHTML = '<p class="loading-text">Loading products...</p>';
+
       const [jsonResult, backendResult] = await Promise.allSettled([
         fetch("/my-store/products.json", { cache: "no-store" }).then(async res => {
           if (!res.ok) throw new Error(`products.json error: ${res.status}`);
@@ -1125,16 +1147,38 @@
       const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
       const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
+      console.log("Local products:", jsonProducts.length);
+      console.log("Backend products:", backendProducts.length);
+
       const normalizedJson = jsonProducts.map((p, index) => normalizeProduct(p, "json", index));
       const normalizedBackend = backendProducts.map((p, index) => normalizeProduct(p, "backend", index));
 
-      const mergedProducts = [...normalizedJson, ...normalizedBackend];
+      // Merge + dedupe by uniqueKey
+      const merged = [...normalizedBackend, ...normalizedJson];
+      const uniqueMap = new Map();
 
-      allProducts = mergedProducts.sort((a, b) => {
-        const aTime = new Date(a.updatedAt || a.createdAt || 0).getTime();
-        const bTime = new Date(b.updatedAt || b.createdAt || 0).getTime();
-        return bTime - aTime;
+      merged.forEach(product => {
+        if (!uniqueMap.has(product.uniqueKey)) {
+          uniqueMap.set(product.uniqueKey, product);
+        }
       });
+
+      allProducts = Array.from(uniqueMap.values()).sort((a, b) => {
+        // Latest added / updated FIRST
+        if (b.sortTime !== a.sortTime) {
+          return b.sortTime - a.sortTime;
+        }
+
+        // If same time, prefer backend first
+        if (a.source !== b.source) {
+          return a.source === "backend" ? -1 : 1;
+        }
+
+        // Stable fallback
+        return String(b.id).localeCompare(String(a.id));
+      });
+
+      console.log("Final merged products:", allProducts.length);
 
       if (!allProducts.length) {
         productList.innerHTML = '<p class="empty-text">No products found.</p>';
@@ -1160,6 +1204,7 @@
       const card = document.createElement('a');
       card.className = 'product-card';
       card.style.opacity = 0;
+      card.style.transform = 'translateY(8px)';
 
       card.href = `product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;
 
@@ -1179,10 +1224,12 @@
 
       productList.appendChild(card);
 
-      setTimeout(() => {
-        card.style.opacity = 1;
-        card.style.transform = 'translateY(0)';
-      }, i * 30);
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          card.style.opacity = 1;
+          card.style.transform = 'translateY(0)';
+        }, i * 25);
+      });
     });
   }
 
@@ -1201,6 +1248,9 @@
         (p.brand || '').toLowerCase().includes(searchText)
       );
     }
+
+    // Always keep latest first even after filter
+    filtered.sort((a, b) => b.sortTime - a.sortTime);
 
     displayProducts(filtered);
   }
