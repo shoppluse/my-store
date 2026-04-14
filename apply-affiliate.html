@@ -12,13 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <script>
-    // GLOBAL THEME (controlled only from profile.html)
     (function () {
       const savedTheme = localStorage.getItem("theme");
       document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
     })();
 
-    // LOGIN PROTECTION
     const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
     const currentUserRaw = localStorage.getItem("shopplusUser");
 
@@ -417,7 +415,6 @@
   </div>
 
   <div class="page-wrap">
-    <!-- HERO -->
     <section class="card">
       <h1 class="hero-title">Join ShopPlus Affiliate Program</h1>
       <p class="hero-sub">
@@ -431,7 +428,6 @@
       </div>
     </section>
 
-    <!-- APPLICATION SECTION -->
     <section class="card">
       <h2 class="section-title">Affiliate Application Form</h2>
       <p class="section-sub">
@@ -616,12 +612,10 @@
         return;
       }
 
-      // Default / none
       formWrapper.classList.remove("hidden");
       clearMessage();
     }
 
-    // FIXED: backend status route does not exist, so use localStorage only
     function fetchAffiliateStatus() {
       try {
         setLoading(true, "⏳ Checking your affiliate status...");
@@ -657,8 +651,15 @@
 
       const payload = {
         userId: storedUser.id,
+        instagram: instagramInput.value.trim(),
+        youtube: youtubeInput.value.trim(),
+        telegram: telegramInput.value.trim(),
+        audienceType: audienceTypeInput.value.trim(),
+        experience: experienceInput.value.trim(),
         reason: reasonInput.value.trim()
       };
+
+      console.log("📤 Final affiliate payload:", payload);
 
       if (!payload.userId) {
         showMessage("danger", "Missing user session. Please logout and login again.");
@@ -675,8 +676,6 @@
 
       try {
         setLoading(true, "⏳ Submitting your affiliate application...");
-
-        console.log("Submitting affiliate payload:", payload);
 
         const response = await fetch(`${API_BASE}/api/auth/apply-affiliate`, {
           method: "POST",
@@ -721,15 +720,23 @@
       clearMessage();
       formWrapper.classList.remove("hidden");
       reapplyWrapper.classList.add("hidden");
+
+      const currentName = storedUser.name || "";
+      const currentEmail = storedUser.email || "";
+      const currentMobile = storedUser.mobile || "";
+
       affiliateForm.reset();
-      fillUserDetails();
+
+      nameInput.value = currentName;
+      emailInput.value = currentEmail;
+      mobileInput.value = currentMobile;
+
       showMessage(
         "info",
         "You can now submit a fresh affiliate application with improved details."
       );
     });
 
-    // INIT
     fillUserDetails();
     fetchAffiliateStatus();
 
