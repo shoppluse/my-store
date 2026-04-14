@@ -579,7 +579,7 @@
     const API_BASE = "https://my-store-e28j.onrender.com";
     const SUPPORT_NUMBER = "919945243930"; // change to your real number
 
-    const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+    let storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
     const htmlEl = document.documentElement;
     const themeToggleBtn = document.getElementById("themeToggleBtn");
@@ -688,35 +688,18 @@
       `;
     }
 
-    async function fetchAffiliateStatus() {
+    // FIXED: no backend call to non-existing /api/affiliate/status route
+    function fetchAffiliateStatus() {
       try {
-        const response = await fetch(`${API_BASE}/api/affiliate/status`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: storedUser.id })
-        });
+        storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
-        const data = await response.json();
+        const affiliateStatus = storedUser.affiliateStatus || "none";
+        const isAffiliate = storedUser.isAffiliate === true;
 
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch affiliate status");
-        }
-
-        const backendUser = data?.user || {};
-        const affiliateStatus = backendUser.affiliateStatus || storedUser.affiliateStatus || "none";
-        const isAffiliate = backendUser.isAffiliate === true || storedUser.isAffiliate === true;
-
-        const updatedUser = {
-          ...storedUser,
-          affiliateStatus,
-          isAffiliate
-        };
-
-        localStorage.setItem("shopplusUser", JSON.stringify(updatedUser));
         renderAffiliateStatus(affiliateStatus, isAffiliate);
       } catch (error) {
-        console.error("Affiliate status fetch error:", error);
-        renderAffiliateStatus(storedUser.affiliateStatus || "none", storedUser.isAffiliate === true);
+        console.error("Affiliate status local read error:", error);
+        renderAffiliateStatus("none", false);
       }
     }
 
