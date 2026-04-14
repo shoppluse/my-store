@@ -1,13 +1,8 @@
+// models/Product.js
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    ownerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true
-    },
-
     name: {
       type: String,
       required: true,
@@ -21,15 +16,8 @@ const productSchema = new mongoose.Schema(
     },
 
     price: {
-      type: String,
-      default: "",
-      trim: true
-    },
-
-    link: {
-      type: String,
-      required: true,
-      trim: true
+      type: mongoose.Schema.Types.Mixed,
+      default: ""
     },
 
     image: {
@@ -43,21 +31,50 @@ const productSchema = new mongoose.Schema(
       default: []
     },
 
-    rating: {
-      type: Number,
-      default: 4.5
-    },
-
     category: {
       type: String,
-      default: "General",
+      default: "Overall",
       trim: true
     },
 
-    status: {
+    brand: {
       type: String,
-      enum: ["active", "inactive"],
-      default: "active"
+      default: "",
+      trim: true
+    },
+
+    link: {
+      type: String,
+      default: "",
+      trim: true
+    },
+
+    rating: {
+      type: Number,
+      default: null
+    },
+
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+
+    ownerName: {
+      type: String,
+      default: "",
+      trim: true
+    },
+
+    source: {
+      type: String,
+      default: "affiliate",
+      trim: true
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true
     }
   },
   {
@@ -65,4 +82,4 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.models.Product || mongoose.model("Product", productSchema);
