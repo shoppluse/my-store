@@ -466,7 +466,6 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.25s ease;
     opacity: 0;
     transform: translateY(8px);
-    min-height: auto;
     text-decoration: none;
     overflow: hidden;
   }
@@ -480,12 +479,10 @@
     width: 100%;
     aspect-ratio: 1 / 1;
     background: #ffffff;
-    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 6px;
-    margin-bottom: 0;
     overflow: hidden;
   }
 
@@ -522,6 +519,11 @@
     font-weight: 700;
     color: var(--rating-color);
     line-height: 1.1;
+  }
+
+  .no-rating {
+    color: var(--muted);
+    font-weight: 600;
   }
 
   .loading-text,
@@ -1055,6 +1057,15 @@
     adsTrack.style.transform = `translateX(${currentTranslate}px)`;
   }
 
+  function getDisplayRating(rating) {
+    if (rating === null || rating === undefined || rating === "") return null;
+
+    const numeric = Number(String(rating).replace(/[^\d.]/g, ""));
+    if (!isNaN(numeric) && numeric > 0) return numeric.toFixed(1);
+
+    return null;
+  }
+
   function normalizeProduct(p, source, index) {
     const rawId = p._id || p.id || `fallback-${source}-${index}`;
     const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
@@ -1076,8 +1087,11 @@
       description: p.description || 'No description available.',
       category: p.category || 'Overall',
       brand: p.brand || '',
-      rating: p.rating ?? 4.5,
-      link: p.link || '#'
+      rating: p.rating,
+      displayRating: getDisplayRating(p.rating),
+      link: p.link || '#',
+      createdAt: p.createdAt || null,
+      updatedAt: p.updatedAt || null
     };
   }
 
@@ -1101,14 +1115,20 @@
       const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
       const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
-      const normalizedJson = [...jsonProducts]
-        .reverse()
-        .map((p, index) => normalizeProduct(p, "json", index));
+      // Backend latest first by createdAt/updatedAt
+      const sortedBackendProducts = [...backendProducts].sort((a, b) => {
+        const aTime = new Date(a.createdAt || a.updatedAt || 0).getTime();
+        const bTime = new Date(b.createdAt || b.updatedAt || 0).getTime();
+        return bTime - aTime;
+      });
 
-      const normalizedBackend = [...backendProducts]
-        .reverse()
-        .map((p, index) => normalizeProduct(p, "backend", index));
+      // products.json latest added last in file => reverse for latest first
+      const sortedJsonProducts = [...jsonProducts].reverse();
 
+      const normalizedBackend = sortedBackendProducts.map((p, index) => normalizeProduct(p, "backend", index));
+      const normalizedJson = sortedJsonProducts.map((p, index) => normalizeProduct(p, "json", index));
+
+      // backend latest first, then json latest first
       allProducts = [...normalizedBackend, ...normalizedJson];
 
       if (!allProducts.length) {
@@ -1138,7 +1158,9 @@
 
       card.href = `product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;
 
-      const ratingValue = Number(p.rating || 4.0).toFixed(1);
+      const ratingHtml = p.displayRating
+        ? `${p.displayRating} ⭐`
+        : `<span class="no-rating">No rating yet</span>`;
 
       card.innerHTML = `
         <div class="product-image-box">
@@ -1146,7 +1168,7 @@
         </div>
         <div class="product-info">
           <h2>${p.name}</h2>
-          <div class="product-rating">${ratingValue} ⭐</div>
+          <div class="product-rating">${ratingHtml}</div>
         </div>
       `;
 
