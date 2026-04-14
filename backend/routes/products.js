@@ -1,8 +1,7 @@
-// routes/product.js
 const express = require("express");
 const router = express.Router();
 
-const Product = require("../models/Product");
+const Product = require("../models/product");
 const User = require("../models/User");
 
 /* =========================================================
@@ -16,28 +15,6 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.error("GET /api/products error:", error);
     res.status(500).json({ message: "Failed to fetch products" });
-  }
-});
-
-/* =========================================================
-   GET SINGLE PRODUCT BY ID
-   Route: GET /api/products/:id
-========================================================= */
-router.get("/:id", async (req, res) => {
-  try {
-    const product = await Product.findOne({
-      _id: req.params.id,
-      isActive: true
-    });
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    res.json(product);
-  } catch (error) {
-    console.error("GET /api/products/:id error:", error);
-    res.status(500).json({ message: "Failed to fetch product" });
   }
 });
 
@@ -61,6 +38,28 @@ router.get("/my-products/:userId", async (req, res) => {
   } catch (error) {
     console.error("GET /api/products/my-products/:userId error:", error);
     res.status(500).json({ message: "Failed to fetch your products" });
+  }
+});
+
+/* =========================================================
+   GET SINGLE PRODUCT BY ID
+   Route: GET /api/products/:id
+========================================================= */
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findOne({
+      _id: req.params.id,
+      isActive: true
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json(product);
+  } catch (error) {
+    console.error("GET /api/products/:id error:", error);
+    res.status(500).json({ message: "Failed to fetch product" });
   }
 });
 
@@ -133,7 +132,7 @@ router.post("/", async (req, res) => {
       : [];
 
     if (!cleanImages.includes(image)) {
-      cleanImages.unshift(image);
+      cleanImages.unshift(String(image).trim());
     }
 
     cleanImages = [...new Set(cleanImages)];
