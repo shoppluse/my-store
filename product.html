@@ -8,6 +8,7 @@
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#0047ab" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+  <link rel="icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <script>
@@ -659,6 +660,28 @@
       }
     }
 
+    function getProductImages(product) {
+      const fallbackImage = "https://via.placeholder.com/600x600?text=No+Image";
+
+      const imageList = [];
+
+      if (product.image && String(product.image).trim()) {
+        imageList.push(String(product.image).trim());
+      }
+
+      if (Array.isArray(product.images)) {
+        product.images.forEach((img) => {
+          if (img && String(img).trim()) {
+            imageList.push(String(img).trim());
+          }
+        });
+      }
+
+      const uniqueImages = [...new Set(imageList)];
+
+      return uniqueImages.length ? uniqueImages : [fallbackImage];
+    }
+
     async function loadProductDetails() {
       const params = new URLSearchParams(window.location.search);
       const pid = params.get("id");
@@ -677,27 +700,21 @@
       }
 
       try {
-        const response = await fetch(\`\${BACKEND_URL}/api/products\`, { cache: "no-store" });
-        if (!response.ok) throw new Error(\`Failed to load products from backend: \${response.status}\`);
+        const response = await fetch(`${BACKEND_URL}/api/products/${encodeURIComponent(pid)}`, {
+          cache: "no-store"
+        });
 
-        const products = await response.json();
-        if (!Array.isArray(products)) throw new Error("Products API must return an array");
-
-        const product = products.find(p => String(p.id) === String(pid));
-
-        if (!product) {
-          throw new Error("Product not found in backend");
+        if (!response.ok) {
+          throw new Error(`Failed to load product from backend: ${response.status}`);
         }
 
-        const fallbackImage = "https://via.placeholder.com/600x600?text=No+Image";
+        const product = await response.json();
 
-        const safeImages = Array.isArray(product.images) && product.images.length
-          ? product.images.filter(Boolean)
-          : [];
+        if (!product || typeof product !== "object") {
+          throw new Error("Invalid product data from backend");
+        }
 
-        const finalImages = safeImages.length
-          ? safeImages
-          : [product.image || fallbackImage];
+        const safeImages = getProductImages(product);
 
         const safeProduct = {
           id: product.id ?? pid,
@@ -705,8 +722,8 @@
           description: product.description || "No description available.",
           price: formatPrice(product.price),
           link: product.link || "#",
-          image: product.image || fallbackImage,
-          images: finalImages,
+          image: product.image || safeImages[0],
+          images: safeImages,
           rating: product.rating || 4.5,
           category: product.category || "General"
         };
@@ -717,7 +734,13 @@
           ? `
             <div class="carousel-thumbs">
               ${safeProduct.images.map((src, i) => `
-                <img class="carousel-thumb${i === 0 ? ' active' : ''}" src="${escapeHtml(src)}" data-idx="${i}" alt="Thumbnail ${i + 1}">
+                <img
+                  class="carousel-thumb${i === 0 ? ' active' : ''}"
+                  src="${escapeHtml(src)}"
+                  data-idx="${i}"
+                  alt="Thumbnail ${i + 1}"
+                  onerror="this.src='https://via.placeholder.com/100x100?text=No+Image';"
+                >
               `).join('')}
             </div>
           `
@@ -733,7 +756,12 @@
             <div class="gallery-card">
               <div class="carousel-track" id="carousel-track">
                 ${safeProduct.images.map((src, i) => `
-                  <img class="carousel-image" src="${escapeHtml(src)}" alt="${escapeHtml(safeProduct.name)} image ${i + 1}">
+                  <img
+                    class="carousel-image"
+                    src="${escapeHtml(src)}"
+                    alt="${escapeHtml(safeProduct.name)} image ${i + 1}"
+                    onerror="this.src='https://via.placeholder.com/600x600?text=No+Image';"
+                  >
                 `).join('')}
               </div>
               ${thumbs}
