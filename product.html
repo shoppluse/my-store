@@ -293,6 +293,11 @@
       margin-bottom: 12px;
     }
 
+    .no-rating-text {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
     .product-price {
       font-size: 1.8rem;
       color: var(--primary-2);
@@ -505,6 +510,15 @@
       return div.innerHTML;
     }
 
+    function getDisplayRating(rating) {
+      if (rating === null || rating === undefined || rating === "") return null;
+
+      const numeric = Number(String(rating).replace(/[^\d.]/g, ""));
+      if (!isNaN(numeric) && numeric > 0) return numeric.toFixed(1);
+
+      return null;
+    }
+
     function splitDescription(description) {
       const text = String(description || "No description available.").trim();
 
@@ -628,6 +642,7 @@
         }
 
         const safeImages = getProductImages(product);
+        const displayRating = getDisplayRating(product.rating);
 
         const safeProduct = {
           id: String(product._id || product.id || pid),
@@ -637,7 +652,8 @@
           price: formatPrice(product.price),
           link: product.link || "#",
           images: safeImages,
-          rating: product.rating || 4.5,
+          rating: product.rating,
+          displayRating,
           category: product.category || "General"
         };
 
@@ -656,6 +672,10 @@
         const buyButton = safeProduct.link && safeProduct.link !== "#"
           ? `<a href="${escapeHtml(safeProduct.link)}" target="_blank" rel="noopener noreferrer" class="buy-btn">Buy Now</a>`
           : `<button class="buy-btn" onclick="alert('Buy link not available for this product yet')">Buy Now</button>`;
+
+        const ratingHtml = safeProduct.displayRating
+          ? `⭐ ${escapeHtml(String(safeProduct.displayRating))} / 5`
+          : `<span class="no-rating-text">No rating yet</span>`;
 
         root.className = "";
         root.innerHTML = `
@@ -679,7 +699,7 @@
             <div class="details-card">
               <div class="product-category">${escapeHtml(safeProduct.category)}</div>
               <h1 class="product-title">${escapeHtml(safeProduct.name)}</h1>
-              <div class="product-rating">⭐ ${escapeHtml(String(safeProduct.rating))} / 5</div>
+              <div class="product-rating">${ratingHtml}</div>
               <div class="product-price">${escapeHtml(safeProduct.price)}</div>
 
               <div class="product-summary">
