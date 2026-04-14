@@ -490,7 +490,7 @@
   <script>
     const API_BASE = "https://my-store-e28j.onrender.com";
     const WHATSAPP_UPGRADE_NUMBER = "919945243930";
-    const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+    let storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
     const htmlEl = document.documentElement;
     const themeToggleBtn = document.getElementById("themeToggleBtn");
@@ -589,6 +589,7 @@
       const current = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
       const updated = { ...current, ...patch };
       localStorage.setItem("shopplusUser", JSON.stringify(updated));
+      storedUser = updated;
       return updated;
     }
 
@@ -622,13 +623,13 @@
       `;
     }
 
-    function goToCurrentPlanAction(currentPlan) {
+    function goToCurrentPlanAction(currentPlan, currentPlanStatus) {
       if (!currentPlan) {
         window.location.href = "profile.html";
         return;
       }
 
-      if (currentPlan === "starter" || currentPlan === "growth" || currentPlan === "elite") {
+      if ((currentPlan === "starter" || currentPlan === "growth" || currentPlan === "elite") && currentPlanStatus === "active") {
         window.location.href = "add-product.html";
       } else {
         window.location.href = "profile.html";
@@ -650,7 +651,7 @@
             : `Current Plan • Pending Activation`;
 
           buttonHtml = `
-            <button class="plan-btn current" type="button" onclick="goToCurrentPlanAction('${key}')">
+            <button class="plan-btn current" type="button" onclick="goToCurrentPlanAction('${key}', '${planStatus}')">
               ${currentLabel}
             </button>
           `;
@@ -699,15 +700,21 @@
       });
 
       try {
+        if (!storedUser.id) {
+          throw new Error("Please login again.");
+        }
+
         const response = await fetch(`${API_BASE}/api/affiliate/select-plan`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache"
           },
           body: JSON.stringify({
             userId: storedUser.id,
             plan: "starter"
-          })
+          }),
+          cache: "no-store"
         });
 
         let data = {};
@@ -746,29 +753,38 @@
 
     async function initPlansPage() {
       try {
-        const response = await fetch(`${API_BASE}/api/affiliate/status`, {
-          method: "POST",
+        if (!storedUser.id) {
+          throw new Error("Please login again.");
+        }
+
+        const response = await fetch(`${API_BASE}/api/auth/user/${storedUser.id}`, {
+          method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache"
           },
-          body: JSON.stringify({
-            userId: storedUser.id
-          })
+          cache: "no-store"
         });
 
         const data = await response.json();
 
-        if (!response.ok) {
+        console.log("Plans page user verify response:", response.status, data);
+
+        if (!response.ok || !data.user) {
           throw new Error(data.message || "Failed to fetch affiliate status");
         }
 
-        const user = data?.user || {};
+        const user = data.user;
         const affiliateStatus = (user.affiliateStatus || "none").toLowerCase();
         const isAffiliate = user.isAffiliate === true;
         const currentPlan = normalizePlan(user.affiliatePlan || "");
         const currentPlanStatus = (user.planStatus || "").toLowerCase();
 
         updateLocalUser({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          mobile: user.mobile,
           isAffiliate,
           affiliateStatus,
           affiliatePlan: currentPlan,
@@ -832,24 +848,19 @@
         renderAccessMessage(
           "danger",
           "Unable to Load Plans",
-          "Could not verify your affiliate account right now. Please try again after a moment."
+          error.message || "Could not verify your affiliate account right now. Please try again after a moment."
         );
       }
     }
 
-    initPlansPage();
-
+    // remove old service workers to avoid stale cached JS
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
-          .then((registration) => {
-            console.log("Service Worker registered:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => registration.unregister());
       });
     }
+
+    initPlansPage();
   </script>
 </body>
 </html>
