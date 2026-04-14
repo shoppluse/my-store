@@ -12,7 +12,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <script>
-    // GLOBAL THEME SUPPORT (controlled only from profile.html)
     (function () {
       const savedTheme = localStorage.getItem("theme");
       document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
@@ -34,13 +33,10 @@
 
       --buy-bg: #0099ff;
       --buy-hover: #006cc0;
-
       --back-bg: #43a047;
       --back-hover: #38733b;
-
       --claim-bg: #7c3aed;
       --claim-hover: #6d28d9;
-
       --share-bg: #f59e0b;
       --share-hover: #d97706;
     }
@@ -58,20 +54,15 @@
 
       --buy-bg: #3a8dde;
       --buy-hover: #2a5e9d;
-
       --back-bg: #2abf6a;
       --back-hover: #1e8f3f;
-
       --claim-bg: #8b5cf6;
       --claim-hover: #7c3aed;
-
       --share-bg: #f59e0b;
       --share-hover: #d97706;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: 'Poppins', Arial, sans-serif;
@@ -79,11 +70,9 @@
       margin: 0;
       color: var(--text);
       min-height: 100vh;
-      transition: background 0.3s ease, color 0.3s ease;
       overflow-x: hidden;
     }
 
-    /* HEADER */
     .main-header {
       background: var(--gradient);
       display: flex;
@@ -124,7 +113,6 @@
       justify-content: center;
       text-align: center;
       font-family: inherit;
-      box-shadow: none;
       backdrop-filter: blur(4px);
     }
 
@@ -179,9 +167,7 @@
       overflow: hidden;
     }
 
-    .gallery-card {
-      padding: 20px;
-    }
+    .gallery-card { padding: 20px; }
 
     .carousel-track {
       display: flex;
@@ -200,10 +186,7 @@
       border-color: #1e293b;
     }
 
-    .carousel-track::-webkit-scrollbar {
-      height: 8px;
-    }
-
+    .carousel-track::-webkit-scrollbar { height: 8px; }
     .carousel-track::-webkit-scrollbar-thumb {
       background: rgba(0, 153, 255, 0.25);
       border-radius: 999px;
@@ -218,12 +201,9 @@
       scroll-snap-align: center;
       background: #ffffff;
       padding: 16px;
-      box-sizing: border-box;
     }
 
-    [data-theme="dark"] .carousel-image {
-      background: #0b1220;
-    }
+    [data-theme="dark"] .carousel-image { background: #0b1220; }
 
     .carousel-thumbs {
       margin-top: 16px;
@@ -284,9 +264,7 @@
       white-space: nowrap;
     }
 
-    .details-card {
-      padding: 26px 24px;
-    }
+    .details-card { padding: 26px 24px; }
 
     .product-category {
       display: inline-block;
@@ -333,20 +311,12 @@
       padding: 16px;
     }
 
-    [data-theme="dark"] .product-summary {
-      background: rgba(96, 165, 250, 0.05);
-    }
-
     .highlights-box {
       background: rgba(0, 71, 171, 0.03);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 16px;
       margin-bottom: 18px;
-    }
-
-    [data-theme="dark"] .highlights-box {
-      background: rgba(96, 165, 250, 0.05);
     }
 
     .highlights-title {
@@ -375,9 +345,7 @@
       gap: 8px;
     }
 
-    .highlights-list li span {
-      flex: 1;
-    }
+    .highlights-list li span { flex: 1; }
 
     .info-list {
       display: grid;
@@ -390,10 +358,6 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 14px;
-    }
-
-    [data-theme="dark"] .info-item {
-      background: rgba(96, 165, 250, 0.05);
     }
 
     .info-label {
@@ -412,41 +376,17 @@
       word-break: break-word;
     }
 
-    .buy-btn {
-      background-color: var(--buy-bg);
-    }
+    .buy-btn { background-color: var(--buy-bg); }
+    .buy-btn:hover { background-color: var(--buy-hover); transform: translateY(-2px); }
 
-    .buy-btn:hover {
-      background-color: var(--buy-hover);
-      transform: translateY(-2px);
-    }
+    .claim-btn { background-color: var(--claim-bg); }
+    .claim-btn:hover { background-color: var(--claim-hover); transform: translateY(-2px); }
 
-    .claim-btn {
-      background-color: var(--claim-bg);
-    }
+    .share-btn { background-color: var(--share-bg); }
+    .share-btn:hover { background-color: var(--share-hover); transform: translateY(-2px); }
 
-    .claim-btn:hover {
-      background-color: var(--claim-hover);
-      transform: translateY(-2px);
-    }
-
-    .share-btn {
-      background-color: var(--share-bg);
-    }
-
-    .share-btn:hover {
-      background-color: var(--share-hover);
-      transform: translateY(-2px);
-    }
-
-    .back-btn {
-      background-color: var(--back-bg);
-    }
-
-    .back-btn:hover {
-      background-color: var(--back-hover);
-      transform: translateY(-2px);
-    }
+    .back-btn { background-color: var(--back-bg); }
+    .back-btn:hover { background-color: var(--back-hover); transform: translateY(-2px); }
 
     .footer {
       text-align: center;
@@ -458,21 +398,10 @@
     }
 
     @media (max-width: 980px) {
-      .product-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .carousel-image {
-        height: 520px;
-      }
-
-      .gallery-actions {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-      }
-
-      .gallery-actions a,
-      .gallery-actions button {
+      .product-layout { grid-template-columns: 1fr; }
+      .carousel-image { height: 520px; }
+      .gallery-actions { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      .gallery-actions a, .gallery-actions button {
         font-size: 12px;
         padding: 12px 6px;
         min-height: 48px;
@@ -485,9 +414,7 @@
         gap: 12px;
       }
 
-      .header-actions {
-        gap: 10px;
-      }
+      .header-actions { gap: 10px; }
 
       .header-btn {
         min-height: 58px;
@@ -501,8 +428,7 @@
         margin-top: 20px;
       }
 
-      .gallery-card,
-      .details-card {
+      .gallery-card, .details-card {
         border-radius: 18px;
         padding: 16px;
       }
@@ -517,36 +443,21 @@
         height: 52px;
       }
 
-      .product-title {
-        font-size: 1.4rem;
-      }
-
-      .product-price {
-        font-size: 1.3rem;
-      }
+      .product-title { font-size: 1.4rem; }
+      .product-price { font-size: 1.3rem; }
 
       .gallery-actions {
         grid-template-columns: repeat(4, 1fr);
         gap: 8px;
       }
 
-      .gallery-actions a,
-      .gallery-actions button {
+      .gallery-actions a, .gallery-actions button {
         font-size: 10px;
         padding: 10px 4px;
         min-height: 44px;
         border-radius: 10px;
         white-space: normal;
         line-height: 1.15;
-      }
-
-      .product-summary {
-        font-size: 0.95rem;
-        padding: 14px;
-      }
-
-      .highlights-list li {
-        font-size: 0.92rem;
       }
     }
   </style>
@@ -579,18 +490,11 @@
     }
 
     function formatPrice(price) {
-      if (price === null || price === undefined || price === "") {
-        return "Price not available";
-      }
-
-      if (typeof price === "number") {
-        return `₹${price.toFixed(2)}`;
-      }
+      if (price === null || price === undefined || price === "") return "Price not available";
+      if (typeof price === "number") return `₹${price.toFixed(2)}`;
 
       const numeric = Number(String(price).replace(/[^\d.]/g, ""));
-      if (!isNaN(numeric) && numeric > 0) {
-        return `₹${numeric.toFixed(2)}`;
-      }
+      if (!isNaN(numeric) && numeric > 0) return `₹${numeric.toFixed(2)}`;
 
       return String(price);
     }
@@ -635,10 +539,28 @@
       };
     }
 
-    async function shareProduct(productId, productName) {
+    function getProductImages(product) {
+      const fallbackImage = "https://via.placeholder.com/600x600?text=No+Image";
+      const imageList = [];
+
+      if (product.image && String(product.image).trim()) {
+        imageList.push(String(product.image).trim());
+      }
+
+      if (Array.isArray(product.images)) {
+        product.images.forEach((img) => {
+          if (img && String(img).trim()) imageList.push(String(img).trim());
+        });
+      }
+
+      const uniqueImages = [...new Set(imageList)];
+      return uniqueImages.length ? uniqueImages : [fallbackImage];
+    }
+
+    async function shareProduct(productId, productName, source) {
       const decodedName = decodeURIComponent(productName);
       const baseUrl = window.location.origin + "/my-store";
-      const productUrl = `${baseUrl}/product.html?id=${productId}`;
+      const productUrl = `${baseUrl}/product.html?id=${productId}&source=${encodeURIComponent(source || "json")}`;
 
       const shareData = {
         title: decodedName,
@@ -660,31 +582,30 @@
       }
     }
 
-    function getProductImages(product) {
-      const fallbackImage = "https://via.placeholder.com/600x600?text=No+Image";
+    async function getProductBySource(pid, source) {
+      if (source === "backend") {
+        const response = await fetch(`${BACKEND_URL}/api/products`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Backend fetch failed: ${response.status}`);
 
-      const imageList = [];
+        const products = await response.json();
+        if (!Array.isArray(products)) throw new Error("Backend products must be array");
 
-      if (product.image && String(product.image).trim()) {
-        imageList.push(String(product.image).trim());
+        return products.find(p => String(p._id || p.id) === String(pid));
       }
 
-      if (Array.isArray(product.images)) {
-        product.images.forEach((img) => {
-          if (img && String(img).trim()) {
-            imageList.push(String(img).trim());
-          }
-        });
-      }
+      const response = await fetch("/my-store/products.json", { cache: "no-store" });
+      if (!response.ok) throw new Error(`products.json fetch failed: ${response.status}`);
 
-      const uniqueImages = [...new Set(imageList)];
+      const products = await response.json();
+      if (!Array.isArray(products)) throw new Error("products.json must be array");
 
-      return uniqueImages.length ? uniqueImages : [fallbackImage];
+      return products.find(p => String(p.id) === String(pid));
     }
 
     async function loadProductDetails() {
       const params = new URLSearchParams(window.location.search);
       const pid = params.get("id");
+      const source = params.get("source") || "json";
       const root = document.getElementById("product-root");
 
       if (!pid) {
@@ -700,29 +621,21 @@
       }
 
       try {
-        const response = await fetch(`${BACKEND_URL}/api/products/${encodeURIComponent(pid)}`, {
-          cache: "no-store"
-        });
+        const product = await getProductBySource(pid, source);
 
-        if (!response.ok) {
-          throw new Error(`Failed to load product from backend: ${response.status}`);
-        }
-
-        const product = await response.json();
-
-        if (!product || typeof product !== "object") {
-          throw new Error("Invalid product data from backend");
+        if (!product) {
+          throw new Error("Product not found");
         }
 
         const safeImages = getProductImages(product);
 
         const safeProduct = {
-          id: product.id ?? pid,
+          id: String(product._id || product.id || pid),
+          source,
           name: product.name || "Unnamed Product",
           description: product.description || "No description available.",
           price: formatPrice(product.price),
           link: product.link || "#",
-          image: product.image || safeImages[0],
           images: safeImages,
           rating: product.rating || 4.5,
           category: product.category || "General"
@@ -734,13 +647,7 @@
           ? `
             <div class="carousel-thumbs">
               ${safeProduct.images.map((src, i) => `
-                <img
-                  class="carousel-thumb${i === 0 ? ' active' : ''}"
-                  src="${escapeHtml(src)}"
-                  data-idx="${i}"
-                  alt="Thumbnail ${i + 1}"
-                  onerror="this.src='https://via.placeholder.com/100x100?text=No+Image';"
-                >
+                <img class="carousel-thumb${i === 0 ? ' active' : ''}" src="${escapeHtml(src)}" data-idx="${i}" alt="Thumbnail ${i + 1}" onerror="this.src='https://via.placeholder.com/100x100?text=No+Image';">
               `).join('')}
             </div>
           `
@@ -756,19 +663,14 @@
             <div class="gallery-card">
               <div class="carousel-track" id="carousel-track">
                 ${safeProduct.images.map((src, i) => `
-                  <img
-                    class="carousel-image"
-                    src="${escapeHtml(src)}"
-                    alt="${escapeHtml(safeProduct.name)} image ${i + 1}"
-                    onerror="this.src='https://via.placeholder.com/600x600?text=No+Image';"
-                  >
+                  <img class="carousel-image" src="${escapeHtml(src)}" alt="${escapeHtml(safeProduct.name)} image ${i + 1}" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image';">
                 `).join('')}
               </div>
               ${thumbs}
 
               <div class="gallery-actions">
                 ${buyButton}
-                <button class="share-btn" onclick="shareProduct('${encodeURIComponent(safeProduct.id)}', '${encodeURIComponent(safeProduct.name)}')">Share Product</button>
+                <button class="share-btn" onclick="shareProduct('${encodeURIComponent(safeProduct.id)}', '${encodeURIComponent(safeProduct.name)}', '${encodeURIComponent(safeProduct.source)}')">Share Product</button>
                 <a href="./claim-reward.html?productId=${encodeURIComponent(safeProduct.id)}&productName=${encodeURIComponent(safeProduct.name)}" class="claim-btn">Claim Reward</a>
                 <a href="./home.html" class="back-btn">Back to Store</a>
               </div>
