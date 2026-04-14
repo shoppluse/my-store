@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const AffiliateApplication = require("../models/AffiliateApplication");
 
 const router = express.Router();
 
@@ -182,6 +183,7 @@ router.post("/apply-affiliate", async (req, res) => {
       });
     }
 
+    // Save in users collection
     user.affiliateStatus = "pending";
     user.affiliateReason = cleanReason;
     user.affiliateAppliedAt = new Date();
@@ -189,6 +191,19 @@ router.post("/apply-affiliate", async (req, res) => {
     user.affiliateReviewNote = "";
 
     await user.save();
+
+    // Remove old application if exists for same user
+    await AffiliateApplication.deleteMany({ userId: user._id });
+
+    // Save in affiliateapplications collection
+    const application = await AffiliateApplication.create({
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      reason: cleanReason,
+      status: "pending"
+    });
 
     res.status(200).json({
       message: "Affiliate application submitted successfully. Your request is now pending review.",
@@ -201,6 +216,13 @@ router.post("/apply-affiliate", async (req, res) => {
         affiliateStatus: user.affiliateStatus,
         affiliateReason: user.affiliateReason,
         affiliateAppliedAt: user.affiliateAppliedAt
+      },
+      application: {
+        id: application._id,
+        userId: application.userId,
+        status: application.status,
+        reason: application.reason,
+        createdAt: application.createdAt
       }
     });
   } catch (error) {
