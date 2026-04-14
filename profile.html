@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Profile - ShopPlus</title>
+  <title>My Profile - ShopPlus</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#0047ab" />
@@ -12,13 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <script>
-    // GLOBAL THEME LOADER (profile controls all pages)
     (function () {
       const savedTheme = localStorage.getItem("theme");
       document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
     })();
 
-    // LOGIN PROTECTION
     const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
     const currentUserRaw = localStorage.getItem("shopplusUser");
 
@@ -63,14 +61,17 @@
       --btn-bg: linear-gradient(120deg, #0047ab, #0099ff);
       --btn-shadow: rgba(0, 71, 171, 0.24);
 
-      --starter-bg: rgba(59, 130, 246, 0.06);
-      --starter-border: rgba(59, 130, 246, 0.18);
+      --support-bg: linear-gradient(120deg, #22c55e, #2fd566);
+      --support-shadow: rgba(34, 197, 94, 0.22);
 
-      --growth-bg: rgba(16, 185, 129, 0.06);
-      --growth-border: rgba(16, 185, 129, 0.18);
+      --share-bg: linear-gradient(120deg, #0ea5e9, #22c1ff);
+      --share-shadow: rgba(14, 165, 233, 0.22);
 
-      --elite-bg: rgba(124, 58, 237, 0.06);
-      --elite-border: rgba(124, 58, 237, 0.18);
+      --logout-bg: linear-gradient(120deg, #ef4444, #ff4d4d);
+      --logout-shadow: rgba(239, 68, 68, 0.22);
+
+      --upgrade-bg: linear-gradient(120deg, #7c3aed, #a855f7);
+      --upgrade-shadow: rgba(124, 58, 237, 0.22);
     }
 
     [data-theme="dark"] {
@@ -99,18 +100,6 @@
       --info-bg: rgba(59, 130, 246, 0.12);
       --info-text: #93c5fd;
       --info-border: rgba(147, 197, 253, 0.22);
-
-      --btn-bg: linear-gradient(120deg, #1d4ed8, #0ea5e9);
-      --btn-shadow: rgba(14, 165, 233, 0.24);
-
-      --starter-bg: rgba(59, 130, 246, 0.10);
-      --starter-border: rgba(59, 130, 246, 0.24);
-
-      --growth-bg: rgba(16, 185, 129, 0.10);
-      --growth-border: rgba(16, 185, 129, 0.24);
-
-      --elite-bg: rgba(124, 58, 237, 0.10);
-      --elite-border: rgba(124, 58, 237, 0.24);
     }
 
     body {
@@ -134,23 +123,71 @@
       z-index: 100;
     }
 
+    .header-top {
+      width: 100%;
+      max-width: 980px;
+      display: grid;
+      grid-template-columns: 72px 1fr 72px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .header-icon-btn,
+    .theme-btn {
+      min-height: 56px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: 0.25s ease;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .header-icon-btn:hover,
+    .theme-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.22);
+    }
+
+    .header-title {
+      min-height: 56px;
+      background: #ffffff;
+      color: var(--primary);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 0 12px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 71, 171, 0.12);
+    }
+
     .header-actions {
       width: 100%;
       max-width: 980px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
-    .header-btn,
-    .theme-btn {
-      width: 100%;
+    .header-btn {
       min-height: 56px;
       text-decoration: none;
       background: rgba(255,255,255,0.14);
       color: #fff;
       font-weight: 700;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       padding: 10px 8px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.2);
@@ -160,18 +197,11 @@
       text-align: center;
       backdrop-filter: blur(4px);
       transition: 0.25s ease;
-      font-family: inherit;
-      cursor: pointer;
     }
 
-    .header-btn:hover,
-    .theme-btn:hover {
+    .header-btn:hover {
       transform: translateY(-2px);
       background: rgba(255,255,255,0.22);
-    }
-
-    .theme-btn {
-      font-size: 1.3rem;
     }
 
     .page-wrap {
@@ -204,9 +234,60 @@
       line-height: 1.8;
     }
 
+    .profile-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .avatar {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: var(--btn-bg);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      box-shadow: 0 12px 28px var(--btn-shadow);
+    }
+
+    .profile-name {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .profile-sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .verified-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
     .profile-grid {
       display: grid;
       gap: 12px;
+      margin-top: 14px;
     }
 
     .info-box {
@@ -234,6 +315,55 @@
       font-weight: 600;
       color: var(--text);
       word-break: break-word;
+    }
+
+    .action-btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      min-height: 56px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-top: 14px;
+      color: white;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .store-btn {
+      background: var(--btn-bg);
+      box-shadow: 0 14px 28px var(--btn-shadow);
+    }
+
+    .share-btn {
+      background: var(--share-bg);
+      box-shadow: 0 14px 28px var(--share-shadow);
+    }
+
+    .support-btn {
+      background: var(--support-bg);
+      box-shadow: 0 14px 28px var(--support-shadow);
+    }
+
+    .logout-btn {
+      background: var(--logout-bg);
+      box-shadow: 0 14px 28px var(--logout-shadow);
+    }
+
+    .upgrade-btn {
+      background: var(--upgrade-bg);
+      box-shadow: 0 14px 28px var(--upgrade-shadow);
     }
 
     .status-box {
@@ -335,244 +465,6 @@
       background: rgba(59, 130, 246, 0.08);
     }
 
-    .primary-btn,
-    .secondary-btn,
-    .danger-btn {
-      width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 15px 16px;
-      font-size: 1rem;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
-      min-height: 56px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      margin-top: 14px;
-    }
-
-    .primary-btn {
-      background: var(--btn-bg);
-      color: white;
-      box-shadow: 0 14px 28px var(--btn-shadow);
-    }
-
-    .secondary-btn {
-      background: transparent;
-      color: var(--primary);
-      border: 1px solid var(--border);
-    }
-
-    .danger-btn {
-      background: linear-gradient(120deg, #dc2626, #ef4444);
-      color: white;
-      box-shadow: 0 14px 28px rgba(239, 68, 68, 0.2);
-    }
-
-    .primary-btn:hover,
-    .secondary-btn:hover,
-    .danger-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .plan-summary {
-      display: grid;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .summary-box {
-      border-radius: 16px;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      background: rgba(0, 153, 255, 0.04);
-    }
-
-    [data-theme="dark"] .summary-box {
-      background: rgba(59, 130, 246, 0.08);
-    }
-
-    .summary-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .summary-value {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .plans-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 10px;
-    }
-
-    .plan-card {
-      border-radius: 20px;
-      padding: 18px;
-      border: 1px solid;
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .plan-card.starter {
-      background: var(--starter-bg);
-      border-color: var(--starter-border);
-    }
-
-    .plan-card.growth {
-      background: var(--growth-bg);
-      border-color: var(--growth-border);
-    }
-
-    .plan-card.elite {
-      background: var(--elite-bg);
-      border-color: var(--elite-border);
-    }
-
-    .plan-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.5);
-      margin-bottom: 12px;
-    }
-
-    [data-theme="dark"] .plan-badge {
-      background: rgba(255,255,255,0.04);
-    }
-
-    .plan-name {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 0 0 6px;
-    }
-
-    .plan-price {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .plan-price span {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    .plan-desc {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.95rem;
-      margin-bottom: 14px;
-    }
-
-    .plan-features {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 10px;
-      margin-bottom: 16px;
-      flex: 1;
-    }
-
-    .plan-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      line-height: 1.6;
-      color: var(--text);
-      font-size: 0.94rem;
-    }
-
-    .plan-btn {
-      width: 100%;
-      border: none;
-      border-radius: 14px;
-      padding: 14px 14px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      min-height: 52px;
-    }
-
-    .plan-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .plan-btn.current {
-      background: rgba(22, 163, 74, 0.14);
-      color: var(--success-text);
-      border: 1px solid var(--success-border);
-      cursor: default;
-    }
-
-    .plan-btn.upgrade {
-      background: var(--btn-bg);
-      color: white;
-      box-shadow: 0 12px 24px var(--btn-shadow);
-    }
-
-    .reward-empty {
-      margin-top: 10px;
-      border: 1px dashed var(--border);
-      border-radius: 18px;
-      padding: 20px;
-      text-align: center;
-      color: var(--muted);
-      line-height: 1.8;
-      background: rgba(0, 153, 255, 0.03);
-    }
-
-    [data-theme="dark"] .reward-empty {
-      background: rgba(59, 130, 246, 0.06);
-    }
-
-    .logout-btn {
-      margin-top: 10px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
     .footer {
       text-align: center;
       color: white;
@@ -582,83 +474,75 @@
       margin-top: 40px;
     }
 
-    @media (max-width: 900px) {
-      .plans-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     @media (max-width: 700px) {
       .card {
         border-radius: 20px;
         padding: 18px;
       }
 
-      .header-actions {
-        grid-template-columns: repeat(3, 1fr);
+      .header-top {
+        grid-template-columns: 72px 1fr 72px;
         gap: 8px;
       }
 
-      .header-btn,
+      .header-actions {
+        gap: 8px;
+      }
+
+      .header-btn {
+        min-height: 52px;
+        font-size: 0.85rem;
+      }
+
+      .header-title {
+        font-size: 1rem;
+        min-height: 52px;
+      }
+
+      .header-icon-btn,
       .theme-btn {
         min-height: 52px;
-        font-size: 0.78rem;
-        border-radius: 14px;
-        padding: 8px 6px;
+        font-size: 1.3rem;
       }
 
-      .theme-btn {
-        font-size: 1.1rem;
+      .profile-name {
+        font-size: 1.5rem;
       }
 
-      .primary-btn,
-      .secondary-btn,
-      .danger-btn {
+      .action-btn {
         min-height: 52px;
-        font-size: 0.94rem;
-      }
-
-      .status-header {
-        align-items: flex-start;
-      }
-
-      .plan-name {
-        font-size: 1.2rem;
-      }
-
-      .plan-price {
-        font-size: 1.45rem;
+        font-size: 0.95rem;
       }
     }
   </style>
 </head>
 <body>
   <div class="main-header">
+    <div class="header-top">
+      <a href="home.html" class="header-icon-btn" title="Back to Home">‹</a>
+      <div class="header-title">My Profile</div>
+      <button id="themeToggleBtn" class="theme-btn" title="Toggle Theme">🌙</button>
+    </div>
+
     <div class="header-actions">
-      <a href="home.html" class="header-btn">← Home</a>
-      <a href="apply-affiliate.html" class="header-btn">Apply Affiliate</a>
-      <button id="themeToggleBtn" class="theme-btn" title="Toggle theme">🌙</button>
+      <a href="home.html" class="header-btn">Home</a>
+      <a href="claim-reward.html" class="header-btn">Claim Reward</a>
     </div>
   </div>
 
   <div class="page-wrap">
-    <!-- PROFILE INFO -->
+    <!-- PROFILE CARD -->
     <section class="card">
-      <h1 class="section-title">My Profile</h1>
-      <p class="section-sub">Manage your ShopPlus account, affiliate membership, and current plan.</p>
+      <div class="profile-top">
+        <div class="avatar" id="profileAvatar">U</div>
+        <h1 class="profile-name" id="profileName">Loading...</h1>
+        <p class="profile-sub">Your ShopPlus account dashboard</p>
+        <div class="verified-pill">✅ Verified Account</div>
+      </div>
 
       <div class="profile-grid">
         <div class="info-box">
-          <div class="info-label">Full Name</div>
-          <div class="info-value" id="profileName">Loading...</div>
-        </div>
-
-        <div class="info-box">
-          <div class="info-label">Email Address</div>
+          <div class="info-label">Email</div>
           <div class="info-value" id="profileEmail">Loading...</div>
         </div>
 
@@ -666,57 +550,26 @@
           <div class="info-label">Mobile Number</div>
           <div class="info-value" id="profileMobile">Loading...</div>
         </div>
+
+        <div class="info-box">
+          <div class="info-label">User ID</div>
+          <div class="info-value" id="profileUserId">Loading...</div>
+        </div>
       </div>
 
-      <button id="logoutBtn" class="danger-btn logout-btn">Logout</button>
+      <a href="home.html" class="action-btn store-btn">Back to Store</a>
+      <button id="shareAppBtn" class="action-btn share-btn">Share App</button>
+      <a href="https://wa.me/919999999999?text=Hello%20ShopPlus%20Support" target="_blank" class="action-btn support-btn">Support</a>
+      <button id="logoutBtn" class="action-btn logout-btn">Logout</button>
+      <a href="plans.html" class="action-btn upgrade-btn">Upgrade Plan</a>
     </section>
 
-    <!-- AFFILIATE STATUS -->
+    <!-- AFFILIATE MEMBERSHIP -->
     <section class="card">
       <h2 class="section-title">Affiliate Membership</h2>
       <p class="section-sub">Your ShopPlus affiliate approval status and next steps appear here.</p>
 
       <div id="affiliateStatusRoot"></div>
-    </section>
-
-    <!-- PLAN SECTION (only when approved) -->
-    <section id="planSection" class="card hidden">
-      <h2 class="section-title">Starter • Growth • Elite Plans</h2>
-      <p class="section-sub">
-        Choose the right ShopPlus affiliate plan for your product promotion scale. Free plan is auto-enabled after approval.
-      </p>
-
-      <div class="plan-summary">
-        <div class="summary-grid">
-          <div class="summary-box">
-            <div class="summary-label">Current Plan</div>
-            <div class="summary-value" id="currentPlanName">Starter</div>
-          </div>
-          <div class="summary-box">
-            <div class="summary-label">Plan Status</div>
-            <div class="summary-value" id="currentPlanStatus">Active</div>
-          </div>
-          <div class="summary-box">
-            <div class="summary-label">Product Limit</div>
-            <div class="summary-value" id="currentPlanLimit">3 Products</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="plans-grid" id="plansGrid"></div>
-    </section>
-
-    <!-- REWARD CLAIMS -->
-    <section class="card">
-      <h2 class="section-title">My Reward Claims</h2>
-      <p class="section-sub">
-        Track your submitted reward requests, review status, and approved reward amounts.
-      </p>
-
-      <div class="reward-empty">
-        No reward claims submitted yet.<br>
-        Buy a product and submit your first reward request from the product page.
-      </div>
     </section>
   </div>
 
@@ -724,108 +577,47 @@
 
   <script>
     const API_BASE = "https://my-store-e28j.onrender.com";
-    const WHATSAPP_UPGRADE_NUMBER = "919999999999"; // <-- CHANGE THIS TO YOUR REAL WHATSAPP NUMBER (country code + number, no +)
+    const SUPPORT_NUMBER = "919999999999"; // change to your real number
 
     const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
     const htmlEl = document.documentElement;
     const themeToggleBtn = document.getElementById("themeToggleBtn");
-
+    const profileAvatar = document.getElementById("profileAvatar");
     const profileName = document.getElementById("profileName");
     const profileEmail = document.getElementById("profileEmail");
     const profileMobile = document.getElementById("profileMobile");
+    const profileUserId = document.getElementById("profileUserId");
     const logoutBtn = document.getElementById("logoutBtn");
-
+    const shareAppBtn = document.getElementById("shareAppBtn");
     const affiliateStatusRoot = document.getElementById("affiliateStatusRoot");
-    const planSection = document.getElementById("planSection");
-    const currentPlanName = document.getElementById("currentPlanName");
-    const currentPlanStatus = document.getElementById("currentPlanStatus");
-    const currentPlanLimit = document.getElementById("currentPlanLimit");
-    const plansGrid = document.getElementById("plansGrid");
 
     function setThemeButton() {
       const currentTheme = htmlEl.getAttribute("data-theme");
       themeToggleBtn.textContent = currentTheme === "dark" ? "☀️" : "🌙";
     }
 
-    function toggleTheme() {
+    themeToggleBtn.addEventListener("click", () => {
       const currentTheme = htmlEl.getAttribute("data-theme");
       const nextTheme = currentTheme === "dark" ? "light" : "dark";
       htmlEl.setAttribute("data-theme", nextTheme);
       localStorage.setItem("theme", nextTheme);
       setThemeButton();
-    }
+    });
 
-    themeToggleBtn.addEventListener("click", toggleTheme);
     setThemeButton();
 
-    function updateLocalUser(patch = {}) {
-      const user = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
-      Object.assign(user, patch);
-      localStorage.setItem("shopplusUser", JSON.stringify(user));
+    function fillProfileInfo() {
+      const name = storedUser.name || "ShopPlus User";
+      profileName.textContent = name;
+      profileEmail.textContent = storedUser.email || "Not available";
+      profileMobile.textContent = storedUser.mobile || "Not available";
+      profileUserId.textContent = storedUser.id || "Not available";
+      profileAvatar.textContent = name.trim().charAt(0).toUpperCase() || "U";
     }
 
-    function normalizePlan(plan) {
-      const safePlan = (plan || "starter").toLowerCase();
-      if (["starter", "growth", "elite"].includes(safePlan)) return safePlan;
-      return "starter";
-    }
-
-    function getPlanConfig(planKey) {
-      const plans = {
-        starter: {
-          key: "starter",
-          name: "Starter",
-          badge: "Free Plan",
-          price: "₹0",
-          suffix: "/month",
-          limit: 3,
-          desc: "Perfect for new affiliates who want to start with ShopPlus and test the platform.",
-          features: [
-            "Up to 3 product listings",
-            "Basic affiliate participation",
-            "Manual approval required",
-            "Best for beginners"
-          ]
-        },
-        growth: {
-          key: "growth",
-          name: "Growth",
-          badge: "Pro Plan",
-          price: "₹29",
-          suffix: "/month",
-          limit: 20,
-          desc: "For growing affiliate members who want more products and better scale.",
-          features: [
-            "Up to 20 product listings",
-            "Good for serious beginners",
-            "Better scale than free plan",
-            "Great for Instagram / WhatsApp / Telegram promoters"
-          ]
-        },
-        elite: {
-          key: "elite",
-          name: "Elite",
-          badge: "Premium Plan",
-          price: "₹79",
-          suffix: "/month",
-          limit: -1,
-          desc: "For active affiliates who want maximum freedom and long-term growth inside ShopPlus.",
-          features: [
-            "Unlimited product listings",
-            "Best for serious promoters",
-            "Highest listing freedom",
-            "Future-ready for premium visibility"
-          ]
-        }
-      };
-
-      return plans[planKey] || plans.starter;
-    }
-
-    function formatLimit(limit) {
-      if (limit === -1) return "Unlimited";
-      return `${limit} Product${limit > 1 ? "s" : ""}`;
+    function buildWhatsAppLink(message) {
+      return `https://wa.me/${SUPPORT_NUMBER}?text=${encodeURIComponent(message)}`;
     }
 
     function renderAffiliateStatus(status, isAffiliate) {
@@ -840,11 +632,9 @@
             </div>
             <p class="status-desc">Your ShopPlus affiliate membership has been approved.</p>
             <div class="status-note">
-              You are now an approved ShopPlus affiliate member. You can contact ShopPlus support for next onboarding steps.
+              You are now an approved ShopPlus affiliate member. Continue to choose your plan.
             </div>
-            <a class="primary-btn" href="${buildWhatsAppLink("Hello ShopPlus, my affiliate membership is approved. Please guide me for next onboarding steps.")}" target="_blank" rel="noopener noreferrer">
-              Contact for Next Steps
-            </a>
+            <a href="plans.html" class="action-btn store-btn" style="margin-top:14px;">Next</a>
           </div>
         `;
         return;
@@ -859,7 +649,7 @@
             </div>
             <p class="status-desc">Your affiliate application is under manual review by ShopPlus.</p>
             <div class="status-note">
-              Please wait for approval. Once approved, your free Starter plan will become active automatically.
+              Please wait for approval. Once approved, you can continue to select your plan.
             </div>
           </div>
         `;
@@ -877,7 +667,7 @@
             <div class="status-note">
               You can improve your details and submit a fresh application again.
             </div>
-            <a class="secondary-btn" href="apply-affiliate.html">Apply Again</a>
+            <a href="apply-affiliate.html" class="action-btn store-btn" style="margin-top:14px;">Apply Again</a>
           </div>
         `;
         return;
@@ -891,86 +681,19 @@
           </div>
           <p class="status-desc">You have not applied for the ShopPlus affiliate program yet.</p>
           <div class="status-note">
-            Apply first, get manually approved by ShopPlus, and then your free Starter plan will be activated automatically.
+            Apply first, get manually approved by ShopPlus, and then continue to select your plan.
           </div>
-          <a class="primary-btn" href="apply-affiliate.html">Apply for Affiliate Program</a>
+          <a href="apply-affiliate.html" class="action-btn store-btn" style="margin-top:14px;">Apply for Affiliate Program</a>
         </div>
       `;
-    }
-
-    function buildWhatsAppLink(message) {
-      const encoded = encodeURIComponent(message);
-      return `https://wa.me/${WHATSAPP_UPGRADE_NUMBER}?text=${encoded}`;
-    }
-
-    function renderPlans(currentPlanKey, planStatusValue) {
-      const safeCurrent = normalizePlan(currentPlanKey);
-      const safeStatus = (planStatusValue || "active").toLowerCase();
-
-      const currentConfig = getPlanConfig(safeCurrent);
-
-      currentPlanName.textContent = currentConfig.name;
-      currentPlanStatus.textContent = safeStatus === "active" ? "Active" : "Inactive";
-      currentPlanLimit.textContent = formatLimit(currentConfig.limit);
-
-      const order = ["starter", "growth", "elite"];
-
-      plansGrid.innerHTML = order.map((key) => {
-        const plan = getPlanConfig(key);
-        const isCurrent = safeCurrent === key;
-
-        let buttonHtml = "";
-
-        if (isCurrent) {
-          buttonHtml = `<button class="plan-btn current" type="button">Current Plan</button>`;
-        } else if (key === "starter") {
-          buttonHtml = `<button class="plan-btn current" type="button">Starter is Default Free Plan</button>`;
-        } else {
-          const msg = key === "growth"
-            ? "Hello ShopPlus, I want to upgrade to the Growth plan (₹29/month). Please guide me."
-            : "Hello ShopPlus, I want to upgrade to the Elite plan (₹79/month). Please guide me.";
-
-          buttonHtml = `
-            <a class="plan-btn upgrade" href="${buildWhatsAppLink(msg)}" target="_blank" rel="noopener noreferrer">
-              Upgrade via WhatsApp
-            </a>
-          `;
-        }
-
-        return `
-          <div class="plan-card ${plan.key}">
-            <div class="plan-badge">${plan.badge}</div>
-            <h3 class="plan-name">${plan.name}</h3>
-            <div class="plan-price">${plan.price} <span>${plan.suffix}</span></div>
-            <div class="plan-desc">${plan.desc}</div>
-
-            <ul class="plan-features">
-              ${plan.features.map(item => `<li><span>✔️</span><span>${item}</span></li>`).join("")}
-              <li><span>📦</span><span><strong>Product Limit:</strong> ${formatLimit(plan.limit)}</span></li>
-            </ul>
-
-            ${buttonHtml}
-          </div>
-        `;
-      }).join("");
-    }
-
-    function fillProfileInfo() {
-      profileName.textContent = storedUser.name || "ShopPlus User";
-      profileEmail.textContent = storedUser.email || "Not available";
-      profileMobile.textContent = storedUser.mobile || "Not available";
     }
 
     async function fetchAffiliateStatus() {
       try {
         const response = await fetch(`${API_BASE}/api/affiliate/status`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            userId: storedUser.id
-          })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: storedUser.id })
         });
 
         const data = await response.json();
@@ -980,65 +703,20 @@
         }
 
         const backendUser = data?.user || {};
-
         const affiliateStatus = backendUser.affiliateStatus || storedUser.affiliateStatus || "none";
         const isAffiliate = backendUser.isAffiliate === true || storedUser.isAffiliate === true;
 
-        let affiliatePlan = backendUser.affiliatePlan || storedUser.affiliatePlan || "starter";
-        let planStatus = backendUser.planStatus || storedUser.planStatus || "inactive";
-        let maxProducts = backendUser.maxProducts ?? storedUser.maxProducts;
-
-        // Auto default for approved users if backend doesn't yet provide plan fields
-        if ((affiliateStatus === "approved" || isAffiliate) && !backendUser.affiliatePlan) {
-          affiliatePlan = "starter";
-          planStatus = "active";
-          maxProducts = 3;
-        }
-
-        updateLocalUser({
+        const updatedUser = {
+          ...storedUser,
           affiliateStatus,
-          isAffiliate,
-          affiliatePlan,
-          planStatus,
-          maxProducts
-        });
+          isAffiliate
+        };
 
+        localStorage.setItem("shopplusUser", JSON.stringify(updatedUser));
         renderAffiliateStatus(affiliateStatus, isAffiliate);
-
-        if (affiliateStatus === "approved" || isAffiliate) {
-          planSection.classList.remove("hidden");
-          renderPlans(affiliatePlan, planStatus);
-        } else {
-          planSection.classList.add("hidden");
-        }
       } catch (error) {
-        console.error("Profile affiliate status fetch error:", error);
-
-        const fallbackStatus = storedUser.affiliateStatus || "none";
-        const fallbackAffiliate = storedUser.isAffiliate === true;
-
-        let fallbackPlan = storedUser.affiliatePlan || "starter";
-        let fallbackPlanStatus = storedUser.planStatus || "inactive";
-
-        if ((fallbackStatus === "approved" || fallbackAffiliate) && !storedUser.affiliatePlan) {
-          fallbackPlan = "starter";
-          fallbackPlanStatus = "active";
-
-          updateLocalUser({
-            affiliatePlan: "starter",
-            planStatus: "active",
-            maxProducts: 3
-          });
-        }
-
-        renderAffiliateStatus(fallbackStatus, fallbackAffiliate);
-
-        if (fallbackStatus === "approved" || fallbackAffiliate) {
-          planSection.classList.remove("hidden");
-          renderPlans(fallbackPlan, fallbackPlanStatus);
-        } else {
-          planSection.classList.add("hidden");
-        }
+        console.error("Affiliate status fetch error:", error);
+        renderAffiliateStatus(storedUser.affiliateStatus || "none", storedUser.isAffiliate === true);
       }
     }
 
@@ -1048,7 +726,28 @@
       window.location.href = "login.html";
     });
 
-    // INIT
+    shareAppBtn.addEventListener("click", async () => {
+      const shareUrl = "https://shoppluse.github.io/my-store/";
+      const shareData = {
+        title: "ShopPlus",
+        text: "Check out ShopPlus - curated affiliate shopping platform!",
+        url: shareUrl
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareUrl);
+          alert("ShopPlus link copied successfully!");
+        } else {
+          prompt("Copy this ShopPlus link:", shareUrl);
+        }
+      } catch (err) {
+        console.log("Share cancelled or failed:", err);
+      }
+    });
+
     fillProfileInfo();
     fetchAffiliateStatus();
 
