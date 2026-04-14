@@ -10,10 +10,19 @@
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+  <script>
+    // GLOBAL THEME SUPPORT (controlled only from profile.html)
+    (function () {
+      const savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
   <style>
     :root {
       --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
       --bg: #f4f8ff;
+      --bg-end: #f8fbff;
       --card-bg: #ffffff;
       --text: #1f1f1f;
       --muted: #64748b;
@@ -37,6 +46,7 @@
 
     [data-theme="dark"] {
       --bg: #0f172a;
+      --bg-end: #111827;
       --card-bg: #111827;
       --text: #f8fafc;
       --muted: #94a3b8;
@@ -64,7 +74,7 @@
 
     body {
       font-family: 'Poppins', Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, #f8fbff 100%);
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
       margin: 0;
       color: var(--text);
       min-height: 100vh;
@@ -72,7 +82,7 @@
       overflow-x: hidden;
     }
 
-    /* HOME.HTML REFERENCE HEADER */
+    /* HEADER */
     .main-header {
       background: var(--gradient);
       display: flex;
@@ -86,30 +96,6 @@
       gap: 14px;
     }
 
-    .shopplus-logo {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-      background: #ffffff;
-      padding: 10px 22px;
-      border-radius: 18px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      max-width: 700px;
-      box-shadow: 0 8px 24px rgba(0, 71, 171, 0.15);
-    }
-
-    .shopplus-logo .plus {
-      color: var(--primary-2);
-      font-size: 2.2rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
     .header-actions {
       width: 100%;
       max-width: 700px;
@@ -119,8 +105,7 @@
       align-items: stretch;
     }
 
-    .header-btn,
-    .dark-mode-toggle {
+    .header-btn {
       width: 100%;
       min-height: 64px;
       text-decoration: none;
@@ -142,16 +127,9 @@
       backdrop-filter: blur(4px);
     }
 
-    .header-btn:hover,
-    .dark-mode-toggle:hover {
+    .header-btn:hover {
       transform: translateY(-2px);
       background: rgba(255,255,255,0.22);
-    }
-
-    .dark-mode-toggle {
-      font-size: 1.5rem;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .page-wrap {
@@ -230,7 +208,6 @@
       border-radius: 999px;
     }
 
-    /* 25% BIGGER MAIN PRODUCT IMAGE */
     .carousel-image {
       min-width: 100%;
       width: 100%;
@@ -507,30 +484,15 @@
         gap: 12px;
       }
 
-      .shopplus-logo {
-        font-size: 1.35rem;
-        padding: 8px 14px;
-        border-radius: 16px;
-      }
-
-      .shopplus-logo .plus {
-        font-size: 1.7rem;
-      }
-
       .header-actions {
         gap: 10px;
       }
 
-      .header-btn,
-      .dark-mode-toggle {
+      .header-btn {
         min-height: 58px;
         font-size: 0.82rem;
         padding: 10px 6px;
         border-radius: 14px;
-      }
-
-      .dark-mode-toggle {
-        font-size: 1.25rem;
       }
 
       .page-wrap {
@@ -544,7 +506,6 @@
         padding: 16px;
       }
 
-      /* 25% BIGGER MOBILE PRODUCT IMAGE */
       .carousel-image {
         height: 330px;
         padding: 10px;
@@ -591,11 +552,9 @@
 </head>
 <body>
   <div class="main-header">
-    <a href="./home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
-
     <div class="header-actions">
+      <a href="./home.html" class="header-btn">← Home</a>
       <a href="./profile.html" class="header-btn">Profile</a>
-      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
     </div>
   </div>
 
@@ -615,29 +574,6 @@
     if (isLoggedIn !== "true" || !currentUser) {
       window.location.href = "./login.html";
     }
-
-    const htmlEl = document.documentElement;
-    const darkToggleBtn = document.getElementById("darkModeToggle");
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme) {
-      htmlEl.setAttribute("data-theme", savedTheme);
-      darkToggleBtn.textContent = savedTheme === "dark" ? "☀️" : "🌙";
-    }
-
-    darkToggleBtn.addEventListener("click", () => {
-      const currentTheme = htmlEl.getAttribute("data-theme");
-
-      if (currentTheme === "dark") {
-        htmlEl.setAttribute("data-theme", "light");
-        localStorage.setItem("theme", "light");
-        darkToggleBtn.textContent = "🌙";
-      } else {
-        htmlEl.setAttribute("data-theme", "dark");
-        localStorage.setItem("theme", "dark");
-        darkToggleBtn.textContent = "☀️";
-      }
-    });
 
     function formatPrice(price) {
       if (price === null || price === undefined || price === "") {
