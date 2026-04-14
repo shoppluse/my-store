@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose");
 const User = require("../models/User");
 const AffiliateApplication = require("../models/AffiliateApplication");
 
@@ -37,7 +38,7 @@ router.post("/signup", async (req, res) => {
       isVerified: true
     });
 
-    console.log("User created successfully:", user.email);
+    console.log("✅ User created successfully:", user.email);
 
     res.status(201).json({
       message: "Signup successful. You can now login.",
@@ -45,7 +46,7 @@ router.post("/signup", async (req, res) => {
       email: user.email
     });
   } catch (error) {
-    console.error("Signup error:", error);
+    console.error("❌ Signup error:", error);
     res.status(500).json({
       message: "Signup failed",
       error: error.message
@@ -104,7 +105,7 @@ router.post("/login", async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("❌ Login error:", error);
     res.status(500).json({
       message: "Login failed",
       error: error.message
@@ -136,7 +137,7 @@ router.get("/user/:id", async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Get user by ID error:", error);
+    console.error("❌ Get user by ID error:", error);
     res.status(500).json({
       message: "Failed to fetch user",
       error: error.message
@@ -149,9 +150,17 @@ router.post("/apply-affiliate", async (req, res) => {
   try {
     const { userId, reason } = req.body;
 
+    console.log("📥 /apply-affiliate called with:", { userId, reason });
+
     if (!userId || !reason) {
       return res.status(400).json({
         message: "User ID and reason are required"
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        message: "Invalid user ID"
       });
     }
 
@@ -171,6 +180,12 @@ router.post("/apply-affiliate", async (req, res) => {
       });
     }
 
+    console.log("👤 User found:", {
+      id: user._id.toString(),
+      email: user.email,
+      affiliateStatus: user.affiliateStatus
+    });
+
     if (user.affiliateStatus === "pending") {
       return res.status(400).json({
         message: "Your affiliate application is already pending review."
@@ -183,7 +198,7 @@ router.post("/apply-affiliate", async (req, res) => {
       });
     }
 
-    // Save in users collection
+    // 1) Save in users collection
     user.affiliateStatus = "pending";
     user.affiliateReason = cleanReason;
     user.affiliateAppliedAt = new Date();
@@ -192,11 +207,18 @@ router.post("/apply-affiliate", async (req, res) => {
 
     await user.save();
 
-    // Remove old application if exists for same user
-    await AffiliateApplication.deleteMany({ userId: user._id });
+    console.log("✅ User updated in users collection");
 
-    // Save in affiliateapplications collection
-    const application = await AffiliateApplication.create({
+    // 2) Delete old application if exists (do not fail whole request if delete fails)
+    try {
+      const deleteResult = await AffiliateApplication.deleteMany({ userId: user._id });
+      console.log("🗑️ Old affiliate applications deleted:", deleteResult.deletedCount);
+    } catch (deleteErr) {
+      console.error("⚠️ Could not delete old affiliate applications:", deleteErr.message);
+    }
+
+    // 3) Force save in affiliateapplications collection
+    const application = new AffiliateApplication({
       userId: user._id,
       name: user.name,
       email: user.email,
@@ -204,6 +226,19 @@ router.post("/apply-affiliate", async (req, res) => {
       reason: cleanReason,
       status: "pending"
     });
+
+    const savedApplication = await application.save();
+
+    console.log("✅ Affiliate application saved in affiliateapplications:", {
+      id: savedApplication._id.toString(),
+      userId: savedApplication.userId.toString(),
+      email: savedApplication.email
+    });
+
+    // 4) Verify immediately from DB
+    const verifyApplication = await AffiliateApplication.findById(savedApplication._id);
+
+    console.log("🔍 Verification from DB:", verifyApplication ? "FOUND" : "NOT FOUND");
 
     res.status(200).json({
       message: "Affiliate application submitted successfully. Your request is now pending review.",
@@ -218,15 +253,15 @@ router.post("/apply-affiliate", async (req, res) => {
         affiliateAppliedAt: user.affiliateAppliedAt
       },
       application: {
-        id: application._id,
-        userId: application.userId,
-        status: application.status,
-        reason: application.reason,
-        createdAt: application.createdAt
+        id: savedApplication._id,
+        userId: savedApplication.userId,
+        status: savedApplication.status,
+        reason: savedApplication.reason,
+        createdAt: savedApplication.createdAt
       }
     });
   } catch (error) {
-    console.error("Apply affiliate error:", error);
+    console.error("❌ Apply affiliate error:", error);
     res.status(500).json({
       message: "Failed to submit affiliate application",
       error: error.message
