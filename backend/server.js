@@ -5,7 +5,7 @@ const connectDB = require("./config/db");
 const productsRouter = require("./routes/products");
 const authRouter = require("./routes/auth");
 const rewardRoutes = require("./routes/rewardRoutes");
-const affiliateRoutes = require("./routes/affiliate");
+const affiliateRouter = require("./routes/affiliate");
 const nodemailer = require("nodemailer");
 
 dotenv.config();
@@ -29,7 +29,7 @@ app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // ===============================
-// EMAIL TRANSPORTER (kept for future use)
+// EMAIL TRANSPORTER (optional)
 // ===============================
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -49,12 +49,12 @@ app.get("/", (req, res) => {
 });
 
 // ===============================
-// APP ROUTES
+// API ROUTES
 // ===============================
 app.use("/api/products", productsRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/rewards", rewardRoutes);
-app.use("/api/affiliate", affiliateRoutes);
+app.use("/api/affiliate", affiliateRouter);
 
 // ===============================
 // START SERVER
