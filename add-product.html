@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Product - ShopPlus</title>
+
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#0047ab" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+  <link rel="icon" href="/my-store/icons/icon-192.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+    })();
+
+    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+    const currentUserRaw = localStorage.getItem("shopplusUser");
+
+    if (isLoggedIn !== "true" || !currentUserRaw) {
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --gradient: linear-gradient(120deg, #0047ab 55%, #0099ff 100%);
+      --bg: #f4f7fc;
+      --bg-end: #eef5ff;
+      --card-bg: #ffffff;
+      --text: #1f1f1f;
+      --muted: #64748b;
+      --primary: #0047ab;
+      --primary-2: #0099ff;
+      --border: #dbe7ff;
+      --shadow: rgba(0, 71, 171, 0.14);
+
+      --success-bg: #eafaf0;
+      --success-text: #159947;
+      --success-border: #b8e8c8;
+
+      --warning-bg: #fff8e8;
+      --warning-text: #b26b00;
+      --warning-border: #ffe0a3;
+
+      --danger-bg: #fff0f0;
+      --danger-text: #c62828;
+      --danger-border: #ffc9c9;
+
+      --info-bg: #f3f9ff;
+      --info-text: #2b5ca8;
+      --info-border: #d9e9ff;
+
+      --btn-bg: linear-gradient(120deg, #0047ab, #0099ff);
+      --btn-shadow: rgba(0, 71, 171, 0.24);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --bg-end: #111827;
+      --card-bg: #111827;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #60a5fa;
+      --primary-2: #38bdf8;
+      --border: #1e3a8a;
+      --shadow: rgba(56, 189, 248, 0.15);
+
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --success-text: #4ade80;
+      --success-border: rgba(74, 222, 128, 0.22);
+
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-text: #fbbf24;
+      --warning-border: rgba(251, 191, 36, 0.22);
+
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-text: #f87171;
+      --danger-border: rgba(248, 113, 113, 0.22);
+
+      --info-bg: rgba(59, 130, 246, 0.12);
+      --info-text: #93c5fd;
+      --info-border: rgba(147, 197, 253, 0.22);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .main-header {
+      background: var(--gradient);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
+      box-shadow: 0 6px 20px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 72px 1fr 72px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .header-icon-btn,
+    .theme-btn {
+      min-height: 56px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: 0.25s ease;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .header-title {
+      min-height: 56px;
+      background: #ffffff;
+      color: var(--primary);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.15rem;
+      padding: 0 12px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 71, 171, 0.12);
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 900px;
+      margin: 22px auto 50px;
+      padding: 0 12px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 18px 50px var(--shadow);
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: clamp(1.3rem, 3.8vw, 2rem);
+      color: var(--primary);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .section-sub {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .status-box {
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid;
+      margin-top: 12px;
+    }
+
+    .status-info { background: var(--info-bg); border-color: var(--info-border); }
+    .status-warning { background: var(--warning-bg); border-color: var(--warning-border); }
+    .status-danger { background: var(--danger-bg); border-color: var(--danger-border); }
+    .status-success { background: var(--success-bg); border-color: var(--success-border); }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 1px solid;
+      margin-bottom: 12px;
+    }
+
+    .pill-info { background: var(--info-bg); color: var(--info-text); border-color: var(--info-border); }
+    .pill-warning { background: var(--warning-bg); color: var(--warning-text); border-color: var(--warning-border); }
+    .pill-danger { background: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); }
+    .pill-success { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .usage-card {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    [data-theme="dark"] .usage-card {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .usage-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .usage-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.7);
+      color: var(--text);
+      padding: 14px 14px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    [data-theme="dark"] .field input,
+    [data-theme="dark"] .field textarea,
+    [data-theme="dark"] .field select {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .field textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .submit-btn,
+    .secondary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 15px 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      min-height: 54px;
+    }
+
+    .submit-btn {
+      background: var(--btn-bg);
+      color: white;
+      box-shadow: 0 12px 24px var(--btn-shadow);
+    }
+
+    .secondary-btn {
+      background: rgba(255,255,255,0.7);
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    [data-theme="dark"] .secondary-btn {
+      background: rgba(255,255,255,0.04);
+      color: var(--primary);
+    }
+
+    .submit-btn:hover,
+    .secondary-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .helper {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .footer {
+      text-align: center;
+      color: white;
+      background: var(--gradient);
+      padding: 16px 12px;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 700px) {
+      .usage-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        border-radius: 20px;
+        padding: 18px;
+      }
+
+      .header-title {
+        font-size: 1rem;
+        min-height: 52px;
+      }
+
+      .header-icon-btn,
+      .theme-btn {
+        min-height: 52px;
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-header">
+    <div class="header-top">
+      <a href="profile.html" class="header-icon-btn" title="Back to Profile">‹</a>
+      <div class="header-title">Add Affiliate Product</div>
+      <button id="themeToggleBtn" class="theme-btn" title="Toggle Theme">🌙</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <section class="card">
+      <h1 class="section-title">List a New Product</h1>
+      <p class="section-sub">
+        Add your affiliate product here. Your plan decides how many active products you can list.
+      </p>
+
+      <div id="accessRoot" class="status-box status-info">
+        <div class="status-pill pill-info">⏳ Checking</div>
+        <div>Checking your affiliate plan access...</div>
+      </div>
+    </section>
+
+    <section class="card" id="formSection" style="display:none;">
+      <h2 class="section-title" style="font-size:1.35rem;">Product Details</h2>
+      <p class="section-sub">Enter clean details so your product looks attractive and trustworthy.</p>
+
+      <div class="usage-grid">
+        <div class="usage-card">
+          <div class="usage-label">Current Plan</div>
+          <div class="usage-value" id="planNameText">—</div>
+        </div>
+        <div class="usage-card">
+          <div class="usage-label">Products Used</div>
+          <div class="usage-value" id="usedCountText">—</div>
+        </div>
+        <div class="usage-card">
+          <div class="usage-label">Remaining</div>
+          <div class="usage-value" id="remainingCountText">—</div>
+        </div>
+      </div>
+
+      <form id="addProductForm">
+        <div class="field">
+          <label for="productName">Product Name *</label>
+          <input type="text" id="productName" placeholder="e.g. boAt Airdopes 141" required />
+        </div>
+
+        <div class="field">
+          <label for="productDescription">Description</label>
+          <textarea id="productDescription" placeholder="Short and attractive description for buyers"></textarea>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label for="productPrice">Price</label>
+            <input type="text" id="productPrice" placeholder="e.g. 999 or ₹999" />
+          </div>
+
+          <div class="field">
+            <label for="productCategory">Category</label>
+            <select id="productCategory">
+              <option value="General">General</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Fashion">Fashion</option>
+              <option value="Beauty">Beauty</option>
+              <option value="Home">Home</option>
+              <option value="Books">Books</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="productLink">Affiliate / Product Link *</label>
+          <input type="url" id="productLink" placeholder="Paste your profit/affiliate product link here" required />
+          <div class="helper">Tip: Paste your EarnKaro / affiliate / direct product link here.</div>
+        </div>
+
+        <div class="field">
+          <label for="productImage">Main Image URL</label>
+          <input type="url" id="productImage" placeholder="https://example.com/product-image.jpg" />
+        </div>
+
+        <div class="field">
+          <label for="productImages">Extra Image URLs (comma separated)</label>
+          <textarea id="productImages" placeholder="https://img1.jpg, https://img2.jpg"></textarea>
+        </div>
+
+        <div class="two-col">
+          <button type="submit" class="submit-btn" id="submitBtn">Add Product</button>
+          <a href="profile.html" class="secondary-btn">Back to Profile</a>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
+
+  <script>
+    const API_BASE = "https://my-store-e28j.onrender.com";
+    const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+
+    const htmlEl = document.documentElement;
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const accessRoot = document.getElementById("accessRoot");
+    const formSection = document.getElementById("formSection");
+
+    const planNameText = document.getElementById("planNameText");
+    const usedCountText = document.getElementById("usedCountText");
+    const remainingCountText = document.getElementById("remainingCountText");
+
+    const addProductForm = document.getElementById("addProductForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    let latestPlanUsage = null;
+
+    function setThemeButton() {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+      themeToggleBtn.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+    }
+
+    themeToggleBtn.addEventListener("click", () => {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      htmlEl.setAttribute("data-theme", nextTheme);
+      localStorage.setItem("theme", nextTheme);
+      setThemeButton();
+    });
+
+    setThemeButton();
+
+    function titleCase(text = "") {
+      if (!text) return "—";
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    function renderAccess(type, title, text, buttonText = "", buttonHref = "") {
+      let boxClass = "status-info";
+      let pillClass = "pill-info";
+      let pillText = "ℹ️ Info";
+
+      if (type === "success") {
+        boxClass = "status-success";
+        pillClass = "pill-success";
+        pillText = "✅ Active";
+      } else if (type === "warning") {
+        boxClass = "status-warning";
+        pillClass = "pill-warning";
+        pillText = "⏳ Pending";
+      } else if (type === "danger") {
+        boxClass = "status-danger";
+        pillClass = "pill-danger";
+        pillText = "❌ Blocked";
+      }
+
+      accessRoot.className = `status-box ${boxClass}`;
+      accessRoot.innerHTML = `
+        <div class="status-pill ${pillClass}">${pillText}</div>
+        <h3 style="margin:0 0 8px; color: var(--primary);">${title}</h3>
+        <p style="margin:0; color: var(--muted); line-height:1.8;">${text}</p>
+        ${buttonText && buttonHref ? `<a href="${buttonHref}" class="secondary-btn" style="margin-top:14px; max-width:240px;">${buttonText}</a>` : ""}
+      `;
+    }
+
+    async function loadPlanUsage() {
+      try {
+        const response = await fetch(`${API_BASE}/api/products/plan-usage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId: storedUser.id
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch plan usage");
+        }
+
+        latestPlanUsage = data;
+
+        const user = data.user || {};
+        const usage = data.usage || {};
+
+        if (user.affiliateStatus !== "approved") {
+          formSection.style.display = "none";
+          renderAccess(
+            "warning",
+            "Affiliate Approval Pending",
+            "You must be an approved affiliate before adding products.",
+            "Go to Plans",
+            "plans.html"
+          );
+          return;
+        }
+
+        if (user.planStatus !== "active") {
+          formSection.style.display = "none";
+          renderAccess(
+            "danger",
+            "Plan Not Active",
+            "Your affiliate plan is not active yet. Please activate or upgrade your plan first.",
+            "Open Plans",
+            "plans.html"
+          );
+          return;
+        }
+
+        const currentProductCount = usage.currentProductCount || 0;
+        const maxProducts = user.maxProducts;
+        const remainingProducts = usage.remainingProducts;
+
+        if (maxProducts !== -1 && currentProductCount >= maxProducts) {
+          formSection.style.display = "none";
+          renderAccess(
+            "danger",
+            "Plan Limit Reached",
+            `You have already used all ${maxProducts} product slots in your ${titleCase(user.affiliatePlan)} plan. Upgrade your plan to add more products.`,
+            "Upgrade Plan",
+            "plans.html"
+          );
+          return;
+        }
+
+        renderAccess(
+          "success",
+          "Plan Active",
+          `Your ${titleCase(user.affiliatePlan)} plan is active. You can add products now.`
+        );
+
+        formSection.style.display = "block";
+        planNameText.textContent = titleCase(user.affiliatePlan);
+        usedCountText.textContent = currentProductCount;
+
+        if (remainingProducts === "unlimited") {
+          remainingCountText.textContent = "Unlimited";
+        } else {
+          remainingCountText.textContent = remainingProducts;
+        }
+      } catch (error) {
+        console.error("Plan usage load error:", error);
+        formSection.style.display = "none";
+        renderAccess(
+          "danger",
+          "Unable to Verify Access",
+          "Could not verify your affiliate plan right now. Please try again after a moment."
+        );
+      }
+    }
+
+    addProductForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("productName").value.trim();
+      const description = document.getElementById("productDescription").value.trim();
+      const price = document.getElementById("productPrice").value.trim();
+      const link = document.getElementById("productLink").value.trim();
+      const image = document.getElementById("productImage").value.trim();
+      const imagesRaw = document.getElementById("productImages").value.trim();
+      const category = document.getElementById("productCategory").value;
+
+      const images = imagesRaw
+        ? imagesRaw.split(",").map(item => item.trim()).filter(Boolean)
+        : [];
+
+      if (!name || !link) {
+        alert("Product name and product link are required.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Adding Product...";
+
+      try {
+        const response = await fetch(`${API_BASE}/api/products/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId: storedUser.id,
+            name,
+            description,
+            price,
+            link,
+            image,
+            images,
+            rating: 4.5,
+            category
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to add product");
+        }
+
+        alert("Product added successfully! 🎉");
+
+        addProductForm.reset();
+        document.getElementById("productCategory").value = "General";
+
+        await loadPlanUsage();
+      } catch (error) {
+        console.error("Add product error:", error);
+
+        if (String(error.message).toLowerCase().includes("limit")) {
+          alert("Your current plan product limit is full. Please upgrade your plan.");
+        } else {
+          alert(error.message || "Failed to add product. Please try again.");
+        }
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Add Product";
+      }
+    });
+
+    loadPlanUsage();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
