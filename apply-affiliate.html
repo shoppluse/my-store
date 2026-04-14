@@ -2,18 +2,40 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShopPlus - Apply Affiliate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apply Affiliate - ShopPlus</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#0047ab" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+  <link rel="icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+  <script>
+    // GLOBAL THEME (controlled only from profile.html)
+    (function () {
+      const savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+    })();
+
+    // LOGIN PROTECTION
+    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+    const currentUserRaw = localStorage.getItem("shopplusUser");
+
+    if (isLoggedIn !== "true" || !currentUserRaw) {
+      window.location.href = "login.html";
+    }
+  </script>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     :root {
-      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-      --bg: #eef5ff;
+      --gradient: linear-gradient(120deg, #0047ab 55%, #0099ff 100%);
+      --bg: #f4f7fc;
+      --bg-end: #eef5ff;
       --card-bg: #ffffff;
       --text: #1f1f1f;
       --muted: #64748b;
@@ -21,16 +43,30 @@
       --primary-2: #0099ff;
       --border: #dbe7ff;
       --shadow: rgba(0, 71, 171, 0.14);
-      --success: #16a34a;
-      --danger: #dc2626;
-      --warning: #f59e0b;
-      --info-bg: rgba(0, 153, 255, 0.05);
-      --info-border: rgba(0, 153, 255, 0.12);
-      --input-bg: #ffffff;
+
+      --success-bg: #eafaf0;
+      --success-text: #159947;
+      --success-border: #b8e8c8;
+
+      --warning-bg: #fff8e8;
+      --warning-text: #b26b00;
+      --warning-border: #ffe0a3;
+
+      --danger-bg: #fff0f0;
+      --danger-text: #c62828;
+      --danger-border: #ffc9c9;
+
+      --info-bg: #f3f9ff;
+      --info-text: #2b5ca8;
+      --info-border: #d9e9ff;
+
+      --btn-bg: linear-gradient(120deg, #0047ab, #0099ff);
+      --btn-shadow: rgba(0, 71, 171, 0.24);
     }
 
     [data-theme="dark"] {
       --bg: #0f172a;
+      --bg-end: #111827;
       --card-bg: #111827;
       --text: #f8fafc;
       --muted: #94a3b8;
@@ -38,25 +74,34 @@
       --primary-2: #38bdf8;
       --border: #1e3a8a;
       --shadow: rgba(56, 189, 248, 0.15);
-      --success: #22c55e;
-      --danger: #f87171;
-      --warning: #fbbf24;
-      --info-bg: rgba(56, 189, 248, 0.08);
-      --info-border: rgba(56, 189, 248, 0.18);
-      --input-bg: #0f172a;
-    }
 
-    * {
-      box-sizing: border-box;
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --success-text: #4ade80;
+      --success-border: rgba(74, 222, 128, 0.22);
+
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-text: #fbbf24;
+      --warning-border: rgba(251, 191, 36, 0.22);
+
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-text: #f87171;
+      --danger-border: rgba(248, 113, 113, 0.22);
+
+      --info-bg: rgba(59, 130, 246, 0.12);
+      --info-text: #93c5fd;
+      --info-border: rgba(147, 197, 253, 0.22);
+
+      --btn-bg: linear-gradient(120deg, #1d4ed8, #0ea5e9);
+      --btn-shadow: rgba(14, 165, 233, 0.24);
     }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, #f8fbff 100%);
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
       color: var(--text);
-      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .main-header {
@@ -64,584 +109,584 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(18px + env(safe-area-inset-top)) 16px 20px;
+      padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
       box-shadow: 0 6px 20px var(--shadow);
-      gap: 14px;
-    }
-
-    .shopplus-logo {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-      background: #ffffff;
-      padding: 10px 22px;
-      border-radius: 18px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      max-width: 700px;
-    }
-
-    .shopplus-logo .plus {
-      color: var(--primary-2);
-      font-size: 2.2rem;
-      font-weight: 900;
-      line-height: 1;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .header-actions {
       width: 100%;
-      max-width: 700px;
+      max-width: 780px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      align-items: stretch;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
 
-    .header-btn,
-    .dark-mode-toggle {
+    .header-btn {
       width: 100%;
-      min-height: 64px;
+      min-height: 56px;
       text-decoration: none;
-      background: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.14);
       color: #fff;
       font-weight: 700;
-      font-size: 1rem;
-      padding: 12px 10px;
+      font-size: 0.95rem;
+      padding: 10px 8px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.2);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      font-family: inherit;
-      cursor: pointer;
-      transition: 0.25s ease;
       backdrop-filter: blur(4px);
+      transition: 0.25s ease;
     }
 
-    .header-btn:hover,
-    .dark-mode-toggle:hover {
+    .header-btn:hover {
       transform: translateY(-2px);
       background: rgba(255,255,255,0.22);
     }
 
-    .dark-mode-toggle {
-      font-size: 1.5rem;
-    }
-
     .page-wrap {
+      width: 100%;
       max-width: 860px;
-      margin: 28px auto;
-      padding: 0 16px 36px;
+      margin: 22px auto 50px;
+      padding: 0 12px;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 24px;
-      padding: 26px;
-      box-shadow: 0 18px 50px var(--shadow);
       border: 1px solid var(--border);
-    }
-
-    .hero-card {
+      border-radius: 24px;
+      box-shadow: 0 18px 50px var(--shadow);
+      padding: 22px;
       margin-bottom: 18px;
-      background: linear-gradient(135deg, rgba(0,153,255,0.06) 0%, rgba(255,255,255,0.95) 100%);
     }
 
-    [data-theme="dark"] .hero-card {
-      background: linear-gradient(135deg, rgba(17,24,39,0.96) 0%, rgba(30,41,59,0.96) 100%);
-    }
-
-    .title {
-      margin: 0 0 8px;
-      font-size: 1.6rem;
-      font-weight: 700;
+    .hero-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.55rem, 4vw, 2.2rem);
+      line-height: 1.2;
       color: var(--primary);
+      font-weight: 700;
     }
 
-    .subtitle {
+    .hero-sub {
       margin: 0;
-      font-size: 0.96rem;
       color: var(--muted);
-      line-height: 1.7;
+      font-size: 1rem;
+      line-height: 1.8;
     }
 
     .benefits {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
       margin-top: 18px;
-    }
-
-    .benefit-chip {
-      padding: 14px 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid var(--info-border);
-      text-align: center;
-      font-size: 0.88rem;
-      font-weight: 700;
-      line-height: 1.45;
-    }
-
-    [data-theme="dark"] .benefit-chip {
-      background: rgba(30,41,59,0.82);
-    }
-
-    .form-title {
-      margin: 0 0 8px;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .form-subtitle {
-      margin: 0 0 20px;
-      font-size: 0.92rem;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .info-box {
-      margin-bottom: 18px;
-      padding: 14px;
-      border-radius: 16px;
-      background: var(--info-bg);
-      border: 1px solid var(--info-border);
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      font-weight: 500;
-    }
-
-    .form-grid {
       display: grid;
-      gap: 16px;
+      gap: 12px;
     }
 
-    .field-group {
-      display: grid;
-      gap: 8px;
-    }
-
-    .field-label {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .input,
-    .textarea {
-      width: 100%;
+    .benefit {
+      background: rgba(0, 153, 255, 0.04);
       border: 1px solid var(--border);
-      outline: none;
-      background: var(--input-bg);
-      color: var(--text);
       border-radius: 16px;
       padding: 14px 16px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      transition: 0.2s ease;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
-    }
-
-    .input:focus,
-    .textarea:focus {
-      border-color: var(--primary-2);
-      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.12);
-    }
-
-    .input[readonly] {
-      opacity: 0.95;
-    }
-
-    .textarea {
-      min-height: 130px;
-      resize: vertical;
-      line-height: 1.6;
-    }
-
-    .actions {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .btn {
-      width: 100%;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
       font-weight: 700;
-      font-family: inherit;
-      text-decoration: none;
-      text-align: center;
-      transition: 0.25s ease;
-      display: inline-block;
-      color: #fff;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      line-height: 1.5;
     }
 
-    .btn-primary {
-      background: var(--gradient);
-      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
+    [data-theme="dark"] .benefit {
+      background: rgba(59, 130, 246, 0.08);
     }
 
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-2px);
+    .section-title {
+      margin: 0 0 8px;
+      font-size: clamp(1.3rem, 3.8vw, 1.8rem);
+      color: var(--primary);
+      font-weight: 700;
     }
 
-    .btn-primary:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    .btn-secondary {
-      background: #64748b;
-      box-shadow: 0 10px 24px rgba(100, 116, 139, 0.2);
-    }
-
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      background: #475569;
+    .section-sub {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.8;
     }
 
     .status-box {
-      margin-top: 18px;
-      padding: 14px;
-      border-radius: 16px;
-      font-size: 0.92rem;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid;
+      margin-bottom: 14px;
+      line-height: 1.7;
       font-weight: 600;
-      line-height: 1.6;
-      display: none;
+    }
+
+    .status-info {
+      background: var(--info-bg);
+      color: var(--info-text);
+      border-color: var(--info-border);
     }
 
     .status-success {
-      display: block;
-      background: rgba(22, 163, 74, 0.08);
-      color: var(--success);
-      border: 1px solid rgba(22, 163, 74, 0.16);
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
     }
 
-    .status-error {
-      display: block;
-      background: rgba(220, 38, 38, 0.08);
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.16);
+    .status-warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
     }
 
-    .already-applied {
-      margin-top: 18px;
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(0, 153, 255, 0.06);
-      border: 1px solid var(--info-border);
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.92rem;
-      font-weight: 600;
-      display: none;
+    .status-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
     }
 
     .status-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 12px;
+      padding: 10px 16px;
       border-radius: 999px;
-      font-size: 0.82rem;
       font-weight: 700;
+      font-size: 0.95rem;
       margin-top: 10px;
-      background: rgba(245, 158, 11, 0.12);
-      color: #b45309;
-      border: 1px solid rgba(245, 158, 11, 0.2);
+      border: 1px solid;
     }
 
-    .status-pill.approved {
-      background: rgba(22, 163, 74, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(22, 163, 74, 0.18);
+    .pill-warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
     }
 
-    .status-pill.rejected {
-      background: rgba(220, 38, 38, 0.08);
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.16);
+    .pill-success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+
+    .pill-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
+    }
+
+    .loading-box {
+      display: none;
+      margin-bottom: 14px;
+      background: var(--info-bg);
+      color: var(--info-text);
+      border: 1px solid var(--info-border);
+      border-radius: 18px;
+      padding: 16px;
+      font-weight: 700;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-group label {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 0.95rem;
+    }
+
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 0.96rem;
+      font-family: inherit;
+      background: var(--card-bg);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus,
+    .input-group select:focus {
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.08);
+    }
+
+    .input-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .readonly-note {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .submit-btn,
+    .secondary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      min-height: 56px;
+    }
+
+    .submit-btn {
+      background: var(--btn-bg);
+      color: white;
+      box-shadow: 0 14px 28px var(--btn-shadow);
+    }
+
+    .submit-btn:hover:not(:disabled),
+    .secondary-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .secondary-btn {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      text-align: center;
+      color: white;
+      background: var(--gradient);
+      padding: 16px 12px;
+      font-size: 14px;
+      margin-top: 40px;
     }
 
     @media (max-width: 700px) {
-      .main-header {
-        padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
-        gap: 12px;
-      }
-
-      .shopplus-logo {
-        font-size: 1.35rem;
-        padding: 8px 14px;
-        border-radius: 16px;
-      }
-
-      .shopplus-logo .plus {
-        font-size: 1.7rem;
-      }
-
-      .header-actions {
-        gap: 10px;
-      }
-
-      .header-btn,
-      .dark-mode-toggle {
-        min-height: 58px;
-        font-size: 0.82rem;
-        padding: 10px 6px;
-        border-radius: 14px;
-      }
-
-      .dark-mode-toggle {
-        font-size: 1.25rem;
-      }
-
-      .page-wrap {
-        margin: 18px auto;
-        padding: 0 12px 24px;
-      }
-
       .card {
-        padding: 18px 14px;
-        border-radius: 18px;
+        border-radius: 20px;
+        padding: 18px;
       }
 
-      .title {
-        font-size: 1.3rem;
-      }
-
-      .subtitle,
-      .form-subtitle,
-      .info-box,
-      .already-applied {
-        font-size: 0.88rem;
-      }
-
-      .benefits {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .benefit-chip {
-        font-size: 0.84rem;
-        padding: 12px 10px;
+      .header-btn {
+        min-height: 52px;
+        font-size: 0.86rem;
         border-radius: 14px;
       }
 
-      .form-title {
-        font-size: 1.15rem;
-      }
-
-      .field-label {
-        font-size: 0.85rem;
-      }
-
-      .input,
-      .textarea {
-        font-size: 0.92rem;
-        padding: 12px 14px;
-        border-radius: 14px;
-      }
-
-      .btn {
-        padding: 13px 14px;
-        font-size: 14px;
-        border-radius: 12px;
-      }
-
-      .status-box {
-        font-size: 0.88rem;
+      .submit-btn,
+      .secondary-btn {
+        min-height: 52px;
+        font-size: 0.95rem;
       }
     }
   </style>
 </head>
 <body>
   <div class="main-header">
-    <a href="./home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
-
     <div class="header-actions">
-      <a href="./home.html" class="header-btn">Home</a>
-      <a href="./profile.html" class="header-btn">Profile</a>
-      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+      <a href="home.html" class="header-btn">← Home</a>
+      <a href="profile.html" class="header-btn">Profile</a>
     </div>
   </div>
 
   <div class="page-wrap">
-    <div class="card hero-card">
-      <h1 class="title">Join ShopPlus Affiliate Program</h1>
-      <p class="subtitle">
-        Apply to become a ShopPlus affiliate member and get the opportunity to grow through curated product promotion on ShopPlus.
+    <!-- HERO -->
+    <section class="card">
+      <h1 class="hero-title">Join ShopPlus Affiliate Program</h1>
+      <p class="hero-sub">
+        Apply to become a ShopPlus affiliate member and grow by promoting curated products through ShopPlus.
       </p>
 
       <div class="benefits">
-        <div class="benefit-chip">📦 Add your own curated product links</div>
-        <div class="benefit-chip">📈 Get better visibility through ShopPlus</div>
-        <div class="benefit-chip">💸 Build and grow your affiliate earnings</div>
+        <div class="benefit">📦 Add your own curated product links</div>
+        <div class="benefit">📈 Get better visibility through ShopPlus</div>
+        <div class="benefit">💸 Build and grow your affiliate earnings</div>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2 class="form-title">Affiliate Application Form</h2>
-      <p class="form-subtitle">
+    <!-- APPLICATION SECTION -->
+    <section class="card">
+      <h2 class="section-title">Affiliate Application Form</h2>
+      <p class="section-sub">
         Fill in your details below. Your application will be reviewed manually by ShopPlus before approval.
       </p>
 
-      <div class="info-box">
-        Your request will be submitted to ShopPlus and stored securely for manual review. Once reviewed, you will be approved or rejected by the admin.
+      <div id="loadingBox" class="loading-box">⏳ Checking your affiliate status...</div>
+
+      <div id="messageArea"></div>
+
+      <div id="formWrapper">
+        <div class="status-box status-info">
+          Your request will be submitted to ShopPlus and stored securely for manual review. Once reviewed, you will be approved or rejected by the admin.
+        </div>
+
+        <form id="affiliateForm" class="form-grid">
+          <div class="input-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" readonly />
+            <div class="readonly-note">Auto-filled from your account</div>
+          </div>
+
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" readonly />
+            <div class="readonly-note">Auto-filled from your account</div>
+          </div>
+
+          <div class="input-group">
+            <label for="mobile">Mobile Number</label>
+            <input type="text" id="mobile" readonly />
+            <div class="readonly-note">Auto-filled from your account</div>
+          </div>
+
+          <div class="input-group">
+            <label for="instagram">Instagram Profile / Page Link (optional)</label>
+            <input type="url" id="instagram" placeholder="https://instagram.com/yourpage" />
+          </div>
+
+          <div class="input-group">
+            <label for="youtube">YouTube Channel Link (optional)</label>
+            <input type="url" id="youtube" placeholder="https://youtube.com/@yourchannel" />
+          </div>
+
+          <div class="input-group">
+            <label for="telegram">Telegram Channel / Group Link (optional)</label>
+            <input type="url" id="telegram" placeholder="https://t.me/yourchannel" />
+          </div>
+
+          <div class="input-group">
+            <label for="audienceType">Primary Promotion Platform</label>
+            <select id="audienceType">
+              <option value="">Select your main platform</option>
+              <option value="Instagram">Instagram</option>
+              <option value="YouTube">YouTube</option>
+              <option value="Telegram">Telegram</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Multiple Platforms">Multiple Platforms</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="experience">Your Promotion Experience</label>
+            <textarea id="experience" placeholder="Example: I share product deals in WhatsApp groups, Instagram stories, Telegram channels, etc."></textarea>
+          </div>
+
+          <div class="input-group">
+            <label for="reason">Why do you want to join ShopPlus affiliate program?</label>
+            <textarea id="reason" placeholder="Tell us why you want to become a ShopPlus affiliate member..."></textarea>
+          </div>
+
+          <button type="submit" id="submitBtn" class="submit-btn">Submit Affiliate Application</button>
+        </form>
       </div>
 
-      <div id="alreadyAppliedBox" class="already-applied">
-        You have already submitted an affiliate application.
-        <div class="status-pill" id="applicationStatusPill">⏳ Status: Pending</div>
+      <div id="reapplyWrapper" class="hidden" style="margin-top: 14px;">
+        <button id="reapplyBtn" class="secondary-btn">Apply Again</button>
       </div>
-
-      <form id="affiliateForm" class="form-grid">
-        <div class="field-group">
-          <label for="fullName" class="field-label">Full Name</label>
-          <input type="text" id="fullName" class="input" placeholder="Enter your full name" readonly />
-        </div>
-
-        <div class="field-group">
-          <label for="email" class="field-label">Email Address</label>
-          <input type="email" id="email" class="input" placeholder="Enter your email" readonly />
-        </div>
-
-        <div class="field-group">
-          <label for="mobile" class="field-label">Mobile Number</label>
-          <input type="tel" id="mobile" class="input" placeholder="Enter your mobile number" readonly />
-        </div>
-
-        <div class="field-group">
-          <label for="reason" class="field-label">Why do you want to join ShopPlus Affiliate Program?</label>
-          <textarea id="reason" class="textarea" placeholder="Tell us why you want to join and how you plan to promote products..." required></textarea>
-        </div>
-
-        <div class="actions">
-          <button type="submit" id="submitBtn" class="btn btn-primary">Submit Affiliate Application</button>
-          <a href="./profile.html" class="btn btn-secondary">Back to Profile</a>
-        </div>
-      </form>
-
-      <div id="statusBox" class="status-box"></div>
-    </div>
+    </section>
   </div>
 
+  <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
+
   <script>
-    const BACKEND_URL = "https://my-store-e28j.onrender.com";
+    const API_BASE = "https://my-store-e28j.onrender.com";
 
-    const currentUserRaw = localStorage.getItem("shopplusUser");
+    const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
-    if (!currentUserRaw) {
-      window.location.href = "./login.html";
-    }
-
-    let currentUser = {};
-    try {
-      currentUser = JSON.parse(currentUserRaw);
-    } catch (error) {
-      localStorage.removeItem("shopplusUser");
-      localStorage.removeItem("shopplusLoggedIn");
-      window.location.href = "./login.html";
-    }
-
-    const htmlEl = document.documentElement;
-    const darkToggleBtn = document.getElementById("darkModeToggle");
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme) {
-      htmlEl.setAttribute("data-theme", savedTheme);
-      darkToggleBtn.textContent = savedTheme === "dark" ? "☀️" : "🌙";
-    }
-
-    darkToggleBtn.addEventListener("click", () => {
-      const currentTheme = htmlEl.getAttribute("data-theme");
-
-      if (currentTheme === "dark") {
-        htmlEl.setAttribute("data-theme", "light");
-        localStorage.setItem("theme", "light");
-        darkToggleBtn.textContent = "🌙";
-      } else {
-        htmlEl.setAttribute("data-theme", "dark");
-        localStorage.setItem("theme", "dark");
-        darkToggleBtn.textContent = "☀️";
-      }
-    });
-
+    const loadingBox = document.getElementById("loadingBox");
+    const messageArea = document.getElementById("messageArea");
+    const formWrapper = document.getElementById("formWrapper");
     const affiliateForm = document.getElementById("affiliateForm");
-    const fullNameInput = document.getElementById("fullName");
+    const submitBtn = document.getElementById("submitBtn");
+    const reapplyWrapper = document.getElementById("reapplyWrapper");
+    const reapplyBtn = document.getElementById("reapplyBtn");
+
+    const nameInput = document.getElementById("name");
     const emailInput = document.getElementById("email");
     const mobileInput = document.getElementById("mobile");
+    const instagramInput = document.getElementById("instagram");
+    const youtubeInput = document.getElementById("youtube");
+    const telegramInput = document.getElementById("telegram");
+    const audienceTypeInput = document.getElementById("audienceType");
+    const experienceInput = document.getElementById("experience");
     const reasonInput = document.getElementById("reason");
-    const submitBtn = document.getElementById("submitBtn");
-    const statusBox = document.getElementById("statusBox");
-    const alreadyAppliedBox = document.getElementById("alreadyAppliedBox");
-    const applicationStatusPill = document.getElementById("applicationStatusPill");
 
-    const userId = currentUser.id || currentUser._id || "";
-    const affiliateStatus = (currentUser.affiliateStatus || "none").toLowerCase();
-
-    function showStatus(message, type = "success") {
-      statusBox.textContent = message;
-      statusBox.className = "status-box";
-      statusBox.classList.add(type === "success" ? "status-success" : "status-error");
+    function setLoading(show, text = "⏳ Processing...") {
+      loadingBox.style.display = show ? "block" : "none";
+      loadingBox.textContent = text;
     }
 
-    function hideStatus() {
-      statusBox.textContent = "";
-      statusBox.className = "status-box";
+    function showMessage(type, html) {
+      let cls = "status-info";
+      if (type === "success") cls = "status-success";
+      if (type === "warning") cls = "status-warning";
+      if (type === "danger") cls = "status-danger";
+
+      messageArea.innerHTML = `<div class="status-box ${cls}">${html}</div>`;
     }
 
-    function prefillUserData() {
-      fullNameInput.value = currentUser.name || "";
-      emailInput.value = currentUser.email || "";
-      mobileInput.value = currentUser.mobile || "";
+    function clearMessage() {
+      messageArea.innerHTML = "";
     }
 
-    function showExistingStatus(status) {
-      affiliateForm.style.display = "none";
-      alreadyAppliedBox.style.display = "block";
+    function fillUserDetails() {
+      nameInput.value = storedUser.name || "";
+      emailInput.value = storedUser.email || "";
+      mobileInput.value = storedUser.mobile || "";
+    }
 
-      applicationStatusPill.className = "status-pill";
+    function updateLocalUserAffiliate(status) {
+      const user = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+      user.affiliateStatus = status;
+      user.isAffiliate = status === "approved";
+      localStorage.setItem("shopplusUser", JSON.stringify(user));
+    }
+
+    function renderState(status) {
+      clearMessage();
+      reapplyWrapper.classList.add("hidden");
+
+      if (status === "pending") {
+        formWrapper.classList.add("hidden");
+        showMessage(
+          "warning",
+          `
+            <strong>You have already submitted an affiliate application.</strong><br>
+            Your request is currently under manual review by ShopPlus.
+            <div class="status-pill pill-warning">⏳ Status: Pending</div>
+          `
+        );
+        return;
+      }
 
       if (status === "approved") {
-        applicationStatusPill.textContent = "✅ Status: Approved";
-        applicationStatusPill.classList.add("approved");
-      } else if (status === "rejected") {
-        applicationStatusPill.textContent = "❌ Status: Rejected";
-        applicationStatusPill.classList.add("rejected");
-      } else {
-        applicationStatusPill.textContent = "⏳ Status: Pending";
+        formWrapper.classList.add("hidden");
+        showMessage(
+          "success",
+          `
+            <strong>Congratulations! Your affiliate application has been approved.</strong><br>
+            You are now an official ShopPlus affiliate member.
+            <div class="status-pill pill-success">✅ Status: Approved</div>
+          `
+        );
+        return;
+      }
+
+      if (status === "rejected") {
+        formWrapper.classList.add("hidden");
+        showMessage(
+          "danger",
+          `
+            <strong>Your affiliate application was not approved this time.</strong><br>
+            You may improve your details and apply again.
+            <div class="status-pill pill-danger">❌ Status: Rejected</div>
+          `
+        );
+        reapplyWrapper.classList.remove("hidden");
+        return;
+      }
+
+      // Default / none
+      formWrapper.classList.remove("hidden");
+      clearMessage();
+    }
+
+    async function fetchAffiliateStatus() {
+      try {
+        setLoading(true, "⏳ Checking your affiliate status...");
+
+        console.log("Checking affiliate status for user:", storedUser);
+
+        const response = await fetch(`${API_BASE}/api/affiliate/status`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId: storedUser.id
+          })
+        });
+
+        const data = await response.json();
+
+        console.log("Affiliate status response:", response.status, data);
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch affiliate status");
+        }
+
+        const backendStatus = data?.user?.affiliateStatus || "none";
+
+        updateLocalUserAffiliate(backendStatus);
+        renderState(backendStatus);
+      } catch (error) {
+        console.error("Affiliate status fetch error:", error);
+
+        // fallback to localStorage if backend sleeping or temporary issue
+        const fallbackStatus = storedUser.affiliateStatus || "none";
+        renderState(fallbackStatus);
+
+        showMessage(
+          "info",
+          `
+            Could not fetch latest status from server right now. Showing saved local status.<br>
+            <strong>Current visible status:</strong> ${fallbackStatus}
+          `
+        );
+      } finally {
+        setLoading(false);
       }
     }
 
-    prefillUserData();
+    affiliateForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    if (!userId) {
-      showStatus("User ID not found. Please login again.", "error");
-      affiliateForm.style.display = "none";
-    } else if (affiliateStatus === "pending" || affiliateStatus === "approved" || affiliateStatus === "rejected") {
-      showExistingStatus(affiliateStatus);
-    }
+      clearMessage();
 
-    affiliateForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      hideStatus();
+      const payload = {
+        userId: storedUser.id,
+        name: (storedUser.name || "").trim(),
+        email: (storedUser.email || "").trim(),
+        mobile: (storedUser.mobile || "").trim(),
+        instagram: instagramInput.value.trim(),
+        youtube: youtubeInput.value.trim(),
+        telegram: telegramInput.value.trim(),
+        audienceType: audienceTypeInput.value.trim(),
+        experience: experienceInput.value.trim(),
+        reason: reasonInput.value.trim()
+      };
 
-      const reason = reasonInput.value.trim();
-
-      if (!reason) {
-        showStatus("Please enter why you want to join the affiliate program.", "error");
+      if (!payload.userId || !payload.name || !payload.email || !payload.mobile) {
+        showMessage("danger", "Missing required user account details. Please logout and login again.");
         return;
       }
 
@@ -649,39 +694,76 @@
       submitBtn.textContent = "Submitting...";
 
       try {
-        const res = await fetch(`${BACKEND_URL}/api/auth/apply-affiliate`, {
+        setLoading(true, "⏳ Submitting your affiliate application...");
+
+        console.log("Submitting affiliate payload:", payload);
+
+        const response = await fetch(`${API_BASE}/api/affiliate/apply`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            userId,
-            reason
-          })
+          body: JSON.stringify(payload)
         });
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if (!res.ok) {
+        console.log("Affiliate apply response:", response.status, data);
+
+        if (!response.ok) {
           throw new Error(data.message || "Failed to submit affiliate application");
         }
 
-        if (data.user) {
-          localStorage.setItem("shopplusUser", JSON.stringify(data.user));
-          currentUser = data.user;
-        }
+        updateLocalUserAffiliate("pending");
+        renderState("pending");
 
-        showStatus(data.message || "Affiliate application submitted successfully!", "success");
-        setTimeout(() => {
-          showExistingStatus("pending");
-        }, 700);
+        showMessage(
+          "success",
+          `
+            <strong>Affiliate application submitted successfully.</strong><br>
+            Your request is now pending manual review by ShopPlus.
+          `
+        );
+
+        affiliateForm.reset();
+        fillUserDetails();
       } catch (error) {
-        console.error("Affiliate application submit error:", error);
-        showStatus(error.message || "Failed to submit affiliate application.", "error");
+        console.error("Affiliate submit failed:", error);
+        showMessage("danger", error.message || "Something went wrong while submitting your application.");
+      } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit Affiliate Application";
+        setLoading(false);
       }
     });
+
+    reapplyBtn.addEventListener("click", () => {
+      clearMessage();
+      formWrapper.classList.remove("hidden");
+      reapplyWrapper.classList.add("hidden");
+      affiliateForm.reset();
+      fillUserDetails();
+      showMessage(
+        "info",
+        "You can now submit a fresh affiliate application with improved details."
+      );
+    });
+
+    // INIT
+    fillUserDetails();
+    fetchAffiliateStatus();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
   </script>
 </body>
 </html>
