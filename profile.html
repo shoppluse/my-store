@@ -14,6 +14,7 @@
     :root {
       --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
       --bg: #eef5ff;
+      --bg-2: #f8fbff;
       --card-bg: #ffffff;
       --text: #1f1f1f;
       --muted: #64748b;
@@ -29,12 +30,15 @@
       --share-hover: #0284c7;
       --support: #25d366;
       --support-hover: #1da851;
-      --affiliate-bg: rgba(0, 153, 255, 0.06);
-      --affiliate-border: rgba(0, 153, 255, 0.16);
+      --header-glass: rgba(255,255,255,0.15);
+      --header-glass-border: rgba(255,255,255,0.2);
+      --soft-blue-bg: rgba(0, 153, 255, 0.05);
+      --soft-blue-border: rgba(0, 153, 255, 0.12);
     }
 
     [data-theme="dark"] {
       --bg: #0f172a;
+      --bg-2: #111827;
       --card-bg: #111827;
       --text: #f8fafc;
       --muted: #94a3b8;
@@ -50,8 +54,10 @@
       --share-hover: #0ea5e9;
       --support: #25d366;
       --support-hover: #1da851;
-      --affiliate-bg: rgba(56, 189, 248, 0.08);
-      --affiliate-border: rgba(56, 189, 248, 0.18);
+      --header-glass: rgba(255,255,255,0.12);
+      --header-glass-border: rgba(255,255,255,0.16);
+      --soft-blue-bg: rgba(56, 189, 248, 0.08);
+      --soft-blue-border: rgba(56, 189, 248, 0.18);
     }
 
     * { box-sizing: border-box; }
@@ -60,66 +66,89 @@
       margin: 0;
       min-height: 100vh;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, #f8fbff 100%);
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
       color: var(--text);
       overflow-x: hidden;
     }
 
-    /* HOME.HTML STYLE HEADER */
     .main-header {
       background: var(--gradient);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(18px + env(safe-area-inset-top)) 16px 20px;
+      padding: calc(16px + env(safe-area-inset-top)) 14px 18px;
       box-shadow: 0 6px 20px var(--shadow);
-      gap: 14px;
+      gap: 12px;
     }
 
-    .shopplus-logo {
-      font-size: 2rem;
+    .header-top {
+      width: 100%;
+      max-width: 700px;
+      display: grid;
+      grid-template-columns: 58px 1fr 58px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 100%;
+      min-height: 58px;
+      border: 1px solid var(--header-glass-border);
+      background: var(--header-glass);
+      color: #fff;
+      border-radius: 16px;
+      font-family: inherit;
+      font-size: 1.6rem;
       font-weight: 700;
-      color: var(--primary);
-      background: #ffffff;
-      padding: 10px 22px;
-      border-radius: 18px;
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      width: 100%;
-      max-width: 700px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.25s ease;
+      backdrop-filter: blur(4px);
     }
 
-    .shopplus-logo .plus {
-      color: var(--primary-2);
-      font-size: 2.2rem;
-      font-weight: 900;
-      line-height: 1;
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.22);
+    }
+
+    .header-title {
+      background: #ffffff;
+      color: var(--primary);
+      border-radius: 16px;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(0, 71, 171, 0.14);
     }
 
     .header-actions {
       width: 100%;
       max-width: 700px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       align-items: stretch;
     }
 
-    .header-btn,
-    .dark-mode-toggle {
+    .header-btn {
       width: 100%;
-      min-height: 64px;
+      min-height: 60px;
       text-decoration: none;
-      background: rgba(255,255,255,0.15);
+      background: var(--header-glass);
       color: #fff;
       font-weight: 700;
       font-size: 1rem;
       padding: 12px 10px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid var(--header-glass-border);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -127,26 +156,18 @@
       font-family: inherit;
       cursor: pointer;
       transition: 0.25s ease;
-      box-shadow: none;
       backdrop-filter: blur(4px);
     }
 
-    .header-btn:hover,
-    .dark-mode-toggle:hover {
+    .header-btn:hover {
       transform: translateY(-2px);
       background: rgba(255,255,255,0.22);
     }
 
-    .dark-mode-toggle {
-      font-size: 1.5rem;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
     .page-wrap {
       max-width: 1100px;
-      margin: 32px auto;
-      padding: 0 18px 40px;
+      margin: 26px auto;
+      padding: 0 16px 34px;
     }
 
     .profile-grid {
@@ -156,15 +177,10 @@
       align-items: start;
     }
 
-    .right-column {
-      display: grid;
-      gap: 22px;
-    }
-
     .card {
       background: var(--card-bg);
       border-radius: 24px;
-      padding: 26px;
+      padding: 24px;
       box-shadow: 0 18px 50px var(--shadow);
       border: 1px solid var(--border);
     }
@@ -190,7 +206,7 @@
     }
 
     .title {
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--primary);
       margin: 0 0 6px;
@@ -201,7 +217,7 @@
       text-align: center;
       color: var(--muted);
       margin: 0 0 18px;
-      font-size: 0.95rem;
+      font-size: 0.94rem;
     }
 
     .info-list {
@@ -213,8 +229,8 @@
     .info-item {
       padding: 14px;
       border-radius: 16px;
-      background: rgba(0, 153, 255, 0.05);
-      border: 1px solid rgba(0, 153, 255, 0.12);
+      background: var(--soft-blue-bg);
+      border: 1px solid var(--soft-blue-border);
     }
 
     .info-label {
@@ -225,7 +241,7 @@
     }
 
     .info-value {
-      font-size: 0.98rem;
+      font-size: 0.96rem;
       font-weight: 600;
       word-break: break-word;
     }
@@ -316,15 +332,6 @@
       background: #dc2626;
     }
 
-    .btn-affiliate {
-      background: var(--gradient);
-      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
-    }
-
-    .btn-affiliate:hover {
-      transform: translateY(-2px);
-    }
-
     .share-status {
       margin-top: 10px;
       text-align: center;
@@ -335,7 +342,7 @@
     }
 
     .section-title {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: var(--primary);
       margin: 0 0 8px;
@@ -344,81 +351,92 @@
     .section-subtitle {
       color: var(--muted);
       margin: 0 0 20px;
-      font-size: 0.95rem;
+      font-size: 0.94rem;
     }
 
     .affiliate-card {
-      background: linear-gradient(135deg, var(--affiliate-bg) 0%, rgba(255,255,255,0.9) 100%);
-      border: 1px solid var(--affiliate-border);
+      margin-bottom: 20px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--soft-blue-bg);
     }
 
-    [data-theme="dark"] .affiliate-card {
-      background: linear-gradient(135deg, rgba(17,24,39,0.95) 0%, rgba(30,41,59,0.95) 100%);
-    }
-
-    .affiliate-top {
+    .affiliate-head {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    .affiliate-badge {
+    .affiliate-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .affiliate-desc {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .affiliate-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 700;
-      color: var(--primary);
-      background: rgba(0, 153, 255, 0.08);
-      border: 1px solid rgba(0, 153, 255, 0.14);
+      white-space: nowrap;
     }
 
-    .affiliate-desc {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.7;
-      margin: 0 0 16px;
+    .pill-none {
+      background: rgba(100, 116, 139, 0.08);
+      color: #64748b;
+      border: 1px solid rgba(100, 116, 139, 0.16);
     }
 
-    .affiliate-benefits {
+    .pill-pending {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .pill-approved {
+      background: rgba(22, 163, 74, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(22, 163, 74, 0.2);
+    }
+
+    .pill-rejected {
+      background: rgba(220, 38, 38, 0.08);
+      color: var(--danger);
+      border: 1px solid rgba(220, 38, 38, 0.18);
+    }
+
+    .affiliate-body {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .benefit-chip {
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(0, 153, 255, 0.12);
-      text-align: center;
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.45;
-    }
-
-    [data-theme="dark"] .benefit-chip {
-      background: rgba(30,41,59,0.8);
+      gap: 12px;
     }
 
     .affiliate-note {
-      margin-top: 12px;
-      font-size: 0.84rem;
-      font-weight: 600;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--border);
       color: var(--muted);
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.7;
     }
 
-    .claims-grid {
-      display: grid;
-      gap: 16px;
+    [data-theme="dark"] .affiliate-note {
+      background: rgba(15, 23, 42, 0.65);
     }
 
     .claim-card {
@@ -433,6 +451,11 @@
       background: rgba(17,24,39,0.9);
     }
 
+    .claims-grid {
+      display: grid;
+      gap: 16px;
+    }
+
     .claim-top {
       display: flex;
       justify-content: space-between;
@@ -443,14 +466,14 @@
     }
 
     .claim-product {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 700;
       color: var(--text);
       margin-bottom: 4px;
     }
 
     .claim-id {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       color: var(--muted);
       font-weight: 600;
     }
@@ -497,8 +520,8 @@
     .meta-box {
       padding: 12px;
       border-radius: 14px;
-      background: rgba(0, 153, 255, 0.05);
-      border: 1px solid rgba(0, 153, 255, 0.1);
+      background: var(--soft-blue-bg);
+      border: 1px solid var(--soft-blue-border);
     }
 
     .meta-label {
@@ -511,7 +534,7 @@
     }
 
     .meta-value {
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       font-weight: 700;
       color: var(--text);
       word-break: break-word;
@@ -526,7 +549,7 @@
       padding: 18px;
       border-radius: 18px;
       border: 1px dashed var(--border);
-      background: rgba(0, 153, 255, 0.04);
+      background: var(--soft-blue-bg);
       color: var(--muted);
       text-align: center;
       line-height: 1.6;
@@ -543,44 +566,43 @@
       }
 
       .page-wrap {
-        margin: 24px auto;
-      }
-
-      .right-column {
-        gap: 18px;
+        margin: 20px auto;
       }
     }
 
     @media (max-width: 700px) {
       .main-header {
-        padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
-        gap: 12px;
+        padding: calc(14px + env(safe-area-inset-top)) 12px 16px;
+        gap: 10px;
       }
 
-      .shopplus-logo {
+      .header-top {
+        grid-template-columns: 52px 1fr 52px;
+        gap: 8px;
+      }
+
+      .icon-btn {
+        min-height: 52px;
+        border-radius: 14px;
         font-size: 1.35rem;
-        padding: 8px 14px;
-        border-radius: 16px;
       }
 
-      .shopplus-logo .plus {
-        font-size: 1.7rem;
+      .header-title {
+        min-height: 52px;
+        font-size: 1rem;
+        border-radius: 14px;
+        padding: 8px 10px;
       }
 
       .header-actions {
         gap: 10px;
       }
 
-      .header-btn,
-      .dark-mode-toggle {
-        min-height: 58px;
-        font-size: 0.82rem;
-        padding: 10px 6px;
+      .header-btn {
+        min-height: 56px;
+        font-size: 0.9rem;
+        padding: 10px 8px;
         border-radius: 14px;
-      }
-
-      .dark-mode-toggle {
-        font-size: 1.25rem;
       }
 
       .card {
@@ -601,7 +623,7 @@
       }
 
       .title {
-        font-size: 1.3rem;
+        font-size: 1.28rem;
       }
 
       .subtitle {
@@ -643,7 +665,7 @@
       }
 
       .section-title {
-        font-size: 1.2rem;
+        font-size: 1.16rem;
         text-align: center;
       }
 
@@ -653,26 +675,18 @@
         margin-bottom: 16px;
       }
 
-      .affiliate-top {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+      .affiliate-card {
+        padding: 14px;
+        border-radius: 16px;
       }
 
-      .affiliate-benefits {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .benefit-chip {
-        font-size: 0.82rem;
-        padding: 10px;
-        border-radius: 12px;
+      .affiliate-title {
+        font-size: 0.96rem;
       }
 
       .affiliate-desc,
       .affiliate-note {
-        font-size: 0.88rem;
+        font-size: 0.86rem;
       }
 
       .claim-card {
@@ -687,7 +701,7 @@
       }
 
       .claim-product {
-        font-size: 0.95rem;
+        font-size: 0.93rem;
         line-height: 1.4;
       }
 
@@ -729,12 +743,15 @@
 </head>
 <body>
   <div class="main-header">
-    <a href="./home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+    <div class="header-top">
+      <a href="./home.html" class="icon-btn" title="Back to Home">&lt;</a>
+      <div class="header-title">My Profile</div>
+      <button id="darkModeToggle" class="icon-btn" title="Toggle theme">🌙</button>
+    </div>
 
     <div class="header-actions">
       <a href="./home.html" class="header-btn">Home</a>
       <a href="./claim-reward.html" class="header-btn">Claim Reward</a>
-      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
     </div>
   </div>
 
@@ -776,44 +793,16 @@
         <div id="shareStatus" class="share-status"></div>
       </div>
 
-      <div class="right-column">
-        <div class="card affiliate-card">
-          <div class="affiliate-top">
-            <div>
-              <h2 class="section-title" style="margin-bottom: 6px;">Join Affiliate Program</h2>
-              <p class="section-subtitle" style="margin: 0;">
-                Become a ShopPlus affiliate member and grow with your own product links.
-              </p>
-            </div>
-            <span class="affiliate-badge">🚀 Grow with ShopPlus</span>
-          </div>
+      <div class="card">
+        <div id="affiliateSection"></div>
 
-          <p class="affiliate-desc">
-            Want to promote products through ShopPlus? Join our affiliate program and get access to add your own curated product links after approval.
-          </p>
+        <h2 class="section-title">My Reward Claims</h2>
+        <p class="section-subtitle">
+          Track your submitted reward requests, review status, and approved reward amounts.
+        </p>
 
-          <div class="affiliate-benefits">
-            <div class="benefit-chip">📦 Add your product links</div>
-            <div class="benefit-chip">📈 Get more visibility</div>
-            <div class="benefit-chip">💸 Grow your affiliate earnings</div>
-          </div>
-
-          <a href="./apply-affiliate.html" class="btn btn-affiliate">Join Affiliate</a>
-
-          <div class="affiliate-note">
-            Note: Affiliate membership is reviewed manually by ShopPlus before approval.
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="section-title">My Reward Claims</h2>
-          <p class="section-subtitle">
-            Track your submitted reward requests, review status, and approved reward amounts.
-          </p>
-
-          <div id="claimsContainer" class="loading-box">
-            Loading your reward claims...
-          </div>
+        <div id="claimsContainer" class="loading-box">
+          Loading your reward claims...
         </div>
       </div>
     </div>
@@ -831,6 +820,7 @@
       currentUser = JSON.parse(currentUserRaw);
     } catch (error) {
       localStorage.removeItem("shopplusUser");
+      localStorage.removeItem("shopplusLoggedIn");
       window.location.href = "./login.html";
     }
 
@@ -840,23 +830,17 @@
     const darkToggleBtn = document.getElementById("darkModeToggle");
     const savedTheme = localStorage.getItem("theme");
 
-    if (savedTheme) {
-      htmlEl.setAttribute("data-theme", savedTheme);
-      darkToggleBtn.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+    function applyTheme(theme) {
+      htmlEl.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme);
+      darkToggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
     }
+
+    applyTheme(savedTheme === "dark" ? "dark" : "light");
 
     darkToggleBtn.addEventListener("click", () => {
       const currentTheme = htmlEl.getAttribute("data-theme");
-
-      if (currentTheme === "dark") {
-        htmlEl.setAttribute("data-theme", "light");
-        localStorage.setItem("theme", "light");
-        darkToggleBtn.textContent = "🌙";
-      } else {
-        htmlEl.setAttribute("data-theme", "dark");
-        localStorage.setItem("theme", "dark");
-        darkToggleBtn.textContent = "☀️";
-      }
+      applyTheme(currentTheme === "dark" ? "light" : "dark");
     });
 
     const userNameEl = document.getElementById("userName");
@@ -869,12 +853,14 @@
     const shareAppBtn = document.getElementById("shareAppBtn");
     const shareStatus = document.getElementById("shareStatus");
     const claimsContainer = document.getElementById("claimsContainer");
+    const affiliateSection = document.getElementById("affiliateSection");
 
     const userName = currentUser.name || "User";
     const userEmail = currentUser.email || "Not available";
     const userMobile = currentUser.mobile || "Not available";
     const userId = currentUser.id || currentUser._id || "Not available";
     const isVerified = !!currentUser.isVerified;
+    const affiliateStatus = (currentUser.affiliateStatus || "none").toLowerCase();
 
     userNameEl.textContent = userName;
     userEmailEl.textContent = userEmail;
@@ -889,6 +875,91 @@
       verifiedBadgeEl.textContent = "❌ Not Verified";
       verifiedBadgeEl.className = "verified-badge verified-no";
     }
+
+    function renderAffiliateSection(status) {
+      if (status === "approved") {
+        affiliateSection.innerHTML = `
+          <div class="affiliate-card">
+            <div class="affiliate-head">
+              <div>
+                <h3 class="affiliate-title">Affiliate Membership</h3>
+                <p class="affiliate-desc">Your ShopPlus affiliate membership has been approved.</p>
+              </div>
+              <span class="affiliate-pill pill-approved">✅ Approved</span>
+            </div>
+            <div class="affiliate-body">
+              <div class="affiliate-note">
+                You are now an approved ShopPlus affiliate member. You can contact ShopPlus support for next onboarding steps.
+              </div>
+              <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%2C%20my%20affiliate%20application%20has%20been%20approved.%20Please%20guide%20me%20for%20next%20steps." target="_blank" class="btn btn-primary">Contact for Next Steps</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (status === "pending") {
+        affiliateSection.innerHTML = `
+          <div class="affiliate-card">
+            <div class="affiliate-head">
+              <div>
+                <h3 class="affiliate-title">Affiliate Application</h3>
+                <p class="affiliate-desc">Your affiliate application is under manual review by ShopPlus.</p>
+              </div>
+              <span class="affiliate-pill pill-pending">⏳ Pending Review</span>
+            </div>
+            <div class="affiliate-body">
+              <div class="affiliate-note">
+                Your application has been submitted successfully. Once verified, ShopPlus will approve or reject your request. If your status was updated in the backend, please logout and login again to refresh your profile.
+              </div>
+              <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%2C%20I%20wanted%20to%20check%20the%20status%20of%20my%20affiliate%20application." target="_blank" class="btn btn-support">Check via WhatsApp</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (status === "rejected") {
+        affiliateSection.innerHTML = `
+          <div class="affiliate-card">
+            <div class="affiliate-head">
+              <div>
+                <h3 class="affiliate-title">Affiliate Application</h3>
+                <p class="affiliate-desc">Your previous affiliate application was not approved.</p>
+              </div>
+              <span class="affiliate-pill pill-rejected">❌ Rejected</span>
+            </div>
+            <div class="affiliate-body">
+              <div class="affiliate-note">
+                Your affiliate application was rejected after review. If you want to try again later, please contact ShopPlus support first.
+              </div>
+              <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%2C%20my%20affiliate%20application%20was%20rejected.%20Can%20you%20guide%20me%20for%20reapply%20or%20improvement%3F" target="_blank" class="btn btn-support">Contact Support</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      affiliateSection.innerHTML = `
+        <div class="affiliate-card">
+          <div class="affiliate-head">
+            <div>
+              <h3 class="affiliate-title">Join ShopPlus Affiliate Program</h3>
+              <p class="affiliate-desc">Apply to become a ShopPlus affiliate member and start your affiliate journey with ShopPlus.</p>
+            </div>
+            <span class="affiliate-pill pill-none">📝 Not Applied</span>
+          </div>
+          <div class="affiliate-body">
+            <div class="affiliate-note">
+              Join the ShopPlus affiliate program to get access to affiliate member opportunities. Your application will be manually reviewed before approval.
+            </div>
+            <a href="./apply-affiliate.html" class="btn btn-primary">Join Affiliate</a>
+          </div>
+        </div>
+      `;
+    }
+
+    renderAffiliateSection(affiliateStatus);
 
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("shopplusUser");
