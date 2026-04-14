@@ -87,19 +87,18 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    res.status(200).json({
-      message: "Login successful",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        mobile: user.mobile,
-        isVerified: true,
-        affiliateStatus: user.affiliateStatus || "none",
-        affiliateReason: user.affiliateReason || "",
-        affiliateAppliedAt: user.affiliateAppliedAt || null
-      }
-    });
+res.status(200).json({
+  message: "Login successful",
+  user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    mobile: user.mobile,
+    isVerified: true,
+    isAffiliate: user.isAffiliate || false,
+    affiliateStatus: user.affiliateStatus || "none"
+  }
+});
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({
