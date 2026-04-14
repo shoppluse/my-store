@@ -38,9 +38,6 @@ const userSchema = new mongoose.Schema(
       default: []
     },
 
-    // =========================
-    // AFFILIATE SYSTEM FIELDS
-    // =========================
     isAffiliate: {
       type: Boolean,
       default: false
@@ -52,7 +49,6 @@ const userSchema = new mongoose.Schema(
       default: "none"
     },
 
-    // NEW: Store affiliate application details
     affiliateReason: {
       type: String,
       default: ""
