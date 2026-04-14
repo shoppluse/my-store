@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const Product = require("../models/product");
+const Product = require("../models/Product");
 const User = require("../models/User");
 
 /* =========================================================
@@ -131,8 +131,10 @@ router.post("/", async (req, res) => {
       ? images.map(img => String(img || "").trim()).filter(Boolean)
       : [];
 
-    if (!cleanImages.includes(image)) {
-      cleanImages.unshift(String(image).trim());
+    const mainImage = String(image).trim();
+
+    if (!cleanImages.includes(mainImage)) {
+      cleanImages.unshift(mainImage);
     }
 
     cleanImages = [...new Set(cleanImages)];
@@ -149,7 +151,7 @@ router.post("/", async (req, res) => {
       name: String(name).trim(),
       description: String(description).trim(),
       price,
-      image: String(image).trim(),
+      image: mainImage,
       images: cleanImages,
       category: String(category).trim(),
       brand: String(brand || "").trim(),
