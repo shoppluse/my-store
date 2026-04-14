@@ -52,6 +52,27 @@ const userSchema = new mongoose.Schema(
       default: "none"
     },
 
+    // NEW: Store affiliate application details
+    affiliateReason: {
+      type: String,
+      default: ""
+    },
+
+    affiliateAppliedAt: {
+      type: Date,
+      default: null
+    },
+
+    affiliateReviewedAt: {
+      type: Date,
+      default: null
+    },
+
+    affiliateReviewNote: {
+      type: String,
+      default: ""
+    },
+
     affiliatePlan: {
       type: String,
       enum: ["", "starter", "growth", "elite"],
