@@ -2,19 +2,40 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShopPlus - Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile - ShopPlus</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#0047ab" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+  <link rel="icon" href="/my-store/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+  <script>
+    // GLOBAL THEME LOADER (profile controls all pages)
+    (function () {
+      const savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+    })();
+
+    // LOGIN PROTECTION
+    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+    const currentUserRaw = localStorage.getItem("shopplusUser");
+
+    if (isLoggedIn !== "true" || !currentUserRaw) {
+      window.location.href = "login.html";
+    }
+  </script>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     :root {
-      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-      --bg: #eef5ff;
-      --bg-2: #f8fbff;
+      --gradient: linear-gradient(120deg, #0047ab 55%, #0099ff 100%);
+      --bg: #f4f7fc;
+      --bg-end: #eef5ff;
       --card-bg: #ffffff;
       --text: #1f1f1f;
       --muted: #64748b;
@@ -22,23 +43,39 @@
       --primary-2: #0099ff;
       --border: #dbe7ff;
       --shadow: rgba(0, 71, 171, 0.14);
-      --success: #16a34a;
-      --warning: #f59e0b;
-      --danger: #dc2626;
-      --paid: #7c3aed;
-      --share: #0ea5e9;
-      --share-hover: #0284c7;
-      --support: #25d366;
-      --support-hover: #1da851;
-      --header-glass: rgba(255,255,255,0.15);
-      --header-glass-border: rgba(255,255,255,0.2);
-      --soft-blue-bg: rgba(0, 153, 255, 0.05);
-      --soft-blue-border: rgba(0, 153, 255, 0.12);
+
+      --success-bg: #eafaf0;
+      --success-text: #159947;
+      --success-border: #b8e8c8;
+
+      --warning-bg: #fff8e8;
+      --warning-text: #b26b00;
+      --warning-border: #ffe0a3;
+
+      --danger-bg: #fff0f0;
+      --danger-text: #c62828;
+      --danger-border: #ffc9c9;
+
+      --info-bg: #f3f9ff;
+      --info-text: #2b5ca8;
+      --info-border: #d9e9ff;
+
+      --btn-bg: linear-gradient(120deg, #0047ab, #0099ff);
+      --btn-shadow: rgba(0, 71, 171, 0.24);
+
+      --starter-bg: rgba(59, 130, 246, 0.06);
+      --starter-border: rgba(59, 130, 246, 0.18);
+
+      --growth-bg: rgba(16, 185, 129, 0.06);
+      --growth-border: rgba(16, 185, 129, 0.18);
+
+      --elite-bg: rgba(124, 58, 237, 0.06);
+      --elite-border: rgba(124, 58, 237, 0.18);
     }
 
     [data-theme="dark"] {
       --bg: #0f172a;
-      --bg-2: #111827;
+      --bg-end: #111827;
       --card-bg: #111827;
       --text: #f8fafc;
       --muted: #94a3b8;
@@ -46,29 +83,43 @@
       --primary-2: #38bdf8;
       --border: #1e3a8a;
       --shadow: rgba(56, 189, 248, 0.15);
-      --success: #22c55e;
-      --warning: #fbbf24;
-      --danger: #f87171;
-      --paid: #a78bfa;
-      --share: #38bdf8;
-      --share-hover: #0ea5e9;
-      --support: #25d366;
-      --support-hover: #1da851;
-      --header-glass: rgba(255,255,255,0.12);
-      --header-glass-border: rgba(255,255,255,0.16);
-      --soft-blue-bg: rgba(56, 189, 248, 0.08);
-      --soft-blue-border: rgba(56, 189, 248, 0.18);
-    }
 
-    * { box-sizing: border-box; }
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --success-text: #4ade80;
+      --success-border: rgba(74, 222, 128, 0.22);
+
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-text: #fbbf24;
+      --warning-border: rgba(251, 191, 36, 0.22);
+
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-text: #f87171;
+      --danger-border: rgba(248, 113, 113, 0.22);
+
+      --info-bg: rgba(59, 130, 246, 0.12);
+      --info-text: #93c5fd;
+      --info-border: rgba(147, 197, 253, 0.22);
+
+      --btn-bg: linear-gradient(120deg, #1d4ed8, #0ea5e9);
+      --btn-shadow: rgba(14, 165, 233, 0.24);
+
+      --starter-bg: rgba(59, 130, 246, 0.10);
+      --starter-border: rgba(59, 130, 246, 0.24);
+
+      --growth-bg: rgba(16, 185, 129, 0.10);
+      --growth-border: rgba(16, 185, 129, 0.24);
+
+      --elite-bg: rgba(124, 58, 237, 0.10);
+      --elite-border: rgba(124, 58, 237, 0.24);
+    }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
       color: var(--text);
-      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .main-header {
@@ -76,1039 +127,942 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(16px + env(safe-area-inset-top)) 14px 18px;
+      padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
       box-shadow: 0 6px 20px var(--shadow);
-      gap: 12px;
-    }
-
-    .header-top {
-      width: 100%;
-      max-width: 700px;
-      display: grid;
-      grid-template-columns: 58px 1fr 58px;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .icon-btn {
-      width: 100%;
-      min-height: 58px;
-      border: 1px solid var(--header-glass-border);
-      background: var(--header-glass);
-      color: #fff;
-      border-radius: 16px;
-      font-family: inherit;
-      font-size: 1.6rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      cursor: pointer;
-      transition: 0.25s ease;
-      backdrop-filter: blur(4px);
-    }
-
-    .icon-btn:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.22);
-    }
-
-    .header-title {
-      background: #ffffff;
-      color: var(--primary);
-      border-radius: 16px;
-      min-height: 58px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 700;
-      padding: 8px 14px;
-      text-align: center;
-      box-shadow: 0 8px 22px rgba(0, 71, 171, 0.14);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .header-actions {
       width: 100%;
-      max-width: 700px;
+      max-width: 980px;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      align-items: stretch;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
-    .header-btn {
+    .header-btn,
+    .theme-btn {
       width: 100%;
-      min-height: 60px;
+      min-height: 56px;
       text-decoration: none;
-      background: var(--header-glass);
+      background: rgba(255,255,255,0.14);
       color: #fff;
       font-weight: 700;
-      font-size: 1rem;
-      padding: 12px 10px;
+      font-size: 0.92rem;
+      padding: 10px 8px;
       border-radius: 16px;
-      border: 1px solid var(--header-glass-border);
+      border: 1px solid rgba(255,255,255,0.2);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      backdrop-filter: blur(4px);
+      transition: 0.25s ease;
       font-family: inherit;
       cursor: pointer;
-      transition: 0.25s ease;
-      backdrop-filter: blur(4px);
     }
 
-    .header-btn:hover {
+    .header-btn:hover,
+    .theme-btn:hover {
       transform: translateY(-2px);
       background: rgba(255,255,255,0.22);
     }
 
-    .page-wrap {
-      max-width: 1100px;
-      margin: 26px auto;
-      padding: 0 16px 34px;
+    .theme-btn {
+      font-size: 1.3rem;
     }
 
-    .profile-grid {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 22px;
-      align-items: start;
+    .page-wrap {
+      width: 100%;
+      max-width: 980px;
+      margin: 22px auto 50px;
+      padding: 0 12px;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 18px 50px var(--shadow);
       border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 18px 50px var(--shadow);
+      padding: 22px;
+      margin-bottom: 18px;
     }
 
-    .profile-card {
-      position: sticky;
-      top: 20px;
-    }
-
-    .avatar {
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      background: var(--gradient);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 0 auto 18px;
-      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.2);
-    }
-
-    .title {
-      font-size: 1.5rem;
-      font-weight: 700;
+    .section-title {
+      margin: 0 0 8px;
+      font-size: clamp(1.3rem, 3.8vw, 1.9rem);
       color: var(--primary);
-      margin: 0 0 6px;
-      text-align: center;
+      font-weight: 700;
+      line-height: 1.25;
     }
 
-    .subtitle {
-      text-align: center;
+    .section-sub {
+      margin: 0 0 16px;
       color: var(--muted);
-      margin: 0 0 18px;
-      font-size: 0.94rem;
+      line-height: 1.8;
     }
 
-    .info-list {
+    .profile-grid {
       display: grid;
-      gap: 14px;
-      margin-top: 10px;
+      gap: 12px;
     }
 
-    .info-item {
-      padding: 14px;
+    .info-box {
+      background: rgba(0, 153, 255, 0.04);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      background: var(--soft-blue-bg);
-      border: 1px solid var(--soft-blue-border);
+      padding: 14px 16px;
+    }
+
+    [data-theme="dark"] .info-box {
+      background: rgba(59, 130, 246, 0.08);
     }
 
     .info-label {
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.78rem;
+      font-weight: 700;
       color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-bottom: 6px;
     }
 
     .info-value {
-      font-size: 0.96rem;
+      font-size: 1rem;
       font-weight: 600;
+      color: var(--text);
       word-break: break-word;
     }
 
-    .verified-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-top: 8px;
-    }
-
-    .verified-yes {
-      background: rgba(22, 163, 74, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(22, 163, 74, 0.2);
-    }
-
-    .verified-no {
-      background: rgba(220, 38, 38, 0.08);
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.2);
-    }
-
-    .btn-group {
-      display: grid;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      width: 100%;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 14px;
-      padding: 13px 16px;
-      font-size: 15px;
-      font-weight: 700;
-      font-family: inherit;
-      text-decoration: none;
-      text-align: center;
-      transition: 0.25s ease;
-      display: inline-block;
-      color: #fff;
-    }
-
-    .btn-primary {
-      background: var(--gradient);
-      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-share {
-      background: var(--share);
-      box-shadow: 0 10px 24px rgba(14, 165, 233, 0.22);
-    }
-
-    .btn-share:hover {
-      transform: translateY(-2px);
-      background: var(--share-hover);
-    }
-
-    .btn-support {
-      background: var(--support);
-      box-shadow: 0 10px 24px rgba(37, 211, 102, 0.22);
-    }
-
-    .btn-support:hover {
-      transform: translateY(-2px);
-      background: var(--support-hover);
-    }
-
-    .btn-danger {
-      background: #ef4444;
-      box-shadow: 0 10px 24px rgba(239, 68, 68, 0.22);
-    }
-
-    .btn-danger:hover {
-      transform: translateY(-2px);
-      background: #dc2626;
-    }
-
-    .share-status {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: var(--muted);
-      min-height: 20px;
-    }
-
-    .section-title {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 0 0 8px;
-    }
-
-    .section-subtitle {
-      color: var(--muted);
-      margin: 0 0 20px;
-      font-size: 0.94rem;
-    }
-
-    .affiliate-card {
-      margin-bottom: 20px;
-      padding: 18px;
+    .status-box {
       border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--soft-blue-bg);
+      padding: 18px;
+      border: 1px solid;
+      margin-top: 12px;
     }
 
-    .affiliate-head {
+    .status-header {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
-    .affiliate-title {
+    .status-title {
+      margin: 0;
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--primary);
-      margin: 0;
     }
 
-    .affiliate-desc {
+    .status-desc {
       margin: 0;
-      font-size: 0.9rem;
       color: var(--muted);
       line-height: 1.7;
     }
 
-    .affiliate-pill {
+    .status-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
+      gap: 8px;
+      padding: 10px 16px;
       border-radius: 999px;
-      font-size: 0.8rem;
       font-weight: 700;
+      font-size: 0.95rem;
+      border: 1px solid;
       white-space: nowrap;
     }
 
-    .pill-none {
-      background: rgba(100, 116, 139, 0.08);
-      color: #64748b;
-      border: 1px solid rgba(100, 116, 139, 0.16);
+    .status-info {
+      background: var(--info-bg);
+      border-color: var(--info-border);
     }
 
-    .pill-pending {
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.2);
+    .status-warning {
+      background: var(--warning-bg);
+      border-color: var(--warning-border);
     }
 
-    .pill-approved {
-      background: rgba(22, 163, 74, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(22, 163, 74, 0.2);
+    .status-success {
+      background: var(--success-bg);
+      border-color: var(--success-border);
     }
 
-    .pill-rejected {
-      background: rgba(220, 38, 38, 0.08);
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.18);
+    .status-danger {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
     }
 
-    .affiliate-body {
-      display: grid;
-      gap: 12px;
+    .pill-info {
+      background: var(--info-bg);
+      color: var(--info-text);
+      border-color: var(--info-border);
     }
 
-    .affiliate-note {
-      padding: 14px;
+    .pill-warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
+    }
+
+    .pill-success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+
+    .pill-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
+    }
+
+    .status-note {
+      margin-top: 12px;
+      background: rgba(0, 153, 255, 0.04);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.9rem;
+      padding: 14px 16px;
       line-height: 1.7;
+      color: var(--text);
     }
 
-    [data-theme="dark"] .affiliate-note {
-      background: rgba(15, 23, 42, 0.65);
+    [data-theme="dark"] .status-note {
+      background: rgba(59, 130, 246, 0.08);
     }
 
-    .claim-card {
-      border-radius: 20px;
-      padding: 18px;
+    .primary-btn,
+    .secondary-btn,
+    .danger-btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      min-height: 56px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    .primary-btn {
+      background: var(--btn-bg);
+      color: white;
+      box-shadow: 0 14px 28px var(--btn-shadow);
+    }
+
+    .secondary-btn {
+      background: transparent;
+      color: var(--primary);
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.55);
-      box-shadow: 0 10px 28px rgba(0, 71, 171, 0.08);
     }
 
-    [data-theme="dark"] .claim-card {
-      background: rgba(17,24,39,0.9);
+    .danger-btn {
+      background: linear-gradient(120deg, #dc2626, #ef4444);
+      color: white;
+      box-shadow: 0 14px 28px rgba(239, 68, 68, 0.2);
     }
 
-    .claims-grid {
+    .primary-btn:hover,
+    .secondary-btn:hover,
+    .danger-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .plan-summary {
       display: grid;
-      gap: 16px;
-    }
-
-    .claim-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
       gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .claim-product {
-      font-size: 1.02rem;
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .summary-box {
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: rgba(0, 153, 255, 0.04);
+    }
+
+    [data-theme="dark"] .summary-box {
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .summary-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .summary-value {
+      font-size: 1rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 4px;
     }
 
-    .claim-id {
-      font-size: 0.84rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .status-badge {
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .status-pending {
-      background: rgba(245, 158, 11, 0.12);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-
-    .status-approved {
-      background: rgba(22, 163, 74, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(22, 163, 74, 0.2);
-    }
-
-    .status-rejected {
-      background: rgba(220, 38, 38, 0.08);
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.2);
-    }
-
-    .status-paid {
-      background: rgba(124, 58, 237, 0.12);
-      color: var(--paid);
-      border: 1px solid rgba(124, 58, 237, 0.22);
-    }
-
-    .claim-meta {
+    .plans-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
       margin-top: 10px;
     }
 
-    .meta-box {
-      padding: 12px;
-      border-radius: 14px;
-      background: var(--soft-blue-bg);
-      border: 1px solid var(--soft-blue-border);
+    .plan-card {
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
-    .meta-label {
-      font-size: 0.75rem;
+    .plan-card.starter {
+      background: var(--starter-bg);
+      border-color: var(--starter-border);
+    }
+
+    .plan-card.growth {
+      background: var(--growth-bg);
+      border-color: var(--growth-border);
+    }
+
+    .plan-card.elite {
+      background: var(--elite-bg);
+      border-color: var(--elite-border);
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
       font-weight: 700;
-      color: var(--muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
     }
 
-    .meta-value {
-      font-size: 0.93rem;
+    [data-theme="dark"] .plan-badge {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .plan-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0 0 6px;
+    }
+
+    .plan-price {
+      font-size: 1.7rem;
       font-weight: 700;
       color: var(--text);
-      word-break: break-word;
+      margin-bottom: 12px;
     }
 
-    .reward-amount {
-      color: var(--success);
-    }
-
-    .empty-box,
-    .loading-box {
-      padding: 18px;
-      border-radius: 18px;
-      border: 1px dashed var(--border);
-      background: var(--soft-blue-bg);
+    .plan-price span {
+      font-size: 0.92rem;
+      font-weight: 600;
       color: var(--muted);
-      text-align: center;
-      line-height: 1.6;
     }
 
-    @media (max-width: 950px) {
-      .profile-grid {
+    .plan-desc {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.6;
+      color: var(--text);
+      font-size: 0.94rem;
+    }
+
+    .plan-btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      min-height: 52px;
+    }
+
+    .plan-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .plan-btn.current {
+      background: rgba(22, 163, 74, 0.14);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
+      cursor: default;
+    }
+
+    .plan-btn.upgrade {
+      background: var(--btn-bg);
+      color: white;
+      box-shadow: 0 12px 24px var(--btn-shadow);
+    }
+
+    .reward-empty {
+      margin-top: 10px;
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.8;
+      background: rgba(0, 153, 255, 0.03);
+    }
+
+    [data-theme="dark"] .reward-empty {
+      background: rgba(59, 130, 246, 0.06);
+    }
+
+    .logout-btn {
+      margin-top: 10px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      text-align: center;
+      color: white;
+      background: var(--gradient);
+      padding: 16px 12px;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .plans-grid {
         grid-template-columns: 1fr;
-        gap: 18px;
       }
 
-      .profile-card {
-        position: static;
-      }
-
-      .page-wrap {
-        margin: 20px auto;
+      .summary-grid {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 700px) {
-      .main-header {
-        padding: calc(14px + env(safe-area-inset-top)) 12px 16px;
-        gap: 10px;
-      }
-
-      .header-top {
-        grid-template-columns: 52px 1fr 52px;
-        gap: 8px;
-      }
-
-      .icon-btn {
-        min-height: 52px;
-        border-radius: 14px;
-        font-size: 1.35rem;
-      }
-
-      .header-title {
-        min-height: 52px;
-        font-size: 1rem;
-        border-radius: 14px;
-        padding: 8px 10px;
+      .card {
+        border-radius: 20px;
+        padding: 18px;
       }
 
       .header-actions {
-        gap: 10px;
-      }
-
-      .header-btn {
-        min-height: 56px;
-        font-size: 0.9rem;
-        padding: 10px 8px;
-        border-radius: 14px;
-      }
-
-      .card {
-        padding: 18px 14px;
-        border-radius: 18px;
-      }
-
-      .page-wrap {
-        padding: 0 12px 24px;
-        margin: 18px auto;
-      }
-
-      .avatar {
-        width: 72px;
-        height: 72px;
-        font-size: 1.6rem;
-        margin-bottom: 14px;
-      }
-
-      .title {
-        font-size: 1.28rem;
-      }
-
-      .subtitle {
-        font-size: 0.88rem;
-        margin-bottom: 14px;
-      }
-
-      .info-list {
-        gap: 10px;
-      }
-
-      .info-item {
-        padding: 12px;
-        border-radius: 14px;
-      }
-
-      .info-label {
-        font-size: 0.75rem;
-      }
-
-      .info-value {
-        font-size: 0.9rem;
-      }
-
-      .verified-badge {
-        font-size: 0.78rem;
-        padding: 7px 10px;
-      }
-
-      .btn-group {
-        gap: 10px;
-        margin-top: 16px;
-      }
-
-      .btn {
-        padding: 12px 14px;
-        font-size: 14px;
-        border-radius: 12px;
-      }
-
-      .section-title {
-        font-size: 1.16rem;
-        text-align: center;
-      }
-
-      .section-subtitle {
-        font-size: 0.88rem;
-        text-align: center;
-        margin-bottom: 16px;
-      }
-
-      .affiliate-card {
-        padding: 14px;
-        border-radius: 16px;
-      }
-
-      .affiliate-title {
-        font-size: 0.96rem;
-      }
-
-      .affiliate-desc,
-      .affiliate-note {
-        font-size: 0.86rem;
-      }
-
-      .claim-card {
-        padding: 14px;
-        border-radius: 16px;
-      }
-
-      .claim-top {
-        flex-direction: column;
-        align-items: flex-start;
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
       }
 
-      .claim-product {
-        font-size: 0.93rem;
-        line-height: 1.4;
-      }
-
-      .claim-id {
+      .header-btn,
+      .theme-btn {
+        min-height: 52px;
         font-size: 0.78rem;
-      }
-
-      .status-badge {
-        font-size: 0.75rem;
-        padding: 7px 10px;
-      }
-
-      .claim-meta {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .meta-box {
-        padding: 10px;
-        border-radius: 12px;
-      }
-
-      .meta-label {
-        font-size: 0.7rem;
-      }
-
-      .meta-value {
-        font-size: 0.88rem;
-      }
-
-      .empty-box,
-      .loading-box {
-        padding: 14px;
-        font-size: 0.9rem;
         border-radius: 14px;
+        padding: 8px 6px;
+      }
+
+      .theme-btn {
+        font-size: 1.1rem;
+      }
+
+      .primary-btn,
+      .secondary-btn,
+      .danger-btn {
+        min-height: 52px;
+        font-size: 0.94rem;
+      }
+
+      .status-header {
+        align-items: flex-start;
+      }
+
+      .plan-name {
+        font-size: 1.2rem;
+      }
+
+      .plan-price {
+        font-size: 1.45rem;
       }
     }
   </style>
 </head>
 <body>
   <div class="main-header">
-    <div class="header-top">
-      <a href="./home.html" class="icon-btn" title="Back to Home">&lt;</a>
-      <div class="header-title">My Profile</div>
-      <button id="darkModeToggle" class="icon-btn" title="Toggle theme">🌙</button>
-    </div>
-
     <div class="header-actions">
-      <a href="./home.html" class="header-btn">Home</a>
-      <a href="./claim-reward.html" class="header-btn">Claim Reward</a>
+      <a href="home.html" class="header-btn">← Home</a>
+      <a href="apply-affiliate.html" class="header-btn">Apply Affiliate</a>
+      <button id="themeToggleBtn" class="theme-btn" title="Toggle theme">🌙</button>
     </div>
   </div>
 
   <div class="page-wrap">
-    <div class="profile-grid">
-      <div class="card profile-card">
-        <div class="avatar" id="avatarLetter">U</div>
-        <h1 class="title" id="userName">User</h1>
-        <p class="subtitle">Your ShopPlus account dashboard</p>
+    <!-- PROFILE INFO -->
+    <section class="card">
+      <h1 class="section-title">My Profile</h1>
+      <p class="section-sub">Manage your ShopPlus account, affiliate membership, and current plan.</p>
 
-        <div style="text-align:center;">
-          <span id="verifiedBadge" class="verified-badge verified-no">❌ Not Verified</span>
+      <div class="profile-grid">
+        <div class="info-box">
+          <div class="info-label">Full Name</div>
+          <div class="info-value" id="profileName">Loading...</div>
         </div>
 
-        <div class="info-list">
-          <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value" id="userEmail">-</div>
-          </div>
-
-          <div class="info-item">
-            <div class="info-label">Mobile Number</div>
-            <div class="info-value" id="userMobile">-</div>
-          </div>
-
-          <div class="info-item">
-            <div class="info-label">User ID</div>
-            <div class="info-value" id="userId">-</div>
-          </div>
+        <div class="info-box">
+          <div class="info-label">Email Address</div>
+          <div class="info-value" id="profileEmail">Loading...</div>
         </div>
 
-        <div class="btn-group">
-          <a href="./home.html" class="btn btn-primary">Back to Store</a>
-          <button id="shareAppBtn" class="btn btn-share">Share App</button>
-          <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%20Support%2C%20I%20need%20help." target="_blank" class="btn btn-support">Support</a>
-          <button id="logoutBtn" class="btn btn-danger">Logout</button>
-        </div>
-
-        <div id="shareStatus" class="share-status"></div>
-      </div>
-
-      <div class="card">
-        <div id="affiliateSection"></div>
-
-        <h2 class="section-title">My Reward Claims</h2>
-        <p class="section-subtitle">
-          Track your submitted reward requests, review status, and approved reward amounts.
-        </p>
-
-        <div id="claimsContainer" class="loading-box">
-          Loading your reward claims...
+        <div class="info-box">
+          <div class="info-label">Mobile Number</div>
+          <div class="info-value" id="profileMobile">Loading...</div>
         </div>
       </div>
-    </div>
+
+      <button id="logoutBtn" class="danger-btn logout-btn">Logout</button>
+    </section>
+
+    <!-- AFFILIATE STATUS -->
+    <section class="card">
+      <h2 class="section-title">Affiliate Membership</h2>
+      <p class="section-sub">Your ShopPlus affiliate approval status and next steps appear here.</p>
+
+      <div id="affiliateStatusRoot"></div>
+    </section>
+
+    <!-- PLAN SECTION (only when approved) -->
+    <section id="planSection" class="card hidden">
+      <h2 class="section-title">Starter • Growth • Elite Plans</h2>
+      <p class="section-sub">
+        Choose the right ShopPlus affiliate plan for your product promotion scale. Free plan is auto-enabled after approval.
+      </p>
+
+      <div class="plan-summary">
+        <div class="summary-grid">
+          <div class="summary-box">
+            <div class="summary-label">Current Plan</div>
+            <div class="summary-value" id="currentPlanName">Starter</div>
+          </div>
+          <div class="summary-box">
+            <div class="summary-label">Plan Status</div>
+            <div class="summary-value" id="currentPlanStatus">Active</div>
+          </div>
+          <div class="summary-box">
+            <div class="summary-label">Product Limit</div>
+            <div class="summary-value" id="currentPlanLimit">3 Products</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="plans-grid" id="plansGrid"></div>
+    </section>
+
+    <!-- REWARD CLAIMS -->
+    <section class="card">
+      <h2 class="section-title">My Reward Claims</h2>
+      <p class="section-sub">
+        Track your submitted reward requests, review status, and approved reward amounts.
+      </p>
+
+      <div class="reward-empty">
+        No reward claims submitted yet.<br>
+        Buy a product and submit your first reward request from the product page.
+      </div>
+    </section>
   </div>
 
+  <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
+
   <script>
-    const currentUserRaw = localStorage.getItem("shopplusUser");
+    const API_BASE = "https://my-store-e28j.onrender.com";
+    const WHATSAPP_UPGRADE_NUMBER = "919999999999"; // <-- CHANGE THIS TO YOUR REAL WHATSAPP NUMBER (country code + number, no +)
 
-    if (!currentUserRaw) {
-      window.location.href = "./login.html";
-    }
-
-    let currentUser = {};
-    try {
-      currentUser = JSON.parse(currentUserRaw);
-    } catch (error) {
-      localStorage.removeItem("shopplusUser");
-      localStorage.removeItem("shopplusLoggedIn");
-      window.location.href = "./login.html";
-    }
-
-    const BACKEND_URL = "https://my-store-e28j.onrender.com";
+    const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
     const htmlEl = document.documentElement;
-    const darkToggleBtn = document.getElementById("darkModeToggle");
-    const savedTheme = localStorage.getItem("theme");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
 
-    function applyTheme(theme) {
-      htmlEl.setAttribute("data-theme", theme);
-      localStorage.setItem("theme", theme);
-      darkToggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
-    }
-
-    applyTheme(savedTheme === "dark" ? "dark" : "light");
-
-    darkToggleBtn.addEventListener("click", () => {
-      const currentTheme = htmlEl.getAttribute("data-theme");
-      applyTheme(currentTheme === "dark" ? "light" : "dark");
-    });
-
-    const userNameEl = document.getElementById("userName");
-    const userEmailEl = document.getElementById("userEmail");
-    const userMobileEl = document.getElementById("userMobile");
-    const userIdEl = document.getElementById("userId");
-    const avatarLetterEl = document.getElementById("avatarLetter");
-    const verifiedBadgeEl = document.getElementById("verifiedBadge");
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileMobile = document.getElementById("profileMobile");
     const logoutBtn = document.getElementById("logoutBtn");
-    const shareAppBtn = document.getElementById("shareAppBtn");
-    const shareStatus = document.getElementById("shareStatus");
-    const claimsContainer = document.getElementById("claimsContainer");
-    const affiliateSection = document.getElementById("affiliateSection");
 
-    const userName = currentUser.name || "User";
-    const userEmail = currentUser.email || "Not available";
-    const userMobile = currentUser.mobile || "Not available";
-    const userId = currentUser.id || currentUser._id || "Not available";
-    const isVerified = !!currentUser.isVerified;
-    const affiliateStatus = (currentUser.affiliateStatus || "none").toLowerCase();
+    const affiliateStatusRoot = document.getElementById("affiliateStatusRoot");
+    const planSection = document.getElementById("planSection");
+    const currentPlanName = document.getElementById("currentPlanName");
+    const currentPlanStatus = document.getElementById("currentPlanStatus");
+    const currentPlanLimit = document.getElementById("currentPlanLimit");
+    const plansGrid = document.getElementById("plansGrid");
 
-    userNameEl.textContent = userName;
-    userEmailEl.textContent = userEmail;
-    userMobileEl.textContent = userMobile;
-    userIdEl.textContent = userId;
-    avatarLetterEl.textContent = userName.charAt(0).toUpperCase();
-
-    if (isVerified) {
-      verifiedBadgeEl.textContent = "✅ Verified Account";
-      verifiedBadgeEl.className = "verified-badge verified-yes";
-    } else {
-      verifiedBadgeEl.textContent = "❌ Not Verified";
-      verifiedBadgeEl.className = "verified-badge verified-no";
+    function setThemeButton() {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+      themeToggleBtn.textContent = currentTheme === "dark" ? "☀️" : "🌙";
     }
 
-    function renderAffiliateSection(status) {
-      if (status === "approved") {
-        affiliateSection.innerHTML = `
-          <div class="affiliate-card">
-            <div class="affiliate-head">
-              <div>
-                <h3 class="affiliate-title">Affiliate Membership</h3>
-                <p class="affiliate-desc">Your ShopPlus affiliate membership has been approved.</p>
-              </div>
-              <span class="affiliate-pill pill-approved">✅ Approved</span>
+    function toggleTheme() {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      htmlEl.setAttribute("data-theme", nextTheme);
+      localStorage.setItem("theme", nextTheme);
+      setThemeButton();
+    }
+
+    themeToggleBtn.addEventListener("click", toggleTheme);
+    setThemeButton();
+
+    function updateLocalUser(patch = {}) {
+      const user = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+      Object.assign(user, patch);
+      localStorage.setItem("shopplusUser", JSON.stringify(user));
+    }
+
+    function normalizePlan(plan) {
+      const safePlan = (plan || "starter").toLowerCase();
+      if (["starter", "growth", "elite"].includes(safePlan)) return safePlan;
+      return "starter";
+    }
+
+    function getPlanConfig(planKey) {
+      const plans = {
+        starter: {
+          key: "starter",
+          name: "Starter",
+          badge: "Free Plan",
+          price: "₹0",
+          suffix: "/month",
+          limit: 3,
+          desc: "Perfect for new affiliates who want to start with ShopPlus and test the platform.",
+          features: [
+            "Up to 3 product listings",
+            "Basic affiliate participation",
+            "Manual approval required",
+            "Best for beginners"
+          ]
+        },
+        growth: {
+          key: "growth",
+          name: "Growth",
+          badge: "Pro Plan",
+          price: "₹29",
+          suffix: "/month",
+          limit: 20,
+          desc: "For growing affiliate members who want more products and better scale.",
+          features: [
+            "Up to 20 product listings",
+            "Good for serious beginners",
+            "Better scale than free plan",
+            "Great for Instagram / WhatsApp / Telegram promoters"
+          ]
+        },
+        elite: {
+          key: "elite",
+          name: "Elite",
+          badge: "Premium Plan",
+          price: "₹79",
+          suffix: "/month",
+          limit: -1,
+          desc: "For active affiliates who want maximum freedom and long-term growth inside ShopPlus.",
+          features: [
+            "Unlimited product listings",
+            "Best for serious promoters",
+            "Highest listing freedom",
+            "Future-ready for premium visibility"
+          ]
+        }
+      };
+
+      return plans[planKey] || plans.starter;
+    }
+
+    function formatLimit(limit) {
+      if (limit === -1) return "Unlimited";
+      return `${limit} Product${limit > 1 ? "s" : ""}`;
+    }
+
+    function renderAffiliateStatus(status, isAffiliate) {
+      const safeStatus = (status || "none").toLowerCase();
+
+      if (safeStatus === "approved" || isAffiliate) {
+        affiliateStatusRoot.innerHTML = `
+          <div class="status-box status-success">
+            <div class="status-header">
+              <h3 class="status-title">Affiliate Membership</h3>
+              <div class="status-pill pill-success">✅ Approved</div>
             </div>
-            <div class="affiliate-body">
-              <div class="affiliate-note">
-                You are now an approved ShopPlus affiliate member. You can contact ShopPlus support for next onboarding steps.
-              </div>
-              <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%2C%20my%20affiliate%20application%20has%20been%20approved.%20Please%20guide%20me%20for%20next%20steps." target="_blank" class="btn btn-primary">Contact for Next Steps</a>
+            <p class="status-desc">Your ShopPlus affiliate membership has been approved.</p>
+            <div class="status-note">
+              You are now an approved ShopPlus affiliate member. You can contact ShopPlus support for next onboarding steps.
+            </div>
+            <a class="primary-btn" href="${buildWhatsAppLink("Hello ShopPlus, my affiliate membership is approved. Please guide me for next onboarding steps.")}" target="_blank" rel="noopener noreferrer">
+              Contact for Next Steps
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      if (safeStatus === "pending") {
+        affiliateStatusRoot.innerHTML = `
+          <div class="status-box status-warning">
+            <div class="status-header">
+              <h3 class="status-title">Affiliate Membership</h3>
+              <div class="status-pill pill-warning">⏳ Pending Review</div>
+            </div>
+            <p class="status-desc">Your affiliate application is under manual review by ShopPlus.</p>
+            <div class="status-note">
+              Please wait for approval. Once approved, your free Starter plan will become active automatically.
             </div>
           </div>
         `;
         return;
       }
 
-      if (status === "pending") {
-        affiliateSection.innerHTML = `
-          <div class="affiliate-card">
-            <div class="affiliate-head">
-              <div>
-                <h3 class="affiliate-title">Affiliate Application</h3>
-                <p class="affiliate-desc">Your affiliate application is under manual review by ShopPlus.</p>
-              </div>
-              <span class="affiliate-pill pill-pending">⏳ Pending Review</span>
+      if (safeStatus === "rejected") {
+        affiliateStatusRoot.innerHTML = `
+          <div class="status-box status-danger">
+            <div class="status-header">
+              <h3 class="status-title">Affiliate Membership</h3>
+              <div class="status-pill pill-danger">❌ Rejected</div>
             </div>
-            <div class="affiliate-body">
-              <div class="affiliate-note">
-                Your application has been submitted successfully. Once verified, ShopPlus will approve or reject your request. If your status was updated in the backend, please logout and login again to refresh your profile.
-              </div>
-              <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%2C%20I%20wanted%20to%20check%20the%20status%20of%20my%20affiliate%20application." target="_blank" class="btn btn-support">Check via WhatsApp</a>
+            <p class="status-desc">Your affiliate application was not approved this time.</p>
+            <div class="status-note">
+              You can improve your details and submit a fresh application again.
             </div>
+            <a class="secondary-btn" href="apply-affiliate.html">Apply Again</a>
           </div>
         `;
         return;
       }
 
-      if (status === "rejected") {
-        affiliateSection.innerHTML = `
-          <div class="affiliate-card">
-            <div class="affiliate-head">
-              <div>
-                <h3 class="affiliate-title">Affiliate Application</h3>
-                <p class="affiliate-desc">Your previous affiliate application was not approved.</p>
-              </div>
-              <span class="affiliate-pill pill-rejected">❌ Rejected</span>
-            </div>
-            <div class="affiliate-body">
-              <div class="affiliate-note">
-                Your affiliate application was rejected after review. If you want to try again later, please contact ShopPlus support first.
-              </div>
-              <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%2C%20my%20affiliate%20application%20was%20rejected.%20Can%20you%20guide%20me%20for%20reapply%20or%20improvement%3F" target="_blank" class="btn btn-support">Contact Support</a>
-            </div>
+      affiliateStatusRoot.innerHTML = `
+        <div class="status-box status-info">
+          <div class="status-header">
+            <h3 class="status-title">Affiliate Membership</h3>
+            <div class="status-pill pill-info">ℹ️ Not Applied</div>
           </div>
-        `;
-        return;
-      }
-
-      affiliateSection.innerHTML = `
-        <div class="affiliate-card">
-          <div class="affiliate-head">
-            <div>
-              <h3 class="affiliate-title">Join ShopPlus Affiliate Program</h3>
-              <p class="affiliate-desc">Apply to become a ShopPlus affiliate member and start your affiliate journey with ShopPlus.</p>
-            </div>
-            <span class="affiliate-pill pill-none">📝 Not Applied</span>
+          <p class="status-desc">You have not applied for the ShopPlus affiliate program yet.</p>
+          <div class="status-note">
+            Apply first, get manually approved by ShopPlus, and then your free Starter plan will be activated automatically.
           </div>
-          <div class="affiliate-body">
-            <div class="affiliate-note">
-              Join the ShopPlus affiliate program to get access to affiliate member opportunities. Your application will be manually reviewed before approval.
-            </div>
-            <a href="./apply-affiliate.html" class="btn btn-primary">Join Affiliate</a>
-          </div>
+          <a class="primary-btn" href="apply-affiliate.html">Apply for Affiliate Program</a>
         </div>
       `;
     }
 
-    renderAffiliateSection(affiliateStatus);
+    function buildWhatsAppLink(message) {
+      const encoded = encodeURIComponent(message);
+      return `https://wa.me/${WHATSAPP_UPGRADE_NUMBER}?text=${encoded}`;
+    }
+
+    function renderPlans(currentPlanKey, planStatusValue) {
+      const safeCurrent = normalizePlan(currentPlanKey);
+      const safeStatus = (planStatusValue || "active").toLowerCase();
+
+      const currentConfig = getPlanConfig(safeCurrent);
+
+      currentPlanName.textContent = currentConfig.name;
+      currentPlanStatus.textContent = safeStatus === "active" ? "Active" : "Inactive";
+      currentPlanLimit.textContent = formatLimit(currentConfig.limit);
+
+      const order = ["starter", "growth", "elite"];
+
+      plansGrid.innerHTML = order.map((key) => {
+        const plan = getPlanConfig(key);
+        const isCurrent = safeCurrent === key;
+
+        let buttonHtml = "";
+
+        if (isCurrent) {
+          buttonHtml = `<button class="plan-btn current" type="button">Current Plan</button>`;
+        } else if (key === "starter") {
+          buttonHtml = `<button class="plan-btn current" type="button">Starter is Default Free Plan</button>`;
+        } else {
+          const msg = key === "growth"
+            ? "Hello ShopPlus, I want to upgrade to the Growth plan (₹29/month). Please guide me."
+            : "Hello ShopPlus, I want to upgrade to the Elite plan (₹79/month). Please guide me.";
+
+          buttonHtml = `
+            <a class="plan-btn upgrade" href="${buildWhatsAppLink(msg)}" target="_blank" rel="noopener noreferrer">
+              Upgrade via WhatsApp
+            </a>
+          `;
+        }
+
+        return `
+          <div class="plan-card ${plan.key}">
+            <div class="plan-badge">${plan.badge}</div>
+            <h3 class="plan-name">${plan.name}</h3>
+            <div class="plan-price">${plan.price} <span>${plan.suffix}</span></div>
+            <div class="plan-desc">${plan.desc}</div>
+
+            <ul class="plan-features">
+              ${plan.features.map(item => `<li><span>✔️</span><span>${item}</span></li>`).join("")}
+              <li><span>📦</span><span><strong>Product Limit:</strong> ${formatLimit(plan.limit)}</span></li>
+            </ul>
+
+            ${buttonHtml}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function fillProfileInfo() {
+      profileName.textContent = storedUser.name || "ShopPlus User";
+      profileEmail.textContent = storedUser.email || "Not available";
+      profileMobile.textContent = storedUser.mobile || "Not available";
+    }
+
+    async function fetchAffiliateStatus() {
+      try {
+        const response = await fetch(`${API_BASE}/api/affiliate/status`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId: storedUser.id
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch affiliate status");
+        }
+
+        const backendUser = data?.user || {};
+
+        const affiliateStatus = backendUser.affiliateStatus || storedUser.affiliateStatus || "none";
+        const isAffiliate = backendUser.isAffiliate === true || storedUser.isAffiliate === true;
+
+        let affiliatePlan = backendUser.affiliatePlan || storedUser.affiliatePlan || "starter";
+        let planStatus = backendUser.planStatus || storedUser.planStatus || "inactive";
+        let maxProducts = backendUser.maxProducts ?? storedUser.maxProducts;
+
+        // Auto default for approved users if backend doesn't yet provide plan fields
+        if ((affiliateStatus === "approved" || isAffiliate) && !backendUser.affiliatePlan) {
+          affiliatePlan = "starter";
+          planStatus = "active";
+          maxProducts = 3;
+        }
+
+        updateLocalUser({
+          affiliateStatus,
+          isAffiliate,
+          affiliatePlan,
+          planStatus,
+          maxProducts
+        });
+
+        renderAffiliateStatus(affiliateStatus, isAffiliate);
+
+        if (affiliateStatus === "approved" || isAffiliate) {
+          planSection.classList.remove("hidden");
+          renderPlans(affiliatePlan, planStatus);
+        } else {
+          planSection.classList.add("hidden");
+        }
+      } catch (error) {
+        console.error("Profile affiliate status fetch error:", error);
+
+        const fallbackStatus = storedUser.affiliateStatus || "none";
+        const fallbackAffiliate = storedUser.isAffiliate === true;
+
+        let fallbackPlan = storedUser.affiliatePlan || "starter";
+        let fallbackPlanStatus = storedUser.planStatus || "inactive";
+
+        if ((fallbackStatus === "approved" || fallbackAffiliate) && !storedUser.affiliatePlan) {
+          fallbackPlan = "starter";
+          fallbackPlanStatus = "active";
+
+          updateLocalUser({
+            affiliatePlan: "starter",
+            planStatus: "active",
+            maxProducts: 3
+          });
+        }
+
+        renderAffiliateStatus(fallbackStatus, fallbackAffiliate);
+
+        if (fallbackStatus === "approved" || fallbackAffiliate) {
+          planSection.classList.remove("hidden");
+          renderPlans(fallbackPlan, fallbackPlanStatus);
+        } else {
+          planSection.classList.add("hidden");
+        }
+      }
+    }
 
     logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("shopplusUser");
       localStorage.removeItem("shopplusLoggedIn");
-      window.location.href = "./login.html";
+      localStorage.removeItem("shopplusUser");
+      window.location.href = "login.html";
     });
 
-    function showShareStatus(message, isSuccess = true) {
-      shareStatus.textContent = message;
-      shareStatus.style.color = isSuccess ? "var(--success)" : "var(--danger)";
+    // INIT
+    fillProfileInfo();
+    fetchAffiliateStatus();
 
-      setTimeout(() => {
-        shareStatus.textContent = "";
-      }, 3000);
-    }
-
-    async function shareApp() {
-      const appUrl = window.location.origin + "/my-store/";
-
-      const shareData = {
-        title: "ShopPlus",
-        text: "Check out ShopPlus - discover awesome products and deals!",
-        url: appUrl
-      };
-
-      if (navigator.share) {
-        try {
-          await navigator.share(shareData);
-          showShareStatus("App shared successfully!");
-        } catch (error) {
-          console.log("Share cancelled or failed:", error);
-        }
-      } else {
-        try {
-          await navigator.clipboard.writeText(appUrl);
-          showShareStatus("App link copied successfully!");
-        } catch (error) {
-          showShareStatus("Copy failed. Share this link: " + appUrl, false);
-          alert("Copy failed. App link: " + appUrl);
-        }
-      }
-    }
-
-    shareAppBtn.addEventListener("click", shareApp);
-
-    function formatDate(dateString) {
-      if (!dateString) return "Not available";
-
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return dateString;
-
-      return date.toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
       });
     }
-
-    function getStatusClass(status) {
-      switch ((status || "").toLowerCase()) {
-        case "approved":
-          return "status-approved";
-        case "rejected":
-          return "status-rejected";
-        case "paid":
-          return "status-paid";
-        default:
-          return "status-pending";
-      }
-    }
-
-    function getStatusText(status) {
-      if (!status) return "Pending";
-      return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-    }
-
-    async function loadRewardClaims() {
-      if (!userId || userId === "Not available") {
-        claimsContainer.className = "empty-box";
-        claimsContainer.textContent = "User ID not found. Please login again.";
-        return;
-      }
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/rewards/user/${encodeURIComponent(userId)}`);
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.message || "Failed to fetch reward claims");
-        }
-
-        const claims = data.claims || [];
-
-        if (claims.length === 0) {
-          claimsContainer.className = "empty-box";
-          claimsContainer.innerHTML = `
-            No reward claims submitted yet.<br>
-            Buy a product and submit your first reward request from the product page.
-          `;
-          return;
-        }
-
-        claimsContainer.className = "claims-grid";
-        claimsContainer.innerHTML = claims.map((claim) => {
-          const status = claim.status || "pending";
-          const rewardAmount = Number(claim.rewardAmount || 0);
-
-          return `
-            <div class="claim-card">
-              <div class="claim-top">
-                <div>
-                  <div class="claim-product">${claim.productName || "Unnamed Product"}</div>
-                  <div class="claim-id">Product ID: ${claim.productId || "-"}</div>
-                </div>
-                <div class="status-badge ${getStatusClass(status)}">${getStatusText(status)}</div>
-              </div>
-
-              <div class="claim-meta">
-                <div class="meta-box">
-                  <div class="meta-label">Order Reference</div>
-                  <div class="meta-value">${claim.orderReference || "-"}</div>
-                </div>
-
-                <div class="meta-box">
-                  <div class="meta-label">Purchase Date</div>
-                  <div class="meta-value">${formatDate(claim.purchaseDate)}</div>
-                </div>
-
-                <div class="meta-box">
-                  <div class="meta-label">Reward Amount</div>
-                  <div class="meta-value reward-amount">₹${rewardAmount.toFixed(2)}</div>
-                </div>
-
-                <div class="meta-box">
-                  <div class="meta-label">Submitted On</div>
-                  <div class="meta-value">${formatDate(claim.createdAt)}</div>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join("");
-      } catch (error) {
-        console.error("Reward claims fetch error:", error);
-        claimsContainer.className = "empty-box";
-        claimsContainer.textContent = error.message || "Failed to load reward claims.";
-      }
-    }
-
-    loadRewardClaims();
   </script>
 </body>
 </html>
