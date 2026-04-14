@@ -21,7 +21,7 @@ app.use(
   cors({
     origin: ["https://shoppluse.github.io"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
+    credentials: true
   })
 );
 
@@ -35,8 +35,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    pass: process.env.EMAIL_PASS
+  }
 });
 
 app.locals.transporter = transporter;
