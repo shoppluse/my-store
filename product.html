@@ -568,6 +568,8 @@
   <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
   <script>
+    const BACKEND_URL = "https://my-store-e28j.onrender.com";
+
     const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
     const currentUser = localStorage.getItem("shopplusUser");
 
@@ -675,16 +677,16 @@
       }
 
       try {
-        const response = await fetch("/my-store/products.json", { cache: "no-store" });
-        if (!response.ok) throw new Error(`Failed to load products.json: ${response.status}`);
+        const response = await fetch(\`\${BACKEND_URL}/api/products\`, { cache: "no-store" });
+        if (!response.ok) throw new Error(\`Failed to load products from backend: \${response.status}\`);
 
         const products = await response.json();
-        if (!Array.isArray(products)) throw new Error("products.json must contain an array");
+        if (!Array.isArray(products)) throw new Error("Products API must return an array");
 
         const product = products.find(p => String(p.id) === String(pid));
 
         if (!product) {
-          throw new Error("Product not found in products.json");
+          throw new Error("Product not found in backend");
         }
 
         const fallbackImage = "https://via.placeholder.com/600x600?text=No+Image";
