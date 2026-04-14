@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const productsRouter = require("./routes/products");
 const authRouter = require("./routes/auth");
 const rewardRoutes = require("./routes/rewardRoutes");
+const affiliateRoutes = require("./routes/affiliate");
 const nodemailer = require("nodemailer");
 
 dotenv.config();
@@ -53,6 +54,7 @@ app.get("/", (req, res) => {
 app.use("/api/products", productsRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/rewards", rewardRoutes);
+app.use("/api/affiliate", affiliateRoutes);
 
 // ===============================
 // START SERVER
