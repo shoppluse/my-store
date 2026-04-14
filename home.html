@@ -1066,7 +1066,13 @@
     return null;
   }
 
-  function normalizeProduct(p, source, index) {
+  function getTimestampValue(value) {
+    if (!value) return 0;
+    const time = new Date(value).getTime();
+    return isNaN(time) ? 0 : time;
+  }
+
+  function normalizeProduct(p, source, index, totalCount) {
     const rawId = p._id || p.id || `fallback-${source}-${index}`;
     const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
 
@@ -1076,6 +1082,16 @@
       image = String(p.image).trim();
     } else if (Array.isArray(p.images) && p.images.length && p.images[0]) {
       image = String(p.images[0]).trim();
+    }
+
+    const createdTime = getTimestampValue(p.createdAt);
+    const updatedTime = getTimestampValue(p.updatedAt);
+    let sortTime = Math.max(createdTime, updatedTime);
+
+    // If products.json has no createdAt/updatedAt, last item in file should be treated as latest
+    if (sortTime === 0 && source === "json") {
+      sortTime = index + 1; 
+      // later we use original file order, and higher index = later added
     }
 
     return {
@@ -1091,7 +1107,10 @@
       displayRating: getDisplayRating(p.rating),
       link: p.link || '#',
       createdAt: p.createdAt || null,
-      updatedAt: p.updatedAt || null
+      updatedAt: p.updatedAt || null,
+      sortTime,
+      originalIndex: index,
+      totalCount
     };
   }
 
@@ -1115,21 +1134,24 @@
       const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
       const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
-      // Backend latest first by createdAt/updatedAt
-      const sortedBackendProducts = [...backendProducts].sort((a, b) => {
-        const aTime = new Date(a.createdAt || a.updatedAt || 0).getTime();
-        const bTime = new Date(b.createdAt || b.updatedAt || 0).getTime();
-        return bTime - aTime;
+      const normalizedJson = jsonProducts.map((p, index) =>
+        normalizeProduct(p, "json", index, jsonProducts.length)
+      );
+
+      const normalizedBackend = backendProducts.map((p, index) =>
+        normalizeProduct(p, "backend", index, backendProducts.length)
+      );
+
+      // NO DISCRIMINATION:
+      // Merge both first, then sort by latest time across BOTH sources
+      allProducts = [...normalizedJson, ...normalizedBackend].sort((a, b) => {
+        if (b.sortTime !== a.sortTime) {
+          return b.sortTime - a.sortTime;
+        }
+
+        // Tie-breaker: if same time, latest index wins
+        return (b.originalIndex || 0) - (a.originalIndex || 0);
       });
-
-      // products.json latest added last in file => reverse for latest first
-      const sortedJsonProducts = [...jsonProducts].reverse();
-
-      const normalizedBackend = sortedBackendProducts.map((p, index) => normalizeProduct(p, "backend", index));
-      const normalizedJson = sortedJsonProducts.map((p, index) => normalizeProduct(p, "json", index));
-
-      // backend latest first, then json latest first
-      allProducts = [...normalizedBackend, ...normalizedJson];
 
       if (!allProducts.length) {
         productList.innerHTML = '<p class="empty-text">No products found.</p>';
