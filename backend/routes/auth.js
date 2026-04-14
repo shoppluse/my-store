@@ -148,9 +148,25 @@ router.get("/user/:id", async (req, res) => {
 // APPLY FOR AFFILIATE PROGRAM
 router.post("/apply-affiliate", async (req, res) => {
   try {
-    const { userId, reason } = req.body;
+    const {
+      userId,
+      instagram,
+      youtube,
+      telegram,
+      audienceType,
+      experience,
+      reason
+    } = req.body;
 
-    console.log("📥 /apply-affiliate called with:", { userId, reason });
+    console.log("📥 /apply-affiliate called with:", {
+      userId,
+      instagram,
+      youtube,
+      telegram,
+      audienceType,
+      experience,
+      reason
+    });
 
     if (!userId || !reason) {
       return res.status(400).json({
@@ -164,7 +180,12 @@ router.post("/apply-affiliate", async (req, res) => {
       });
     }
 
-    const cleanReason = reason.trim();
+    const cleanReason = (reason || "").trim();
+    const cleanInstagram = (instagram || "").trim();
+    const cleanYoutube = (youtube || "").trim();
+    const cleanTelegram = (telegram || "").trim();
+    const cleanAudienceType = (audienceType || "").trim();
+    const cleanExperience = (experience || "").trim();
 
     if (!cleanReason) {
       return res.status(400).json({
@@ -198,7 +219,7 @@ router.post("/apply-affiliate", async (req, res) => {
       });
     }
 
-    // 1) Save in users collection
+    // 1) Save status in users collection
     user.affiliateStatus = "pending";
     user.affiliateReason = cleanReason;
     user.affiliateAppliedAt = new Date();
@@ -209,7 +230,7 @@ router.post("/apply-affiliate", async (req, res) => {
 
     console.log("✅ User updated in users collection");
 
-    // 2) Delete old application if exists (do not fail whole request if delete fails)
+    // 2) Delete old application if exists
     try {
       const deleteResult = await AffiliateApplication.deleteMany({ userId: user._id });
       console.log("🗑️ Old affiliate applications deleted:", deleteResult.deletedCount);
@@ -217,12 +238,17 @@ router.post("/apply-affiliate", async (req, res) => {
       console.error("⚠️ Could not delete old affiliate applications:", deleteErr.message);
     }
 
-    // 3) Force save in affiliateapplications collection
+    // 3) Save fresh application in affiliateapplications collection
     const application = new AffiliateApplication({
       userId: user._id,
       name: user.name,
       email: user.email,
       mobile: user.mobile,
+      instagram: cleanInstagram,
+      youtube: cleanYoutube,
+      telegram: cleanTelegram,
+      audienceType: cleanAudienceType,
+      experience: cleanExperience,
       reason: cleanReason,
       status: "pending"
     });
@@ -255,8 +281,16 @@ router.post("/apply-affiliate", async (req, res) => {
       application: {
         id: savedApplication._id,
         userId: savedApplication.userId,
-        status: savedApplication.status,
+        name: savedApplication.name,
+        email: savedApplication.email,
+        mobile: savedApplication.mobile,
+        instagram: savedApplication.instagram,
+        youtube: savedApplication.youtube,
+        telegram: savedApplication.telegram,
+        audienceType: savedApplication.audienceType,
+        experience: savedApplication.experience,
         reason: savedApplication.reason,
+        status: savedApplication.status,
         createdAt: savedApplication.createdAt
       }
     });
