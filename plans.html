@@ -396,7 +396,6 @@
       background: rgba(22, 163, 74, 0.14);
       color: var(--success-text);
       border: 1px solid var(--success-border);
-      cursor: pointer;
     }
 
     .plan-btn.free {
@@ -499,10 +498,6 @@
     const plansRoot = document.getElementById("plansRoot");
     const plansGrid = document.getElementById("plansGrid");
 
-    function getUserId() {
-      return storedUser.id || storedUser._id || storedUser.userId || "";
-    }
-
     function setThemeButton() {
       const currentTheme = htmlEl.getAttribute("data-theme");
       themeToggleBtn.textContent = currentTheme === "dark" ? "☀️" : "🌙";
@@ -522,6 +517,11 @@
       const safePlan = (plan || "").toLowerCase();
       if (["starter", "growth", "elite"].includes(safePlan)) return safePlan;
       return "";
+    }
+
+    function titleCase(text = "") {
+      if (!text) return "";
+      return text.charAt(0).toUpperCase() + text.slice(1);
     }
 
     function buildWhatsAppLink(message) {
@@ -592,10 +592,6 @@
       return updated;
     }
 
-    function goToCurrentPlan() {
-      window.location.href = "home.html";
-    }
-
     function renderAccessMessage(type, title, text, btnText = "", btnHref = "") {
       let boxClass = "status-info";
       let pillClass = "pill-info";
@@ -626,7 +622,20 @@
       `;
     }
 
-    function renderPlans(currentPlan = "") {
+    function goToCurrentPlanAction(currentPlan) {
+      if (!currentPlan) {
+        window.location.href = "profile.html";
+        return;
+      }
+
+      if (currentPlan === "starter" || currentPlan === "growth" || currentPlan === "elite") {
+        window.location.href = "add-product.html";
+      } else {
+        window.location.href = "profile.html";
+      }
+    }
+
+    function renderPlans(currentPlan = "", planStatus = "") {
       const order = ["starter", "growth", "elite"];
 
       plansGrid.innerHTML = order.map((key) => {
@@ -636,9 +645,21 @@
         let buttonHtml = "";
 
         if (isCurrent) {
-          buttonHtml = `<button class="plan-btn current" type="button" onclick="goToCurrentPlan()">Current Plan</button>`;
+          const currentLabel = planStatus === "active"
+            ? `Current Plan • Go Add Product`
+            : `Current Plan • Pending Activation`;
+
+          buttonHtml = `
+            <button class="plan-btn current" type="button" onclick="goToCurrentPlanAction('${key}')">
+              ${currentLabel}
+            </button>
+          `;
         } else if (key === "starter") {
-          buttonHtml = `<button class="plan-btn free" type="button" onclick="selectStarterPlan()">Continue Free</button>`;
+          buttonHtml = `
+            <button class="plan-btn free" type="button" onclick="selectStarterPlan()">
+              Continue Free
+            </button>
+          `;
         } else {
           const msg = key === "growth"
             ? "Hello ShopPlus, I want to upgrade to the Growth plan (₹29/month). Please guide me."
@@ -670,18 +691,11 @@
     }
 
     async function selectStarterPlan() {
-      const userId = getUserId();
+      const starterButtons = document.querySelectorAll(".plan-btn.free");
 
-      if (!userId) {
-        alert("User session invalid. Please login again.");
-        window.location.href = "login.html";
-        return;
-      }
-
-      const btns = document.querySelectorAll(".plan-btn.free");
-      btns.forEach(btn => {
+      starterButtons.forEach(btn => {
         btn.disabled = true;
-        btn.textContent = "Please wait...";
+        btn.textContent = "Activating...";
       });
 
       try {
@@ -691,7 +705,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            userId,
+            userId: storedUser.id,
             plan: "starter"
           })
         });
@@ -702,30 +716,25 @@
         } catch (_) {}
 
         if (!response.ok) {
-          alert(data.message || "Failed to activate Starter plan");
-          btns.forEach(btn => {
-            btn.disabled = false;
-            btn.textContent = "Continue Free";
-          });
-          return;
+          throw new Error(data.message || "Failed to activate starter plan");
         }
 
         const backendUser = data?.user || {};
 
         updateLocalUser({
-          isAffiliate: backendUser.isAffiliate ?? true,
-          affiliateStatus: backendUser.affiliateStatus || storedUser.affiliateStatus || "approved",
-          affiliatePlan: backendUser.affiliatePlan || "starter",
-          planStatus: backendUser.planStatus || "active",
-          maxProducts: backendUser.maxProducts ?? 3
+          isAffiliate: backendUser.isAffiliate,
+          affiliateStatus: backendUser.affiliateStatus,
+          affiliatePlan: backendUser.affiliatePlan,
+          planStatus: backendUser.planStatus,
+          maxProducts: backendUser.maxProducts
         });
 
-        alert("Starter plan activated successfully! You can now add up to 3 products.");
-        window.location.href = "home.html";
+        alert("Starter plan activated successfully!");
+        window.location.href = "add-product.html";
       } catch (error) {
-        console.error("Starter plan error:", error);
-        alert("Something went wrong while activating Starter plan.");
-        btns.forEach(btn => {
+        console.error("Starter plan activation failed:", error);
+        alert(error.message || "Starter plan activation failed. Please try again.");
+        starterButtons.forEach(btn => {
           btn.disabled = false;
           btn.textContent = "Continue Free";
         });
@@ -733,61 +742,55 @@
     }
 
     window.selectStarterPlan = selectStarterPlan;
-    window.goToCurrentPlan = goToCurrentPlan;
+    window.goToCurrentPlanAction = goToCurrentPlanAction;
 
     async function initPlansPage() {
-      const userId = getUserId();
-
-      if (!userId) {
-        renderAccessMessage(
-          "danger",
-          "Session Error",
-          "Your login session is invalid. Please login again.",
-          "Go to Login",
-          "login.html"
-        );
-        return;
-      }
-
       try {
-        const response = await fetch(`${API_BASE}/api/affiliate/status/${userId}`, {
-          method: "GET",
+        const response = await fetch(`${API_BASE}/api/affiliate/status`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json"
-          }
+          },
+          body: JSON.stringify({
+            userId: storedUser.id
+          })
         });
 
-        let data = {};
-        try {
-          data = await response.json();
-        } catch (_) {}
+        const data = await response.json();
 
         if (!response.ok) {
           throw new Error(data.message || "Failed to fetch affiliate status");
         }
 
-        const affiliateStatus = (data.affiliateStatus || storedUser.affiliateStatus || "none").toLowerCase();
-        const isAffiliate = data.isAffiliate === true || storedUser.isAffiliate === true;
-        const currentPlan = normalizePlan(data.affiliatePlan || storedUser.affiliatePlan || "");
-        const planStatus = (data.planStatus || storedUser.planStatus || "").toLowerCase();
-        const maxProducts = data.maxProducts ?? storedUser.maxProducts ?? 0;
+        const user = data?.user || {};
+        const affiliateStatus = (user.affiliateStatus || "none").toLowerCase();
+        const isAffiliate = user.isAffiliate === true;
+        const currentPlan = normalizePlan(user.affiliatePlan || "");
+        const currentPlanStatus = (user.planStatus || "").toLowerCase();
 
         updateLocalUser({
-          affiliateStatus,
           isAffiliate,
+          affiliateStatus,
           affiliatePlan: currentPlan,
-          planStatus,
-          maxProducts
+          planStatus: currentPlanStatus,
+          maxProducts: user.maxProducts ?? 0
         });
 
         if (affiliateStatus === "approved" || isAffiliate) {
+          let successText = "You are approved to choose your ShopPlus plan. Select Starter for free or upgrade via WhatsApp.";
+
+          if (currentPlan) {
+            successText = `You are already on the ${titleCase(currentPlan)} plan${currentPlanStatus ? ` (${titleCase(currentPlanStatus)})` : ""}. You can continue with your current plan or upgrade.`;
+          }
+
           renderAccessMessage(
             "success",
             "Affiliate Approved",
-            "You are approved to choose your ShopPlus plan. Select Starter for free or upgrade via WhatsApp."
+            successText
           );
+
           plansRoot.style.display = "block";
-          renderPlans(currentPlan);
+          renderPlans(currentPlan, currentPlanStatus);
           return;
         }
 
@@ -825,53 +828,11 @@
         );
       } catch (error) {
         console.error("Plans page init error:", error);
-
-        const fallbackStatus = (storedUser.affiliateStatus || "none").toLowerCase();
-        const fallbackAffiliate = storedUser.isAffiliate === true;
-        const fallbackPlan = normalizePlan(storedUser.affiliatePlan || "");
-
-        if (fallbackStatus === "approved" || fallbackAffiliate) {
-          renderAccessMessage(
-            "success",
-            "Affiliate Approved",
-            "You are approved to choose your ShopPlus plan. Select Starter for free or upgrade via WhatsApp."
-          );
-          plansRoot.style.display = "block";
-          renderPlans(fallbackPlan);
-          return;
-        }
-
-        if (fallbackStatus === "pending") {
-          plansRoot.style.display = "none";
-          renderAccessMessage(
-            "warning",
-            "Application Pending",
-            "Your affiliate application is still under review. Please wait until approval before choosing a plan.",
-            "Go to Profile",
-            "profile.html"
-          );
-          return;
-        }
-
-        if (fallbackStatus === "rejected") {
-          plansRoot.style.display = "none";
-          renderAccessMessage(
-            "danger",
-            "Application Rejected",
-            "Your affiliate application was rejected. Please apply again before choosing a plan.",
-            "Apply Again",
-            "apply-affiliate.html"
-          );
-          return;
-        }
-
         plansRoot.style.display = "none";
         renderAccessMessage(
           "danger",
-          "Affiliate Approval Required",
-          "You must apply and get approved as a ShopPlus affiliate before selecting a plan.",
-          "Apply for Affiliate",
-          "apply-affiliate.html"
+          "Unable to Load Plans",
+          "Could not verify your affiliate account right now. Please try again after a moment."
         );
       }
     }
