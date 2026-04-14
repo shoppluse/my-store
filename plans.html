@@ -396,7 +396,7 @@
       background: rgba(22, 163, 74, 0.14);
       color: var(--success-text);
       border: 1px solid var(--success-border);
-      cursor: default;
+      cursor: pointer;
     }
 
     .plan-btn.free {
@@ -490,7 +490,7 @@
 
   <script>
     const API_BASE = "https://my-store-e28j.onrender.com";
-    const WHATSAPP_UPGRADE_NUMBER = "919945243930"; // CHANGE THIS
+    const WHATSAPP_UPGRADE_NUMBER = "919945243930";
     const storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
     const htmlEl = document.documentElement;
@@ -498,6 +498,10 @@
     const accessStateRoot = document.getElementById("accessStateRoot");
     const plansRoot = document.getElementById("plansRoot");
     const plansGrid = document.getElementById("plansGrid");
+
+    function getUserId() {
+      return storedUser.id || storedUser._id || storedUser.userId || "";
+    }
 
     function setThemeButton() {
       const currentTheme = htmlEl.getAttribute("data-theme");
@@ -588,6 +592,10 @@
       return updated;
     }
 
+    function goToCurrentPlan() {
+      window.location.href = "home.html";
+    }
+
     function renderAccessMessage(type, title, text, btnText = "", btnHref = "") {
       let boxClass = "status-info";
       let pillClass = "pill-info";
@@ -628,7 +636,7 @@
         let buttonHtml = "";
 
         if (isCurrent) {
-          buttonHtml = `<button class="plan-btn current" type="button">Current Plan</button>`;
+          buttonHtml = `<button class="plan-btn current" type="button" onclick="goToCurrentPlan()">Current Plan</button>`;
         } else if (key === "starter") {
           buttonHtml = `<button class="plan-btn free" type="button" onclick="selectStarterPlan()">Continue Free</button>`;
         } else {
@@ -662,18 +670,19 @@
     }
 
     async function selectStarterPlan() {
+      const userId = getUserId();
+
+      if (!userId) {
+        alert("User session invalid. Please login again.");
+        window.location.href = "login.html";
+        return;
+      }
+
       const btns = document.querySelectorAll(".plan-btn.free");
       btns.forEach(btn => {
         btn.disabled = true;
         btn.textContent = "Please wait...";
       });
-
-      const fallbackPatch = {
-        affiliatePlan: "starter",
-        planStatus: "active",
-        maxProducts: 3,
-        isAffiliate: true
-      };
 
       try {
         const response = await fetch(`${API_BASE}/api/affiliate/select-plan`, {
@@ -682,7 +691,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            userId: storedUser.id,
+            userId,
             plan: "starter"
           })
         });
@@ -693,58 +702,82 @@
         } catch (_) {}
 
         if (!response.ok) {
-          throw new Error(data.message || "Backend route not ready");
+          alert(data.message || "Failed to activate Starter plan");
+          btns.forEach(btn => {
+            btn.disabled = false;
+            btn.textContent = "Continue Free";
+          });
+          return;
         }
 
         const backendUser = data?.user || {};
 
         updateLocalUser({
+          isAffiliate: backendUser.isAffiliate ?? true,
+          affiliateStatus: backendUser.affiliateStatus || storedUser.affiliateStatus || "approved",
           affiliatePlan: backendUser.affiliatePlan || "starter",
           planStatus: backendUser.planStatus || "active",
-          maxProducts: backendUser.maxProducts ?? 3,
-          isAffiliate: true
+          maxProducts: backendUser.maxProducts ?? 3
         });
 
-        alert("Starter plan activated successfully!");
+        alert("Starter plan activated successfully! You can now add up to 3 products.");
         window.location.href = "home.html";
       } catch (error) {
-        console.warn("Starter plan backend save failed, using local fallback:", error);
-
-        updateLocalUser(fallbackPatch);
-        alert("Starter plan selected successfully!");
-        window.location.href = "home.html";
+        console.error("Starter plan error:", error);
+        alert("Something went wrong while activating Starter plan.");
+        btns.forEach(btn => {
+          btn.disabled = false;
+          btn.textContent = "Continue Free";
+        });
       }
     }
 
     window.selectStarterPlan = selectStarterPlan;
+    window.goToCurrentPlan = goToCurrentPlan;
 
     async function initPlansPage() {
+      const userId = getUserId();
+
+      if (!userId) {
+        renderAccessMessage(
+          "danger",
+          "Session Error",
+          "Your login session is invalid. Please login again.",
+          "Go to Login",
+          "login.html"
+        );
+        return;
+      }
+
       try {
-        const response = await fetch(`${API_BASE}/api/affiliate/status`, {
-          method: "POST",
+        const response = await fetch(`${API_BASE}/api/affiliate/status/${userId}`, {
+          method: "GET",
           headers: {
             "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            userId: storedUser.id
-          })
+          }
         });
 
-        const data = await response.json();
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (_) {}
 
         if (!response.ok) {
           throw new Error(data.message || "Failed to fetch affiliate status");
         }
 
-        const user = data?.user || {};
-        const affiliateStatus = (user.affiliateStatus || storedUser.affiliateStatus || "none").toLowerCase();
-        const isAffiliate = user.isAffiliate === true || storedUser.isAffiliate === true;
-        const currentPlan = normalizePlan(user.affiliatePlan || storedUser.affiliatePlan || "");
+        const affiliateStatus = (data.affiliateStatus || storedUser.affiliateStatus || "none").toLowerCase();
+        const isAffiliate = data.isAffiliate === true || storedUser.isAffiliate === true;
+        const currentPlan = normalizePlan(data.affiliatePlan || storedUser.affiliatePlan || "");
+        const planStatus = (data.planStatus || storedUser.planStatus || "").toLowerCase();
+        const maxProducts = data.maxProducts ?? storedUser.maxProducts ?? 0;
 
         updateLocalUser({
           affiliateStatus,
           isAffiliate,
-          affiliatePlan: currentPlan || storedUser.affiliatePlan || ""
+          affiliatePlan: currentPlan,
+          planStatus,
+          maxProducts
         });
 
         if (affiliateStatus === "approved" || isAffiliate) {
