@@ -2,8 +2,8 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Profile - ShopPlus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile - ShopPlus</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#0047ab" />
@@ -16,24 +16,13 @@
       const savedTheme = localStorage.getItem("theme");
       document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
     })();
-
-    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
-    const currentUserRaw = localStorage.getItem("shopplusUser");
-
-    if (isLoggedIn !== "true" || !currentUserRaw) {
-      window.location.href = "login.html";
-    }
   </script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     :root {
-      --gradient: linear-gradient(120deg, #0047ab 55%, #0099ff 100%);
-      --bg: #f4f7fc;
-      --bg-end: #eef5ff;
+      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
+      --bg: #f4f8ff;
+      --bg-end: #f8fbff;
       --card-bg: #ffffff;
       --text: #1f1f1f;
       --muted: #64748b;
@@ -42,36 +31,23 @@
       --border: #dbe7ff;
       --shadow: rgba(0, 71, 171, 0.14);
 
-      --success-bg: #eafaf0;
-      --success-text: #159947;
-      --success-border: #b8e8c8;
+      --btn-blue: #0099ff;
+      --btn-blue-hover: #006cc0;
 
-      --warning-bg: #fff8e8;
-      --warning-text: #b26b00;
-      --warning-border: #ffe0a3;
+      --btn-green: #22c55e;
+      --btn-green-hover: #16a34a;
 
-      --danger-bg: #fff0f0;
-      --danger-text: #c62828;
-      --danger-border: #ffc9c9;
+      --btn-purple: #7c3aed;
+      --btn-purple-hover: #6d28d9;
 
-      --info-bg: #f3f9ff;
-      --info-text: #2b5ca8;
-      --info-border: #d9e9ff;
+      --btn-orange: #f59e0b;
+      --btn-orange-hover: #d97706;
 
-      --btn-bg: linear-gradient(120deg, #0047ab, #0099ff);
-      --btn-shadow: rgba(0, 71, 171, 0.24);
+      --btn-red: #ef4444;
+      --btn-red-hover: #dc2626;
 
-      --support-bg: linear-gradient(120deg, #22c55e, #2fd566);
-      --support-shadow: rgba(34, 197, 94, 0.22);
-
-      --share-bg: linear-gradient(120deg, #0ea5e9, #22c1ff);
-      --share-shadow: rgba(14, 165, 233, 0.22);
-
-      --logout-bg: linear-gradient(120deg, #ef4444, #ff4d4d);
-      --logout-shadow: rgba(239, 68, 68, 0.22);
-
-      --upgrade-bg: linear-gradient(120deg, #7c3aed, #a855f7);
-      --upgrade-shadow: rgba(124, 58, 237, 0.22);
+      --btn-dark: #111827;
+      --btn-dark-hover: #000000;
     }
 
     [data-theme="dark"] {
@@ -85,21 +61,27 @@
       --border: #1e3a8a;
       --shadow: rgba(56, 189, 248, 0.15);
 
-      --success-bg: rgba(22, 163, 74, 0.12);
-      --success-text: #4ade80;
-      --success-border: rgba(74, 222, 128, 0.22);
+      --btn-blue: #3a8dde;
+      --btn-blue-hover: #2a5e9d;
 
-      --warning-bg: rgba(245, 158, 11, 0.12);
-      --warning-text: #fbbf24;
-      --warning-border: rgba(251, 191, 36, 0.22);
+      --btn-green: #22c55e;
+      --btn-green-hover: #16a34a;
 
-      --danger-bg: rgba(239, 68, 68, 0.12);
-      --danger-text: #f87171;
-      --danger-border: rgba(248, 113, 113, 0.22);
+      --btn-purple: #8b5cf6;
+      --btn-purple-hover: #7c3aed;
 
-      --info-bg: rgba(59, 130, 246, 0.12);
-      --info-text: #93c5fd;
-      --info-border: rgba(147, 197, 253, 0.22);
+      --btn-orange: #f59e0b;
+      --btn-orange-hover: #d97706;
+
+      --btn-red: #f87171;
+      --btn-red-hover: #ef4444;
+
+      --btn-dark: #334155;
+      --btn-dark-hover: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -108,7 +90,6 @@
       background: linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
       color: var(--text);
       min-height: 100vh;
-      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .main-header {
@@ -116,87 +97,41 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
+      padding: calc(18px + env(safe-area-inset-top)) 16px 20px;
       box-shadow: 0 6px 20px var(--shadow);
       position: sticky;
       top: 0;
       z-index: 100;
-    }
-
-    .header-top {
-      width: 100%;
-      max-width: 980px;
-      display: grid;
-      grid-template-columns: 72px 1fr 72px;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .header-icon-btn,
-    .theme-btn {
-      min-height: 56px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.14);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-      transition: 0.25s ease;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .header-icon-btn:hover,
-    .theme-btn:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.22);
-    }
-
-    .header-title {
-      min-height: 56px;
-      background: #ffffff;
-      color: var(--primary);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 1.2rem;
-      padding: 0 12px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0, 71, 171, 0.12);
+      gap: 14px;
     }
 
     .header-actions {
       width: 100%;
-      max-width: 980px;
+      max-width: 760px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 12px;
     }
 
     .header-btn {
-      min-height: 56px;
+      width: 100%;
+      min-height: 60px;
       text-decoration: none;
-      background: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.15);
       color: #fff;
       font-weight: 700;
-      font-size: 0.95rem;
-      padding: 10px 8px;
+      font-size: 1rem;
+      padding: 12px 10px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.2);
+      transition: 0.25s ease;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      font-family: inherit;
       backdrop-filter: blur(4px);
-      transition: 0.25s ease;
     }
 
     .header-btn:hover {
@@ -205,100 +140,70 @@
     }
 
     .page-wrap {
-      width: 100%;
-      max-width: 980px;
-      margin: 22px auto 50px;
-      padding: 0 12px;
+      max-width: 900px;
+      margin: 26px auto 50px;
+      padding: 0 16px;
     }
 
-    .card {
+    .profile-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 24px;
+      border-radius: 26px;
+      padding: 24px;
       box-shadow: 0 18px 50px var(--shadow);
-      padding: 22px;
-      margin-bottom: 18px;
-    }
-
-    .section-title {
-      margin: 0 0 8px;
-      font-size: clamp(1.3rem, 3.8vw, 1.9rem);
-      color: var(--primary);
-      font-weight: 700;
-      line-height: 1.25;
-    }
-
-    .section-sub {
-      margin: 0 0 16px;
-      color: var(--muted);
-      line-height: 1.8;
     }
 
     .profile-top {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }
 
     .avatar {
-      width: 92px;
-      height: 92px;
+      width: 86px;
+      height: 86px;
       border-radius: 50%;
-      background: var(--btn-bg);
-      color: white;
+      background: var(--gradient);
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 14px;
-      box-shadow: 0 12px 28px var(--btn-shadow);
+      margin: 0 auto 14px;
+      box-shadow: 0 10px 28px rgba(0, 71, 171, 0.2);
     }
 
     .profile-name {
-      margin: 0;
       font-size: 1.8rem;
       font-weight: 700;
       color: var(--primary);
+      margin: 0 0 6px;
+      word-break: break-word;
     }
 
-    .profile-sub {
-      margin: 8px 0 0;
+    .profile-email {
       color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .verified-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 16px;
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: var(--success-bg);
-      color: var(--success-text);
-      border: 1px solid var(--success-border);
-      font-weight: 700;
       font-size: 0.95rem;
+      margin: 0;
+      word-break: break-word;
     }
 
-    .profile-grid {
+    .info-grid {
       display: grid;
-      gap: 12px;
-      margin-top: 14px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 18px;
     }
 
     .info-box {
       background: rgba(0, 153, 255, 0.04);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 16px;
+      border-radius: 18px;
+      padding: 16px;
     }
 
     [data-theme="dark"] .info-box {
-      background: rgba(59, 130, 246, 0.08);
+      background: rgba(96, 165, 250, 0.05);
     }
 
     .info-label {
@@ -306,163 +211,131 @@
       font-weight: 700;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       margin-bottom: 6px;
     }
 
     .info-value {
-      font-size: 1rem;
+      font-size: 0.98rem;
       font-weight: 600;
       color: var(--text);
       word-break: break-word;
     }
 
-    .action-btn {
-      width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 15px 16px;
-      font-size: 1rem;
+    .section {
+      margin-top: 24px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
       font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      min-height: 56px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      margin-top: 14px;
-      color: white;
+      color: var(--primary);
+      margin: 0 0 12px;
     }
 
-    .action-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .store-btn {
-      background: var(--btn-bg);
-      box-shadow: 0 14px 28px var(--btn-shadow);
-    }
-
-    .share-btn {
-      background: var(--share-bg);
-      box-shadow: 0 14px 28px var(--share-shadow);
-    }
-
-    .support-btn {
-      background: var(--support-bg);
-      box-shadow: 0 14px 28px var(--support-shadow);
-    }
-
-    .logout-btn {
-      background: var(--logout-bg);
-      box-shadow: 0 14px 28px var(--logout-shadow);
-    }
-
-    .upgrade-btn {
-      background: var(--upgrade-bg);
-      box-shadow: 0 14px 28px var(--upgrade-shadow);
-    }
-
-    .status-box {
+    .affiliate-box {
+      background: rgba(124, 58, 237, 0.05);
+      border: 1px solid rgba(124, 58, 237, 0.18);
       border-radius: 20px;
       padding: 18px;
-      border: 1px solid;
-      margin-top: 12px;
     }
 
-    .status-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
+    [data-theme="dark"] .affiliate-box {
+      background: rgba(139, 92, 246, 0.08);
     }
 
-    .status-title {
-      margin: 0;
-      font-size: 1.05rem;
-      font-weight: 700;
+    .affiliate-status {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .affiliate-status strong {
       color: var(--primary);
     }
 
-    .status-desc {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
     }
 
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      border: 1px solid;
-      white-space: nowrap;
-    }
-
-    .status-info {
-      background: var(--info-bg);
-      border-color: var(--info-border);
-    }
-
-    .status-warning {
-      background: var(--warning-bg);
-      border-color: var(--warning-border);
-    }
-
-    .status-success {
-      background: var(--success-bg);
-      border-color: var(--success-border);
-    }
-
-    .status-danger {
-      background: var(--danger-bg);
-      border-color: var(--danger-border);
-    }
-
-    .pill-info {
-      background: var(--info-bg);
-      color: var(--info-text);
-      border-color: var(--info-border);
-    }
-
-    .pill-warning {
-      background: var(--warning-bg);
-      color: var(--warning-text);
-      border-color: var(--warning-border);
-    }
-
-    .pill-success {
-      background: var(--success-bg);
-      color: var(--success-text);
-      border-color: var(--success-border);
-    }
-
-    .pill-danger {
-      background: var(--danger-bg);
-      color: var(--danger-text);
-      border-color: var(--danger-border);
-    }
-
-    .status-note {
-      margin-top: 12px;
-      background: rgba(0, 153, 255, 0.04);
-      border: 1px solid var(--border);
+    .profile-action-btn {
+      width: 100%;
+      min-height: 56px;
+      text-decoration: none;
+      border: none;
       border-radius: 16px;
       padding: 14px 16px;
-      line-height: 1.7;
-      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      color: white;
+      transition: 0.22s ease;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
     }
 
-    [data-theme="dark"] .status-note {
-      background: rgba(59, 130, 246, 0.08);
+    .profile-action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-add {
+      background: var(--btn-blue);
+    }
+
+    .btn-add:hover {
+      background: var(--btn-blue-hover);
+    }
+
+    .btn-products {
+      background: var(--btn-purple);
+    }
+
+    .btn-products:hover {
+      background: var(--btn-purple-hover);
+    }
+
+    .btn-upgrade {
+      background: var(--btn-orange);
+    }
+
+    .btn-upgrade:hover {
+      background: var(--btn-orange-hover);
+    }
+
+    .btn-theme {
+      background: var(--btn-dark);
+    }
+
+    .btn-theme:hover {
+      background: var(--btn-dark-hover);
+    }
+
+    .btn-home {
+      background: var(--btn-green);
+    }
+
+    .btn-home:hover {
+      background: var(--btn-green-hover);
+    }
+
+    .btn-logout {
+      background: var(--btn-red);
+    }
+
+    .btn-logout:hover {
+      background: var(--btn-red-hover);
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .footer {
@@ -470,269 +343,284 @@
       color: white;
       background: var(--gradient);
       padding: 16px 12px;
-      font-size: 14px;
-      margin-top: 40px;
+      font-size: 15px;
+      margin-top: 50px;
     }
 
     @media (max-width: 700px) {
-      .card {
-        border-radius: 20px;
-        padding: 18px;
-      }
-
-      .header-top {
-        grid-template-columns: 72px 1fr 72px;
-        gap: 8px;
+      .main-header {
+        padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
       }
 
       .header-actions {
-        gap: 8px;
+        gap: 10px;
       }
 
       .header-btn {
-        min-height: 52px;
-        font-size: 0.85rem;
+        min-height: 56px;
+        font-size: 0.84rem;
+        padding: 10px 6px;
+        border-radius: 14px;
       }
 
-      .header-title {
-        font-size: 1rem;
-        min-height: 52px;
+      .page-wrap {
+        padding: 0 12px;
+        margin-top: 18px;
       }
 
-      .header-icon-btn,
-      .theme-btn {
-        min-height: 52px;
-        font-size: 1.3rem;
+      .profile-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .avatar {
+        width: 74px;
+        height: 74px;
+        font-size: 1.6rem;
       }
 
       .profile-name {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
 
-      .action-btn {
+      .info-grid,
+      .action-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-action-btn {
         min-height: 52px;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        border-radius: 14px;
       }
     }
   </style>
 </head>
 <body>
   <div class="main-header">
-    <div class="header-top">
-      <a href="home.html" class="header-icon-btn" title="Back to Home">‹</a>
-      <div class="header-title">My Profile</div>
-      <button id="themeToggleBtn" class="theme-btn" title="Toggle Theme">🌙</button>
-    </div>
-
     <div class="header-actions">
-      <a href="home.html" class="header-btn">Home</a>
-      <a href="claim-reward.html" class="header-btn">Claim Reward</a>
+      <a href="./home.html" class="header-btn">← Home</a>
+      <a href="./plans.html" class="header-btn">Plans</a>
     </div>
   </div>
 
   <div class="page-wrap">
-    <!-- PROFILE CARD -->
-    <section class="card">
+    <div class="profile-card">
       <div class="profile-top">
-        <div class="avatar" id="profileAvatar">U</div>
+        <div class="avatar" id="avatar">U</div>
         <h1 class="profile-name" id="profileName">Loading...</h1>
-        <p class="profile-sub">Your ShopPlus account dashboard</p>
-        <div class="verified-pill">✅ Verified Account</div>
+        <p class="profile-email" id="profileEmail">Please wait...</p>
       </div>
 
-      <div class="profile-grid">
-        <div class="info-box">
-          <div class="info-label">Email</div>
-          <div class="info-value" id="profileEmail">Loading...</div>
-        </div>
-
+      <div class="info-grid">
         <div class="info-box">
           <div class="info-label">Mobile Number</div>
-          <div class="info-value" id="profileMobile">Loading...</div>
+          <div class="info-value" id="profileMobile">Not available</div>
         </div>
 
         <div class="info-box">
-          <div class="info-label">User ID</div>
-          <div class="info-value" id="profileUserId">Loading...</div>
+          <div class="info-label">Account Verified</div>
+          <div class="info-value" id="profileVerified">Checking...</div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-label">Affiliate Status</div>
+          <div class="info-value" id="profileAffiliate">Checking...</div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-label">Affiliate Plan</div>
+          <div class="info-value" id="profilePlan">Not active</div>
         </div>
       </div>
 
-      <a href="home.html" class="action-btn store-btn">Back to Store</a>
-      <button id="shareAppBtn" class="action-btn share-btn">Share App</button>
-      <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%20Support" target="_blank" class="action-btn support-btn">Support</a>
-      <button id="logoutBtn" class="action-btn logout-btn">Logout</button>
-      <a href="plans.html" class="action-btn upgrade-btn">Upgrade Plan</a>
-    </section>
+      <div class="section">
+        <h2 class="section-title">Affiliate Dashboard</h2>
+        <div class="affiliate-box">
+          <div class="affiliate-status" id="affiliateSummary">
+            Checking affiliate access...
+          </div>
 
-    <!-- AFFILIATE MEMBERSHIP -->
-    <section class="card">
-      <h2 class="section-title">Affiliate Membership</h2>
-      <p class="section-sub">Your ShopPlus affiliate approval status and next steps appear here.</p>
+          <div class="action-grid">
+            <!-- ONLY APPROVED AFFILIATE -->
+            <a href="./add-product.html" id="addProductBtn" class="profile-action-btn btn-add hidden">
+              ➕ Add Product
+            </a>
 
-      <div id="affiliateStatusRoot"></div>
-    </section>
+            <!-- ONLY APPROVED AFFILIATE -->
+            <a href="./my-products.html" id="myProductsBtn" class="profile-action-btn btn-products hidden">
+              📦 My Products
+            </a>
+
+            <!-- FOR AFFILIATE USERS -->
+            <a href="./plans.html" id="upgradePlanBtn" class="profile-action-btn btn-upgrade hidden">
+              🚀 Upgrade Plan
+            </a>
+
+            <!-- FOR NON-AFFILIATE USERS -->
+            <a href="./plans.html" id="becomeAffiliateBtn" class="profile-action-btn btn-upgrade hidden">
+              🌟 Become Affiliate
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="action-grid">
+          <button id="themeToggleBtn" class="profile-action-btn btn-theme">
+            🌙 Toggle Theme
+          </button>
+
+          <a href="./home.html" class="profile-action-btn btn-home">
+            🏠 Go to Home
+          </a>
+
+          <button id="logoutBtn" class="profile-action-btn btn-logout" style="grid-column: 1 / -1;">
+            🚪 Logout
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
   <script>
-    const API_BASE = "https://my-store-e28j.onrender.com";
-    const SUPPORT_NUMBER = "919945243930"; // change to your real number
+    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+    const currentUserRaw = localStorage.getItem("shopplusUser");
 
-    let storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+    if (isLoggedIn !== "true" || !currentUserRaw) {
+      window.location.href = "./login.html";
+    }
 
-    const htmlEl = document.documentElement;
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-    const profileAvatar = document.getElementById("profileAvatar");
+    let currentUser = null;
+
+    try {
+      currentUser = JSON.parse(currentUserRaw);
+    } catch (error) {
+      console.error("Invalid user session:", error);
+      localStorage.removeItem("shopplusLoggedIn");
+      localStorage.removeItem("shopplusUser");
+      window.location.href = "./login.html";
+    }
+
+    const avatar = document.getElementById("avatar");
     const profileName = document.getElementById("profileName");
     const profileEmail = document.getElementById("profileEmail");
     const profileMobile = document.getElementById("profileMobile");
-    const profileUserId = document.getElementById("profileUserId");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const shareAppBtn = document.getElementById("shareAppBtn");
-    const affiliateStatusRoot = document.getElementById("affiliateStatusRoot");
+    const profileVerified = document.getElementById("profileVerified");
+    const profileAffiliate = document.getElementById("profileAffiliate");
+    const profilePlan = document.getElementById("profilePlan");
+    const affiliateSummary = document.getElementById("affiliateSummary");
 
-    function setThemeButton() {
-      const currentTheme = htmlEl.getAttribute("data-theme");
-      themeToggleBtn.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+    const addProductBtn = document.getElementById("addProductBtn");
+    const myProductsBtn = document.getElementById("myProductsBtn");
+    const upgradePlanBtn = document.getElementById("upgradePlanBtn");
+    const becomeAffiliateBtn = document.getElementById("becomeAffiliateBtn");
+
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function capitalize(value) {
+      if (!value) return "Not available";
+      const str = String(value);
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function renderProfile() {
+      const name = currentUser.name || "User";
+      const email = currentUser.email || "No email";
+      const mobile = currentUser.mobile || "Not available";
+      const isVerified = currentUser.isVerified === true;
+      const isAffiliate = currentUser.isAffiliate === true;
+      const affiliateStatus = currentUser.affiliateStatus || "not applied";
+      const affiliatePlan = currentUser.affiliatePlan || "No plan";
+
+      avatar.textContent = name.charAt(0).toUpperCase();
+      profileName.textContent = name;
+      profileEmail.textContent = email;
+      profileMobile.textContent = mobile;
+      profileVerified.textContent = isVerified ? "Yes ✅" : "No ❌";
+      profileAffiliate.textContent = isAffiliate
+        ? `${capitalize(affiliateStatus)} ✅`
+        : "Not an affiliate ❌";
+      profilePlan.textContent = isAffiliate ? capitalize(affiliatePlan) : "Not active";
+
+      // Reset visibility
+      addProductBtn.classList.add("hidden");
+      myProductsBtn.classList.add("hidden");
+      upgradePlanBtn.classList.add("hidden");
+      becomeAffiliateBtn.classList.add("hidden");
+
+      if (!isAffiliate) {
+        affiliateSummary.innerHTML = `
+          You are currently <strong>not an affiliate</strong>.<br>
+          Become an affiliate to unlock product listing and earnings features.
+        `;
+        becomeAffiliateBtn.classList.remove("hidden");
+        return;
+      }
+
+      // Affiliate user
+      upgradePlanBtn.classList.remove("hidden");
+
+      if (affiliateStatus === "approved") {
+        affiliateSummary.innerHTML = `
+          🎉 Your affiliate account is <strong>approved</strong>.<br>
+          You can now add products, manage your listings, and upgrade your plan anytime.
+        `;
+
+        addProductBtn.classList.remove("hidden");
+        myProductsBtn.classList.remove("hidden");
+      } else if (affiliateStatus === "pending") {
+        affiliateSummary.innerHTML = `
+          ⏳ Your affiliate request is <strong>pending approval</strong>.<br>
+          Once approved, your <strong>Add Product</strong> and <strong>My Products</strong> options will appear here.
+        `;
+      } else if (affiliateStatus === "rejected") {
+        affiliateSummary.innerHTML = `
+          ❌ Your affiliate request is <strong>rejected</strong>.<br>
+          You can review your details and try again later.
+        `;
+      } else {
+        affiliateSummary.innerHTML = `
+          Your affiliate account exists, but approval is still needed before product listing is enabled.
+        `;
+      }
     }
 
     themeToggleBtn.addEventListener("click", () => {
-      const currentTheme = htmlEl.getAttribute("data-theme");
+      const currentTheme = document.documentElement.getAttribute("data-theme");
       const nextTheme = currentTheme === "dark" ? "light" : "dark";
-      htmlEl.setAttribute("data-theme", nextTheme);
+
+      document.documentElement.setAttribute("data-theme", nextTheme);
       localStorage.setItem("theme", nextTheme);
-      setThemeButton();
+
+      themeToggleBtn.textContent = nextTheme === "dark"
+        ? "☀️ Switch to Light"
+        : "🌙 Toggle Theme";
     });
 
-    setThemeButton();
-
-    function fillProfileInfo() {
-      const name = storedUser.name || "ShopPlus User";
-      profileName.textContent = name;
-      profileEmail.textContent = storedUser.email || "Not available";
-      profileMobile.textContent = storedUser.mobile || "Not available";
-      profileUserId.textContent = storedUser.id || "Not available";
-      profileAvatar.textContent = name.trim().charAt(0).toUpperCase() || "U";
-    }
-
-    function buildWhatsAppLink(message) {
-      return `https://wa.me/${SUPPORT_NUMBER}?text=${encodeURIComponent(message)}`;
-    }
-
-    function renderAffiliateStatus(status, isAffiliate) {
-      const safeStatus = (status || "none").toLowerCase();
-
-      if (safeStatus === "approved" || isAffiliate) {
-        affiliateStatusRoot.innerHTML = `
-          <div class="status-box status-success">
-            <div class="status-header">
-              <h3 class="status-title">Affiliate Membership</h3>
-              <div class="status-pill pill-success">✅ Approved</div>
-            </div>
-            <p class="status-desc">Your ShopPlus affiliate membership has been approved.</p>
-            <div class="status-note">
-              You are now an approved ShopPlus affiliate member. Continue to choose your plan.
-            </div>
-            <a href="plans.html" class="action-btn store-btn" style="margin-top:14px;">Next</a>
-          </div>
-        `;
-        return;
-      }
-
-      if (safeStatus === "pending") {
-        affiliateStatusRoot.innerHTML = `
-          <div class="status-box status-warning">
-            <div class="status-header">
-              <h3 class="status-title">Affiliate Membership</h3>
-              <div class="status-pill pill-warning">⏳ Pending Review</div>
-            </div>
-            <p class="status-desc">Your affiliate application is under manual review by ShopPlus.</p>
-            <div class="status-note">
-              Please wait for approval. Once approved, you can continue to select your plan.
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      if (safeStatus === "rejected") {
-        affiliateStatusRoot.innerHTML = `
-          <div class="status-box status-danger">
-            <div class="status-header">
-              <h3 class="status-title">Affiliate Membership</h3>
-              <div class="status-pill pill-danger">❌ Rejected</div>
-            </div>
-            <p class="status-desc">Your affiliate application was not approved this time.</p>
-            <div class="status-note">
-              You can improve your details and submit a fresh application again.
-            </div>
-            <a href="apply-affiliate.html" class="action-btn store-btn" style="margin-top:14px;">Apply Again</a>
-          </div>
-        `;
-        return;
-      }
-
-      affiliateStatusRoot.innerHTML = `
-        <div class="status-box status-info">
-          <div class="status-header">
-            <h3 class="status-title">Affiliate Membership</h3>
-            <div class="status-pill pill-info">ℹ️ Not Applied</div>
-          </div>
-          <p class="status-desc">You have not applied for the ShopPlus affiliate program yet.</p>
-          <div class="status-note">
-            Apply first, get manually approved by ShopPlus, and then continue to select your plan.
-          </div>
-          <a href="apply-affiliate.html" class="action-btn store-btn" style="margin-top:14px;">Apply for Affiliate Program</a>
-        </div>
-      `;
-    }
-
-    // FIXED: no backend call to non-existing /api/affiliate/status route
-    function fetchAffiliateStatus() {
-      try {
-        storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
-
-        const affiliateStatus = storedUser.affiliateStatus || "none";
-        const isAffiliate = storedUser.isAffiliate === true;
-
-        renderAffiliateStatus(affiliateStatus, isAffiliate);
-      } catch (error) {
-        console.error("Affiliate status local read error:", error);
-        renderAffiliateStatus("none", false);
-      }
-    }
+    // Set initial theme button label
+    (function setInitialThemeButtonText() {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      themeToggleBtn.textContent = currentTheme === "dark"
+        ? "☀️ Switch to Light"
+        : "🌙 Toggle Theme";
+    })();
 
     logoutBtn.addEventListener("click", () => {
+      const confirmLogout = confirm("Are you sure you want to logout?");
+      if (!confirmLogout) return;
+
       localStorage.removeItem("shopplusLoggedIn");
       localStorage.removeItem("shopplusUser");
-      window.location.href = "login.html";
+
+      window.location.href = "./login.html";
     });
 
-    shareAppBtn.addEventListener("click", async () => {
-      const shareUrl = "https://shoppluse.github.io/my-store/";
-      const shareData = {
-        title: "ShopPlus",
-        text: "Check out ShopPlus - curated affiliate shopping platform!",
-        url: shareUrl
-      };
-
-      try {
-        if (navigator.share) {
-          await navigator.share(shareData);
-        } else if (navigator.clipboard) {
-          await navigator.clipboard.writeText(shareUrl);
-          alert("ShopPlus link copied successfully!");
-        } else {
-          prompt("Copy this ShopPlus link:", shareUrl);
-        }
-      } catch (err) {
-        console.log("Share cancelled or failed:", err);
-      }
-    });
-
-    fillProfileInfo();
-    fetchAffiliateStatus();
+    renderProfile();
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
