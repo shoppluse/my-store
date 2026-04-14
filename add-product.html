@@ -488,7 +488,7 @@
       currentUser = null;
     }
 
-    if (!currentUser || !currentUser._id) {
+    if (!currentUser || !currentUser.id) {
       alert("User session invalid. Please login again.");
       localStorage.removeItem("shopplusLoggedIn");
       localStorage.removeItem("shopplusUser");
@@ -553,7 +553,7 @@
 
     async function checkPlanAndLimit() {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/products/my-products/${currentUser._id}`, {
+        const response = await fetch(`${BACKEND_URL}/api/products/my-products/${currentUser.id}`, {
           cache: "no-store"
         });
 
@@ -566,14 +566,14 @@
 
         myProductsCount = myProducts.length;
 
-        const affiliatePlan = currentUser.affiliatePlan || "starter";
-        const planStatus = currentUser.planStatus || "active";
+        const affiliatePlan = (currentUser.affiliatePlan || "starter").toLowerCase();
+        const planStatus = (currentUser.planStatus || "active").toLowerCase();
 
         if (affiliatePlan === "starter") {
           maxProducts = 3;
-        } else if (affiliatePlan === "pro") {
-          maxProducts = 15;
-        } else if (affiliatePlan === "premium") {
+        } else if (affiliatePlan === "growth") {
+          maxProducts = 20;
+        } else if (affiliatePlan === "elite") {
           maxProducts = 9999;
         } else {
           maxProducts = 3;
@@ -592,6 +592,10 @@
           submitBtn.disabled = true;
           submitBtn.style.opacity = "0.6";
           submitBtn.style.cursor = "not-allowed";
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = "1";
+          submitBtn.style.cursor = "pointer";
         }
       } catch (error) {
         console.error("Plan check error:", error);
@@ -657,7 +661,7 @@
             image,
             images,
             rating,
-            ownerId: currentUser._id,
+            ownerId: currentUser.id,
             ownerName: currentUser.name || ""
           })
         });
@@ -674,7 +678,11 @@
         renderImagePreview();
 
         if (result.user) {
-          localStorage.setItem("shopplusUser", JSON.stringify(result.user));
+          const mergedUser = {
+            ...currentUser,
+            ...result.user
+          };
+          localStorage.setItem("shopplusUser", JSON.stringify(mergedUser));
         }
 
         setTimeout(() => {
