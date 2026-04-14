@@ -1,64 +1,81 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const productsRouter = require("./routes/products");
-const authRouter = require("./routes/auth");
-const rewardRoutes = require("./routes/rewardRoutes");
-const affiliateRouter = require("./routes/affiliate");
-const nodemailer = require("nodemailer");
-
-dotenv.config();
-connectDB();
+const path = require("path");
+require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// ===============================
-// MIDDLEWARE
-// ===============================
-app.use(
-  cors({
-    origin: ["https://shoppluse.github.io"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
-  })
-);
-
-app.use(express.json({ limit: "2mb" }));
+/* =========================================
+   MIDDLEWARE
+========================================= */
+app.use(cors());
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// ===============================
-// EMAIL TRANSPORTER (optional)
-// ===============================
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+/* =========================================
+   STATIC FRONTEND (optional but useful)
+   If your frontend is inside "public/my-store"
+========================================= */
+app.use("/my-store", express.static(path.join(__dirname, "public", "my-store")));
 
-app.locals.transporter = transporter;
+/* =========================================
+   API ROUTES
+========================================= */
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/products", require("./routes/products"));
 
-// ===============================
-// TEST ROUTE
-// ===============================
+/* =========================================
+   HEALTH CHECK
+========================================= */
 app.get("/", (req, res) => {
-  res.send("ShopPlus Backend is running...");
+  res.send("ShopPlus backend is running 🚀");
 });
 
-// ===============================
-// API ROUTES
-// ===============================
-app.use("/api/products", productsRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/rewards", rewardRoutes);
-app.use("/api/affiliate", affiliateRouter);
+/* =========================================
+   MONGODB CONNECTION
+========================================= */
+const MONGO_URI = process.env.MONGO_URI;
 
-// ===============================
-// START SERVER
-// ===============================
+if (!MONGO_URI) {
+  console.error("❌ MONGO_URI is missing in .env file");
+  process.exit(1);
+}
+
+mongoose.connect(MONGO_URI)
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+  })
+  .catch((error) => {
+    console.error("❌ MongoDB connection failed:", error.message);
+    process.exit(1);
+  });
+
+/* =========================================
+   404 HANDLER
+========================================= */
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found"
+  });
+});
+
+/* =========================================
+   GLOBAL ERROR HANDLER
+========================================= */
+app.use((err, req, res, next) => {
+  console.error("🔥 Server error:", err);
+
+  res.status(err.status || 500).json({
+    message: err.message || "Internal server error"
+  });
+});
+
+/* =========================================
+   START SERVER
+========================================= */
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`ShopPlus backend running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
