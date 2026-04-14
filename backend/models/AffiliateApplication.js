@@ -8,7 +8,7 @@ const affiliateApplicationSchema = new mongoose.Schema(
       required: true
     },
 
-    fullName: {
+    name: {
       type: String,
       required: true,
       trim: true
@@ -17,8 +17,8 @@ const affiliateApplicationSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      trim: true,
-      lowercase: true
+      lowercase: true,
+      trim: true
     },
 
     mobile: {
@@ -27,27 +27,9 @@ const affiliateApplicationSchema = new mongoose.Schema(
       trim: true
     },
 
-    socialPlatform: {
+    reason: {
       type: String,
-      default: "",
-      trim: true
-    },
-
-    socialLink: {
-      type: String,
-      default: "",
-      trim: true
-    },
-
-    promoMethod: {
-      type: String,
-      default: "",
-      trim: true
-    },
-
-    whyJoin: {
-      type: String,
-      default: "",
+      required: true,
       trim: true
     },
 
@@ -55,6 +37,16 @@ const affiliateApplicationSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending"
+    },
+
+    reviewedAt: {
+      type: Date,
+      default: null
+    },
+
+    reviewNote: {
+      type: String,
+      default: ""
     }
   },
   {
