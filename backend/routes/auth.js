@@ -87,22 +87,57 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-res.status(200).json({
-  message: "Login successful",
-  user: {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    mobile: user.mobile,
-    isVerified: true,
-    isAffiliate: user.isAffiliate || false,
-    affiliateStatus: user.affiliateStatus || "none"
-  }
-});
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        isVerified: true,
+        isAffiliate: user.isAffiliate || false,
+        affiliateStatus: user.affiliateStatus || "none",
+        affiliatePlan: user.affiliatePlan || "none",
+        planStatus: user.planStatus || "inactive",
+        maxProducts: user.maxProducts || 0
+      }
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({
       message: "Login failed",
+      error: error.message
+    });
+  }
+});
+
+// GET USER BY ID
+router.get("/user/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        isVerified: user.isVerified || false,
+        isAffiliate: user.isAffiliate || false,
+        affiliateStatus: user.affiliateStatus || "none",
+        affiliatePlan: user.affiliatePlan || "none",
+        planStatus: user.planStatus || "inactive",
+        maxProducts: user.maxProducts || 0
+      }
+    });
+  } catch (error) {
+    console.error("Get user by ID error:", error);
+    res.status(500).json({
+      message: "Failed to fetch user",
       error: error.message
     });
   }
