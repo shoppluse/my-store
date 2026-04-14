@@ -1,13 +1,12 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const User = require("../models/User");
 const AffiliateApplication = require("../models/AffiliateApplication");
+const User = require("../models/User");
 
 const router = express.Router();
 
-// =======================================
-// APPLY FOR AFFILIATE
-// =======================================
+/* =========================================================
+   APPLY FOR AFFILIATE
+========================================================= */
 router.post("/apply", async (req, res) => {
   try {
     const {
@@ -25,70 +24,46 @@ router.post("/apply", async (req, res) => {
 
     if (!userId || !name || !email || !mobile) {
       return res.status(400).json({
-        message: "userId, name, email and mobile are required"
-      });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        message: "Invalid userId"
+        message: "User ID, name, email, and mobile are required"
       });
     }
 
     const user = await User.findById(userId);
-
     if (!user) {
-      return res.status(404).json({
-        message: "User not found"
-      });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if already has application
-    let existingApplication = await AffiliateApplication.findOne({ userId: user._id });
+    const existingApplication = await AffiliateApplication.findOne({ userId });
 
     if (existingApplication) {
       return res.status(400).json({
-        message: "You have already submitted an affiliate application",
+        message: "You have already submitted an affiliate application.",
         application: existingApplication
       });
     }
 
     const application = await AffiliateApplication.create({
-      userId: user._id,
+      userId,
       name: name.trim(),
       email: email.trim().toLowerCase(),
       mobile: mobile.trim(),
-      instagram: (instagram || "").trim(),
-      youtube: (youtube || "").trim(),
-      telegram: (telegram || "").trim(),
-      audienceType: (audienceType || "").trim(),
-      experience: (experience || "").trim(),
-      reason: (reason || "").trim(),
+      instagram: instagram?.trim() || "",
+      youtube: youtube?.trim() || "",
+      telegram: telegram?.trim() || "",
+      audienceType: audienceType?.trim() || "",
+      experience: experience?.trim() || "",
+      reason: reason?.trim() || "",
       status: "pending"
     });
 
-    // Update user affiliate status
-    user.affiliateStatus = "pending";
-    user.isAffiliate = false;
-
-    // keep plan empty until approved + plan selected
-    if (!user.affiliatePlan) user.affiliatePlan = "";
-    if (!user.planStatus) user.planStatus = "";
-    if (!user.maxProducts) user.maxProducts = 0;
-
-    await user.save();
+    await User.findByIdAndUpdate(userId, {
+      isAffiliate: false,
+      affiliateStatus: "pending"
+    });
 
     res.status(201).json({
-      message: "Affiliate application submitted successfully",
-      application,
-      user: {
-        id: user._id,
-        isAffiliate: user.isAffiliate,
-        affiliateStatus: user.affiliateStatus,
-        affiliatePlan: user.affiliatePlan,
-        planStatus: user.planStatus,
-        maxProducts: user.maxProducts
-      }
+      message: "Affiliate application submitted successfully.",
+      application
     });
   } catch (error) {
     console.error("Affiliate apply error:", error);
@@ -99,40 +74,27 @@ router.post("/apply", async (req, res) => {
   }
 });
 
-// =======================================
-// GET AFFILIATE STATUS
-// =======================================
-router.post("/status", async (req, res) => {
+/* =========================================================
+   GET MY AFFILIATE STATUS
+========================================================= */
+router.get("/status/:userId", async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
-    if (!userId) {
-      return res.status(400).json({
-        message: "userId is required"
-      });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        message: "Invalid userId"
-      });
-    }
-
-    const user = await User.findById(userId).select(
-      "name email mobile isAffiliate affiliateStatus affiliatePlan planStatus maxProducts"
-    );
-
+    const user = await User.findById(userId).lean();
     if (!user) {
-      return res.status(404).json({
-        message: "User not found"
-      });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const application = await AffiliateApplication.findOne({ userId: user._id });
+    const application = await AffiliateApplication.findOne({ userId }).lean();
 
     res.status(200).json({
-      message: "Affiliate status fetched successfully",
-      user,
+      isAffiliate: user.isAffiliate || false,
+      affiliateStatus: user.affiliateStatus || "none",
+      affiliatePlan: user.affiliatePlan || "",
+      planStatus: user.planStatus || "",
+      maxProducts: user.maxProducts || 0,
+      applicationStatus: application?.status || "none",
       application
     });
   } catch (error) {
@@ -144,93 +106,81 @@ router.post("/status", async (req, res) => {
   }
 });
 
-// =======================================
-// SELECT PLAN (Starter / Growth / Elite)
-// =======================================
+/* =========================================================
+   SELECT PLAN (STARTER / GROWTH / ELITE)
+========================================================= */
 router.post("/select-plan", async (req, res) => {
   try {
     const { userId, plan } = req.body;
 
     if (!userId || !plan) {
       return res.status(400).json({
-        message: "userId and plan are required"
-      });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        message: "Invalid userId"
-      });
-    }
-
-    const safePlan = String(plan).trim().toLowerCase();
-
-    if (!["starter", "growth", "elite"].includes(safePlan)) {
-      return res.status(400).json({
-        message: "Invalid plan. Allowed: starter, growth, elite"
+        message: "User ID and plan are required"
       });
     }
 
     const user = await User.findById(userId);
-
     if (!user) {
-      return res.status(404).json({
-        message: "User not found"
-      });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Must be approved affiliate before selecting any plan
     if (user.affiliateStatus !== "approved") {
       return res.status(403).json({
         message: "Only approved affiliates can select a plan"
       });
     }
 
-    // ===============================
-    // STARTER PLAN = AUTO ACTIVATE
-    // ===============================
-    if (safePlan === "starter") {
-      user.isAffiliate = true;
-      user.affiliatePlan = "starter";
-      user.planStatus = "active";
-      user.maxProducts = 3;
+    let updateData = {};
 
-      await user.save();
-
-      return res.status(200).json({
-        message: "Starter plan activated successfully",
-        user: {
-          id: user._id,
-          isAffiliate: user.isAffiliate,
-          affiliateStatus: user.affiliateStatus,
-          affiliatePlan: user.affiliatePlan,
-          planStatus: user.planStatus,
-          maxProducts: user.maxProducts
-        }
+    if (plan === "starter") {
+      updateData = {
+        isAffiliate: true,
+        affiliatePlan: "starter",
+        planStatus: "active",
+        maxProducts: 3
+      };
+    } else if (plan === "growth") {
+      updateData = {
+        isAffiliate: true,
+        affiliatePlan: "growth",
+        planStatus: "inactive", // activate after payment verification
+        maxProducts: 20
+      };
+    } else if (plan === "elite") {
+      updateData = {
+        isAffiliate: true,
+        affiliatePlan: "elite",
+        planStatus: "inactive", // activate after payment verification
+        maxProducts: -1
+      };
+    } else {
+      return res.status(400).json({
+        message: "Invalid plan selected"
       });
     }
 
-    // ===============================
-    // GROWTH / ELITE
-    // For now: request created, admin verifies manually in MongoDB
-    // We DO NOT auto-activate paid plans here
-    // ===============================
-    return res.status(200).json({
-      message: `${safePlan} plan request received. Please complete payment and wait for manual activation by ShopPlus.`,
-      pendingPlanRequest: safePlan,
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true
+    });
+
+    res.status(200).json({
+      message:
+        plan === "starter"
+          ? "Starter plan activated successfully"
+          : "Plan selected successfully. Awaiting payment verification.",
       user: {
-        id: user._id,
-        isAffiliate: user.isAffiliate,
-        affiliateStatus: user.affiliateStatus,
-        affiliatePlan: user.affiliatePlan,
-        planStatus: user.planStatus,
-        maxProducts: user.maxProducts
+        id: updatedUser._id,
+        isAffiliate: updatedUser.isAffiliate,
+        affiliateStatus: updatedUser.affiliateStatus,
+        affiliatePlan: updatedUser.affiliatePlan,
+        planStatus: updatedUser.planStatus,
+        maxProducts: updatedUser.maxProducts
       }
     });
   } catch (error) {
     console.error("Select plan error:", error);
     res.status(500).json({
-      message: "Failed to process plan selection",
+      message: "Failed to select plan",
       error: error.message
     });
   }
