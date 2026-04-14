@@ -33,25 +33,6 @@ app.get("/", (req, res) => {
 });
 
 /* =========================================
-   MONGODB CONNECTION
-========================================= */
-const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  console.error("❌ MONGO_URI is missing in .env file");
-  process.exit(1);
-}
-
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log("✅ MongoDB connected successfully");
-  })
-  .catch((error) => {
-    console.error("❌ MongoDB connection failed:", error.message);
-    process.exit(1);
-  });
-
-/* =========================================
    404 HANDLER
 ========================================= */
 app.use((req, res) => {
@@ -72,10 +53,27 @@ app.use((err, req, res, next) => {
 });
 
 /* =========================================
-   START SERVER
+   START SERVER AFTER DB CONNECTS
 ========================================= */
 const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    if (!MONGO_URI) {
+      throw new Error("MONGO_URI is missing in environment variables");
+    }
+
+    await mongoose.connect(MONGO_URI);
+    console.log("✅ MongoDB connected successfully");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error.message);
+    process.exit(1);
+  }
+}
+
+startServer();
