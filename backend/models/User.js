@@ -28,19 +28,21 @@ const userSchema = new mongoose.Schema(
       required: true
     },
 
-    // Email verification not used
+    // Email verification removed
     isVerified: {
       type: Boolean,
       default: true
     },
 
-    // Store multiple FCM tokens directly inside user doc
+    // Store multiple device FCM tokens
     fcmTokens: {
       type: [String],
       default: []
     },
 
-    // AFFILIATE STATUS
+    // ===============================
+    // AFFILIATE ACCESS
+    // ===============================
     isAffiliate: {
       type: Boolean,
       default: false
@@ -50,6 +52,27 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["none", "pending", "approved", "rejected"],
       default: "none"
+    },
+
+    // ===============================
+    // PLAN CONTROL
+    // ===============================
+    affiliatePlan: {
+      type: String,
+      enum: ["", "starter", "growth", "elite"],
+      default: ""
+    },
+
+    planStatus: {
+      type: String,
+      enum: ["", "inactive", "active"],
+      default: ""
+    },
+
+    // 3 = free, 20 = growth, -1 = unlimited
+    maxProducts: {
+      type: Number,
+      default: 0
     }
   },
   {
