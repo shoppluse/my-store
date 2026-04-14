@@ -472,28 +472,29 @@
   <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
   <script>
-    const BACKEND_URL = "https://my-store-e28j.onrender.com";
+  const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
-    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
-    const currentUserRaw = localStorage.getItem("shopplusUser");
+  const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+  const currentUserRaw = localStorage.getItem("shopplusUser");
 
-    if (isLoggedIn !== "true" || !currentUserRaw) {
-      window.location.href = "./login.html";
-    }
+  let currentUser = null;
 
-    let currentUser = null;
-    try {
-      currentUser = JSON.parse(currentUserRaw);
-    } catch (e) {
-      currentUser = null;
-    }
+  try {
+    currentUser = JSON.parse(currentUserRaw || "{}");
+  } catch (e) {
+    currentUser = {};
+  }
 
-    if (!currentUser || !currentUser.id) {
-      alert("User session invalid. Please login again.");
-      localStorage.removeItem("shopplusLoggedIn");
-      localStorage.removeItem("shopplusUser");
-      window.location.href = "./login.html";
-    }
+  // support BOTH id and _id
+  const currentUserId = currentUser.id || currentUser._id || "";
+
+  if (isLoggedIn !== "true" || !currentUserRaw || !currentUserId) {
+    alert("User session invalid. Please login again.");
+    localStorage.removeItem("shopplusLoggedIn");
+    localStorage.removeItem("shopplusUser");
+    window.location.href = "./login.html";
+    throw new Error("Invalid session");
+  }
 
     const planInfoText = document.getElementById("planInfoText");
     const statusBox = document.getElementById("statusBox");
