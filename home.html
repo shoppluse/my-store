@@ -466,6 +466,7 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.25s ease;
     opacity: 0;
     transform: translateY(8px);
+    min-height: auto;
     text-decoration: none;
     overflow: hidden;
   }
@@ -479,10 +480,12 @@
     width: 100%;
     aspect-ratio: 1 / 1;
     background: #ffffff;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 6px;
+    margin-bottom: 0;
     overflow: hidden;
   }
 
@@ -519,11 +522,6 @@
     font-weight: 700;
     color: var(--rating-color);
     line-height: 1.1;
-  }
-
-  .no-rating {
-    color: var(--muted);
-    font-weight: 600;
   }
 
   .loading-text,
@@ -1057,22 +1055,8 @@
     adsTrack.style.transform = `translateX(${currentTranslate}px)`;
   }
 
-  function getDisplayRating(rating) {
-    if (rating === null || rating === undefined || rating === "") return null;
-
-    const numeric = Number(String(rating).replace(/[^\d.]/g, ""));
-    if (!isNaN(numeric) && numeric > 0) return numeric.toFixed(1);
-
-    return null;
-  }
-
-  function getSafeTimestamp(value) {
-    if (!value) return 0;
-    const time = new Date(value).getTime();
-    return Number.isFinite(time) ? time : 0;
-  }
-
   function normalizeProduct(p, source, index) {
+    const rawId = p._id || p.id || `fallback-${source}-${index}`;
     const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
 
     let image = fallbackImage;
@@ -1083,52 +1067,22 @@
       image = String(p.images[0]).trim();
     }
 
-    // STRONG unique id (prevents conflict between json and backend)
-    const rawId = p._id || p.id || `${source}-${Date.now()}-${index}`;
-
-    // STRONG timestamp logic
-    let createdAt = p.createdAt || p.created_at || p.dateAdded || p.date || null;
-    let updatedAt = p.updatedAt || p.updated_at || p.lastUpdated || null;
-
-    // if local JSON has no time, keep old products lower priority than backend latest
-    if (!createdAt && !updatedAt && source === "json") {
-      const fakeOldTime = Date.now() - ((100000 + index) * 1000);
-      createdAt = new Date(fakeOldTime).toISOString();
-      updatedAt = new Date(fakeOldTime).toISOString();
-    }
-
-    // if backend has no time, still give recent fallback so affiliate products appear
-    if (!createdAt && !updatedAt && source === "backend") {
-      const fakeRecentTime = Date.now() - (index * 1000);
-      createdAt = new Date(fakeRecentTime).toISOString();
-      updatedAt = new Date(fakeRecentTime).toISOString();
-    }
-
-    const sortTime = Math.max(getSafeTimestamp(updatedAt), getSafeTimestamp(createdAt));
-
     return {
       id: String(rawId),
       source,
-      uniqueKey: `${source}-${String(rawId)}`,
       name: p.name || 'Unnamed Product',
       price: p.price ?? '',
       image,
       description: p.description || 'No description available.',
       category: p.category || 'Overall',
       brand: p.brand || '',
-      rating: p.rating,
-      displayRating: getDisplayRating(p.rating),
-      link: p.link || '#',
-      createdAt,
-      updatedAt,
-      sortTime
+      rating: p.rating ?? 4.5,
+      link: p.link || '#'
     };
   }
 
   async function loadProducts() {
     try {
-      productList.innerHTML = '<p class="loading-text">Loading products...</p>';
-
       const [jsonResult, backendResult] = await Promise.allSettled([
         fetch("/my-store/products.json", { cache: "no-store" }).then(async res => {
           if (!res.ok) throw new Error(`products.json error: ${res.status}`);
@@ -1147,38 +1101,15 @@
       const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
       const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
-      console.log("Local products:", jsonProducts.length);
-      console.log("Backend products:", backendProducts.length);
+      const normalizedJson = [...jsonProducts]
+        .reverse()
+        .map((p, index) => normalizeProduct(p, "json", index));
 
-      const normalizedJson = jsonProducts.map((p, index) => normalizeProduct(p, "json", index));
-      const normalizedBackend = backendProducts.map((p, index) => normalizeProduct(p, "backend", index));
+      const normalizedBackend = [...backendProducts]
+        .reverse()
+        .map((p, index) => normalizeProduct(p, "backend", index));
 
-      // Merge + dedupe by uniqueKey
-      const merged = [...normalizedBackend, ...normalizedJson];
-      const uniqueMap = new Map();
-
-      merged.forEach(product => {
-        if (!uniqueMap.has(product.uniqueKey)) {
-          uniqueMap.set(product.uniqueKey, product);
-        }
-      });
-
-      allProducts = Array.from(uniqueMap.values()).sort((a, b) => {
-        // Latest added / updated FIRST
-        if (b.sortTime !== a.sortTime) {
-          return b.sortTime - a.sortTime;
-        }
-
-        // If same time, prefer backend first
-        if (a.source !== b.source) {
-          return a.source === "backend" ? -1 : 1;
-        }
-
-        // Stable fallback
-        return String(b.id).localeCompare(String(a.id));
-      });
-
-      console.log("Final merged products:", allProducts.length);
+      allProducts = [...normalizedBackend, ...normalizedJson];
 
       if (!allProducts.length) {
         productList.innerHTML = '<p class="empty-text">No products found.</p>';
@@ -1204,13 +1135,10 @@
       const card = document.createElement('a');
       card.className = 'product-card';
       card.style.opacity = 0;
-      card.style.transform = 'translateY(8px)';
 
       card.href = `product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;
 
-      const ratingHtml = p.displayRating
-        ? `${p.displayRating} ⭐`
-        : `<span class="no-rating">No rating yet</span>`;
+      const ratingValue = Number(p.rating || 4.0).toFixed(1);
 
       card.innerHTML = `
         <div class="product-image-box">
@@ -1218,18 +1146,16 @@
         </div>
         <div class="product-info">
           <h2>${p.name}</h2>
-          <div class="product-rating">${ratingHtml}</div>
+          <div class="product-rating">${ratingValue} ⭐</div>
         </div>
       `;
 
       productList.appendChild(card);
 
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          card.style.opacity = 1;
-          card.style.transform = 'translateY(0)';
-        }, i * 25);
-      });
+      setTimeout(() => {
+        card.style.opacity = 1;
+        card.style.transform = 'translateY(0)';
+      }, i * 30);
     });
   }
 
@@ -1248,9 +1174,6 @@
         (p.brand || '').toLowerCase().includes(searchText)
       );
     }
-
-    // Always keep latest first even after filter
-    filtered.sort((a, b) => b.sortTime - a.sortTime);
 
     displayProducts(filtered);
   }
