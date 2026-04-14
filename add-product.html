@@ -472,29 +472,31 @@
   <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
   <script>
-  const BACKEND_URL = "https://my-store-e28j.onrender.com";
+    const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
-  const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
-  const currentUserRaw = localStorage.getItem("shopplusUser");
+    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+    const currentUserRaw = localStorage.getItem("shopplusUser");
 
-  let currentUser = null;
+    let currentUser = {};
+    try {
+      currentUser = JSON.parse(currentUserRaw || "{}");
+    } catch (e) {
+      currentUser = {};
+    }
 
-  try {
-    currentUser = JSON.parse(currentUserRaw || "{}");
-  } catch (e) {
-    currentUser = {};
-  }
+    // support BOTH id and _id
+    const currentUserId = currentUser.id || currentUser._id || "";
 
-  // support BOTH id and _id
-  const currentUserId = currentUser.id || currentUser._id || "";
+    console.log("DEBUG shopplusUser:", currentUser);
+    console.log("DEBUG currentUserId:", currentUserId);
 
-  if (isLoggedIn !== "true" || !currentUserRaw || !currentUserId) {
-    alert("User session invalid. Please login again.");
-    localStorage.removeItem("shopplusLoggedIn");
-    localStorage.removeItem("shopplusUser");
-    window.location.href = "./login.html";
-    throw new Error("Invalid session");
-  }
+    if (isLoggedIn !== "true" || !currentUserRaw || !currentUserId) {
+      alert("User session invalid. Please login again.");
+      localStorage.removeItem("shopplusLoggedIn");
+      localStorage.removeItem("shopplusUser");
+      window.location.href = "./login.html";
+      throw new Error("Invalid session");
+    }
 
     const planInfoText = document.getElementById("planInfoText");
     const statusBox = document.getElementById("statusBox");
@@ -554,7 +556,7 @@
 
     async function checkPlanAndLimit() {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/products/my-products/${currentUser.id}`, {
+        const response = await fetch(`${BACKEND_URL}/api/products/my-products/${currentUserId}`, {
           cache: "no-store"
         });
 
@@ -662,7 +664,7 @@
             image,
             images,
             rating,
-            ownerId: currentUser.id,
+            ownerId: currentUserId,
             ownerName: currentUser.name || ""
           })
         });
@@ -702,15 +704,10 @@
 
     checkPlanAndLimit();
 
+    // TEMP: unregister old service workers to avoid stale cached files
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
-          .then((registration) => {
-            console.log("Service Worker registered:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => registration.unregister());
       });
     }
   </script>
