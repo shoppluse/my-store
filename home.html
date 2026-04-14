@@ -1078,6 +1078,16 @@
       image = String(p.images[0]).trim();
     }
 
+    let productCreatedAt = p.createdAt || null;
+    let productUpdatedAt = p.updatedAt || null;
+
+    // For products.json items with no timestamps, use index as fallback ordering
+    if (!productCreatedAt && !productUpdatedAt && source === "json") {
+      const fakeTime = Date.now() - ((index + 1) * 1000);
+      productCreatedAt = new Date(fakeTime).toISOString();
+      productUpdatedAt = new Date(fakeTime).toISOString();
+    }
+
     return {
       id: String(rawId),
       source,
@@ -1090,8 +1100,8 @@
       rating: p.rating,
       displayRating: getDisplayRating(p.rating),
       link: p.link || '#',
-      createdAt: p.createdAt || null,
-      updatedAt: p.updatedAt || null
+      createdAt: productCreatedAt,
+      updatedAt: productUpdatedAt
     };
   }
 
@@ -1115,21 +1125,16 @@
       const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
       const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
-      // Backend latest first by createdAt/updatedAt
-      const sortedBackendProducts = [...backendProducts].sort((a, b) => {
-        const aTime = new Date(a.createdAt || a.updatedAt || 0).getTime();
-        const bTime = new Date(b.createdAt || b.updatedAt || 0).getTime();
+      const normalizedJson = jsonProducts.map((p, index) => normalizeProduct(p, "json", index));
+      const normalizedBackend = backendProducts.map((p, index) => normalizeProduct(p, "backend", index));
+
+      const mergedProducts = [...normalizedJson, ...normalizedBackend];
+
+      allProducts = mergedProducts.sort((a, b) => {
+        const aTime = new Date(a.updatedAt || a.createdAt || 0).getTime();
+        const bTime = new Date(b.updatedAt || b.createdAt || 0).getTime();
         return bTime - aTime;
       });
-
-      // products.json latest added last in file => reverse for latest first
-      const sortedJsonProducts = [...jsonProducts].reverse();
-
-      const normalizedBackend = sortedBackendProducts.map((p, index) => normalizeProduct(p, "backend", index));
-      const normalizedJson = sortedJsonProducts.map((p, index) => normalizeProduct(p, "json", index));
-
-      // backend latest first, then json latest first
-      allProducts = [...normalizedBackend, ...normalizedJson];
 
       if (!allProducts.length) {
         productList.innerHTML = '<p class="empty-text">No products found.</p>';
