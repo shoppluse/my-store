@@ -29,6 +29,8 @@
       --share-hover: #0284c7;
       --support: #25d366;
       --support-hover: #1da851;
+      --affiliate-bg: rgba(0, 153, 255, 0.06);
+      --affiliate-border: rgba(0, 153, 255, 0.16);
     }
 
     [data-theme="dark"] {
@@ -48,6 +50,8 @@
       --share-hover: #0ea5e9;
       --support: #25d366;
       --support-hover: #1da851;
+      --affiliate-bg: rgba(56, 189, 248, 0.08);
+      --affiliate-border: rgba(56, 189, 248, 0.18);
     }
 
     * { box-sizing: border-box; }
@@ -150,6 +154,11 @@
       grid-template-columns: 340px 1fr;
       gap: 22px;
       align-items: start;
+    }
+
+    .right-column {
+      display: grid;
+      gap: 22px;
     }
 
     .card {
@@ -307,6 +316,15 @@
       background: #dc2626;
     }
 
+    .btn-affiliate {
+      background: var(--gradient);
+      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
+    }
+
+    .btn-affiliate:hover {
+      transform: translateY(-2px);
+    }
+
     .share-status {
       margin-top: 10px;
       text-align: center;
@@ -327,6 +345,75 @@
       color: var(--muted);
       margin: 0 0 20px;
       font-size: 0.95rem;
+    }
+
+    .affiliate-card {
+      background: linear-gradient(135deg, var(--affiliate-bg) 0%, rgba(255,255,255,0.9) 100%);
+      border: 1px solid var(--affiliate-border);
+    }
+
+    [data-theme="dark"] .affiliate-card {
+      background: linear-gradient(135deg, rgba(17,24,39,0.95) 0%, rgba(30,41,59,0.95) 100%);
+    }
+
+    .affiliate-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .affiliate-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(0, 153, 255, 0.08);
+      border: 1px solid rgba(0, 153, 255, 0.14);
+    }
+
+    .affiliate-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin: 0 0 16px;
+    }
+
+    .affiliate-benefits {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .benefit-chip {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(0, 153, 255, 0.12);
+      text-align: center;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    [data-theme="dark"] .benefit-chip {
+      background: rgba(30,41,59,0.8);
+    }
+
+    .affiliate-note {
+      margin-top: 12px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
     .claims-grid {
@@ -458,6 +545,10 @@
       .page-wrap {
         margin: 24px auto;
       }
+
+      .right-column {
+        gap: 18px;
+      }
     }
 
     @media (max-width: 700px) {
@@ -562,6 +653,28 @@
         margin-bottom: 16px;
       }
 
+      .affiliate-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .affiliate-benefits {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .benefit-chip {
+        font-size: 0.82rem;
+        padding: 10px;
+        border-radius: 12px;
+      }
+
+      .affiliate-desc,
+      .affiliate-note {
+        font-size: 0.88rem;
+      }
+
       .claim-card {
         padding: 14px;
         border-radius: 16px;
@@ -663,14 +776,44 @@
         <div id="shareStatus" class="share-status"></div>
       </div>
 
-      <div class="card">
-        <h2 class="section-title">My Reward Claims</h2>
-        <p class="section-subtitle">
-          Track your submitted reward requests, review status, and approved reward amounts.
-        </p>
+      <div class="right-column">
+        <div class="card affiliate-card">
+          <div class="affiliate-top">
+            <div>
+              <h2 class="section-title" style="margin-bottom: 6px;">Join Affiliate Program</h2>
+              <p class="section-subtitle" style="margin: 0;">
+                Become a ShopPlus affiliate member and grow with your own product links.
+              </p>
+            </div>
+            <span class="affiliate-badge">🚀 Grow with ShopPlus</span>
+          </div>
 
-        <div id="claimsContainer" class="loading-box">
-          Loading your reward claims...
+          <p class="affiliate-desc">
+            Want to promote products through ShopPlus? Join our affiliate program and get access to add your own curated product links after approval.
+          </p>
+
+          <div class="affiliate-benefits">
+            <div class="benefit-chip">📦 Add your product links</div>
+            <div class="benefit-chip">📈 Get more visibility</div>
+            <div class="benefit-chip">💸 Grow your affiliate earnings</div>
+          </div>
+
+          <a href="./apply-affiliate.html" class="btn btn-affiliate">Join Affiliate</a>
+
+          <div class="affiliate-note">
+            Note: Affiliate membership is reviewed manually by ShopPlus before approval.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">My Reward Claims</h2>
+          <p class="section-subtitle">
+            Track your submitted reward requests, review status, and approved reward amounts.
+          </p>
+
+          <div id="claimsContainer" class="loading-box">
+            Loading your reward claims...
+          </div>
         </div>
       </div>
     </div>
