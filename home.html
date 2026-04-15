@@ -869,7 +869,6 @@
       deferredPrompt = null;
     });
 
-    // Fallback: if browser doesn't support beforeinstallprompt
     setTimeout(() => {
       if (!deferredPrompt && !isStandaloneMode()) {
         hideInstallButton();
@@ -1166,14 +1165,14 @@
       image = String(p.images[0]).trim();
     }
 
-    let normalizedSortOrder = null;
-    if (typeof p.sortOrder === "number" && !isNaN(p.sortOrder)) {
-      normalizedSortOrder = p.sortOrder;
-    } else {
-      normalizedSortOrder = source === "json" ? index + 1 : 0;
-    }
+    const timeValue = new Date(p.updatedAt || p.createdAt || 0).getTime();
 
-    const timeValue = new Date(p.createdAt || p.updatedAt || 0).getTime();
+    let fallbackOrder = 0;
+    if (typeof p.sortOrder === "number" && !isNaN(p.sortOrder)) {
+      fallbackOrder = p.sortOrder;
+    } else {
+      fallbackOrder = source === "json" ? (index + 1) : 0;
+    }
 
     return {
       id: String(rawId),
@@ -1189,8 +1188,8 @@
       link: p.link || '#',
       createdAt: p.createdAt || null,
       updatedAt: p.updatedAt || null,
-      sortOrder: normalizedSortOrder,
-      timeValue: isNaN(timeValue) ? 0 : timeValue
+      timeValue: isNaN(timeValue) ? 0 : timeValue,
+      fallbackOrder
     };
   }
 
@@ -1201,15 +1200,14 @@
     const combined = [...normalizedJson, ...normalizedBackend];
 
     combined.sort((a, b) => {
-      const aHasSort = typeof a.sortOrder === "number" && !isNaN(a.sortOrder);
-      const bHasSort = typeof b.sortOrder === "number" && !isNaN(b.sortOrder);
-
-      if (aHasSort && bHasSort && a.sortOrder !== b.sortOrder) {
-        return b.sortOrder - a.sortOrder;
-      }
-
+      // MAIN PRIORITY = latest product first (for both json + affiliate equally)
       if (a.timeValue !== b.timeValue) {
         return b.timeValue - a.timeValue;
+      }
+
+      // fallback only if same/missing time
+      if (a.fallbackOrder !== b.fallbackOrder) {
+        return b.fallbackOrder - a.fallbackOrder;
       }
 
       return 0;
@@ -1329,7 +1327,7 @@
       setTimeout(() => {
         card.style.opacity = 1;
         card.style.transform = 'translateY(0)';
-      }, i * 20);
+      }, i * 15);
     });
 
     if (backendHintExists && jsonProductsCache.length > 0) {
