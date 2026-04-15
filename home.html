@@ -94,9 +94,13 @@
   .header-top-row {
     width: min(100%, 980px);
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 12px;
     align-items: stretch;
+  }
+
+  .header-top-row.no-install {
+    grid-template-columns: 2fr 1fr 1fr;
   }
 
   .shopplus-logo {
@@ -126,7 +130,8 @@
   }
 
   .header-btn,
-  .brand-toggle-btn {
+  .brand-toggle-btn,
+  .install-btn {
     width: 100%;
     min-height: 54px;
     text-decoration: none;
@@ -149,12 +154,22 @@
   }
 
   .header-btn:hover,
-  .brand-toggle-btn:hover {
+  .brand-toggle-btn:hover,
+  .install-btn:hover {
     transform: translateY(-2px);
     background: rgba(255,255,255,0.22);
   }
 
   .profile-btn { font-size: 1.45rem; }
+
+  .install-btn {
+    gap: 6px;
+    display: none;
+  }
+
+  .install-btn.show {
+    display: inline-flex;
+  }
 
   .brand-filter-wrapper { position: relative; width: 100%; }
   .brand-toggle-btn { gap: 8px; }
@@ -564,6 +579,10 @@
     .header-top-row {
       width: 100%;
       gap: 8px;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+
+    .header-top-row.no-install {
       grid-template-columns: 2fr 1fr 1fr;
     }
 
@@ -577,10 +596,11 @@
     .shopplus-logo .plus { font-size: 1.45rem; }
 
     .header-btn,
-    .brand-toggle-btn {
+    .brand-toggle-btn,
+    .install-btn {
       min-height: 50px;
-      font-size: 0.78rem;
-      padding: 8px 6px;
+      font-size: 0.72rem;
+      padding: 8px 4px;
       border-radius: 14px;
     }
 
@@ -700,7 +720,7 @@
 <body>
   <div class="main-header">
     <div class="header-inner">
-      <div class="header-top-row">
+      <div class="header-top-row no-install" id="headerTopRow">
         <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
         <div class="brand-filter-wrapper">
@@ -722,6 +742,8 @@
             <div class="brand-item" data-brand="OnePlus">OnePlus</div>
           </div>
         </div>
+
+        <button id="installBtn" class="install-btn" type="button">⬇️ Install</button>
 
         <a href="profile.html" class="header-btn profile-btn" title="Profile">👤</a>
       </div>
@@ -782,6 +804,10 @@
   const brandBtnText = document.getElementById('brandBtnText');
   const brandItems = document.querySelectorAll('.brand-item');
 
+  const headerTopRow = document.getElementById('headerTopRow');
+  const installBtn = document.getElementById('installBtn');
+  let deferredPrompt = null;
+
   const adsSection = document.getElementById('adsSection');
   const adsSlider = document.getElementById('adsSlider');
   const adsTrack = document.getElementById('adsTrack');
@@ -798,6 +824,58 @@
   let startX = 0;
   let currentTranslate = 0;
   let prevTranslate = 0;
+
+  function isStandaloneMode() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function hideInstallButton() {
+    installBtn.classList.remove('show');
+    headerTopRow.classList.add('no-install');
+  }
+
+  function showInstallButton() {
+    installBtn.classList.add('show');
+    headerTopRow.classList.remove('no-install');
+  }
+
+  function setupInstallButton() {
+    if (isStandaloneMode()) {
+      hideInstallButton();
+      return;
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showInstallButton();
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+
+      if (outcome === 'accepted') {
+        hideInstallButton();
+      }
+
+      deferredPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      hideInstallButton();
+      deferredPrompt = null;
+    });
+
+    // Fallback: if browser doesn't support beforeinstallprompt
+    setTimeout(() => {
+      if (!deferredPrompt && !isStandaloneMode()) {
+        hideInstallButton();
+      }
+    }, 3000);
+  }
 
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
@@ -1160,7 +1238,6 @@
   async function loadProducts() {
     productList.innerHTML = '<p class="loading-text">Loading products...</p>';
 
-    // STEP 1: Load products.json first (FAST)
     try {
       const jsonResponse = await fetch("/my-store/products.json", { cache: "no-store" });
 
@@ -1186,7 +1263,6 @@
       productList.innerHTML = '<p class="loading-text">Loading latest products...</p>';
     }
 
-    // STEP 2: Load backend in background (SLOWER - Render free tier)
     fetch(`${BACKEND_URL}/api/products`, { cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) {
@@ -1346,6 +1422,7 @@
   });
 
   window.addEventListener("DOMContentLoaded", () => {
+    setupInstallButton();
     loadAppShortcuts();
     loadAds();
     loadProducts();
