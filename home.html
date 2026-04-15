@@ -1066,13 +1066,7 @@
     return null;
   }
 
-  function getTimestampValue(value) {
-    if (!value) return 0;
-    const time = new Date(value).getTime();
-    return isNaN(time) ? 0 : time;
-  }
-
-  function normalizeProduct(p, source, index, totalCount, jsonBaseTime = 0) {
+  function normalizeProduct(p, source, index) {
     const rawId = p._id || p.id || `fallback-${source}-${index}`;
     const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
 
@@ -1084,16 +1078,7 @@
       image = String(p.images[0]).trim();
     }
 
-    const createdTime = getTimestampValue(p.createdAt);
-    const updatedTime = getTimestampValue(p.updatedAt);
-    let sortTime = Math.max(createdTime, updatedTime);
-
-    // FINAL FIX:
-    // If products.json has no real timestamp, generate a strong artificial timestamp
-    // based on current time so last item in products.json becomes newest OVERALL
-    if (sortTime === 0 && source === "json") {
-      sortTime = jsonBaseTime + index;
-    }
+    const parsedSortOrder = Number(p.sortOrder);
 
     return {
       id: String(rawId),
@@ -1107,11 +1092,8 @@
       rating: p.rating,
       displayRating: getDisplayRating(p.rating),
       link: p.link || '#',
-      createdAt: p.createdAt || null,
-      updatedAt: p.updatedAt || null,
-      sortTime,
-      originalIndex: index,
-      totalCount
+      sortOrder: Number.isFinite(parsedSortOrder) ? parsedSortOrder : null,
+      fallbackIndex: index
     };
   }
 
@@ -1135,30 +1117,42 @@
       const jsonProducts = jsonResult.status === "fulfilled" ? jsonResult.value : [];
       const backendProducts = backendResult.status === "fulfilled" ? backendResult.value : [];
 
-      // Find latest backend time
-      let latestBackendTime = 0;
-      backendProducts.forEach(p => {
-        const t = Math.max(getTimestampValue(p.createdAt), getTimestampValue(p.updatedAt));
-        if (t > latestBackendTime) latestBackendTime = t;
+      const normalizedJson = jsonProducts.map((p, index) => normalizeProduct(p, "json", index));
+      const normalizedBackend = backendProducts.map((p, index) => normalizeProduct(p, "backend", index));
+
+      const combined = [...normalizedJson, ...normalizedBackend];
+
+      // Find max existing sortOrder
+      let maxSortOrder = 0;
+      combined.forEach(p => {
+        if (typeof p.sortOrder === "number" && p.sortOrder > maxSortOrder) {
+          maxSortOrder = p.sortOrder;
+        }
       });
 
-      // Create a base time for products.json that is GREATER than backend
-      // so newest item in products.json can come first if it was added latest in file
-      const jsonBaseTime = Math.max(Date.now(), latestBackendTime + 1000);
+      // Assign fallback sortOrder ONLY for old products that don't have it
+      // We preserve file/db relative order, but future products with real sortOrder will naturally win
+      let nextFallbackOrder = 1;
 
-      const normalizedJson = jsonProducts.map((p, index) =>
-        normalizeProduct(p, "json", index, jsonProducts.length, jsonBaseTime)
-      );
-
-      const normalizedBackend = backendProducts.map((p, index) =>
-        normalizeProduct(p, "backend", index, backendProducts.length, 0)
-      );
-
-      allProducts = [...normalizedJson, ...normalizedBackend].sort((a, b) => {
-        if (b.sortTime !== a.sortTime) {
-          return b.sortTime - a.sortTime;
+      combined.forEach(p => {
+        if (p.sortOrder === null) {
+          p.effectiveSortOrder = nextFallbackOrder++;
+        } else {
+          p.effectiveSortOrder = p.sortOrder;
         }
-        return (b.originalIndex || 0) - (a.originalIndex || 0);
+      });
+
+      // IMPORTANT:
+      // If there are real sortOrder products, make sure old fallback products stay below them
+      combined.forEach(p => {
+        if (p.sortOrder === null) {
+          p.effectiveSortOrder = p.effectiveSortOrder; // old products start from 1,2,3...
+        }
+      });
+
+      // Final sorting: highest effectiveSortOrder first
+      allProducts = combined.sort((a, b) => {
+        return b.effectiveSortOrder - a.effectiveSortOrder;
       });
 
       if (!allProducts.length) {
