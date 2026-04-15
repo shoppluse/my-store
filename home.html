@@ -478,7 +478,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.25s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.2s ease;
     opacity: 0;
     transform: translateY(8px);
     text-decoration: none;
@@ -543,8 +543,7 @@
 
   .loading-text,
   .empty-text,
-  .error-text,
-  .loading-more-text {
+  .error-text {
     text-align: center;
     font-size: 1rem;
     font-weight: 600;
@@ -552,18 +551,11 @@
     margin-top: 24px;
   }
 
-  .loading-text,
-  .loading-more-text { color: #666; }
+  .loading-text { color: #666; }
   .empty-text { color: #888; }
   .error-text { color: red; }
 
-  .loading-more-text {
-    margin-top: 8px;
-    font-size: 0.9rem;
-  }
-
   [data-theme="dark"] .loading-text,
-  [data-theme="dark"] .loading-more-text,
   [data-theme="dark"] .empty-text { color: var(--muted); }
 
   @media (max-width: 700px) {
@@ -825,6 +817,9 @@
   let currentTranslate = 0;
   let prevTranslate = 0;
 
+  /* =========================
+     INSTALL BUTTON
+  ========================= */
   function isStandaloneMode() {
     return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   }
@@ -876,6 +871,9 @@
     }, 3000);
   }
 
+  /* =========================
+     CATEGORY
+  ========================= */
   function createCategoryIcon(cat) {
     const el = document.createElement('div');
     el.className = 'category-icon' + (cat.name === selectedCategory ? ' selected' : '');
@@ -900,6 +898,9 @@
 
   categories.forEach(cat => categoryBar.appendChild(createCategoryIcon(cat)));
 
+  /* =========================
+     SEARCH
+  ========================= */
   searchInput.addEventListener('input', () => {
     selectedCategory = 'Overall';
     updateCategorySelection();
@@ -907,13 +908,15 @@
     filterProducts();
   });
 
+  /* =========================
+     APP SHORTCUTS
+  ========================= */
   async function loadAppShortcuts() {
     try {
       const response = await fetch("/my-store/apps.json", { cache: "no-store" });
       if (!response.ok) throw new Error(`apps.json error: ${response.status}`);
 
       const apps = await response.json();
-
       if (!Array.isArray(apps)) throw new Error("apps.json must contain an array");
 
       if (apps.length === 0) {
@@ -948,6 +951,9 @@
     }
   }
 
+  /* =========================
+     ADS
+  ========================= */
   async function loadAds() {
     try {
       const response = await fetch("/my-store/ads.json", { cache: "no-store" });
@@ -1144,6 +1150,9 @@
     adsTrack.style.transform = `translateX(${currentTranslate}px)`;
   }
 
+  /* =========================
+     PRODUCTS
+  ========================= */
   function getDisplayRating(rating) {
     if (rating === null || rating === undefined || rating === "") return null;
 
@@ -1165,6 +1174,7 @@
       image = String(p.images[0]).trim();
     }
 
+    // MAIN: latest by updatedAt/createdAt
     const timeValue = new Date(p.updatedAt || p.createdAt || 0).getTime();
 
     let fallbackOrder = 0;
@@ -1199,13 +1209,21 @@
 
     const combined = [...normalizedJson, ...normalizedBackend];
 
-    combined.sort((a, b) => {
-      // MAIN PRIORITY = latest product first (for both json + affiliate equally)
+    // remove duplicates if same id+source accidentally repeated
+    const uniqueMap = new Map();
+    combined.forEach(item => {
+      uniqueMap.set(`${item.source}-${item.id}`, item);
+    });
+
+    const uniqueProducts = Array.from(uniqueMap.values());
+
+    uniqueProducts.sort((a, b) => {
+      // 1) latest product first for ALL equally
       if (a.timeValue !== b.timeValue) {
         return b.timeValue - a.timeValue;
       }
 
-      // fallback only if same/missing time
+      // 2) fallback only if same/no time
       if (a.fallbackOrder !== b.fallbackOrder) {
         return b.fallbackOrder - a.fallbackOrder;
       }
@@ -1213,82 +1231,74 @@
       return 0;
     });
 
-    allProducts = combined;
+    allProducts = uniqueProducts;
     filterProducts();
-  }
-
-  function showBackendLoadingHint() {
-    const existing = document.getElementById("backendLoadingHint");
-    if (existing) return;
-
-    const hint = document.createElement("p");
-    hint.id = "backendLoadingHint";
-    hint.className = "loading-more-text";
-    hint.textContent = "Loading latest affiliate products...";
-    productList.appendChild(hint);
-  }
-
-  function removeBackendLoadingHint() {
-    const existing = document.getElementById("backendLoadingHint");
-    if (existing) existing.remove();
   }
 
   async function loadProducts() {
     productList.innerHTML = '<p class="loading-text">Loading products...</p>';
 
-    try {
-      const jsonResponse = await fetch("/my-store/products.json", { cache: "no-store" });
+    // reset every open
+    allProducts = [];
+    jsonProductsCache = [];
+    backendProductsCache = [];
 
-      if (!jsonResponse.ok) {
-        throw new Error(`products.json error: ${jsonResponse.status}`);
-      }
+    const jsonPromise = fetch("/my-store/products.json", { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`products.json error: ${res.status}`);
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("products.json must be an array");
+        return data;
+      })
+      .catch((err) => {
+        console.error("products.json fetch error:", err);
+        return [];
+      });
 
-      const jsonData = await jsonResponse.json();
+    const backendPromise = fetch(`${BACKEND_URL}/api/products`, { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`backend products error: ${res.status}`);
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("backend products must be an array");
+        return data;
+      })
+      .catch((err) => {
+        console.error("backend products fetch error:", err);
+        return null;
+      });
 
-      if (!Array.isArray(jsonData)) {
-        throw new Error("products.json must be an array");
-      }
+    // first get products.json (usually fast)
+    jsonProductsCache = await jsonPromise;
 
-      jsonProductsCache = jsonData;
+    // wait short time for backend too (so if render is awake both show together)
+    const backendFastResult = await Promise.race([
+      backendPromise,
+      new Promise(resolve => setTimeout(() => resolve("TIMEOUT"), 2500))
+    ]);
+
+    if (backendFastResult !== "TIMEOUT" && backendFastResult !== null) {
+      // backend came quickly -> show combined immediately
+      backendProductsCache = backendFastResult;
       mergeAndSortProducts();
+      return;
+    }
 
-      if (allProducts.length > 0) {
-        showBackendLoadingHint();
-      }
-    } catch (jsonError) {
-      console.error("products.json fetch error:", jsonError);
-      jsonProductsCache = [];
+    // backend slow -> show json first (fast UI)
+    if (jsonProductsCache.length > 0) {
+      mergeAndSortProducts();
+    } else {
       productList.innerHTML = '<p class="loading-text">Loading latest products...</p>';
     }
 
-    fetch(`${BACKEND_URL}/api/products`, { cache: "no-store" })
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`backend products error: ${response.status}`);
-        }
-
-        const backendData = await response.json();
-
-        if (!Array.isArray(backendData)) {
-          throw new Error("backend products must be an array");
-        }
-
+    // when backend finally wakes -> auto merge without refresh
+    backendPromise.then((backendData) => {
+      if (backendData && Array.isArray(backendData)) {
         backendProductsCache = backendData;
-        removeBackendLoadingHint();
         mergeAndSortProducts();
-      })
-      .catch((backendError) => {
-        console.error("backend products fetch error:", backendError);
-        backendProductsCache = [];
-        removeBackendLoadingHint();
-
-        if (!jsonProductsCache.length) {
-          productList.innerHTML = '<p class="error-text">Error loading products. Please try again later.</p>';
-          return;
-        }
-
-        mergeAndSortProducts();
-      });
+      } else if (!jsonProductsCache.length && !backendProductsCache.length) {
+        productList.innerHTML = '<p class="error-text">Error loading products. Please try again later.</p>';
+      }
+    });
   }
 
   function displayProducts(products) {
@@ -1296,8 +1306,6 @@
       productList.innerHTML = '<p class="empty-text">No products found.</p>';
       return;
     }
-
-    const backendHintExists = !!document.getElementById("backendLoadingHint");
 
     productList.innerHTML = '';
 
@@ -1324,19 +1332,13 @@
 
       productList.appendChild(card);
 
-      setTimeout(() => {
-        card.style.opacity = 1;
-        card.style.transform = 'translateY(0)';
-      }, i * 15);
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          card.style.opacity = 1;
+          card.style.transform = 'translateY(0)';
+        }, i * 10);
+      });
     });
-
-    if (backendHintExists && jsonProductsCache.length > 0) {
-      const hint = document.createElement("p");
-      hint.id = "backendLoadingHint";
-      hint.className = "loading-more-text";
-      hint.textContent = "Loading latest affiliate products...";
-      productList.appendChild(hint);
-    }
   }
 
   function filterProducts() {
@@ -1358,6 +1360,9 @@
     displayProducts(filtered);
   }
 
+  /* =========================
+     BRAND FILTER
+  ========================= */
   function setActiveBrand(selectedBrand) {
     brandItems.forEach(item => {
       item.classList.toggle('active', item.getAttribute('data-brand').toLowerCase() === selectedBrand.toLowerCase());
@@ -1419,6 +1424,9 @@
     }
   });
 
+  /* =========================
+     INIT
+  ========================= */
   window.addEventListener("DOMContentLoaded", () => {
     setupInstallButton();
     loadAppShortcuts();
