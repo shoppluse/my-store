@@ -1162,6 +1162,13 @@
     return null;
   }
 
+  function extractProductsArray(data) {
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.products)) return data.products;
+    if (data && Array.isArray(data.data)) return data.data;
+    return [];
+  }
+
   function normalizeProduct(p, source, index) {
     const rawId = p._id || p.id || `fallback-${source}-${index}`;
     const fallbackImage = "https://via.placeholder.com/300x300?text=No+Image";
@@ -1174,7 +1181,6 @@
       image = String(p.images[0]).trim();
     }
 
-    // MAIN: latest by updatedAt/createdAt
     const timeValue = new Date(p.updatedAt || p.createdAt || 0).getTime();
 
     let fallbackOrder = 0;
@@ -1209,7 +1215,6 @@
 
     const combined = [...normalizedJson, ...normalizedBackend];
 
-    // remove duplicates if same id+source accidentally repeated
     const uniqueMap = new Map();
     combined.forEach(item => {
       uniqueMap.set(`${item.source}-${item.id}`, item);
@@ -1218,12 +1223,10 @@
     const uniqueProducts = Array.from(uniqueMap.values());
 
     uniqueProducts.sort((a, b) => {
-      // 1) latest product first for ALL equally
       if (a.timeValue !== b.timeValue) {
         return b.timeValue - a.timeValue;
       }
 
-      // 2) fallback only if same/no time
       if (a.fallbackOrder !== b.fallbackOrder) {
         return b.fallbackOrder - a.fallbackOrder;
       }
@@ -1238,7 +1241,6 @@
   async function loadProducts() {
     productList.innerHTML = '<p class="loading-text">Loading products...</p>';
 
-    // reset every open
     allProducts = [];
     jsonProductsCache = [];
     backendProductsCache = [];
@@ -1247,8 +1249,7 @@
       .then(async (res) => {
         if (!res.ok) throw new Error(`products.json error: ${res.status}`);
         const data = await res.json();
-        if (!Array.isArray(data)) throw new Error("products.json must be an array");
-        return data;
+        return extractProductsArray(data);
       })
       .catch((err) => {
         console.error("products.json fetch error:", err);
@@ -1259,38 +1260,34 @@
       .then(async (res) => {
         if (!res.ok) throw new Error(`backend products error: ${res.status}`);
         const data = await res.json();
-        if (!Array.isArray(data)) throw new Error("backend products must be an array");
-        return data;
+        const arr = extractProductsArray(data);
+        console.log("Affiliate products fetched:", arr);
+        return arr;
       })
       .catch((err) => {
         console.error("backend products fetch error:", err);
         return null;
       });
 
-    // first get products.json (usually fast)
     jsonProductsCache = await jsonPromise;
 
-    // wait short time for backend too (so if render is awake both show together)
     const backendFastResult = await Promise.race([
       backendPromise,
       new Promise(resolve => setTimeout(() => resolve("TIMEOUT"), 2500))
     ]);
 
     if (backendFastResult !== "TIMEOUT" && backendFastResult !== null) {
-      // backend came quickly -> show combined immediately
       backendProductsCache = backendFastResult;
       mergeAndSortProducts();
       return;
     }
 
-    // backend slow -> show json first (fast UI)
     if (jsonProductsCache.length > 0) {
       mergeAndSortProducts();
     } else {
       productList.innerHTML = '<p class="loading-text">Loading latest products...</p>';
     }
 
-    // when backend finally wakes -> auto merge without refresh
     backendPromise.then((backendData) => {
       if (backendData && Array.isArray(backendData)) {
         backendProductsCache = backendData;
