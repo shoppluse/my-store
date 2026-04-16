@@ -1,37 +1,66 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const AffiliateApplication = require("../models/AffiliateApplication");
 
 const router = express.Router();
 
-// SIGNUP (No OTP / No Email Verification)
-router.post("/signup", async (req, res) => {
+// =========================
+// SHARED SIGNUP HANDLER
+// Supports BOTH /signup and /register
+// =========================
+const handleSignup = async (req, res) => {
   try {
     const { name, email, mobile, password } = req.body;
 
     if (!name || !email || !mobile || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
     }
 
-    const cleanEmail = email.toLowerCase().trim();
-    const cleanMobile = mobile.trim();
+    const cleanName = String(name).trim();
+    const cleanEmail = String(email).toLowerCase().trim();
+    const cleanMobile = String(mobile).trim();
+    const cleanPassword = String(password).trim();
+
+    if (!cleanName || !cleanEmail || !cleanMobile || !cleanPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
+    }
+
+    if (cleanPassword.length < 4) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 4 characters"
+      });
+    }
 
     const existingEmail = await User.findOne({ email: cleanEmail });
     if (existingEmail) {
-      return res.status(400).json({ message: "Email already registered" });
+      return res.status(400).json({
+        success: false,
+        message: "Email already registered"
+      });
     }
 
     const existingMobile = await User.findOne({ mobile: cleanMobile });
     if (existingMobile) {
-      return res.status(400).json({ message: "Mobile number already registered" });
+      return res.status(400).json({
+        success: false,
+        message: "Mobile number already registered"
+      });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(cleanPassword, 10);
 
     const user = await User.create({
-      name: name.trim(),
+      name: cleanName,
       email: cleanEmail,
       mobile: cleanMobile,
       password: hashedPassword,
@@ -40,57 +69,108 @@ router.post("/signup", async (req, res) => {
 
     console.log("✅ User created successfully:", user.email);
 
-    res.status(201).json({
+    // Optional token so frontend can auto-login after signup if needed
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET || "shopplus_secret_key",
+      { expiresIn: "7d" }
+    );
+
+    return res.status(201).json({
+      success: true,
       message: "Signup successful. You can now login.",
-      userId: user._id,
-      email: user.email
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        isVerified: true,
+        isAffiliate: user.isAffiliate || false,
+        affiliateStatus: user.affiliateStatus || "none",
+        affiliatePlan: user.affiliatePlan || "none",
+        planStatus: user.planStatus || "inactive",
+        maxProducts: user.maxProducts || 0
+      }
     });
   } catch (error) {
     console.error("❌ Signup error:", error);
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Signup failed",
       error: error.message
     });
   }
-});
+};
 
+// =========================
+// SIGNUP ROUTES
+// Supports BOTH /signup and /register
+// =========================
+router.post("/signup", handleSignup);
+router.post("/register", handleSignup);
+
+// =========================
 // VERIFY EMAIL (Disabled / Optional placeholder)
+// =========================
 router.post("/verify-email", async (req, res) => {
   return res.status(200).json({
+    success: true,
     message: "Email verification is not required."
   });
 });
 
+// =========================
 // LOGIN
+// =========================
 router.post("/login", async (req, res) => {
   try {
     const { emailOrMobile, password } = req.body;
 
     if (!emailOrMobile || !password) {
-      return res.status(400).json({ message: "Email/Mobile and password are required" });
+      return res.status(400).json({
+        success: false,
+        message: "Email/Mobile and password are required"
+      });
     }
 
-    const cleanIdentifier = emailOrMobile.trim().toLowerCase();
+    const cleanIdentifier = String(emailOrMobile).trim().toLowerCase();
+    const cleanMobile = String(emailOrMobile).trim();
+    const cleanPassword = String(password).trim();
 
     const user = await User.findOne({
       $or: [
         { email: cleanIdentifier },
-        { mobile: emailOrMobile.trim() }
+        { mobile: cleanMobile }
       ]
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(cleanPassword, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
+      });
     }
 
-    res.status(200).json({
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET || "shopplus_secret_key",
+      { expiresIn: "7d" }
+    );
+
+    return res.status(200).json({
+      success: true,
       message: "Login successful",
+      token,
       user: {
         id: user._id,
         name: user.name,
@@ -106,23 +186,30 @@ router.post("/login", async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Login error:", error);
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Login failed",
       error: error.message
     });
   }
 });
 
+// =========================
 // GET USER BY ID
+// =========================
 router.get("/user/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
+      success: true,
       user: {
         id: user._id,
         name: user.name,
@@ -138,14 +225,17 @@ router.get("/user/:id", async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Get user by ID error:", error);
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to fetch user",
       error: error.message
     });
   }
 });
 
+// =========================
 // APPLY FOR AFFILIATE PROGRAM
+// =========================
 router.post("/apply-affiliate", async (req, res) => {
   try {
     const {
@@ -170,25 +260,28 @@ router.post("/apply-affiliate", async (req, res) => {
 
     if (!userId || !reason) {
       return res.status(400).json({
+        success: false,
         message: "User ID and reason are required"
       });
     }
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
+        success: false,
         message: "Invalid user ID"
       });
     }
 
-    const cleanReason = (reason || "").trim();
-    const cleanInstagram = (instagram || "").trim();
-    const cleanYoutube = (youtube || "").trim();
-    const cleanTelegram = (telegram || "").trim();
-    const cleanAudienceType = (audienceType || "").trim();
-    const cleanExperience = (experience || "").trim();
+    const cleanReason = String(reason || "").trim();
+    const cleanInstagram = String(instagram || "").trim();
+    const cleanYoutube = String(youtube || "").trim();
+    const cleanTelegram = String(telegram || "").trim();
+    const cleanAudienceType = String(audienceType || "").trim();
+    const cleanExperience = String(experience || "").trim();
 
     if (!cleanReason) {
       return res.status(400).json({
+        success: false,
         message: "Reason is required"
       });
     }
@@ -197,6 +290,7 @@ router.post("/apply-affiliate", async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
+        success: false,
         message: "User not found"
       });
     }
@@ -209,12 +303,14 @@ router.post("/apply-affiliate", async (req, res) => {
 
     if (user.affiliateStatus === "pending") {
       return res.status(400).json({
+        success: false,
         message: "Your affiliate application is already pending review."
       });
     }
 
     if (user.affiliateStatus === "approved") {
       return res.status(400).json({
+        success: false,
         message: "You are already an approved affiliate member."
       });
     }
@@ -263,10 +359,10 @@ router.post("/apply-affiliate", async (req, res) => {
 
     // 4) Verify immediately from DB
     const verifyApplication = await AffiliateApplication.findById(savedApplication._id);
-
     console.log("🔍 Verification from DB:", verifyApplication ? "FOUND" : "NOT FOUND");
 
-    res.status(200).json({
+    return res.status(200).json({
+      success: true,
       message: "Affiliate application submitted successfully. Your request is now pending review.",
       user: {
         id: user._id,
@@ -296,7 +392,8 @@ router.post("/apply-affiliate", async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Apply affiliate error:", error);
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to submit affiliate application",
       error: error.message
     });
