@@ -263,6 +263,17 @@
     const passwordInput = document.getElementById("password");
     const togglePasswordBtn = document.getElementById("togglePassword");
 
+    function showMessage(text, type = "error") {
+      message.textContent = text;
+      message.className = "message";
+      message.classList.add(type);
+    }
+
+    function resetButton() {
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Login";
+    }
+
     // SHOW / HIDE PASSWORD
     togglePasswordBtn.addEventListener("click", () => {
       const isPassword = passwordInput.type === "password";
@@ -281,13 +292,19 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      message.textContent = "";
-      message.className = "message";
-      loginBtn.disabled = true;
-      loginBtn.textContent = "Logging in...";
-
       const emailOrMobile = document.getElementById("emailOrMobile").value.trim();
       const password = passwordInput.value.trim();
+
+      message.textContent = "";
+      message.className = "message";
+
+      if (!emailOrMobile || !password) {
+        showMessage("Please fill in all fields.", "error");
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Logging in...";
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
@@ -298,33 +315,35 @@
           body: JSON.stringify({ emailOrMobile, password })
         });
 
-        const data = await res.json();
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (jsonError) {
+          console.error("Invalid JSON response:", jsonError);
+          throw new Error("Server returned invalid response");
+        }
 
-        if (!res.ok) {
-          message.textContent = data.message || "Login failed";
-          message.classList.add("error");
-          loginBtn.disabled = false;
-          loginBtn.textContent = "Login";
+        if (!res.ok || !data.success) {
+          showMessage(data.message || "Login failed. Please try again.", "error");
+          resetButton();
           return;
         }
 
-        // Save login state and user data
+        // Save login state + token + user
         localStorage.setItem("shopplusLoggedIn", "true");
-        localStorage.setItem("shopplusUser", JSON.stringify(data.user));
+        localStorage.setItem("shopplusToken", data.token || "");
+        localStorage.setItem("shopplusUser", JSON.stringify(data.user || {}));
 
-        message.textContent = "Login successful! Redirecting...";
-        message.classList.add("success");
+        showMessage("Login successful! Redirecting...", "success");
 
         setTimeout(() => {
           window.location.href = "home.html";
-        }, 1500);
+        }, 1200);
 
       } catch (error) {
         console.error("Login error:", error);
-        message.textContent = "Something went wrong. Please try again.";
-        message.classList.add("error");
-        loginBtn.disabled = false;
-        loginBtn.textContent = "Login";
+        showMessage("Server not reachable or something went wrong. Please try again.", "error");
+        resetButton();
       }
     });
   </script>
