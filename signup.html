@@ -104,7 +104,37 @@
       box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.12);
     }
 
-    button {
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 50px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      margin: 0;
+      width: auto;
+      color: #555;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .toggle-password:hover {
+      transform: translateY(-50%);
+      opacity: 0.8;
+    }
+
+    button[type="submit"] {
       width: 100%;
       padding: 14px;
       border: none;
@@ -119,12 +149,12 @@
       font-family: inherit;
     }
 
-    button:hover {
+    button[type="submit"]:hover {
       transform: translateY(-2px);
       opacity: 0.95;
     }
 
-    button:disabled {
+    button[type="submit"]:disabled {
       opacity: 0.7;
       cursor: not-allowed;
       transform: none;
@@ -215,7 +245,10 @@
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Create a password" required />
+          <div class="password-wrapper">
+            <input type="password" id="password" placeholder="Create a password" required />
+            <button type="button" id="togglePassword" class="toggle-password" aria-label="Show password">👁️</button>
+          </div>
         </div>
 
         <button type="submit" id="signupBtn">Create Account</button>
@@ -237,22 +270,73 @@
     const form = document.getElementById("signupForm");
     const message = document.getElementById("message");
     const signupBtn = document.getElementById("signupBtn");
+    const passwordInput = document.getElementById("password");
+    const togglePasswordBtn = document.getElementById("togglePassword");
+
+    function showMessage(text, type = "error") {
+      message.textContent = text;
+      message.className = "message";
+      message.classList.add(type);
+    }
+
+    function resetButton() {
+      signupBtn.disabled = false;
+      signupBtn.textContent = "Create Account";
+    }
+
+    // SHOW / HIDE PASSWORD
+    togglePasswordBtn.addEventListener("click", () => {
+      const isPassword = passwordInput.type === "password";
+
+      if (isPassword) {
+        passwordInput.type = "text";
+        togglePasswordBtn.textContent = "🙈";
+        togglePasswordBtn.setAttribute("aria-label", "Hide password");
+      } else {
+        passwordInput.type = "password";
+        togglePasswordBtn.textContent = "👁️";
+        togglePasswordBtn.setAttribute("aria-label", "Show password");
+      }
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      message.textContent = "";
-      message.className = "message";
-      signupBtn.disabled = true;
-      signupBtn.textContent = "Creating Account...";
-
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const mobile = document.getElementById("mobile").value.trim();
-      const password = document.getElementById("password").value.trim();
+      const password = passwordInput.value.trim();
+
+      message.textContent = "";
+      message.className = "message";
+
+      // Frontend validation
+      if (!name || !email || !mobile || !password) {
+        showMessage("Please fill in all fields.", "error");
+        return;
+      }
+
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        showMessage("Please enter a valid email address.", "error");
+        return;
+      }
+
+      if (!/^\d{10}$/.test(mobile)) {
+        showMessage("Please enter a valid 10-digit mobile number.", "error");
+        return;
+      }
+
+      if (password.length < 4) {
+        showMessage("Password must be at least 4 characters.", "error");
+        return;
+      }
+
+      signupBtn.disabled = true;
+      signupBtn.textContent = "Creating Account...";
 
       try {
-        const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
+        // Using /register because backend now supports BOTH /register and /signup
+        const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -260,28 +344,30 @@
           body: JSON.stringify({ name, email, mobile, password })
         });
 
-        const data = await res.json();
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (jsonError) {
+          console.error("Invalid JSON response:", jsonError);
+          throw new Error("Server returned invalid response");
+        }
 
-        if (!res.ok) {
-          message.textContent = data.message || "Signup failed";
-          message.classList.add("error");
-          signupBtn.disabled = false;
-          signupBtn.textContent = "Create Account";
+        if (!res.ok || !data.success) {
+          showMessage(data.message || "Signup failed. Please try again.", "error");
+          resetButton();
           return;
         }
 
-        message.textContent = "Signup successful! Redirecting to login...";
-        message.classList.add("success");
+        showMessage("Signup successful! Redirecting to login...", "success");
 
         setTimeout(() => {
           window.location.href = "login.html";
-        }, 1800);
+        }, 1400);
 
       } catch (error) {
-        message.textContent = "Something went wrong. Please try again.";
-        message.classList.add("error");
-        signupBtn.disabled = false;
-        signupBtn.textContent = "Create Account";
+        console.error("Signup error:", error);
+        showMessage("Server not reachable or something went wrong. Please try again.", "error");
+        resetButton();
       }
     });
 
