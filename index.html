@@ -15,7 +15,7 @@
 
   <!-- PWA -->
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#111111" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
 
   <!-- Open Graph -->
@@ -32,7 +32,7 @@
   <meta name="twitter:image" content="https://shoppluse.github.io/my-store/icons/icon-512.png" />
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -53,27 +53,60 @@
   <style>
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     :root {
-      --primary: #0047ab;
-      --primary-2: #0099ff;
-      --bg: #ffffff;
-      --border: #e5edf9;
-      --shadow: rgba(0, 71, 171, 0.10);
+      --bg: #f7f7f8;
+      --bg-2: #efeff2;
+      --card-bg: rgba(255,255,255,0.82);
+      --text: #111111;
+      --muted: #777777;
+      --border: #e9e9ec;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --shadow-2: rgba(0, 0, 0, 0.12);
     }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: 'Poppins', sans-serif;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.7), transparent 35%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 32%, var(--bg) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: calc(28px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
+      padding: calc(24px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));
       overflow: hidden;
       position: relative;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(24px);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-1 {
+      width: 180px;
+      height: 180px;
+      background: rgba(0,0,0,0.04);
+      top: 10%;
+      left: 8%;
+      animation: floatOrb 6s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 220px;
+      height: 220px;
+      background: rgba(0,0,0,0.03);
+      bottom: 10%;
+      right: 10%;
+      animation: floatOrb 7s ease-in-out infinite reverse;
     }
 
     .splash-wrap {
@@ -83,8 +116,23 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.55s ease;
       z-index: 2;
+    }
+
+    .brand-shell {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 28px;
+      padding: 22px 18px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 42px var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      animation: floatCard 2.4s ease-in-out infinite;
     }
 
     .brand {
@@ -92,21 +140,46 @@
       align-items: center;
       gap: 6px;
       background: #ffffff;
-      color: #0047ab;
-      padding: 16px 28px;
+      color: #111111;
+      padding: 14px 24px;
       border-radius: 22px;
-      font-size: 2.2rem;
-      font-weight: 700;
+      font-size: 2rem;
+      font-weight: 800;
       border: 1px solid var(--border);
-      box-shadow: 0 12px 32px var(--shadow);
-      animation: pulse 1.8s ease-in-out infinite;
+      box-shadow: 0 10px 24px var(--shadow);
+      letter-spacing: -0.5px;
     }
 
     .brand .plus {
-      color: #0099ff;
-      font-size: 2.5rem;
+      color: #2d2d2d;
+      font-size: 2.1rem;
       font-weight: 900;
       line-height: 1;
+    }
+
+    .tagline {
+      margin: 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 320px;
+    }
+
+    .loader {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 3px solid rgba(17,17,17,0.08);
+      border-top-color: #111111;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .loading-text {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.2px;
     }
 
     .seo-content {
@@ -130,41 +203,81 @@
       }
     }
 
-    @keyframes pulse {
+    @keyframes floatCard {
       0% {
-        transform: scale(1);
-        box-shadow: 0 12px 32px rgba(0, 71, 171, 0.10);
+        transform: translateY(0px);
+        box-shadow: 0 18px 42px var(--shadow);
       }
       50% {
-        transform: scale(1.03);
-        box-shadow: 0 16px 38px rgba(0, 71, 171, 0.16);
+        transform: translateY(-4px);
+        box-shadow: 0 22px 50px var(--shadow-2);
       }
       100% {
-        transform: scale(1);
-        box-shadow: 0 12px 32px rgba(0, 71, 171, 0.10);
+        transform: translateY(0px);
+        box-shadow: 0 18px 42px var(--shadow);
+      }
+    }
+
+    @keyframes floatOrb {
+      0% {
+        transform: translateY(0px) translateX(0px);
+      }
+      50% {
+        transform: translateY(-10px) translateX(6px);
+      }
+      100% {
+        transform: translateY(0px) translateX(0px);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
       }
     }
 
     @media (max-width: 520px) {
       body {
-        padding: calc(42px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+        padding: calc(34px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom));
+      }
+
+      .brand-shell {
+        border-radius: 24px;
+        padding: 18px 14px;
       }
 
       .brand {
-        font-size: 1.9rem;
-        padding: 14px 24px;
-        border-radius: 20px;
+        font-size: 1.65rem;
+        padding: 12px 20px;
+        border-radius: 18px;
       }
 
       .brand .plus {
-        font-size: 2.1rem;
+        font-size: 1.8rem;
+      }
+
+      .tagline {
+        font-size: 0.88rem;
+      }
+
+      .loader {
+        width: 38px;
+        height: 38px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
   <div class="splash-wrap">
-    <div class="brand">Shop<span class="plus">Plus</span></div>
+    <div class="brand-shell">
+      <div class="brand">Shop<span class="plus">Plus</span></div>
+      <p class="tagline">Smart shopping, trusted products, and seamless rewards — all in one place.</p>
+      <div class="loader"></div>
+      <div class="loading-text">Launching ShopPlus...</div>
+    </div>
   </div>
 
   <main class="seo-content" aria-hidden="false">
