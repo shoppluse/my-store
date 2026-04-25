@@ -7,10 +7,19 @@ const AffiliateApplication = require("../models/AffiliateApplication");
 
 const router = express.Router();
 
-// =========================
-// SHARED SIGNUP HANDLER
-// Supports BOTH /signup and /register
-// =========================
+/* =========================================
+   TEST ROUTE
+========================================= */
+router.get("/test", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Auth routes are working"
+  });
+});
+
+/* =========================================
+   SHARED SIGNUP HANDLER
+========================================= */
 const handleSignup = async (req, res) => {
   try {
     const { name, email, mobile, password } = req.body;
@@ -69,7 +78,6 @@ const handleSignup = async (req, res) => {
 
     console.log("✅ User created successfully:", user.email);
 
-    // Optional token so frontend can auto-login after signup if needed
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET || "shopplus_secret_key",
@@ -103,16 +111,15 @@ const handleSignup = async (req, res) => {
   }
 };
 
-// =========================
-// SIGNUP ROUTES
-// Supports BOTH /signup and /register
-// =========================
+/* =========================================
+   SIGNUP ROUTES
+========================================= */
 router.post("/signup", handleSignup);
 router.post("/register", handleSignup);
 
-// =========================
-// VERIFY EMAIL (Disabled / Optional placeholder)
-// =========================
+/* =========================================
+   VERIFY EMAIL
+========================================= */
 router.post("/verify-email", async (req, res) => {
   return res.status(200).json({
     success: true,
@@ -120,9 +127,9 @@ router.post("/verify-email", async (req, res) => {
   });
 });
 
-// =========================
-// LOGIN
-// =========================
+/* =========================================
+   LOGIN
+========================================= */
 router.post("/login", async (req, res) => {
   try {
     const { emailOrMobile, password } = req.body;
@@ -194,9 +201,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// =========================
-// GET USER BY ID
-// =========================
+/* =========================================
+   GET USER BY ID
+========================================= */
 router.get("/user/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -233,9 +240,9 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-// =========================
-// APPLY FOR AFFILIATE PROGRAM
-// =========================
+/* =========================================
+   APPLY FOR AFFILIATE PROGRAM
+========================================= */
 router.post("/apply-affiliate", async (req, res) => {
   try {
     const {
@@ -247,16 +254,6 @@ router.post("/apply-affiliate", async (req, res) => {
       experience,
       reason
     } = req.body;
-
-    console.log("📥 /apply-affiliate called with:", {
-      userId,
-      instagram,
-      youtube,
-      telegram,
-      audienceType,
-      experience,
-      reason
-    });
 
     if (!userId || !reason) {
       return res.status(400).json({
@@ -295,12 +292,6 @@ router.post("/apply-affiliate", async (req, res) => {
       });
     }
 
-    console.log("👤 User found:", {
-      id: user._id.toString(),
-      email: user.email,
-      affiliateStatus: user.affiliateStatus
-    });
-
     if (user.affiliateStatus === "pending") {
       return res.status(400).json({
         success: false,
@@ -315,7 +306,6 @@ router.post("/apply-affiliate", async (req, res) => {
       });
     }
 
-    // 1) Save status in users collection
     user.affiliateStatus = "pending";
     user.affiliateReason = cleanReason;
     user.affiliateAppliedAt = new Date();
@@ -324,17 +314,12 @@ router.post("/apply-affiliate", async (req, res) => {
 
     await user.save();
 
-    console.log("✅ User updated in users collection");
-
-    // 2) Delete old application if exists
     try {
-      const deleteResult = await AffiliateApplication.deleteMany({ userId: user._id });
-      console.log("🗑️ Old affiliate applications deleted:", deleteResult.deletedCount);
+      await AffiliateApplication.deleteMany({ userId: user._id });
     } catch (deleteErr) {
       console.error("⚠️ Could not delete old affiliate applications:", deleteErr.message);
     }
 
-    // 3) Save fresh application in affiliateapplications collection
     const application = new AffiliateApplication({
       userId: user._id,
       name: user.name,
@@ -350,16 +335,6 @@ router.post("/apply-affiliate", async (req, res) => {
     });
 
     const savedApplication = await application.save();
-
-    console.log("✅ Affiliate application saved in affiliateapplications:", {
-      id: savedApplication._id.toString(),
-      userId: savedApplication.userId.toString(),
-      email: savedApplication.email
-    });
-
-    // 4) Verify immediately from DB
-    const verifyApplication = await AffiliateApplication.findById(savedApplication._id);
-    console.log("🔍 Verification from DB:", verifyApplication ? "FOUND" : "NOT FOUND");
 
     return res.status(200).json({
       success: true,
