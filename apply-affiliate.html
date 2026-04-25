@@ -6,10 +6,10 @@
   <title>Apply Affiliate - ShopPlus</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#0047ab" />
+  <meta name="theme-color" content="#111111" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link rel="icon" href="/my-store/icons/icon-192.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <script>
     (function () {
@@ -28,50 +28,56 @@
   <style>
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     :root {
-      --gradient: linear-gradient(120deg, #0047ab 55%, #0099ff 100%);
-      --bg: #f4f7fc;
-      --bg-end: #eef5ff;
+      --bg: #f7f7f8;
+      --bg-2: #efeff2;
       --card-bg: #ffffff;
-      --text: #1f1f1f;
-      --muted: #64748b;
-      --primary: #0047ab;
-      --primary-2: #0099ff;
-      --border: #dbe7ff;
-      --shadow: rgba(0, 71, 171, 0.14);
+      --text: #111111;
+      --muted: #777777;
+      --muted-2: #9b9b9b;
+      --primary: #111111;
+      --primary-2: #2d2d2d;
+      --border: #e9e9ec;
+      --soft-border: #f0f0f2;
+      --shadow: rgba(0, 0, 0, 0.06);
+      --shadow-2: rgba(0, 0, 0, 0.09);
 
-      --success-bg: #eafaf0;
-      --success-text: #159947;
-      --success-border: #b8e8c8;
+      --success-bg: #f0fdf4;
+      --success-text: #15803d;
+      --success-border: #bbf7d0;
 
-      --warning-bg: #fff8e8;
-      --warning-text: #b26b00;
-      --warning-border: #ffe0a3;
+      --warning-bg: #fffbeb;
+      --warning-text: #b45309;
+      --warning-border: #fde68a;
 
-      --danger-bg: #fff0f0;
-      --danger-text: #c62828;
-      --danger-border: #ffc9c9;
+      --danger-bg: #fef2f2;
+      --danger-text: #b91c1c;
+      --danger-border: #fecaca;
 
-      --info-bg: #f3f9ff;
-      --info-text: #2b5ca8;
-      --info-border: #d9e9ff;
+      --info-bg: #f8fafc;
+      --info-text: #334155;
+      --info-border: #e2e8f0;
 
-      --btn-bg: linear-gradient(120deg, #0047ab, #0099ff);
-      --btn-shadow: rgba(0, 71, 171, 0.24);
+      --btn-bg: linear-gradient(120deg, #111111, #2d2d2d);
+      --btn-shadow: rgba(0, 0, 0, 0.18);
     }
 
     [data-theme="dark"] {
-      --bg: #0f172a;
-      --bg-end: #111827;
-      --card-bg: #111827;
+      --bg: #0f1115;
+      --bg-2: #171a20;
+      --card-bg: #161a22;
       --text: #f8fafc;
-      --muted: #94a3b8;
-      --primary: #60a5fa;
-      --primary-2: #38bdf8;
-      --border: #1e3a8a;
-      --shadow: rgba(56, 189, 248, 0.15);
+      --muted: #a1a1aa;
+      --muted-2: #8b95a7;
+      --primary: #ffffff;
+      --primary-2: #d1d5db;
+      --border: #232833;
+      --soft-border: #1d2330;
+      --shadow: rgba(0, 0, 0, 0.25);
+      --shadow-2: rgba(0, 0, 0, 0.32);
 
       --success-bg: rgba(22, 163, 74, 0.12);
       --success-text: #4ade80;
@@ -85,141 +91,160 @@
       --danger-text: #f87171;
       --danger-border: rgba(248, 113, 113, 0.22);
 
-      --info-bg: rgba(59, 130, 246, 0.12);
-      --info-text: #93c5fd;
-      --info-border: rgba(147, 197, 253, 0.22);
+      --info-bg: rgba(255,255,255,0.03);
+      --info-text: #cbd5e1;
+      --info-border: rgba(255,255,255,0.06);
 
-      --btn-bg: linear-gradient(120deg, #1d4ed8, #0ea5e9);
-      --btn-shadow: rgba(14, 165, 233, 0.24);
+      --btn-bg: linear-gradient(120deg, #ffffff, #e5e7eb);
+      --btn-shadow: rgba(255, 255, 255, 0.08);
     }
 
     body {
       margin: 0;
       font-family: 'Poppins', Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
+      background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 24%, var(--bg) 100%);
       color: var(--text);
       min-height: 100vh;
       transition: background 0.3s ease, color 0.3s ease;
     }
 
     .main-header {
-      background: var(--gradient);
+      background: transparent;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
-      box-shadow: 0 6px 20px var(--shadow);
+      padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
       position: sticky;
       top: 0;
       z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-shell {
+      width: 100%;
+      max-width: 780px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 10px;
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    [data-theme="dark"] .header-shell {
+      background: rgba(22,26,34,0.88);
+      border-color: rgba(255,255,255,0.04);
     }
 
     .header-actions {
       width: 100%;
-      max-width: 780px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
 
     .header-btn {
       width: 100%;
-      min-height: 56px;
+      min-height: 52px;
       text-decoration: none;
-      background: rgba(255,255,255,0.14);
-      color: #fff;
+      background: var(--card-bg);
+      color: var(--text);
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.86rem;
       padding: 10px 8px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid var(--border);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      backdrop-filter: blur(4px);
       transition: 0.25s ease;
+      box-shadow: 0 4px 14px var(--shadow);
     }
 
     .header-btn:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,255,0.22);
+      box-shadow: 0 8px 18px var(--shadow-2);
     }
 
     .page-wrap {
       width: 100%;
       max-width: 860px;
-      margin: 22px auto 50px;
-      padding: 0 12px;
+      margin: 14px auto 28px;
+      padding: 0 10px;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 24px;
-      box-shadow: 0 18px 50px var(--shadow);
-      padding: 22px;
-      margin-bottom: 18px;
+      box-shadow: 0 14px 34px var(--shadow);
+      padding: 20px;
+      margin-bottom: 14px;
     }
 
     .hero-title {
-      margin: 0 0 10px;
-      font-size: clamp(1.55rem, 4vw, 2.2rem);
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 4vw, 2rem);
       line-height: 1.2;
       color: var(--primary);
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: -0.3px;
     }
 
     .hero-sub {
       margin: 0;
       color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.8;
+      font-size: 0.95rem;
+      line-height: 1.7;
     }
 
     .benefits {
-      margin-top: 18px;
+      margin-top: 16px;
       display: grid;
-      gap: 12px;
+      gap: 10px;
     }
 
     .benefit {
-      background: rgba(0, 153, 255, 0.04);
+      background: rgba(17, 17, 17, 0.025);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 14px 16px;
+      padding: 14px 15px;
       font-weight: 700;
       color: var(--text);
       display: flex;
       align-items: center;
       gap: 10px;
       line-height: 1.5;
+      font-size: 0.92rem;
     }
 
     [data-theme="dark"] .benefit {
-      background: rgba(59, 130, 246, 0.08);
+      background: rgba(255,255,255,0.025);
     }
 
     .section-title {
       margin: 0 0 8px;
-      font-size: clamp(1.3rem, 3.8vw, 1.8rem);
+      font-size: clamp(1.2rem, 3.8vw, 1.7rem);
       color: var(--primary);
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: -0.2px;
     }
 
     .section-sub {
-      margin: 0 0 16px;
+      margin: 0 0 14px;
       color: var(--muted);
-      line-height: 1.8;
+      line-height: 1.7;
+      font-size: 0.93rem;
     }
 
     .status-box {
       border-radius: 18px;
-      padding: 18px;
+      padding: 16px;
       border: 1px solid;
       margin-bottom: 14px;
-      line-height: 1.7;
+      line-height: 1.65;
       font-weight: 600;
+      font-size: 0.92rem;
     }
 
     .status-info {
@@ -250,10 +275,10 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 16px;
+      padding: 9px 14px;
       border-radius: 999px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       margin-top: 10px;
       border: 1px solid;
     }
@@ -282,14 +307,15 @@
       background: var(--info-bg);
       color: var(--info-text);
       border: 1px solid var(--info-border);
-      border-radius: 18px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 14px 15px;
       font-weight: 700;
+      font-size: 0.9rem;
     }
 
     .form-grid {
       display: grid;
-      gap: 14px;
+      gap: 12px;
     }
 
     .input-group {
@@ -299,9 +325,9 @@
     }
 
     .input-group label {
-      font-weight: 700;
+      font-weight: 800;
       color: var(--primary);
-      font-size: 0.95rem;
+      font-size: 0.88rem;
     }
 
     .input-group input,
@@ -310,20 +336,32 @@
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 14px 14px;
-      font-size: 0.96rem;
+      padding: 13px 14px;
+      font-size: 0.93rem;
       font-family: inherit;
-      background: var(--card-bg);
+      background: rgba(17, 17, 17, 0.025);
       color: var(--text);
       outline: none;
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    [data-theme="dark"] .input-group input,
+    [data-theme="dark"] .input-group textarea,
+    [data-theme="dark"] .input-group select {
+      background: rgba(255,255,255,0.025);
     }
 
     .input-group input:focus,
     .input-group textarea:focus,
     .input-group select:focus {
       border-color: var(--primary-2);
-      box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+    }
+
+    [data-theme="dark"] .input-group input:focus,
+    [data-theme="dark"] .input-group textarea:focus,
+    [data-theme="dark"] .input-group select:focus {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
     }
 
     .input-group textarea {
@@ -332,9 +370,9 @@
     }
 
     .readonly-note {
-      font-size: 0.84rem;
+      font-size: 0.78rem;
       color: var(--muted);
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .submit-btn,
@@ -342,19 +380,23 @@
       width: 100%;
       border: none;
       border-radius: 16px;
-      padding: 15px 16px;
-      font-size: 1rem;
+      padding: 14px 16px;
+      font-size: 0.94rem;
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
       transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
-      min-height: 56px;
+      min-height: 52px;
     }
 
     .submit-btn {
       background: var(--btn-bg);
       color: white;
-      box-shadow: 0 14px 28px var(--btn-shadow);
+      box-shadow: 0 12px 24px var(--btn-shadow);
+    }
+
+    [data-theme="dark"] .submit-btn {
+      color: #111111;
     }
 
     .submit-btn:hover:not(:disabled),
@@ -379,38 +421,63 @@
 
     .footer {
       text-align: center;
-      color: white;
-      background: var(--gradient);
-      padding: 16px 12px;
+      color: var(--muted);
+      background: transparent;
+      padding: 12px 12px 24px;
       font-size: 14px;
-      margin-top: 40px;
+      margin-top: 10px;
+      font-weight: 600;
     }
 
     @media (max-width: 700px) {
+      body {
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      }
+
+      .header-shell {
+        border-radius: 20px;
+        padding: 8px;
+      }
+
       .card {
         border-radius: 20px;
-        padding: 18px;
+        padding: 16px;
       }
 
       .header-btn {
-        min-height: 52px;
-        font-size: 0.86rem;
+        min-height: 48px;
+        font-size: 0.8rem;
         border-radius: 14px;
       }
 
       .submit-btn,
       .secondary-btn {
-        min-height: 52px;
-        font-size: 0.95rem;
+        min-height: 50px;
+        font-size: 0.9rem;
+        border-radius: 14px;
+      }
+
+      .input-group input,
+      .input-group textarea,
+      .input-group select {
+        border-radius: 12px;
+      }
+
+      .benefit,
+      .status-box,
+      .loading-box {
+        border-radius: 14px;
       }
     }
   </style>
 </head>
 <body>
   <div class="main-header">
-    <div class="header-actions">
-      <a href="home.html" class="header-btn">← Home</a>
-      <a href="profile.html" class="header-btn">Profile</a>
+    <div class="header-shell">
+      <div class="header-actions">
+        <a href="home.html" class="header-btn">← Home</a>
+        <a href="profile.html" class="header-btn">Profile</a>
+      </div>
     </div>
   </div>
 
