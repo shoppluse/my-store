@@ -1,65 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ShopPlus Owner Notification Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <style>
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #f7f7f8;
+      --bg-2: #efeff2;
+      --card-bg: #ffffff;
+      --text: #111111;
+      --muted: #777777;
+      --muted-2: #9b9b9b;
+      --primary: #111111;
+      --primary-2: #2d2d2d;
+      --border: #e9e9ec;
+      --soft-border: #f0f0f2;
+      --shadow: rgba(0, 0, 0, 0.06);
+      --shadow-2: rgba(0, 0, 0, 0.09);
+
+      --input-bg: rgba(17, 17, 17, 0.025);
+
+      --success: #15803d;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+
+      --info: #3f3f46;
+      --info-bg: #f5f5f5;
+      --info-border: #e4e4e7;
+
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+
+      --btn-bg: linear-gradient(120deg, #111111, #2d2d2d);
+      --btn-shadow: rgba(0, 0, 0, 0.18);
+
+      --secondary-bg: linear-gradient(120deg, #2d2d2d, #444444);
+      --secondary-shadow: rgba(0, 0, 0, 0.14);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1115;
+      --bg-2: #171a20;
+      --card-bg: #161a22;
+      --text: #f8fafc;
+      --muted: #a1a1aa;
+      --muted-2: #8b95a7;
+      --primary: #ffffff;
+      --primary-2: #d1d5db;
+      --border: #232833;
+      --soft-border: #1d2330;
+      --shadow: rgba(0, 0, 0, 0.25);
+      --shadow-2: rgba(0, 0, 0, 0.32);
+
+      --input-bg: rgba(255,255,255,0.025);
+
+      --success: #4ade80;
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --success-border: rgba(74, 222, 128, 0.22);
+
+      --info: #d4d4d8;
+      --info-bg: rgba(255,255,255,0.04);
+      --info-border: rgba(255,255,255,0.06);
+
+      --danger: #f87171;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-border: rgba(248, 113, 113, 0.22);
+
+      --btn-bg: linear-gradient(120deg, #ffffff, #e5e7eb);
+      --btn-shadow: rgba(255, 255, 255, 0.08);
+
+      --secondary-bg: linear-gradient(120deg, #2a2f3a, #3a4150);
+      --secondary-shadow: rgba(0, 0, 0, 0.22);
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      padding: 18px;
-      max-width: 760px;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 24%, var(--bg) 100%);
+      padding: 12px;
+      max-width: 860px;
       margin: auto;
-      color: #1f2937;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .top-shell {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      margin-bottom: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .top-card {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 14px 16px;
+      box-shadow: 0 8px 24px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    [data-theme="dark"] .top-card {
+      background: rgba(22,26,34,0.88);
+      border-color: rgba(255,255,255,0.04);
+    }
+
+    .brand-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     h1 {
-      color: #0047ab;
-      margin-bottom: 10px;
-      font-size: 28px;
+      color: var(--primary);
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
     }
 
     .subtitle {
-      margin-bottom: 18px;
-      color: #4b5563;
-      font-size: 14px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .theme-btn {
+      border: 1px solid var(--border);
+      background: rgba(17,17,17,0.04);
+      color: var(--text);
+      min-width: 48px;
+      min-height: 48px;
+      border-radius: 16px;
+      font-size: 1.2rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.25s ease;
+    }
+
+    [data-theme="dark"] .theme-btn {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .theme-btn:hover {
+      transform: translateY(-2px);
     }
 
     .box {
-      background: white;
+      background: var(--card-bg);
       padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      border-radius: 24px;
+      box-shadow: 0 14px 34px var(--shadow);
+      border: 1px solid var(--border);
     }
 
     label {
       display: block;
-      font-weight: bold;
+      font-weight: 700;
       margin-top: 10px;
-      margin-bottom: 6px;
-      color: #111827;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 0.9rem;
     }
 
     input, textarea {
       width: 100%;
       margin-top: 4px;
       margin-bottom: 14px;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 15px;
-      box-sizing: border-box;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-size: 14px;
       outline: none;
+      font-family: inherit;
+      background: var(--input-bg);
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     input:focus, textarea:focus {
-      border-color: #0047ab;
-      box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.08);
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+    }
+
+    [data-theme="dark"] input:focus,
+    [data-theme="dark"] textarea:focus {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
     }
 
     .btn-row {
@@ -69,69 +212,153 @@
       margin-top: 6px;
     }
 
-    button {
-      background: #0047ab;
-      color: white;
+    button.action-btn {
       border: none;
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 13px 18px;
+      border-radius: 14px;
+      font-size: 14px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 700;
+      font-family: inherit;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      min-height: 50px;
     }
 
-    button:hover {
-      background: #00337a;
+    button.action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    button.primary {
+      background: var(--btn-bg);
+      color: white;
+      box-shadow: 0 12px 24px var(--btn-shadow);
+    }
+
+    [data-theme="dark"] button.primary {
+      color: #111111;
     }
 
     button.secondary {
-      background: #0f766e;
-    }
-
-    button.secondary:hover {
-      background: #0b5e57;
+      background: var(--secondary-bg);
+      color: white;
+      box-shadow: 0 10px 22px var(--secondary-shadow);
     }
 
     button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
+      transform: none;
     }
 
     .stats {
       margin-top: 16px;
       padding: 14px;
-      border-radius: 10px;
-      background: #eef5ff;
-      font-size: 14px;
-      font-weight: 600;
-      color: #00337a;
+      border-radius: 14px;
+      background: var(--info-bg);
+      border: 1px solid var(--info-border);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--info);
+      line-height: 1.6;
     }
 
     .result {
       margin-top: 18px;
       padding: 14px;
-      border-radius: 10px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      background: rgba(17,17,17,0.02);
+      border: 1px solid var(--border);
       white-space: pre-wrap;
-      font-family: monospace;
-      font-size: 13px;
-      line-height: 1.5;
-      min-height: 80px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      min-height: 90px;
+      color: var(--text);
+      overflow-x: auto;
+    }
+
+    [data-theme="dark"] .result {
+      background: rgba(255,255,255,0.02);
     }
 
     .note {
       margin-top: 16px;
-      font-size: 12px;
-      color: #6b7280;
-      line-height: 1.5;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.6;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(17,17,17,0.025);
+      border: 1px solid var(--soft-border);
+    }
+
+    [data-theme="dark"] .note {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .danger-note {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      color: var(--danger);
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 10px;
+      }
+
+      .top-card {
+        padding: 12px;
+        border-radius: 20px;
+        align-items: flex-start;
+      }
+
+      h1 {
+        font-size: 1.05rem;
+      }
+
+      .subtitle {
+        font-size: 0.76rem;
+      }
+
+      .theme-btn {
+        min-width: 44px;
+        min-height: 44px;
+        border-radius: 14px;
+      }
+
+      .box {
+        padding: 16px;
+        border-radius: 20px;
+      }
+
+      .btn-row {
+        flex-direction: column;
+      }
+
+      button.action-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>📢 ShopPlus Owner Notification Panel</h1>
-  <div class="subtitle">
-    Send push notifications to all stored ShopPlus devices from the <b>users</b> collection.
+  <div class="top-shell">
+    <div class="top-card">
+      <div class="brand-wrap">
+        <h1>📢 ShopPlus Owner Notification Panel</h1>
+        <p class="subtitle">
+          Send push notifications to all stored ShopPlus devices from the <b>users</b> collection.
+        </p>
+      </div>
+      <button id="themeToggleBtn" class="theme-btn" title="Toggle Theme">🌙</button>
+    </div>
   </div>
 
   <div class="box">
@@ -145,8 +372,8 @@
     <input type="text" id="url" value="https://shoppluse.github.io/my-store/home.html" />
 
     <div class="btn-row">
-      <button id="countBtn" class="secondary">Check Token Count</button>
-      <button id="sendBtn">Send Notification to All Devices</button>
+      <button id="countBtn" class="action-btn secondary">Check Token Count</button>
+      <button id="sendBtn" class="action-btn primary">Send Notification to All Devices</button>
     </div>
 
     <div id="stats" class="stats">Token count not checked yet.</div>
@@ -154,6 +381,10 @@
 
     <div class="note">
       Make sure your backend <b>ADMIN_SECRET_KEY</b> matches the admin key used here.
+    </div>
+
+    <div class="danger-note">
+      ⚠️ Security warning: This page currently contains an admin key in frontend source. Keep this page private and do not expose it publicly.
     </div>
   </div>
 
@@ -165,6 +396,31 @@
     const countBtn = document.getElementById("countBtn");
     const resultBox = document.getElementById("result");
     const statsBox = document.getElementById("stats");
+    const htmlEl = document.documentElement;
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+    // theme init
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      htmlEl.setAttribute("data-theme", "dark");
+      themeToggleBtn.textContent = "☀️";
+    } else {
+      htmlEl.setAttribute("data-theme", "light");
+      themeToggleBtn.textContent = "🌙";
+    }
+
+    themeToggleBtn.addEventListener("click", () => {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+      if (currentTheme === "dark") {
+        htmlEl.setAttribute("data-theme", "light");
+        localStorage.setItem("theme", "light");
+        themeToggleBtn.textContent = "🌙";
+      } else {
+        htmlEl.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+        themeToggleBtn.textContent = "☀️";
+      }
+    });
 
     async function fetchTokenCount() {
       statsBox.textContent = "Checking token count...";
