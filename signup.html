@@ -335,8 +335,8 @@
       signupBtn.textContent = "Creating Account...";
 
       try {
-        // Using /register because backend now supports BOTH /register and /signup
-        const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
+        // IMPORTANT: current deployed backend supports /signup
+        const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -352,13 +352,14 @@
           throw new Error("Server returned invalid response");
         }
 
-        if (!res.ok || !data.success) {
+        // Works with both old and new backend responses
+        if (!res.ok || data.success === false) {
           showMessage(data.message || "Signup failed. Please try again.", "error");
           resetButton();
           return;
         }
 
-        showMessage("Signup successful! Redirecting to login...", "success");
+        showMessage(data.message || "Signup successful! Redirecting to login...", "success");
 
         setTimeout(() => {
           window.location.href = "login.html";
