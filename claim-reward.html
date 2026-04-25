@@ -6,65 +6,107 @@
   <title>ShopPlus - Claim Reward</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#0047ab" />
+  <meta name="theme-color" content="#111111" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --gradient: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-      --bg: #eef5ff;
+      --bg: #f7f7f8;
+      --bg-2: #efeff2;
       --card-bg: #ffffff;
-      --text: #1f1f1f;
-      --muted: #64748b;
-      --primary: #0047ab;
-      --primary-2: #0099ff;
-      --border: #dbe7ff;
-      --shadow: rgba(0, 71, 171, 0.14);
-      --success: #16a34a;
-      --danger: #dc2626;
+      --text: #111111;
+      --muted: #777777;
+      --muted-2: #9b9b9b;
+      --primary: #111111;
+      --primary-2: #2d2d2d;
+      --border: #e9e9ec;
+      --soft-border: #f0f0f2;
+      --shadow: rgba(0, 0, 0, 0.06);
+      --shadow-2: rgba(0, 0, 0, 0.09);
+      --success: #15803d;
+      --danger: #b91c1c;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --note-bg: #f8fafc;
+      --note-border: #e2e8f0;
     }
 
     [data-theme="dark"] {
-      --bg: #0f172a;
-      --card-bg: #111827;
+      --bg: #0f1115;
+      --bg-2: #171a20;
+      --card-bg: #161a22;
       --text: #f8fafc;
-      --muted: #94a3b8;
-      --primary: #60a5fa;
-      --primary-2: #38bdf8;
-      --border: #1e3a8a;
-      --shadow: rgba(56, 189, 248, 0.15);
+      --muted: #a1a1aa;
+      --muted-2: #8b95a7;
+      --primary: #ffffff;
+      --primary-2: #d1d5db;
+      --border: #232833;
+      --soft-border: #1d2330;
+      --shadow: rgba(0, 0, 0, 0.25);
+      --shadow-2: rgba(0, 0, 0, 0.32);
+      --success: #4ade80;
+      --danger: #f87171;
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --success-border: rgba(74, 222, 128, 0.22);
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-border: rgba(248, 113, 113, 0.22);
+      --note-bg: rgba(255,255,255,0.03);
+      --note-border: rgba(255,255,255,0.06);
     }
 
-    * { box-sizing: border-box; }
+    * { 
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, #f8fbff 100%);
+      background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 24%, var(--bg) 100%);
       color: var(--text);
       overflow-x: hidden;
     }
 
-    /* HOME.HTML STYLE HEADER */
+    /* UPDATED PREMIUM HEADER THEME */
     .main-header {
-      background: var(--gradient);
+      background: transparent;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calc(18px + env(safe-area-inset-top)) 16px 20px;
-      box-shadow: 0 6px 20px var(--shadow);
-      gap: 14px;
+      padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-shell {
+      width: 100%;
+      max-width: 700px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 10px;
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    [data-theme="dark"] .header-shell {
+      background: rgba(22,26,34,0.88);
+      border-color: rgba(255,255,255,0.04);
     }
 
     .shopplus-logo {
-      font-size: 2rem;
-      font-weight: 700;
+      font-size: 1.6rem;
+      font-weight: 800;
       color: var(--primary);
-      background: #ffffff;
-      padding: 10px 22px;
+      background: var(--card-bg);
+      padding: 12px 18px;
       border-radius: 18px;
       text-decoration: none;
       display: inline-flex;
@@ -72,37 +114,39 @@
       justify-content: center;
       gap: 6px;
       width: 100%;
-      max-width: 700px;
+      border: 1px solid var(--border);
+      box-shadow: 0 6px 16px var(--shadow);
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
     }
 
     .shopplus-logo .plus {
       color: var(--primary-2);
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       line-height: 1;
     }
 
     .header-actions {
       width: 100%;
-      max-width: 700px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 8px;
       align-items: stretch;
     }
 
     .header-btn,
     .dark-mode-toggle {
       width: 100%;
-      min-height: 64px;
+      min-height: 52px;
       text-decoration: none;
-      background: rgba(255,255,255,0.15);
-      color: #fff;
+      background: var(--card-bg);
+      color: var(--text);
       font-weight: 700;
-      font-size: 1rem;
-      padding: 12px 10px;
+      font-size: 0.86rem;
+      padding: 10px 8px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid var(--border);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -110,59 +154,59 @@
       font-family: inherit;
       cursor: pointer;
       transition: 0.25s ease;
-      box-shadow: none;
-      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 14px var(--shadow);
     }
 
     .header-btn:hover,
     .dark-mode-toggle:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,255,0.22);
+      box-shadow: 0 8px 18px var(--shadow-2);
     }
 
     .dark-mode-toggle {
-      font-size: 1.5rem;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 1.2rem;
+      background: var(--card-bg);
     }
 
     .page-wrap {
       max-width: 760px;
-      margin: 36px auto;
-      padding: 0 18px 40px;
+      margin: 14px auto;
+      padding: 0 10px 24px;
     }
 
     .card {
       background: var(--card-bg);
       border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 18px 50px var(--shadow);
+      padding: 20px;
+      box-shadow: 0 14px 34px var(--shadow);
       border: 1px solid var(--border);
     }
 
     .title {
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: clamp(1.35rem, 4vw, 1.9rem);
+      font-weight: 800;
       color: var(--primary);
       margin: 0 0 8px;
       text-align: center;
+      letter-spacing: -0.3px;
     }
 
     .subtitle {
       text-align: center;
       color: var(--muted);
-      margin: 0 0 22px;
-      line-height: 1.6;
+      margin: 0 0 20px;
+      line-height: 1.7;
+      font-size: 0.93rem;
     }
 
     .field {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .label {
       display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.86rem;
+      font-weight: 700;
       margin-bottom: 8px;
       color: var(--text);
     }
@@ -170,14 +214,15 @@
     .input,
     .textarea {
       width: 100%;
-      padding: 14px 15px;
+      padding: 13px 14px;
       border-radius: 14px;
-      border: 1.5px solid var(--border);
+      border: 1px solid var(--border);
       outline: none;
-      font-size: 15px;
+      font-size: 14px;
       font-family: inherit;
-      background: #fff;
-      color: #111827;
+      background: rgba(17, 17, 17, 0.025);
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .textarea {
@@ -188,19 +233,24 @@
     .input:focus,
     .textarea:focus {
       border-color: var(--primary-2);
-      box-shadow: 0 0 0 4px rgba(0, 153, 255, 0.12);
+      box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
     }
 
     [data-theme="dark"] .input,
     [data-theme="dark"] .textarea {
-      background: #0b1220;
+      background: rgba(255,255,255,0.025);
       color: #f8fafc;
+    }
+
+    [data-theme="dark"] .input:focus,
+    [data-theme="dark"] .textarea:focus {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 14px;
     }
 
     .btn {
@@ -208,16 +258,22 @@
       border: none;
       outline: none;
       cursor: pointer;
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 14px 16px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       font-family: inherit;
-      background: var(--gradient);
+      background: linear-gradient(120deg, #111111, #2d2d2d);
       color: #fff;
-      box-shadow: 0 10px 24px rgba(0, 71, 171, 0.22);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
       transition: 0.25s ease;
       margin-top: 8px;
+    }
+
+    [data-theme="dark"] .btn {
+      background: linear-gradient(120deg, #ffffff, #e5e7eb);
+      color: #111111;
+      box-shadow: 0 12px 24px rgba(255, 255, 255, 0.08);
     }
 
     .btn:hover {
@@ -233,101 +289,129 @@
     .message {
       margin-top: 16px;
       padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 0.92rem;
+      border-radius: 14px;
+      font-size: 0.9rem;
       display: none;
-      line-height: 1.5;
+      line-height: 1.6;
       white-space: pre-line;
+      font-weight: 600;
     }
 
     .message.success {
       display: block;
-      background: rgba(22, 163, 74, 0.08);
+      background: var(--success-bg);
       color: var(--success);
-      border: 1px solid rgba(22, 163, 74, 0.2);
+      border: 1px solid var(--success-border);
     }
 
     .message.error {
       display: block;
-      background: rgba(220, 38, 38, 0.08);
+      background: var(--danger-bg);
       color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.2);
+      border: 1px solid var(--danger-border);
     }
 
     .note-box {
       margin-top: 18px;
       padding: 14px;
-      border-radius: 14px;
-      background: rgba(0, 153, 255, 0.06);
-      border: 1px solid rgba(0, 153, 255, 0.14);
+      border-radius: 16px;
+      background: var(--note-bg);
+      border: 1px solid var(--note-border);
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       line-height: 1.6;
     }
 
     @media (max-width: 700px) {
+      body {
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      }
+
       .grid {
         grid-template-columns: 1fr;
       }
 
       .main-header {
-        padding: calc(14px + env(safe-area-inset-top)) 12px 18px;
-        gap: 12px;
+        padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
+        gap: 8px;
+      }
+
+      .header-shell {
+        border-radius: 20px;
+        padding: 8px;
       }
 
       .shopplus-logo {
-        font-size: 1.35rem;
-        padding: 8px 14px;
+        font-size: 1.25rem;
+        padding: 10px 14px;
         border-radius: 16px;
+        margin-bottom: 8px;
       }
 
       .shopplus-logo .plus {
-        font-size: 1.7rem;
+        font-size: 1.5rem;
       }
 
       .header-actions {
-        gap: 10px;
+        gap: 8px;
       }
 
       .header-btn,
       .dark-mode-toggle {
-        min-height: 58px;
-        font-size: 0.82rem;
+        min-height: 48px;
+        font-size: 0.8rem;
         padding: 10px 6px;
         border-radius: 14px;
       }
 
       .dark-mode-toggle {
-        font-size: 1.25rem;
+        font-size: 1.05rem;
       }
 
       .page-wrap {
-        padding: 0 12px 24px;
-        margin: 20px auto;
+        padding: 0 10px 20px;
+        margin: 12px auto;
       }
 
       .card {
-        padding: 20px 16px;
-        border-radius: 18px;
+        padding: 16px;
+        border-radius: 20px;
       }
 
       .title {
-        font-size: 1.45rem;
+        font-size: 1.3rem;
       }
 
       .subtitle {
-        font-size: 0.9rem;
+        font-size: 0.88rem;
+      }
+
+      .input,
+      .textarea {
+        border-radius: 12px;
+      }
+
+      .btn {
+        min-height: 50px;
+        border-radius: 14px;
+      }
+
+      .note-box,
+      .message {
+        border-radius: 14px;
       }
     }
   </style>
 </head>
 <body>
   <div class="main-header">
-    <a href="./home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+    <div class="header-shell">
+      <a href="./home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-    <div class="header-actions">
-      <a href="./profile.html" class="header-btn">Profile</a>
-      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+      <div class="header-actions">
+        <a href="./profile.html" class="header-btn">Profile</a>
+        <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+      </div>
     </div>
   </div>
 
