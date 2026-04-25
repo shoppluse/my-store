@@ -5,44 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - ShopPlus</title>
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#0047ab" />
+  <meta name="theme-color" content="#111111" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --gradient-light: linear-gradient(120deg, #0047ab 60%, #0099ff 100%);
-      --bg-light: #f8f9fb;
+      --bg: #f7f7f8;
+      --bg-2: #efeff2;
       --card-bg: #ffffff;
-      --text-dark: #1f1f1f;
-      --accent: #0099ff;
-      --accent-dark: #0047ab;
-      --input-bg: #f2f4fc;
-      --border: #d8e3f2;
-      --success: #2e7d32;
-      --error: #d32f2f;
+      --text: #111111;
+      --muted: #777777;
+      --muted-2: #9b9b9b;
+      --primary: #111111;
+      --primary-2: #2d2d2d;
+      --border: #e9e9ec;
+      --soft-border: #f0f0f2;
+      --shadow: rgba(0, 0, 0, 0.06);
+      --shadow-2: rgba(0, 0, 0, 0.09);
+      --input-bg: rgba(17, 17, 17, 0.025);
+      --success: #15803d;
+      --error: #b91c1c;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+      --error-bg: #fef2f2;
+      --error-border: #fecaca;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1115;
+      --bg-2: #171a20;
+      --card-bg: #161a22;
+      --text: #f8fafc;
+      --muted: #a1a1aa;
+      --muted-2: #8b95a7;
+      --primary: #ffffff;
+      --primary-2: #d1d5db;
+      --border: #232833;
+      --soft-border: #1d2330;
+      --shadow: rgba(0, 0, 0, 0.25);
+      --shadow-2: rgba(0, 0, 0, 0.32);
+      --input-bg: rgba(255,255,255,0.025);
+      --success: #4ade80;
+      --error: #f87171;
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --success-border: rgba(74, 222, 128, 0.22);
+      --error-bg: rgba(239, 68, 68, 0.12);
+      --error-border: rgba(248, 113, 113, 0.22);
     }
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: var(--bg-light);
+      background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 24%, var(--bg) 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      color: var(--text);
     }
 
     header {
-      background: var(--gradient-light);
-      color: white;
-      padding: calc(18px + env(safe-area-inset-top)) 24px 18px;
+      background: transparent;
+      padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-shell {
+      max-width: 520px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 14px 18px;
+      box-shadow: 0 8px 24px var(--shadow);
       text-align: center;
-      font-size: 24px;
-      font-weight: 700;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.2px;
+    }
+
+    [data-theme="dark"] .header-shell {
+      background: rgba(22,26,34,0.88);
+      border-color: rgba(255,255,255,0.04);
     }
 
     .container {
@@ -50,58 +102,68 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 24px;
+      padding: 14px 10px 20px;
     }
 
     .auth-card {
       background: var(--card-bg);
       width: 100%;
       max-width: 420px;
-      border-radius: 18px;
-      box-shadow: 0 10px 28px rgba(0, 71, 171, 0.15);
-      padding: 28px 24px;
+      border-radius: 24px;
+      box-shadow: 0 14px 34px var(--shadow);
+      border: 1px solid var(--border);
+      padding: 22px 18px;
     }
 
     .auth-card h2 {
       margin: 0 0 8px;
-      color: var(--accent-dark);
+      color: var(--primary);
       text-align: center;
-      font-size: 28px;
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
     }
 
     .auth-card p {
-      margin: 0 0 24px;
-      color: #555;
+      margin: 0 0 20px;
+      color: var(--muted);
       text-align: center;
-      font-size: 14px;
+      font-size: 0.9rem;
+      line-height: 1.6;
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     label {
       display: block;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--text-dark);
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
     }
 
     input {
       width: 100%;
       padding: 13px 14px;
-      border-radius: 10px;
+      border-radius: 14px;
       border: 1px solid var(--border);
       background: var(--input-bg);
-      font-size: 15px;
+      font-size: 14px;
       outline: none;
       font-family: inherit;
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.12);
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+    }
+
+    [data-theme="dark"] input:focus {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
     }
 
     .password-wrapper {
@@ -124,7 +186,7 @@
       padding: 0;
       margin: 0;
       width: auto;
-      color: #555;
+      color: var(--muted);
       line-height: 1;
       user-select: none;
     }
@@ -138,20 +200,26 @@
       width: 100%;
       padding: 14px;
       border: none;
-      border-radius: 10px;
-      background: var(--gradient-light);
+      border-radius: 16px;
+      background: linear-gradient(120deg, #111111, #2d2d2d);
       color: white;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
       margin-top: 8px;
       font-family: inherit;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    [data-theme="dark"] button[type="submit"] {
+      background: linear-gradient(120deg, #ffffff, #e5e7eb);
+      color: #111111;
+      box-shadow: 0 12px 24px rgba(255, 255, 255, 0.08);
     }
 
     button[type="submit"]:hover {
       transform: translateY(-2px);
-      opacity: 0.95;
     }
 
     button[type="submit"]:disabled {
@@ -162,65 +230,95 @@
 
     .message {
       margin-top: 16px;
-      font-size: 14px;
+      font-size: 0.88rem;
       text-align: center;
       font-weight: 600;
-      line-height: 1.5;
+      line-height: 1.6;
       min-height: 22px;
       word-break: break-word;
+      padding: 0;
+      border-radius: 14px;
     }
 
-    .success {
+    .message.success {
       color: var(--success);
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      padding: 12px 14px;
     }
 
-    .error {
+    .message.error {
       color: var(--error);
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      padding: 12px 14px;
     }
 
     .link-text {
       margin-top: 18px;
       text-align: center;
-      font-size: 14px;
+      font-size: 0.88rem;
+      color: var(--muted);
     }
 
     .link-text a {
-      color: var(--accent-dark);
+      color: var(--primary);
       text-decoration: none;
       font-weight: 700;
     }
 
+    .link-text a:hover {
+      opacity: 0.8;
+    }
+
     footer {
-      background: var(--gradient-light);
-      color: white;
       text-align: center;
-      padding: 14px 10px calc(14px + env(safe-area-inset-bottom));
-      font-size: 14px;
+      color: var(--muted);
+      background: transparent;
+      padding: 10px 12px calc(18px + env(safe-area-inset-bottom));
+      font-size: 13px;
+      font-weight: 600;
     }
 
     @media (max-width: 520px) {
       .container {
-        padding: 20px 16px;
+        padding: 12px 10px 18px;
       }
 
       .auth-card {
-        padding: 22px 18px;
-        border-radius: 16px;
+        padding: 18px 14px;
+        border-radius: 20px;
       }
 
       header {
-        font-size: 20px;
-        padding: calc(24px + env(safe-area-inset-top)) 16px 16px;
+        padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
+      }
+
+      .header-shell {
+        font-size: 1rem;
+        padding: 12px 14px;
+        border-radius: 20px;
       }
 
       .auth-card h2 {
-        font-size: 24px;
+        font-size: 1.45rem;
+      }
+
+      input {
+        border-radius: 12px;
+      }
+
+      button[type="submit"] {
+        border-radius: 14px;
+        min-height: 50px;
       }
     }
   </style>
 </head>
 <body>
-  <header>ShopPlus - Welcome Back</header>
+  <header>
+    <div class="header-shell">ShopPlus - Welcome Back</div>
+  </header>
 
   <div class="container">
     <div class="auth-card">
