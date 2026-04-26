@@ -104,7 +104,7 @@ router.post("/", async (req, res) => {
     }
 
     const affiliatePlan = user.affiliatePlan || "starter";
-    const planStatus = user.planStatus || "active";
+    const planStatus = user.planStatus || "inactive";
 
     if (planStatus !== "active") {
       return res.status(403).json({
@@ -112,18 +112,28 @@ router.post("/", async (req, res) => {
       });
     }
 
-    let maxProducts = 3;
-    if (affiliatePlan === "pro") maxProducts = 15;
-    if (affiliatePlan === "premium") maxProducts = 9999;
+    // ===============================
+    // USE maxProducts DIRECTLY FROM USER DOCUMENT
+    // -1 means unlimited
+    // ===============================
+    let maxProducts = typeof user.maxProducts === "number" ? user.maxProducts : 3;
+
+    // fallback mapping only if maxProducts is missing
+    if (user.maxProducts === undefined || user.maxProducts === null) {
+      if (affiliatePlan === "starter") maxProducts = 3;
+      if (affiliatePlan === "basic") maxProducts = 20;
+      if (affiliatePlan === "elite") maxProducts = -1;
+    }
 
     const activeProductsCount = await Product.countDocuments({
       ownerId: user._id,
       isActive: true
     });
 
-    if (activeProductsCount >= maxProducts) {
+    // Only block if NOT unlimited
+    if (maxProducts !== -1 && activeProductsCount >= maxProducts) {
       return res.status(403).json({
-        message: `Your ${affiliatePlan} plan allows only ${maxProducts === 9999 ? "unlimited" : maxProducts} active products`
+        message: `Your ${affiliatePlan} plan allows only ${maxProducts} active products`
       });
     }
 
@@ -147,10 +157,18 @@ router.post("/", async (req, res) => {
       }
     }
 
+    const cleanPrice = Number(price);
+
+    if (isNaN(cleanPrice) || cleanPrice < 0) {
+      return res.status(400).json({
+        message: "Invalid price"
+      });
+    }
+
     const newProduct = new Product({
       name: String(name).trim(),
       description: String(description).trim(),
-      price,
+      price: cleanPrice,
       image: mainImage,
       images: cleanImages,
       category: String(category).trim(),
@@ -167,12 +185,14 @@ router.post("/", async (req, res) => {
 
     res.status(201).json({
       message: "Product added successfully",
-      product: savedProduct,
-      user
+      product: savedProduct
     });
   } catch (error) {
     console.error("POST /api/products error:", error);
-    res.status(500).json({ message: "Failed to add product" });
+    res.status(500).json({
+      message: "Failed to add product",
+      error: error.message
+    });
   }
 });
 
