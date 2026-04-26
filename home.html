@@ -372,20 +372,29 @@
     padding-left: 2px;
   }
 
-  .app-shortcuts-row {
+  .app-shortcuts-slider {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+  }
+
+  .app-shortcuts-slider.dragging {
+    cursor: grabbing;
+  }
+
+  .app-shortcuts-track {
     display: flex;
     flex-wrap: nowrap;
     gap: 14px;
     align-items: flex-start;
-    overflow-x: auto;
-    overflow-y: hidden;
+    width: max-content;
+    will-change: transform;
     padding: 2px 2px 8px;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
   }
-
-  .app-shortcuts-row::-webkit-scrollbar { display: none; }
 
   .app-shortcut-card {
     text-decoration: none;
@@ -704,7 +713,7 @@
       margin-bottom: 8px;
     }
 
-    .app-shortcuts-row {
+    .app-shortcuts-track {
       gap: 12px;
       padding-bottom: 6px;
     }
@@ -820,8 +829,10 @@
 
   <section class="app-shortcuts-section">
     <h2 class="app-shortcuts-title">Top Shopping Apps</h2>
-    <div class="app-shortcuts-row" id="appShortcutsRow">
-      <div class="app-shortcut-fallback">Loading app shortcuts...</div>
+    <div class="app-shortcuts-slider" id="appShortcutsSlider">
+      <div class="app-shortcuts-track" id="appShortcutsRow">
+        <div class="app-shortcut-fallback">Loading app shortcuts...</div>
+      </div>
     </div>
   </section>
 
@@ -855,6 +866,7 @@
   const searchInput = document.getElementById('searchBar');
   const productList = document.getElementById('product-list');
   const appShortcutsRow = document.getElementById('appShortcutsRow');
+  const appShortcutsSlider = document.getElementById('appShortcutsSlider');
 
   const brandToggleBtn = document.getElementById('brandToggleBtn');
   const brandDropdown = document.getElementById('brandDropdown');
@@ -882,6 +894,17 @@
   let startX = 0;
   let currentTranslate = 0;
   let prevTranslate = 0;
+
+  // APP SHORTCUTS AUTO SCROLL VARIABLES
+  let appsAnimationFrame = null;
+  let appsAutoScrollPaused = false;
+  let appsIsDragging = false;
+  let appsStartX = 0;
+  let appsDragStartTranslate = 0;
+  let appsCurrentTranslate = 0;
+  let appsSingleSetWidth = 0;
+  let appsLastFrameTime = 0;
+  const APPS_SCROLL_SPEED = 0.45;
 
   /* =========================
      INSTALL BUTTON
@@ -992,29 +1015,193 @@
 
       appShortcutsRow.innerHTML = '';
 
-      apps.forEach(app => {
-        const appCard = document.createElement('a');
-        appCard.className = 'app-shortcut-card';
-        appCard.href = app.link || '#';
+      const originalCards = apps.map(app => createAppShortcutCard(app));
+      const cloneCards = apps.map(app => createAppShortcutCard(app));
 
-        if (/^https?:\/\//i.test(app.link || '')) {
-          appCard.target = '_blank';
-          appCard.rel = 'noopener noreferrer';
-        }
+      originalCards.forEach(card => appShortcutsRow.appendChild(card));
+      cloneCards.forEach(card => appShortcutsRow.appendChild(card));
 
-        appCard.innerHTML = `
-          <div class="app-shortcut-logo-wrap">
-            <img src="${app.image || 'https://via.placeholder.com/100'}" alt="${app.name || 'App'}" class="app-shortcut-logo" />
-          </div>
-          <div class="app-shortcut-name">${app.name || 'App'}</div>
-        `;
-
-        appShortcutsRow.appendChild(appCard);
+      requestAnimationFrame(() => {
+        setupAppShortcutsAutoScroll();
       });
+
     } catch (error) {
       console.error("apps.json fetch error:", error);
       appShortcutsRow.innerHTML = '<div class="app-shortcut-fallback">Error loading app shortcuts.</div>';
     }
+  }
+
+  function createAppShortcutCard(app) {
+    const appCard = document.createElement('a');
+    appCard.className = 'app-shortcut-card';
+    appCard.href = app.link || '#';
+
+    if (/^https?:\/\//i.test(app.link || '')) {
+      appCard.target = '_blank';
+      appCard.rel = 'noopener noreferrer';
+    }
+
+    appCard.innerHTML = `
+      <div class="app-shortcut-logo-wrap">
+        <img src="${app.image || 'https://via.placeholder.com/100'}" alt="${app.name || 'App'}" class="app-shortcut-logo" />
+      </div>
+      <div class="app-shortcut-name">${app.name || 'App'}</div>
+    `;
+
+    return appCard;
+  }
+
+  function setupAppShortcutsAutoScroll() {
+    stopAppShortcutsAutoScroll();
+
+    const cards = appShortcutsRow.querySelectorAll('.app-shortcut-card');
+    if (!cards.length) return;
+
+    const totalWidth = appShortcutsRow.scrollWidth;
+    appsSingleSetWidth = totalWidth / 2;
+    appsCurrentTranslate = 0;
+    appsLastFrameTime = 0;
+
+    applyAppShortcutsTransform();
+    startAppShortcutsAutoScroll();
+    setupAppShortcutsDrag();
+  }
+
+  function applyAppShortcutsTransform() {
+    appShortcutsRow.style.transform = `translateX(${-appsCurrentTranslate}px)`;
+  }
+
+  function startAppShortcutsAutoScroll() {
+    function step(timestamp) {
+      if (!appsLastFrameTime) appsLastFrameTime = timestamp;
+      const delta = timestamp - appsLastFrameTime;
+      appsLastFrameTime = timestamp;
+
+      if (!appsAutoScrollPaused && !appsIsDragging && appsSingleSetWidth > 0) {
+        appsCurrentTranslate += APPS_SCROLL_SPEED * delta;
+
+        if (appsCurrentTranslate >= appsSingleSetWidth) {
+          appsCurrentTranslate -= appsSingleSetWidth;
+        }
+
+        applyAppShortcutsTransform();
+      }
+
+      appsAnimationFrame = requestAnimationFrame(step);
+    }
+
+    appsAnimationFrame = requestAnimationFrame(step);
+  }
+
+  function stopAppShortcutsAutoScroll() {
+    if (appsAnimationFrame) {
+      cancelAnimationFrame(appsAnimationFrame);
+      appsAnimationFrame = null;
+    }
+  }
+
+  function normalizeAppsTranslate() {
+    if (appsSingleSetWidth <= 0) return;
+
+    while (appsCurrentTranslate < 0) {
+      appsCurrentTranslate += appsSingleSetWidth;
+    }
+
+    while (appsCurrentTranslate >= appsSingleSetWidth) {
+      appsCurrentTranslate -= appsSingleSetWidth;
+    }
+  }
+
+  function setupAppShortcutsDrag() {
+    if (appShortcutsSlider.dataset.dragReady === "true") return;
+    appShortcutsSlider.dataset.dragReady = "true";
+
+    appShortcutsSlider.addEventListener('mouseenter', () => {
+      appsAutoScrollPaused = true;
+    });
+
+    appShortcutsSlider.addEventListener('mouseleave', () => {
+      if (!appsIsDragging) appsAutoScrollPaused = false;
+    });
+
+    appShortcutsSlider.addEventListener('touchstart', appTouchStart, { passive: true });
+    appShortcutsSlider.addEventListener('touchmove', appTouchMove, { passive: false });
+    appShortcutsSlider.addEventListener('touchend', appTouchEnd);
+    appShortcutsSlider.addEventListener('touchcancel', appTouchEnd);
+
+    appShortcutsSlider.addEventListener('mousedown', appMouseStart);
+    window.addEventListener('mousemove', appMouseMove);
+    window.addEventListener('mouseup', appMouseEnd);
+    window.addEventListener('mouseleave', appMouseEnd);
+
+    appShortcutsSlider.addEventListener('dragstart', (e) => e.preventDefault());
+
+    window.addEventListener('resize', () => {
+      const cards = appShortcutsRow.querySelectorAll('.app-shortcut-card');
+      if (!cards.length) return;
+
+      const totalWidth = appShortcutsRow.scrollWidth;
+      appsSingleSetWidth = totalWidth / 2;
+      normalizeAppsTranslate();
+      applyAppShortcutsTransform();
+    });
+  }
+
+  function appTouchStart(e) {
+    if (!appsSingleSetWidth) return;
+    appsIsDragging = true;
+    appsAutoScrollPaused = true;
+    appsStartX = e.touches[0].clientX;
+    appsDragStartTranslate = appsCurrentTranslate;
+    appShortcutsSlider.classList.add('dragging');
+  }
+
+  function appTouchMove(e) {
+    if (!appsIsDragging) return;
+    const currentX = e.touches[0].clientX;
+    const diff = currentX - appsStartX;
+
+    if (Math.abs(diff) > 4) e.preventDefault();
+
+    appsCurrentTranslate = appsDragStartTranslate - diff;
+    normalizeAppsTranslate();
+    applyAppShortcutsTransform();
+  }
+
+  function appTouchEnd() {
+    if (!appsIsDragging) return;
+    appsIsDragging = false;
+    appShortcutsSlider.classList.remove('dragging');
+    setTimeout(() => {
+      appsAutoScrollPaused = false;
+    }, 500);
+  }
+
+  function appMouseStart(e) {
+    if (!appsSingleSetWidth) return;
+    appsIsDragging = true;
+    appsAutoScrollPaused = true;
+    appsStartX = e.clientX;
+    appsDragStartTranslate = appsCurrentTranslate;
+    appShortcutsSlider.classList.add('dragging');
+  }
+
+  function appMouseMove(e) {
+    if (!appsIsDragging) return;
+    const diff = e.clientX - appsStartX;
+
+    appsCurrentTranslate = appsDragStartTranslate - diff;
+    normalizeAppsTranslate();
+    applyAppShortcutsTransform();
+  }
+
+  function appMouseEnd() {
+    if (!appsIsDragging) return;
+    appsIsDragging = false;
+    appShortcutsSlider.classList.remove('dragging');
+    setTimeout(() => {
+      appsAutoScrollPaused = false;
+    }, 500);
   }
 
   /* =========================
