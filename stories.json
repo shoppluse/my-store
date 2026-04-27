@@ -1,0 +1,19 @@
+{
+  "version": "story-v1",
+  "stories": [
+    {
+      "type": "image",
+      "src": "https://m.media-amazon.com/images/I/618kRzYBYlL._SY741_.jpg",
+      "caption": "🔥 New premium product is now live on ShopPlus! Tap to view.",
+      "duration": 5000,
+      "productLink": "https://shoppluse.github.io/my-store/product.html?id=37&source=json"
+    },
+    {
+      "type": "image",
+      "src": "https://assets-jiocdn.ajio.com/medias/sys_master/root/h17/h5d/14567374684190/-473Wx593H-460514688-brown-MODEL.jpg",
+      "caption": "🛍️ Trending deal available now! Tap to open product.",
+      "duration": 5000,
+      "productLink": "https://shoppluse.github.io/my-store/product.html?id=31&source=json"
+    }
+  ]
+}
