@@ -151,6 +151,7 @@
     cursor: pointer;
     transition: 0.25s ease;
     overflow: visible;
+    isolation: isolate;
   }
 
   .shopplus-story-btn:hover {
@@ -174,19 +175,18 @@
     pointer-events: none;
   }
 
-  /* NEW story ring */
   .shopplus-story-btn.has-story::before {
-    inset: -1.5px;
-    background: linear-gradient(135deg, #00d4ff, #00ff95, #4f46e5, #00d4ff);
+    inset: -2px;
+    background: linear-gradient(135deg, #00d4ff, #00ff95, #4f46e5, #ff9800, #00d4ff);
     background-size: 300% 300%;
     animation: shopplusStoryRing 3s linear infinite;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 0 18px rgba(79,70,229,0.18);
   }
 
-  /* SEEN story ring */
   .shopplus-story-btn.story-seen::before {
     inset: -1px;
     background: linear-gradient(135deg, #d1d5db, #9ca3af);
-    opacity: 0.85;
+    opacity: 0.9;
   }
 
   @keyframes shopplusStoryRing {
@@ -662,17 +662,22 @@
   .error-text { color: #e53935; }
 
   /* =========================
-     STORY VIEWER
+     STORY VIEWER - PREMIUM HANGING TAG STYLE
   ========================= */
   .story-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.92);
+    background:
+      radial-gradient(circle at 20% 20%, rgba(79,70,229,0.18), transparent 28%),
+      radial-gradient(circle at 80% 30%, rgba(0,212,255,0.14), transparent 26%),
+      radial-gradient(circle at 50% 85%, rgba(255,152,0,0.12), transparent 28%),
+      linear-gradient(180deg, rgba(4,8,18,0.96) 0%, rgba(9,13,24,0.98) 45%, rgba(3,6,14,0.99) 100%);
     z-index: 9999;
     display: none;
     align-items: center;
     justify-content: center;
     padding: 0;
+    backdrop-filter: blur(10px);
   }
 
   .story-modal.show {
@@ -683,9 +688,12 @@
     width: min(100vw, 430px);
     height: 100vh;
     max-height: 100vh;
-    background: #111;
     position: relative;
     overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 35%, rgba(255,255,255,0.05), transparent 22%),
+      radial-gradient(circle at 50% 58%, rgba(255,255,255,0.04), transparent 24%),
+      linear-gradient(180deg, rgba(6,10,20,0.92) 0%, rgba(8,12,24,0.96) 100%);
   }
 
   .story-progress-wrap {
@@ -693,7 +701,7 @@
     top: calc(8px + env(safe-area-inset-top));
     left: 12px;
     right: 12px;
-    z-index: 5;
+    z-index: 12;
     display: flex;
     gap: 6px;
   }
@@ -701,7 +709,7 @@
   .story-progress-bar {
     flex: 1;
     height: 3px;
-    background: rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.22);
     border-radius: 999px;
     overflow: hidden;
   }
@@ -719,7 +727,7 @@
     top: calc(18px + env(safe-area-inset-top));
     left: 14px;
     right: 14px;
-    z-index: 6;
+    z-index: 13;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -745,6 +753,7 @@
     justify-content: center;
     font-size: 0.95rem;
     flex-shrink: 0;
+    box-shadow: 0 0 14px rgba(0,212,255,0.25);
   }
 
   .story-title {
@@ -757,30 +766,177 @@
   }
 
   .story-close {
-    background: transparent;
-    border: none;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
     color: #fff;
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     cursor: pointer;
     line-height: 1;
-    padding: 0;
+    padding: 8px 10px;
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
   }
 
-  .story-image-wrap {
-    width: 100%;
-    height: 100%;
+  .story-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(74px + env(safe-area-inset-top)) 22px calc(150px + env(safe-area-inset-bottom));
+  }
+
+  .story-card-glow {
+    position: absolute;
+    width: min(82vw, 300px);
+    height: min(82vw, 300px);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(0,212,255,0.08) 35%, rgba(79,70,229,0.06) 55%, transparent 75%);
+    filter: blur(18px);
+    pointer-events: none;
+    z-index: 1;
+    transform: translateY(8px);
+  }
+
+  .story-hanger-line {
+    position: absolute;
+    top: calc(74px + env(safe-area-inset-top));
+    left: 50%;
+    width: 2px;
+    height: 48px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.18));
+    border-radius: 999px;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .story-card {
     position: relative;
-    background: radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 30%),
-                radial-gradient(circle at bottom right, rgba(255,152,0,0.08), transparent 30%),
-                linear-gradient(180deg, #0b0b0d 0%, #111111 100%);
+    width: min(82vw, 310px);
+    max-width: 310px;
+    min-height: 420px;
+    max-height: calc(100vh - 240px);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+    border-radius: 28px;
+    border: 1px solid rgba(255,255,255,0.95);
+    box-shadow:
+      0 22px 60px rgba(0,0,0,0.38),
+      0 10px 24px rgba(0,0,0,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+    padding: 24px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 14px;
+    z-index: 4;
+    transform: rotate(-1.3deg);
+    transform-origin: top center;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .story-card::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    width: 28px;
+    height: 28px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, #d7dbe3 0 30%, #c6ccd6 31% 45%, #eef1f6 46% 100%);
+    box-shadow:
+      inset 0 3px 6px rgba(0,0,0,0.12),
+      0 1px 0 rgba(255,255,255,0.9);
+    z-index: 2;
+  }
+
+  .story-card::after {
+    content: "";
+    position: absolute;
+    top: 19px;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, #7d8794 0%, #5e6670 100%);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.18);
+    z-index: 3;
+  }
+
+  .story-card-header {
+    padding-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .story-card-badge {
+    align-self: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(17,17,17,0.06), rgba(17,17,17,0.03));
+    color: #111;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    border: 1px solid rgba(17,17,17,0.08);
+  }
+
+  .story-card-product-title {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.25;
+    font-weight: 800;
+    color: #111111;
+    word-break: break-word;
+  }
+
+  .story-card-image-wrap {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 240px;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(0,0,0,0.03), transparent 24%),
+      linear-gradient(180deg, #ffffff 0%, #f7f8fb 100%);
+    border-radius: 22px;
+    border: 1px solid rgba(17,17,17,0.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.9),
+      0 8px 18px rgba(17,17,17,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    overflow: hidden;
+  }
+
+  .story-card-image-wrap::after {
+    content: "";
+    position: absolute;
+    inset: auto 12% 10px;
+    height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(17,17,17,0.10), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
   }
 
   .story-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
-    background: #111;
+    background: transparent;
+    position: relative;
+    z-index: 2;
   }
 
   .story-bottom-overlay {
@@ -788,13 +944,14 @@
     left: 12px;
     right: 12px;
     bottom: calc(18px + env(safe-area-inset-bottom));
-    z-index: 5;
+    z-index: 14;
     border-radius: 18px;
     padding: 14px 16px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.55));
-    backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.52));
+    backdrop-filter: blur(12px);
     color: #fff;
     box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.08);
   }
 
   .story-caption {
@@ -817,7 +974,7 @@
     top: 0;
     bottom: 0;
     width: 28%;
-    z-index: 4;
+    z-index: 11;
   }
 
   .story-nav-left { left: 0; }
@@ -999,6 +1156,45 @@
       max-height: 100vh;
     }
 
+    .story-stage {
+      padding: calc(70px + env(safe-area-inset-top)) 18px calc(145px + env(safe-area-inset-bottom));
+    }
+
+    .story-card {
+      width: min(84vw, 300px);
+      max-width: 300px;
+      min-height: 390px;
+      max-height: calc(100vh - 225px);
+      padding: 22px 16px 16px;
+      border-radius: 24px;
+    }
+
+    .story-card::before {
+      width: 24px;
+      height: 24px;
+      top: 9px;
+    }
+
+    .story-card::after {
+      width: 10px;
+      height: 10px;
+      top: 16px;
+    }
+
+    .story-card-header {
+      padding-top: 20px;
+    }
+
+    .story-card-product-title {
+      font-size: 0.98rem;
+    }
+
+    .story-card-image-wrap {
+      min-height: 220px;
+      border-radius: 20px;
+      padding: 14px;
+    }
+
     .story-caption {
       font-size: 0.95rem;
     }
@@ -1006,6 +1202,11 @@
     .story-title {
       max-width: 190px;
       font-size: 0.95rem;
+    }
+
+    .story-hanger-line {
+      height: 42px;
+      top: calc(72px + env(safe-area-inset-top));
     }
   }
 </style>
@@ -1016,7 +1217,6 @@
     <div class="header-inner">
       <div class="header-top-row no-install" id="headerTopRow">
 
-        <!-- UPDATED: Shop+ becomes story button -->
         <div class="shopplus-story-wrap">
           <button id="shopplusStoryBtn" class="shopplus-story-btn" type="button">
             Shop<span class="plus">+</span>
@@ -1097,12 +1297,25 @@
       <div class="story-nav-left" id="storyNavLeft"></div>
       <div class="story-nav-right" id="storyNavRight"></div>
 
-      <div class="story-image-wrap">
-        <img id="storyImage" class="story-image" src="" alt="Story" />
-        <div class="story-bottom-overlay">
-          <p class="story-caption" id="storyCaption"></p>
-          <div class="story-hint">Tap anywhere on the story to open product</div>
+      <div class="story-stage" id="storyStage">
+        <div class="story-card-glow"></div>
+        <div class="story-hanger-line"></div>
+
+        <div class="story-card" id="storyCard" role="button" tabindex="0" aria-label="Open product from story">
+          <div class="story-card-header">
+            <div class="story-card-badge">ShopPlus Pick</div>
+            <h3 class="story-card-product-title" id="storyCardTitle">Featured Product</h3>
+          </div>
+
+          <div class="story-card-image-wrap">
+            <img id="storyImage" class="story-image" src="" alt="Story" />
+          </div>
         </div>
+      </div>
+
+      <div class="story-bottom-overlay">
+        <p class="story-caption" id="storyCaption"></p>
+        <div class="story-hint">Tap anywhere on the story to open product</div>
       </div>
     </div>
   </div>
@@ -1148,9 +1361,12 @@
   const storyImage = document.getElementById('storyImage');
   const storyCaption = document.getElementById('storyCaption');
   const storyTitle = document.getElementById('storyTitle');
+  const storyCardTitle = document.getElementById('storyCardTitle');
   const storyProgressWrap = document.getElementById('storyProgressWrap');
   const storyNavLeft = document.getElementById('storyNavLeft');
   const storyNavRight = document.getElementById('storyNavRight');
+  const storyCard = document.getElementById('storyCard');
+  const storyStage = document.getElementById('storyStage');
 
   let selectedCategory = 'Overall';
   let allProducts = [];
@@ -1181,11 +1397,11 @@
   let storyCurrentIndex = 0;
   let storyTimer = null;
   let storyProgressTimer = null;
-  let latestStoryVersion = 0;
   let currentStoryStartedAt = 0;
   let currentStoryDuration = 5000;
+  let currentStoriesSignature = "";
 
-  const STORY_SEEN_VERSION_KEY = "shopplusStorySeenVersion";
+  const STORY_SEEN_SIGNATURE_KEY = "shopplusStorySeenSignature";
 
   /* =========================
      INSTALL BUTTON
@@ -1242,14 +1458,44 @@
   }
 
   /* =========================
-     STORY SYSTEM (VERSION BASED)
+     STORY SYSTEM (SIGNATURE BASED)
   ========================= */
+  function createStorySignature(stories) {
+    if (!Array.isArray(stories) || !stories.length) return "";
+
+    const normalized = stories.map((story) => ({
+      id: String(story.id || ""),
+      title: String(story.title || ""),
+      image: String(story.image || ""),
+      caption: String(story.caption || ""),
+      productId: String(story.productId || ""),
+      source: String(story.source || "json"),
+      duration: Number(story.duration || 5000)
+    }));
+
+    return JSON.stringify(normalized);
+  }
+
+  function getSeenStorySignature() {
+    return localStorage.getItem(STORY_SEEN_SIGNATURE_KEY) || "";
+  }
+
+  function setSeenStorySignature(signature) {
+    localStorage.setItem(STORY_SEEN_SIGNATURE_KEY, signature || "");
+  }
+
+  function hasUnseenStories() {
+    if (!storiesData.length || !currentStoriesSignature) return false;
+    return currentStoriesSignature !== getSeenStorySignature();
+  }
+
   async function loadStories() {
     try {
       const response = await fetch("/my-store/stories.json", { cache: "no-store" });
 
       if (!response.ok) {
         storiesData = [];
+        currentStoriesSignature = "";
         updateStoryRingState();
         return;
       }
@@ -1258,37 +1504,22 @@
 
       if (!Array.isArray(data) || data.length === 0) {
         storiesData = [];
+        currentStoriesSignature = "";
         updateStoryRingState();
         return;
       }
 
       storiesData = data.filter(Boolean);
-
-      latestStoryVersion = storiesData.reduce((max, story) => {
-        const v = Number(story.version || 1);
-        return Math.max(max, isNaN(v) ? 1 : v);
-      }, 0);
+      currentStoriesSignature = createStorySignature(storiesData);
 
       updateStoryRingState();
 
     } catch (error) {
       console.error("stories.json fetch error:", error);
       storiesData = [];
+      currentStoriesSignature = "";
       updateStoryRingState();
     }
-  }
-
-  function getSeenStoryVersion() {
-    const value = Number(localStorage.getItem(STORY_SEEN_VERSION_KEY) || 0);
-    return isNaN(value) ? 0 : value;
-  }
-
-  function setSeenStoryVersion(version) {
-    localStorage.setItem(STORY_SEEN_VERSION_KEY, String(version));
-  }
-
-  function hasUnseenStories() {
-    return latestStoryVersion > getSeenStoryVersion();
   }
 
   function updateStoryRingState() {
@@ -1313,8 +1544,7 @@
     renderStoryProgressBars();
     showStory(storyCurrentIndex);
 
-    // IMPORTANT: Mark current latest version as seen when user opens stories
-    setSeenStoryVersion(latestStoryVersion);
+    setSeenStorySignature(currentStoriesSignature);
     updateStoryRingState();
   }
 
@@ -1360,7 +1590,7 @@
     });
   }
 
-  function showStory(index) {
+    function showStory(index) {
     clearStoryTimers();
 
     const story = storiesData[index];
@@ -1377,6 +1607,7 @@
     storyImage.alt = story.title || 'Story';
     storyCaption.textContent = story.caption || 'Tap to open product';
     storyTitle.textContent = story.title || 'ShopPlus Update';
+    storyCardTitle.textContent = story.title || 'Featured Product';
 
     currentStoryStartedAt = performance.now();
     animateStoryProgress();
@@ -1436,7 +1667,10 @@
     }
   });
 
-  storyCloseBtn.addEventListener('click', closeStoryViewer);
+  storyCloseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeStoryViewer();
+  });
 
   storyModal.addEventListener('click', (e) => {
     if (e.target === storyModal) {
@@ -1454,10 +1688,21 @@
     nextStory();
   });
 
-  // Tap main story area -> open product
-  document.querySelector('.story-image-wrap').addEventListener('click', (e) => {
-    // prevent if user tapped nav zones or close
+  storyCard.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openCurrentStoryProduct();
+  });
+
+  storyCard.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openCurrentStoryProduct();
+    }
+  });
+
+  storyStage.addEventListener('click', (e) => {
     if (e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right') || e.target.closest('.story-close')) return;
+    if (e.target.closest('.story-card')) return;
     openCurrentStoryProduct();
   });
 
@@ -2188,10 +2433,20 @@
   ========================= */
   window.addEventListener("DOMContentLoaded", () => {
     setupInstallButton();
-    loadStories();       // NEW
+    loadStories();
     loadAppShortcuts();
     loadAds();
     loadProducts();
+  });
+
+  window.addEventListener('focus', () => {
+    loadStories();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      loadStories();
+    }
   });
 </script>
 
