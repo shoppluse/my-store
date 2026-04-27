@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline - ShopPlus</title>
+
+  <link rel="manifest" href="/my-store/manifest.json" />
+  <meta name="theme-color" content="#111111" />
+  <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+  <link rel="icon" href="/my-store/icons/icon-192.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #f7f7f8;
+      --bg-2: #efeff2;
+      --card-bg: #ffffff;
+      --text: #111111;
+      --muted: #6b7280;
+      --border: #e9e9ec;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --primary: #111111;
+      --accent: #ff9800;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1115;
+      --bg-2: #171a20;
+      --card-bg: #161a22;
+      --text: #f8fafc;
+      --muted: #9ca3af;
+      --border: #232833;
+      --shadow: rgba(0, 0, 0, 0.28);
+      --primary: #ffffff;
+      --accent: #fbbf24;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      width: 100%;
+      padding: calc(14px + env(safe-area-inset-top)) 14px 10px;
+    }
+
+    .topbar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 6px 18px var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.2px;
+    }
+
+    .logo .plus {
+      color: var(--accent);
+      font-size: 1.55rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: 0 10px 28px var(--shadow);
+      padding: 28px 22px;
+      text-align: center;
+    }
+
+    .emoji {
+      font-size: 3.4rem;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    p {
+      margin: 0 0 20px;
+      font-size: 0.96rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: #111111;
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      padding: 10px 12px calc(16px + env(safe-area-inset-bottom));
+    }
+
+    @media (max-width: 520px) {
+      .card {
+        padding: 24px 18px;
+        border-radius: 22px;
+      }
+
+      .emoji {
+        font-size: 3rem;
+      }
+
+      .topbar-inner {
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo">Shop<span class="plus">+</span></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="emoji">📡</div>
+      <h1>You are offline</h1>
+      <p>
+        ShopPlus cannot load this page right now because your internet connection is unavailable.
+        Please turn on mobile data or Wi-Fi and try again.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="location.reload()">Try Again</button>
+        <a class="btn btn-secondary" href="home.html">Go to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 ShopPlus. Stay connected for the best experience.</div>
+</body>
+</html>
