@@ -123,7 +123,15 @@
     grid-template-columns: 1.8fr 1fr 0.9fr;
   }
 
-  .shopplus-logo {
+  .shopplus-story-wrap {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .shopplus-story-btn {
+    position: relative;
     font-size: 1.3rem;
     font-weight: 800;
     color: var(--primary);
@@ -140,219 +148,50 @@
     box-shadow: 0 4px 14px var(--shadow);
     border: 1px solid var(--border);
     letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    overflow: visible;
   }
 
-  .shopplus-logo .plus {
+  .shopplus-story-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px var(--shadow-2);
+  }
+
+  .shopplus-story-btn .plus {
     color: #ff9800;
     font-size: 1.55rem;
     font-weight: 900;
     line-height: 1;
   }
 
-  /* =========================
-     SHOPPLUS STORY BUTTON
-  ========================= */
-  .shopplus-story-btn {
-    position: relative;
-    overflow: visible;
-    cursor: pointer;
-  }
-
-  .shopplus-story-btn .shopplus-story-inner {
-    width: 100%;
-    height: 100%;
-    min-height: inherit;
-    border-radius: inherit;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    background: var(--card-bg);
-    border-radius: 16px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .shopplus-story-btn.has-story::before {
-    content: "";
-    position: absolute;
-    inset: -1.5px;
-    border-radius: 21px;
-    background: linear-gradient(135deg, #00c6ff, #00ff99, #4facfe, #38bdf8);
-    background-size: 300% 300%;
-    animation: shopplusStoryGlow 3s ease infinite;
-    z-index: 0;
-    box-shadow: 0 0 14px rgba(0, 198, 255, 0.22), 0 0 18px rgba(0, 255, 153, 0.18);
-  }
-
+  .shopplus-story-btn.has-story::before,
   .shopplus-story-btn.story-seen::before {
     content: "";
     position: absolute;
+    border-radius: 22px;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* NEW story ring */
+  .shopplus-story-btn.has-story::before {
+    inset: -1.5px;
+    background: linear-gradient(135deg, #00d4ff, #00ff95, #4f46e5, #00d4ff);
+    background-size: 300% 300%;
+    animation: shopplusStoryRing 3s linear infinite;
+  }
+
+  /* SEEN story ring */
+  .shopplus-story-btn.story-seen::before {
     inset: -1px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #d7d7dc, #e9e9ef);
-    z-index: 0;
+    background: linear-gradient(135deg, #d1d5db, #9ca3af);
+    opacity: 0.85;
   }
 
-  [data-theme="dark"] .shopplus-story-btn.story-seen::before {
-    background: linear-gradient(135deg, #2a3140, #3b4456);
-  }
-
-  @keyframes shopplusStoryGlow {
+  @keyframes shopplusStoryRing {
     0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  /* =========================
-     STORY VIEWER MODAL
-  ========================= */
-  .story-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background: rgba(0, 0, 0, 0.96);
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .story-modal.show {
-    display: flex;
-  }
-
-  .story-viewer {
-    width: min(100vw, 420px);
-    height: 100vh;
-    max-height: 100vh;
-    position: relative;
-    background: #000;
-    overflow: hidden;
-  }
-
-  .story-progress-wrap {
-    position: absolute;
-    top: calc(10px + env(safe-area-inset-top));
-    left: 10px;
-    right: 10px;
-    display: flex;
-    gap: 6px;
-    z-index: 5;
-  }
-
-  .story-progress {
-    flex: 1;
-    height: 3px;
-    background: rgba(255,255,255,0.25);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .story-progress-fill {
-    height: 100%;
-    width: 0%;
-    background: #ffffff;
-    border-radius: 999px;
-    transition: width 0.08s linear;
-  }
-
-  .story-topbar {
-    position: absolute;
-    top: calc(24px + env(safe-area-inset-top));
-    left: 14px;
-    right: 14px;
-    z-index: 6;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #fff;
-  }
-
-  .story-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 14px;
-  }
-
-  .story-brand-dot {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #00c6ff, #00ff99);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #111;
-    font-weight: 800;
-  }
-
-  .story-close {
-    background: rgba(255,255,255,0.12);
-    border: none;
-    color: #fff;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    font-size: 22px;
-    cursor: pointer;
-  }
-
-  .story-media {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-
-  .story-media img,
-  .story-media video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .story-caption {
-    position: absolute;
-    left: 14px;
-    right: 14px;
-    bottom: calc(20px + env(safe-area-inset-bottom));
-    z-index: 6;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.45;
-    background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0));
-    padding: 40px 10px 8px;
-    border-radius: 14px;
-  }
-
-  .story-nav-zone {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 50%;
-    z-index: 7;
-  }
-
-  .story-nav-left { left: 0; }
-  .story-nav-right { right: 0; }
-
-  .story-loading {
-    position: absolute;
-    inset: 0;
-    z-index: 4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255,255,255,0.9);
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .story-hidden {
-    display: none !important;
+    100% { background-position: 100% 50%; }
   }
 
   .header-btn,
@@ -823,6 +662,168 @@
   .error-text { color: #e53935; }
 
   /* =========================
+     STORY VIEWER
+  ========================= */
+  .story-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .story-modal.show {
+    display: flex;
+  }
+
+  .story-frame {
+    width: min(100vw, 430px);
+    height: 100vh;
+    max-height: 100vh;
+    background: #111;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .story-progress-wrap {
+    position: absolute;
+    top: calc(8px + env(safe-area-inset-top));
+    left: 12px;
+    right: 12px;
+    z-index: 5;
+    display: flex;
+    gap: 6px;
+  }
+
+  .story-progress-bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .story-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 999px;
+    transition: width 0.05s linear;
+  }
+
+  .story-topbar {
+    position: absolute;
+    top: calc(18px + env(safe-area-inset-top));
+    left: 14px;
+    right: 14px;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+  }
+
+  .story-top-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .story-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00d4ff, #00ff95);
+    color: #111;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .story-title {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+  }
+
+  .story-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .story-image-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(255,152,0,0.08), transparent 30%),
+                linear-gradient(180deg, #0b0b0d 0%, #111111 100%);
+  }
+
+  .story-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #111;
+  }
+
+  .story-bottom-overlay {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 5;
+    border-radius: 18px;
+    padding: 14px 16px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.55));
+    backdrop-filter: blur(10px);
+    color: #fff;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  }
+
+  .story-caption {
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .story-hint {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .story-nav-left,
+  .story-nav-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 28%;
+    z-index: 4;
+  }
+
+  .story-nav-left { left: 0; }
+  .story-nav-right { right: 0; }
+
+  /* =========================
      MOBILE APP STYLE
   ========================= */
   @media (max-width: 700px) {
@@ -848,23 +849,20 @@
       grid-template-columns: 1.8fr 1fr 0.8fr;
     }
 
-    .shopplus-logo {
+    .shopplus-story-btn {
       font-size: 1.08rem;
       padding: 10px 10px;
       border-radius: 16px;
       min-height: 50px;
     }
 
-    .shopplus-logo .plus {
+    .shopplus-story-btn .plus {
       font-size: 1.35rem;
     }
 
-    .shopplus-story-btn.has-story::before {
-      border-radius: 19px;
-    }
-
+    .shopplus-story-btn.has-story::before,
     .shopplus-story-btn.story-seen::before {
-      border-radius: 18px;
+      border-radius: 20px;
     }
 
     .header-btn,
@@ -994,6 +992,21 @@
     .product-rating {
       font-size: 10px;
     }
+
+    .story-frame {
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+    }
+
+    .story-caption {
+      font-size: 0.95rem;
+    }
+
+    .story-title {
+      max-width: 190px;
+      font-size: 0.95rem;
+    }
   }
 </style>
 </head>
@@ -1002,9 +1015,13 @@
   <div class="main-header">
     <div class="header-inner">
       <div class="header-top-row no-install" id="headerTopRow">
-        <button id="shopplusStoryBtn" class="shopplus-logo shopplus-story-btn" type="button">
-          <span class="shopplus-story-inner">Shop<span class="plus">+</span></span>
-        </button>
+
+        <!-- UPDATED: Shop+ becomes story button -->
+        <div class="shopplus-story-wrap">
+          <button id="shopplusStoryBtn" class="shopplus-story-btn" type="button">
+            Shop<span class="plus">+</span>
+          </button>
+        </div>
 
         <div class="brand-filter-wrapper">
           <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
@@ -1064,27 +1081,29 @@
     <p class="loading-text">Loading products...</p>
   </div>
 
-  <!-- STORY MODAL -->
-  <div id="storyModal" class="story-modal">
-    <div class="story-viewer">
+  <!-- STORY VIEWER MODAL -->
+  <div class="story-modal" id="storyModal">
+    <div class="story-frame" id="storyFrame">
       <div class="story-progress-wrap" id="storyProgressWrap"></div>
 
       <div class="story-topbar">
-        <div class="story-brand">
-          <div class="story-brand-dot">S+</div>
-          <div>ShopPlus Updates</div>
+        <div class="story-top-left">
+          <div class="story-avatar">S+</div>
+          <div class="story-title" id="storyTitle">ShopPlus Update</div>
         </div>
-        <button id="storyCloseBtn" class="story-close" type="button">×</button>
+        <button class="story-close" id="storyCloseBtn" type="button">×</button>
       </div>
 
-      <div class="story-loading" id="storyLoading">Loading story...</div>
+      <div class="story-nav-left" id="storyNavLeft"></div>
+      <div class="story-nav-right" id="storyNavRight"></div>
 
-      <div class="story-media" id="storyMedia"></div>
-
-      <div class="story-caption" id="storyCaption"></div>
-
-      <div class="story-nav-zone story-nav-left" id="storyPrevZone"></div>
-      <div class="story-nav-zone story-nav-right" id="storyNextZone"></div>
+      <div class="story-image-wrap">
+        <img id="storyImage" class="story-image" src="" alt="Story" />
+        <div class="story-bottom-overlay">
+          <p class="story-caption" id="storyCaption"></p>
+          <div class="story-hint">Tap anywhere on the story to open product</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1122,16 +1141,16 @@
   const adsSlider = document.getElementById('adsSlider');
   const adsTrack = document.getElementById('adsTrack');
 
-  // STORY ELEMENTS
+  /* STORY ELEMENTS */
   const shopplusStoryBtn = document.getElementById('shopplusStoryBtn');
   const storyModal = document.getElementById('storyModal');
-  const storyProgressWrap = document.getElementById('storyProgressWrap');
-  const storyMedia = document.getElementById('storyMedia');
-  const storyCaption = document.getElementById('storyCaption');
-  const storyLoading = document.getElementById('storyLoading');
   const storyCloseBtn = document.getElementById('storyCloseBtn');
-  const storyPrevZone = document.getElementById('storyPrevZone');
-  const storyNextZone = document.getElementById('storyNextZone');
+  const storyImage = document.getElementById('storyImage');
+  const storyCaption = document.getElementById('storyCaption');
+  const storyTitle = document.getElementById('storyTitle');
+  const storyProgressWrap = document.getElementById('storyProgressWrap');
+  const storyNavLeft = document.getElementById('storyNavLeft');
+  const storyNavRight = document.getElementById('storyNavRight');
 
   let selectedCategory = 'Overall';
   let allProducts = [];
@@ -1159,11 +1178,14 @@
 
   // STORY VARIABLES
   let storiesData = [];
-  let currentStoryIndex = 0;
+  let storyCurrentIndex = 0;
   let storyTimer = null;
   let storyProgressTimer = null;
-  let storyDuration = 5000;
-  let currentStoryVersion = "0";
+  let latestStoryVersion = 0;
+  let currentStoryStartedAt = 0;
+  let currentStoryDuration = 5000;
+
+  const STORY_SEEN_VERSION_KEY = "shopplusStorySeenVersion";
 
   /* =========================
      INSTALL BUTTON
@@ -1218,6 +1240,234 @@
       }
     }, 3000);
   }
+
+  /* =========================
+     STORY SYSTEM (VERSION BASED)
+  ========================= */
+  async function loadStories() {
+    try {
+      const response = await fetch("/my-store/stories.json", { cache: "no-store" });
+
+      if (!response.ok) {
+        storiesData = [];
+        updateStoryRingState();
+        return;
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data) || data.length === 0) {
+        storiesData = [];
+        updateStoryRingState();
+        return;
+      }
+
+      storiesData = data.filter(Boolean);
+
+      latestStoryVersion = storiesData.reduce((max, story) => {
+        const v = Number(story.version || 1);
+        return Math.max(max, isNaN(v) ? 1 : v);
+      }, 0);
+
+      updateStoryRingState();
+
+    } catch (error) {
+      console.error("stories.json fetch error:", error);
+      storiesData = [];
+      updateStoryRingState();
+    }
+  }
+
+  function getSeenStoryVersion() {
+    const value = Number(localStorage.getItem(STORY_SEEN_VERSION_KEY) || 0);
+    return isNaN(value) ? 0 : value;
+  }
+
+  function setSeenStoryVersion(version) {
+    localStorage.setItem(STORY_SEEN_VERSION_KEY, String(version));
+  }
+
+  function hasUnseenStories() {
+    return latestStoryVersion > getSeenStoryVersion();
+  }
+
+  function updateStoryRingState() {
+    shopplusStoryBtn.classList.remove('has-story', 'story-seen');
+
+    if (!storiesData.length) return;
+
+    if (hasUnseenStories()) {
+      shopplusStoryBtn.classList.add('has-story');
+    } else {
+      shopplusStoryBtn.classList.add('story-seen');
+    }
+  }
+
+  function openStoryViewer(startIndex = 0) {
+    if (!storiesData.length) return;
+
+    storyCurrentIndex = Math.max(0, Math.min(startIndex, storiesData.length - 1));
+    storyModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+
+    renderStoryProgressBars();
+    showStory(storyCurrentIndex);
+
+    // IMPORTANT: Mark current latest version as seen when user opens stories
+    setSeenStoryVersion(latestStoryVersion);
+    updateStoryRingState();
+  }
+
+  function closeStoryViewer() {
+    storyModal.classList.remove('show');
+    document.body.style.overflow = '';
+    clearStoryTimers();
+  }
+
+  function clearStoryTimers() {
+    if (storyTimer) {
+      clearTimeout(storyTimer);
+      storyTimer = null;
+    }
+    if (storyProgressTimer) {
+      cancelAnimationFrame(storyProgressTimer);
+      storyProgressTimer = null;
+    }
+  }
+
+  function renderStoryProgressBars() {
+    storyProgressWrap.innerHTML = '';
+    storiesData.forEach((_, index) => {
+      const bar = document.createElement('div');
+      bar.className = 'story-progress-bar';
+      bar.innerHTML = `<div class="story-progress-fill" id="storyProgressFill-${index}"></div>`;
+      storyProgressWrap.appendChild(bar);
+    });
+  }
+
+  function updateProgressBars(activeIndex, progressPercent = 0) {
+    storiesData.forEach((_, index) => {
+      const fill = document.getElementById(`storyProgressFill-${index}`);
+      if (!fill) return;
+
+      if (index < activeIndex) {
+        fill.style.width = '100%';
+      } else if (index === activeIndex) {
+        fill.style.width = `${progressPercent}%`;
+      } else {
+        fill.style.width = '0%';
+      }
+    });
+  }
+
+  function showStory(index) {
+    clearStoryTimers();
+
+    const story = storiesData[index];
+    if (!story) {
+      closeStoryViewer();
+      return;
+    }
+
+    storyCurrentIndex = index;
+    currentStoryDuration = Number(story.duration || 5000);
+    if (isNaN(currentStoryDuration) || currentStoryDuration < 1500) currentStoryDuration = 5000;
+
+    storyImage.src = story.image || '';
+    storyImage.alt = story.title || 'Story';
+    storyCaption.textContent = story.caption || 'Tap to open product';
+    storyTitle.textContent = story.title || 'ShopPlus Update';
+
+    currentStoryStartedAt = performance.now();
+    animateStoryProgress();
+
+    storyTimer = setTimeout(() => {
+      nextStory();
+    }, currentStoryDuration);
+  }
+
+  function animateStoryProgress() {
+    function step(now) {
+      const elapsed = now - currentStoryStartedAt;
+      const percent = Math.min((elapsed / currentStoryDuration) * 100, 100);
+      updateProgressBars(storyCurrentIndex, percent);
+
+      if (percent < 100 && storyModal.classList.contains('show')) {
+        storyProgressTimer = requestAnimationFrame(step);
+      }
+    }
+
+    storyProgressTimer = requestAnimationFrame(step);
+  }
+
+  function nextStory() {
+    if (storyCurrentIndex < storiesData.length - 1) {
+      showStory(storyCurrentIndex + 1);
+    } else {
+      closeStoryViewer();
+    }
+  }
+
+  function prevStory() {
+    if (storyCurrentIndex > 0) {
+      showStory(storyCurrentIndex - 1);
+    } else {
+      showStory(0);
+    }
+  }
+
+  function openCurrentStoryProduct() {
+    const story = storiesData[storyCurrentIndex];
+    if (!story) return;
+
+    const productId = story.productId || story.id || '';
+    const source = story.source || 'json';
+
+    if (!productId) return;
+
+    window.location.href = `product.html?id=${encodeURIComponent(productId)}&source=${encodeURIComponent(source)}`;
+  }
+
+  shopplusStoryBtn.addEventListener('click', () => {
+    if (storiesData.length) {
+      openStoryViewer(0);
+    } else {
+      window.location.href = "home.html";
+    }
+  });
+
+  storyCloseBtn.addEventListener('click', closeStoryViewer);
+
+  storyModal.addEventListener('click', (e) => {
+    if (e.target === storyModal) {
+      closeStoryViewer();
+    }
+  });
+
+  storyNavLeft.addEventListener('click', (e) => {
+    e.stopPropagation();
+    prevStory();
+  });
+
+  storyNavRight.addEventListener('click', (e) => {
+    e.stopPropagation();
+    nextStory();
+  });
+
+  // Tap main story area -> open product
+  document.querySelector('.story-image-wrap').addEventListener('click', (e) => {
+    // prevent if user tapped nav zones or close
+    if (e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right') || e.target.closest('.story-close')) return;
+    openCurrentStoryProduct();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!storyModal.classList.contains('show')) return;
+
+    if (e.key === 'Escape') closeStoryViewer();
+    if (e.key === 'ArrowRight') nextStory();
+    if (e.key === 'ArrowLeft') prevStory();
+  });
 
   /* =========================
      CATEGORY
@@ -1934,248 +2184,11 @@
   });
 
   /* =========================
-     SHOPPLUS STORY SYSTEM
-  ========================= */
-  async function loadStories() {
-    try {
-      const response = await fetch("/my-store/stories.json", { cache: "no-store" });
-
-      if (!response.ok) {
-        shopplusStoryBtn.classList.remove('has-story', 'story-seen');
-        return;
-      }
-
-      const data = await response.json();
-      const stories = Array.isArray(data) ? data : (Array.isArray(data.stories) ? data.stories : []);
-
-      if (!stories.length) {
-        shopplusStoryBtn.classList.remove('has-story', 'story-seen');
-        return;
-      }
-
-      storiesData = stories.filter(story => story && story.src);
-
-      if (!storiesData.length) {
-        shopplusStoryBtn.classList.remove('has-story', 'story-seen');
-        return;
-      }
-
-      currentStoryVersion = String(
-        data.version ||
-        storiesData.map(s => `${s.src}-${s.caption || ''}-${s.duration || ''}`).join("|")
-      );
-
-      const seenVersion = localStorage.getItem("shopplusStorySeenVersion");
-
-      shopplusStoryBtn.classList.remove('has-story', 'story-seen');
-
-      if (seenVersion === currentStoryVersion) {
-        shopplusStoryBtn.classList.add('story-seen');
-      } else {
-        shopplusStoryBtn.classList.add('has-story');
-      }
-    } catch (error) {
-      console.error("stories.json fetch error:", error);
-      shopplusStoryBtn.classList.remove('has-story', 'story-seen');
-    }
-  }
-
-  function markStoriesAsSeen() {
-    localStorage.setItem("shopplusStorySeenVersion", currentStoryVersion);
-    shopplusStoryBtn.classList.remove('has-story');
-    shopplusStoryBtn.classList.add('story-seen');
-  }
-
-  function buildStoryProgressBars() {
-    storyProgressWrap.innerHTML = '';
-
-    storiesData.forEach((_, index) => {
-      const bar = document.createElement('div');
-      bar.className = 'story-progress';
-      bar.innerHTML = `<div class="story-progress-fill" id="storyProgressFill-${index}"></div>`;
-      storyProgressWrap.appendChild(bar);
-    });
-  }
-
-  function resetStoryTimers() {
-    if (storyTimer) {
-      clearTimeout(storyTimer);
-      storyTimer = null;
-    }
-
-    if (storyProgressTimer) {
-      clearInterval(storyProgressTimer);
-      storyProgressTimer = null;
-    }
-  }
-
-  function updateStoryProgressBars(activeIndex, progressPercent) {
-    storiesData.forEach((_, i) => {
-      const fill = document.getElementById(`storyProgressFill-${i}`);
-      if (!fill) return;
-
-      if (i < activeIndex) {
-        fill.style.width = '100%';
-      } else if (i === activeIndex) {
-        fill.style.width = `${progressPercent}%`;
-      } else {
-        fill.style.width = '0%';
-      }
-    });
-  }
-
-  function openStoryViewer() {
-    if (!storiesData.length) return;
-
-    currentStoryIndex = 0;
-    storyModal.classList.add('show');
-    document.body.style.overflow = 'hidden';
-
-    buildStoryProgressBars();
-    showStory(currentStoryIndex);
-  }
-
-  function closeStoryViewer() {
-    resetStoryTimers();
-    storyModal.classList.remove('show');
-    document.body.style.overflow = '';
-    storyMedia.innerHTML = '';
-    storyCaption.textContent = '';
-    storyLoading.classList.remove('story-hidden');
-  }
-
-  function nextStory() {
-    if (currentStoryIndex < storiesData.length - 1) {
-      currentStoryIndex++;
-      showStory(currentStoryIndex);
-    } else {
-      closeStoryViewer();
-    }
-  }
-
-  function prevStory() {
-    if (currentStoryIndex > 0) {
-      currentStoryIndex--;
-      showStory(currentStoryIndex);
-    } else {
-      showStory(currentStoryIndex);
-    }
-  }
-
-  function showStory(index) {
-    resetStoryTimers();
-
-    const story = storiesData[index];
-    if (!story) return;
-
-    markStoriesAsSeen();
-
-    storyMedia.innerHTML = '';
-    storyCaption.textContent = story.caption || '';
-    storyLoading.classList.remove('story-hidden');
-
-    const isVideo = (story.type || '').toLowerCase() === 'video' || /\.(mp4|webm|ogg)$/i.test(story.src);
-
-    let mediaEl;
-
-    if (isVideo) {
-      mediaEl = document.createElement('video');
-      mediaEl.src = story.src;
-      mediaEl.autoplay = true;
-      mediaEl.muted = true;
-      mediaEl.playsInline = true;
-      mediaEl.preload = 'auto';
-
-      mediaEl.addEventListener('loadeddata', () => {
-        storyLoading.classList.add('story-hidden');
-      });
-
-      mediaEl.addEventListener('ended', () => {
-        nextStory();
-      });
-
-      mediaEl.addEventListener('loadedmetadata', () => {
-        const videoDurationMs = Math.max(3000, Math.floor((mediaEl.duration || 5) * 1000));
-        startStoryProgress(videoDurationMs);
-      });
-
-      mediaEl.addEventListener('error', () => {
-        storyLoading.classList.add('story-hidden');
-        startStoryProgress(story.duration || 5000);
-      });
-    } else {
-      mediaEl = document.createElement('img');
-      mediaEl.src = story.src;
-      mediaEl.alt = story.caption || 'Story';
-
-      mediaEl.addEventListener('load', () => {
-        storyLoading.classList.add('story-hidden');
-      });
-
-      mediaEl.addEventListener('error', () => {
-        storyLoading.classList.add('story-hidden');
-      });
-
-      startStoryProgress(story.duration || 5000);
-    }
-
-    storyMedia.appendChild(mediaEl);
-  }
-
-  function startStoryProgress(duration) {
-    storyDuration = Math.max(2000, Number(duration) || 5000);
-
-    const startedAt = Date.now();
-    updateStoryProgressBars(currentStoryIndex, 0);
-
-    storyProgressTimer = setInterval(() => {
-      const elapsed = Date.now() - startedAt;
-      const percent = Math.min(100, (elapsed / storyDuration) * 100);
-      updateStoryProgressBars(currentStoryIndex, percent);
-
-      if (percent >= 100) {
-        clearInterval(storyProgressTimer);
-        storyProgressTimer = null;
-      }
-    }, 60);
-
-    storyTimer = setTimeout(() => {
-      nextStory();
-    }, storyDuration);
-  }
-
-  shopplusStoryBtn.addEventListener('click', () => {
-    if (storiesData.length) {
-      openStoryViewer();
-    } else {
-      window.location.href = "home.html";
-    }
-  });
-
-  storyCloseBtn.addEventListener('click', closeStoryViewer);
-  storyPrevZone.addEventListener('click', prevStory);
-  storyNextZone.addEventListener('click', nextStory);
-
-  storyModal.addEventListener('click', (e) => {
-    if (e.target === storyModal) {
-      closeStoryViewer();
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (!storyModal.classList.contains('show')) return;
-
-    if (e.key === 'Escape') closeStoryViewer();
-    if (e.key === 'ArrowRight') nextStory();
-    if (e.key === 'ArrowLeft') prevStory();
-  });
-
-  /* =========================
      INIT
   ========================= */
   window.addEventListener("DOMContentLoaded", () => {
     setupInstallButton();
-    loadStories();
+    loadStories();       // NEW
     loadAppShortcuts();
     loadAds();
     loadProducts();
