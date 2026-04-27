@@ -1,26 +1,22 @@
-{
-  "version": "story-v1",
-  "stories": [
-    {
-      "type": "image",
-      "src": "https://m.media-amazon.com/images/I/618kRzYBYlL._SY741_.jpg",
-      "caption": "🔥 New premium product is now live on ShopPlus! Tap to view.",
-      "duration": 5000,
-      "productLink": "https://shoppluse.github.io/my-store/product.html?id=37&source=json"
-    },
-    {
-      "type": "image",
-      "src": "https://assets-jiocdn.ajio.com/medias/sys_master/root/h17/h5d/14567374684190/-473Wx593H-460514688-brown-MODEL.jpg",
-      "caption": "🛍️ Trending deal available now! Tap to open product.",
-      "duration": 5000,
-      "productLink": "https://shoppluse.github.io/my-store/product.html?id=31&source=json"
-    },
-        {
-      "type": "image",
-      "src": "https://m.media-amazon.com/images/I/7192Muh-sAL._SL1500_.jpg",
-      "caption": "🔥 New premium product is now live on ShopPlus! Tap to view.",
-      "duration": 5000,
-      "productLink": "https://shoppluse.github.io/my-store/product.html?id=69dec819d472608949793b99&source=backend"
-    }
-  ]
-}
+[
+  {
+    "id": "story-1",
+    "version": 1,
+    "title": "Chandheri Saree",
+    "image": "https://m.media-amazon.com/images/I/618kRzYBYlL._SY741_.jpg",
+    "caption": "🔥 New premium saree is now live on ShopPlus! Tap to view.",
+    "productId": "37",
+    "source": "json",
+    "duration": 5000
+  },
+  {
+    "id": "story-2",
+    "version": 1,
+    "title": "Spigen DuraPro",
+    "image": "https://m.media-amazon.com/images/I/61YMLdWk3CL._SY625_.jpg",
+    "caption": "🛍️ Trending deal available now! Tap to open product.",
+    "productId": "8",
+    "source": "json",
+    "duration": 5000
+  }
+]
