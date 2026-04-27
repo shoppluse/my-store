@@ -14,6 +14,13 @@
       "caption": "🛍️ Trending deal available now! Tap to open product.",
       "duration": 5000,
       "productLink": "https://shoppluse.github.io/my-store/product.html?id=31&source=json"
+    },
+        {
+      "type": "image",
+      "src": "https://m.media-amazon.com/images/I/7192Muh-sAL._SL1500_.jpg",
+      "caption": "🔥 New premium product is now live on ShopPlus! Tap to view.",
+      "duration": 5000,
+      "productLink": "https://shoppluse.github.io/my-store/product.html?id=69dec819d472608949793b99&source=backend"
     }
   ]
 }
