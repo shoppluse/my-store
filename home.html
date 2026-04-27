@@ -149,6 +149,212 @@
     line-height: 1;
   }
 
+  /* =========================
+     SHOPPLUS STORY BUTTON
+  ========================= */
+  .shopplus-story-btn {
+    position: relative;
+    overflow: visible;
+    cursor: pointer;
+  }
+
+  .shopplus-story-btn .shopplus-story-inner {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    border-radius: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .shopplus-story-btn.has-story::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 21px;
+    background: linear-gradient(135deg, #00c6ff, #00ff99, #4facfe, #38bdf8);
+    background-size: 300% 300%;
+    animation: shopplusStoryGlow 3s ease infinite;
+    z-index: 0;
+    box-shadow: 0 0 14px rgba(0, 198, 255, 0.22), 0 0 18px rgba(0, 255, 153, 0.18);
+  }
+
+  .shopplus-story-btn.story-seen::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #d7d7dc, #e9e9ef);
+    z-index: 0;
+  }
+
+  [data-theme="dark"] .shopplus-story-btn.story-seen::before {
+    background: linear-gradient(135deg, #2a3140, #3b4456);
+  }
+
+  @keyframes shopplusStoryGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* =========================
+     STORY VIEWER MODAL
+  ========================= */
+  .story-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.96);
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .story-modal.show {
+    display: flex;
+  }
+
+  .story-viewer {
+    width: min(100vw, 420px);
+    height: 100vh;
+    max-height: 100vh;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .story-progress-wrap {
+    position: absolute;
+    top: calc(10px + env(safe-area-inset-top));
+    left: 10px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+    z-index: 5;
+  }
+
+  .story-progress {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .story-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #ffffff;
+    border-radius: 999px;
+    transition: width 0.08s linear;
+  }
+
+  .story-topbar {
+    position: absolute;
+    top: calc(24px + env(safe-area-inset-top));
+    left: 14px;
+    right: 14px;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+  }
+
+  .story-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .story-brand-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00c6ff, #00ff99);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    font-weight: 800;
+  }
+
+  .story-close {
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .story-media {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .story-media img,
+  .story-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .story-caption {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    z-index: 6;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.45;
+    background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0));
+    padding: 40px 10px 8px;
+    border-radius: 14px;
+  }
+
+  .story-nav-zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    z-index: 7;
+  }
+
+  .story-nav-left { left: 0; }
+  .story-nav-right { right: 0; }
+
+  .story-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.9);
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .story-hidden {
+    display: none !important;
+  }
+
   .header-btn,
   .brand-toggle-btn,
   .install-btn {
@@ -653,6 +859,14 @@
       font-size: 1.35rem;
     }
 
+    .shopplus-story-btn.has-story::before {
+      border-radius: 19px;
+    }
+
+    .shopplus-story-btn.story-seen::before {
+      border-radius: 18px;
+    }
+
     .header-btn,
     .brand-toggle-btn,
     .install-btn {
@@ -788,7 +1002,9 @@
   <div class="main-header">
     <div class="header-inner">
       <div class="header-top-row no-install" id="headerTopRow">
-        <a href="home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
+        <button id="shopplusStoryBtn" class="shopplus-logo shopplus-story-btn" type="button">
+          <span class="shopplus-story-inner">Shop<span class="plus">+</span></span>
+        </button>
 
         <div class="brand-filter-wrapper">
           <button id="brandToggleBtn" class="brand-toggle-btn" type="button">
@@ -848,6 +1064,30 @@
     <p class="loading-text">Loading products...</p>
   </div>
 
+  <!-- STORY MODAL -->
+  <div id="storyModal" class="story-modal">
+    <div class="story-viewer">
+      <div class="story-progress-wrap" id="storyProgressWrap"></div>
+
+      <div class="story-topbar">
+        <div class="story-brand">
+          <div class="story-brand-dot">S+</div>
+          <div>ShopPlus Updates</div>
+        </div>
+        <button id="storyCloseBtn" class="story-close" type="button">×</button>
+      </div>
+
+      <div class="story-loading" id="storyLoading">Loading story...</div>
+
+      <div class="story-media" id="storyMedia"></div>
+
+      <div class="story-caption" id="storyCaption"></div>
+
+      <div class="story-nav-zone story-nav-left" id="storyPrevZone"></div>
+      <div class="story-nav-zone story-nav-right" id="storyNextZone"></div>
+    </div>
+  </div>
+
 <script>
   const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
@@ -882,6 +1122,17 @@
   const adsSlider = document.getElementById('adsSlider');
   const adsTrack = document.getElementById('adsTrack');
 
+  // STORY ELEMENTS
+  const shopplusStoryBtn = document.getElementById('shopplusStoryBtn');
+  const storyModal = document.getElementById('storyModal');
+  const storyProgressWrap = document.getElementById('storyProgressWrap');
+  const storyMedia = document.getElementById('storyMedia');
+  const storyCaption = document.getElementById('storyCaption');
+  const storyLoading = document.getElementById('storyLoading');
+  const storyCloseBtn = document.getElementById('storyCloseBtn');
+  const storyPrevZone = document.getElementById('storyPrevZone');
+  const storyNextZone = document.getElementById('storyNextZone');
+
   let selectedCategory = 'Overall';
   let allProducts = [];
   let jsonProductsCache = [];
@@ -905,6 +1156,14 @@
   let appsSingleSetWidth = 0;
   let appsLastFrameTime = 0;
   const APPS_SCROLL_SPEED = 0.15;
+
+  // STORY VARIABLES
+  let storiesData = [];
+  let currentStoryIndex = 0;
+  let storyTimer = null;
+  let storyProgressTimer = null;
+  let storyDuration = 5000;
+  let currentStoryVersion = "0";
 
   /* =========================
      INSTALL BUTTON
@@ -1675,10 +1934,248 @@
   });
 
   /* =========================
+     SHOPPLUS STORY SYSTEM
+  ========================= */
+  async function loadStories() {
+    try {
+      const response = await fetch("/my-store/stories.json", { cache: "no-store" });
+
+      if (!response.ok) {
+        shopplusStoryBtn.classList.remove('has-story', 'story-seen');
+        return;
+      }
+
+      const data = await response.json();
+      const stories = Array.isArray(data) ? data : (Array.isArray(data.stories) ? data.stories : []);
+
+      if (!stories.length) {
+        shopplusStoryBtn.classList.remove('has-story', 'story-seen');
+        return;
+      }
+
+      storiesData = stories.filter(story => story && story.src);
+
+      if (!storiesData.length) {
+        shopplusStoryBtn.classList.remove('has-story', 'story-seen');
+        return;
+      }
+
+      currentStoryVersion = String(
+        data.version ||
+        storiesData.map(s => `${s.src}-${s.caption || ''}-${s.duration || ''}`).join("|")
+      );
+
+      const seenVersion = localStorage.getItem("shopplusStorySeenVersion");
+
+      shopplusStoryBtn.classList.remove('has-story', 'story-seen');
+
+      if (seenVersion === currentStoryVersion) {
+        shopplusStoryBtn.classList.add('story-seen');
+      } else {
+        shopplusStoryBtn.classList.add('has-story');
+      }
+    } catch (error) {
+      console.error("stories.json fetch error:", error);
+      shopplusStoryBtn.classList.remove('has-story', 'story-seen');
+    }
+  }
+
+  function markStoriesAsSeen() {
+    localStorage.setItem("shopplusStorySeenVersion", currentStoryVersion);
+    shopplusStoryBtn.classList.remove('has-story');
+    shopplusStoryBtn.classList.add('story-seen');
+  }
+
+  function buildStoryProgressBars() {
+    storyProgressWrap.innerHTML = '';
+
+    storiesData.forEach((_, index) => {
+      const bar = document.createElement('div');
+      bar.className = 'story-progress';
+      bar.innerHTML = `<div class="story-progress-fill" id="storyProgressFill-${index}"></div>`;
+      storyProgressWrap.appendChild(bar);
+    });
+  }
+
+  function resetStoryTimers() {
+    if (storyTimer) {
+      clearTimeout(storyTimer);
+      storyTimer = null;
+    }
+
+    if (storyProgressTimer) {
+      clearInterval(storyProgressTimer);
+      storyProgressTimer = null;
+    }
+  }
+
+  function updateStoryProgressBars(activeIndex, progressPercent) {
+    storiesData.forEach((_, i) => {
+      const fill = document.getElementById(`storyProgressFill-${i}`);
+      if (!fill) return;
+
+      if (i < activeIndex) {
+        fill.style.width = '100%';
+      } else if (i === activeIndex) {
+        fill.style.width = `${progressPercent}%`;
+      } else {
+        fill.style.width = '0%';
+      }
+    });
+  }
+
+  function openStoryViewer() {
+    if (!storiesData.length) return;
+
+    currentStoryIndex = 0;
+    storyModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+
+    buildStoryProgressBars();
+    showStory(currentStoryIndex);
+  }
+
+  function closeStoryViewer() {
+    resetStoryTimers();
+    storyModal.classList.remove('show');
+    document.body.style.overflow = '';
+    storyMedia.innerHTML = '';
+    storyCaption.textContent = '';
+    storyLoading.classList.remove('story-hidden');
+  }
+
+  function nextStory() {
+    if (currentStoryIndex < storiesData.length - 1) {
+      currentStoryIndex++;
+      showStory(currentStoryIndex);
+    } else {
+      closeStoryViewer();
+    }
+  }
+
+  function prevStory() {
+    if (currentStoryIndex > 0) {
+      currentStoryIndex--;
+      showStory(currentStoryIndex);
+    } else {
+      showStory(currentStoryIndex);
+    }
+  }
+
+  function showStory(index) {
+    resetStoryTimers();
+
+    const story = storiesData[index];
+    if (!story) return;
+
+    markStoriesAsSeen();
+
+    storyMedia.innerHTML = '';
+    storyCaption.textContent = story.caption || '';
+    storyLoading.classList.remove('story-hidden');
+
+    const isVideo = (story.type || '').toLowerCase() === 'video' || /\.(mp4|webm|ogg)$/i.test(story.src);
+
+    let mediaEl;
+
+    if (isVideo) {
+      mediaEl = document.createElement('video');
+      mediaEl.src = story.src;
+      mediaEl.autoplay = true;
+      mediaEl.muted = true;
+      mediaEl.playsInline = true;
+      mediaEl.preload = 'auto';
+
+      mediaEl.addEventListener('loadeddata', () => {
+        storyLoading.classList.add('story-hidden');
+      });
+
+      mediaEl.addEventListener('ended', () => {
+        nextStory();
+      });
+
+      mediaEl.addEventListener('loadedmetadata', () => {
+        const videoDurationMs = Math.max(3000, Math.floor((mediaEl.duration || 5) * 1000));
+        startStoryProgress(videoDurationMs);
+      });
+
+      mediaEl.addEventListener('error', () => {
+        storyLoading.classList.add('story-hidden');
+        startStoryProgress(story.duration || 5000);
+      });
+    } else {
+      mediaEl = document.createElement('img');
+      mediaEl.src = story.src;
+      mediaEl.alt = story.caption || 'Story';
+
+      mediaEl.addEventListener('load', () => {
+        storyLoading.classList.add('story-hidden');
+      });
+
+      mediaEl.addEventListener('error', () => {
+        storyLoading.classList.add('story-hidden');
+      });
+
+      startStoryProgress(story.duration || 5000);
+    }
+
+    storyMedia.appendChild(mediaEl);
+  }
+
+  function startStoryProgress(duration) {
+    storyDuration = Math.max(2000, Number(duration) || 5000);
+
+    const startedAt = Date.now();
+    updateStoryProgressBars(currentStoryIndex, 0);
+
+    storyProgressTimer = setInterval(() => {
+      const elapsed = Date.now() - startedAt;
+      const percent = Math.min(100, (elapsed / storyDuration) * 100);
+      updateStoryProgressBars(currentStoryIndex, percent);
+
+      if (percent >= 100) {
+        clearInterval(storyProgressTimer);
+        storyProgressTimer = null;
+      }
+    }, 60);
+
+    storyTimer = setTimeout(() => {
+      nextStory();
+    }, storyDuration);
+  }
+
+  shopplusStoryBtn.addEventListener('click', () => {
+    if (storiesData.length) {
+      openStoryViewer();
+    } else {
+      window.location.href = "home.html";
+    }
+  });
+
+  storyCloseBtn.addEventListener('click', closeStoryViewer);
+  storyPrevZone.addEventListener('click', prevStory);
+  storyNextZone.addEventListener('click', nextStory);
+
+  storyModal.addEventListener('click', (e) => {
+    if (e.target === storyModal) {
+      closeStoryViewer();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!storyModal.classList.contains('show')) return;
+
+    if (e.key === 'Escape') closeStoryViewer();
+    if (e.key === 'ArrowRight') nextStory();
+    if (e.key === 'ArrowLeft') prevStory();
+  });
+
+  /* =========================
      INIT
   ========================= */
   window.addEventListener("DOMContentLoaded", () => {
     setupInstallButton();
+    loadStories();
     loadAppShortcuts();
     loadAds();
     loadProducts();
