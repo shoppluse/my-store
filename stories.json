@@ -1,16 +1,16 @@
 [
   {
-    "id": "story-2",
+    "id": "story-4",
     "version": 1,
-    "title": "Spigen DuraPro",
-    "image": "https://m.media-amazon.com/images/I/61YMLdWk3CL._SY625_.jpg",
+    "title": "JBL Earbuds",
+    "image": "https://m.media-amazon.com/images/I/41NSt2j7pCL._SL1305_.jpg",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
-    "productId": "8",
-    "source": "json",
+    "productId": "69f0c165da04a7ea56858948",
+    "source": "backend",
     "duration": 5000
   },
     {
-    "id": "story-3",
+    "id": "story-5",
     "version": 1,
     "title": "LCD Writing Pad",
     "image": "https://m.media-amazon.com/images/I/51wfrF6-1hL._SL1200_.jpg",
