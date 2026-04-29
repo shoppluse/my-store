@@ -3,17 +3,17 @@
     "id": "story-4",
     "version": 1,
     "title": "JBL Earbuds",
-    "image": ""image": "https://via.placeholder.com/600x600/ffffff/111111?text=JBL+Earbuds"",
+    "image": "https://via.placeholder.com/600x600/ffffff/111111?text=JBL+Earbuds",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
     "productId": "69f0c165da04a7ea56858948",
     "source": "backend",
     "duration": 5000
   },
-    {
+  {
     "id": "story-5",
     "version": 1,
     "title": "LCD Writing Pad",
-    "image": ""image": "https://via.placeholder.com/600x600/f8f8f8/111111?text=LCD+Writing+Pad"",
+    "image": "https://via.placeholder.com/600x600/f8f8f8/111111?text=LCD+Writing+Pad",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
     "productId": "18",
     "source": "json",
