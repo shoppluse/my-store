@@ -1603,7 +1603,12 @@
     currentStoryDuration = Number(story.duration || 5000);
     if (isNaN(currentStoryDuration) || currentStoryDuration < 1500) currentStoryDuration = 5000;
 
-    storyImage.src = story.image || '';
+    storyImage.onerror = function () {
+  this.onerror = null;
+  this.src = 'https://via.placeholder.com/600x600/ffffff/111111?text=Story+Image';
+};
+
+storyImage.src = story.image || 'https://via.placeholder.com/600x600/ffffff/111111?text=Story+Image';
     storyImage.alt = story.title || 'Story';
     storyCaption.textContent = story.caption || 'Tap to open product';
     storyTitle.textContent = story.title || 'ShopPlus Update';
