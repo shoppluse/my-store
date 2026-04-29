@@ -16,5 +16,15 @@
     "productId": "18",
     "source": "json",
     "duration": 5000
+  },
+    {
+    "id": "story-6",
+    "version": 1,
+    "title": "Aqua Wave Perfume - 100 ml",
+    "caption": "🛍️ Trending deal available now! Tap to open product.",
+    "productId": "69edc0e194a5dca02e68cc26",
+    "source": "backend",
+    "duration": 5000
   }
+  
 ]
