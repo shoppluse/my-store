@@ -1491,7 +1491,7 @@
 
   async function loadStories() {
     try {
-      const response = await fetch("/my-store/stories.json", { cache: "no-store" });
+      const response = await fetch("stories.json", { cache: "no-store" });
 
       if (!response.ok) {
         storiesData = [];
@@ -1761,7 +1761,7 @@ storyImage.src = 'https://via.placeholder.com/600x600/ffffff/111111?text=TEST+IM
   ========================= */
   async function loadAppShortcuts() {
     try {
-      const response = await fetch("/my-store/apps.json", { cache: "no-store" });
+      const response = await fetch("apps.json", { cache: "no-store" });
       if (!response.ok) throw new Error(`apps.json error: ${response.status}`);
 
       const apps = await response.json();
@@ -1968,7 +1968,7 @@ storyImage.src = 'https://via.placeholder.com/600x600/ffffff/111111?text=TEST+IM
   ========================= */
   async function loadAds() {
     try {
-      const response = await fetch("/my-store/ads.json", { cache: "no-store" });
+      const response = await fetch("ads.json", { cache: "no-store" });
 
       if (!response.ok) {
         adsSection.style.display = 'none';
@@ -2257,7 +2257,7 @@ storyImage.src = 'https://via.placeholder.com/600x600/ffffff/111111?text=TEST+IM
     jsonProductsCache = [];
     backendProductsCache = [];
 
-    const jsonPromise = fetch("/my-store/products.json", { cache: "no-store" })
+    const jsonPromise = fetch("products.json", { cache: "no-store" })
       .then(async (res) => {
         if (!res.ok) throw new Error(`products.json error: ${res.status}`);
         const data = await res.json();
