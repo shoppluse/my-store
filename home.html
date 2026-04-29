@@ -1605,12 +1605,15 @@
     currentStoryDuration = Number(story.duration || 5000);
     if (isNaN(currentStoryDuration) || currentStoryDuration < 1500) currentStoryDuration = 5000;
 
-const storyImageUrl = story.image || 'https://via.placeholder.com/600x600/ffffff/111111?text=Story+Image';
+const matchedProduct = findStoryProduct(story);
+
+const storyImageUrl = matchedProduct?.image || 'https://via.placeholder.com/600x600/ffffff/111111?text=Story+Image';
 storyImage.style.backgroundImage = `url("${storyImageUrl}")`;
-storyImage.setAttribute('aria-label', story.title || 'Story');
-    storyCaption.textContent = story.caption || 'Tap to open product';
-    storyTitle.textContent = story.title || 'ShopPlus Update';
-    storyCardTitle.textContent = story.title || 'Featured Product';
+storyImage.textContent = '';
+storyImage.setAttribute('aria-label', matchedProduct?.name || story.title || 'Story');
+
+storyTitle.textContent = matchedProduct?.name || story.title || 'ShopPlus Update';
+    storyCardTitle.textContent = matchedProduct?.name || story.title || 'Featured Product';
 
     currentStoryStartedAt = performance.now();
     animateStoryProgress();
@@ -1716,6 +1719,28 @@ storyImage.setAttribute('aria-label', story.title || 'Story');
     if (e.key === 'ArrowRight') nextStory();
     if (e.key === 'ArrowLeft') prevStory();
   });
+  function findStoryProduct(story) {
+  if (!story) return null;
+
+  const productId = String(story.productId || "").trim();
+  const source = String(story.source || "json").trim().toLowerCase();
+
+  if (!productId) return null;
+
+  if (source === "backend") {
+    const backendMatch = backendProductsCache.find(
+      p => String(p._id || p.id || "").trim() === productId
+    );
+    if (backendMatch) return normalizeProduct(backendMatch, "backend", 0);
+  }
+
+  const jsonMatch = jsonProductsCache.find(
+    p => String(p._id || p.id || "").trim() === productId
+  );
+  if (jsonMatch) return normalizeProduct(jsonMatch, "json", 0);
+
+  return null;
+}
 
   /* =========================
      CATEGORY
@@ -2287,24 +2312,27 @@ storyImage.setAttribute('aria-label', story.title || 'Story');
     ]);
 
     if (backendFastResult !== "TIMEOUT" && backendFastResult !== null) {
-      backendProductsCache = backendFastResult;
-      mergeAndSortProducts();
-      return;
-    }
+  backendProductsCache = backendFastResult;
+  mergeAndSortProducts();
+  loadStories();
+  return;
+}
 
     if (jsonProductsCache.length > 0) {
-      mergeAndSortProducts();
-    } else {
-      productList.innerHTML = '<p class="loading-text">Loading latest products...</p>';
-    }
+  mergeAndSortProducts();
+  loadStories();
+} else {
+  productList.innerHTML = '<p class="loading-text">Loading latest products...</p>';
+}
 
     backendPromise.then((backendData) => {
       if (backendData && Array.isArray(backendData)) {
-        backendProductsCache = backendData;
-        mergeAndSortProducts();
-      } else if (!jsonProductsCache.length && !backendProductsCache.length) {
-        productList.innerHTML = '<p class="error-text">Error loading products. Please try again later.</p>';
-      }
+  backendProductsCache = backendData;
+  mergeAndSortProducts();
+  loadStories();
+} else if (!jsonProductsCache.length && !backendProductsCache.length) {
+  productList.innerHTML = '<p class="error-text">Error loading products. Please try again later.</p>';
+}
     });
   }
 
