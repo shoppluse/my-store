@@ -929,15 +929,17 @@
     pointer-events: none;
   }
 
-  .story-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    background: transparent;
-    position: relative;
-    z-index: 2;
-  }
+.story-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  position: relative;
+  z-index: 2;
+}
 
   .story-bottom-overlay {
     position: absolute;
@@ -1308,7 +1310,7 @@
           </div>
 
           <div class="story-card-image-wrap">
-            <img id="storyImage" class="story-image" src="" alt="Story" />
+            <div id="storyImage" class="story-image" aria-label="Story image"></div>
           </div>
         </div>
       </div>
@@ -1603,13 +1605,9 @@
     currentStoryDuration = Number(story.duration || 5000);
     if (isNaN(currentStoryDuration) || currentStoryDuration < 1500) currentStoryDuration = 5000;
 
-    storyImage.onerror = function () {
-  this.onerror = null;
-  this.src = 'https://via.placeholder.com/600x600/ffffff/111111?text=Story+Image';
-};
-
-storyImage.src = 'https://via.placeholder.com/600x600/ffffff/111111?text=TEST+IMAGE';
-    storyImage.alt = story.title || 'Story';
+const storyImageUrl = story.image || 'https://via.placeholder.com/600x600/ffffff/111111?text=Story+Image';
+storyImage.style.backgroundImage = `url("${storyImageUrl}")`;
+storyImage.setAttribute('aria-label', story.title || 'Story');
     storyCaption.textContent = story.caption || 'Tap to open product';
     storyTitle.textContent = story.title || 'ShopPlus Update';
     storyCardTitle.textContent = story.title || 'Featured Product';
