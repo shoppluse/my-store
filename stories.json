@@ -1,6 +1,6 @@
 [
   {
-    "id": "story-4",
+    "id": "story-1",
     "version": 1,
     "title": "JBL Earbuds",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -9,7 +9,16 @@
     "duration": 5000
   },
   {
-    "id": "story-5",
+    "id": "story-2",
+    "version": 1,
+    "title": "SOFTSPUN Microfiber Cloth - 4 pcs",
+    "caption": "🛍️ Trending deal available now! Tap to open product.",
+    "productId": "69f3683251e735abc8823847",
+    "source": "backend",
+    "duration": 5000
+  },
+  {
+    "id": "story-3",
     "version": 1,
     "title": "LCD Writing Pad",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -17,8 +26,8 @@
     "source": "json",
     "duration": 5000
   },
-    {
-    "id": "story-6",
+  {
+    "id": "story-4",
     "version": 1,
     "title": "Aqua Wave Perfume - 100 ml",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
