@@ -705,5 +705,37 @@
   ],
   "category": "Fashion",
   "brand": "Reebok"
+},
+  {
+  "id": 42,
+  "name": "Fire-Boltt Ninja",
+  "description": "Memory Storage Capacity\t128 MB\nSpecial Feature\tAI Voice Assistant, Bluetooth Calling\nBattery Capacity\t280 Milliamp Hours\nConnectivity Technology\tBluetooth\nWireless Communication Standard\tBluetooth\nAbout this item\nLARGE 1.96” IPS DISPLAY WITH VIBRANT VISUALS: Experience immersive clarity with a 1.96” IPS full-touch display featuring 2.5D curved glass and 240x296 resolution, with premium smart watch for men enjoy vibrant colors, smooth scrolling, and intuitive multi-touch navigation.\nBLUETOOTH CALLING & AI VOICE ASSISTANT FOR HANDS-FREE CONTROL: Make and receive calls directly from your wrist with stable BT 3.0 + 5.1 connectivity. Use the built-in AI voice assistant to set reminders, play music with smart watch for women or check the weather—all without touching your phone.\nWIRELESS CHARGING WITH LONG-LASTING BATTERY: Charge with ease using wireless technology and enjoy up to 7 days of usage on a single charge. The 200mAh battery ensures reliable power whether you're working out or on the go.\nROTATING CROWN CONTROL – Effortlessly scroll, navigate menus, and adjust settings with a smooth, tactile twist for seamless control on the go\nGAMES, WATCH FACES & SMART UTILITIES FOR DAILY USE: Customize your smartwatch with 500+ cloud and photo watch faces, play built-in puzzle games, and access smart tools like calculator, flashlight, stopwatch, alarm, and weather updates.",
+  "price": "Just ₹ 1099",
+  "rating": 4.1,
+  "link": "https://amzn.to/4cYJomK",
+  "image": "https://m.media-amazon.com/images/I/61cDp3ltLWL._SL1500_.jpg",
+  "images": [
+    "https://m.media-amazon.com/images/I/61aVuynbE5L._SL1500_.jpg",
+    "https://m.media-amazon.com/images/I/61sv6i7RuXL._SL1500_.jpg",
+    "https://m.media-amazon.com/images/I/71NhlJhbU3L._SL1500_.jpg"
+  ],
+  "category": "Gadgets",
+  "brand": "Fire-Boltt"
+},
+  {
+  "id": 43,
+  "name": "Kurta and Pant with Dupatta Set",
+  "description": "Material compositionViscose\nLengthCalf Length\nSleeve type3/4 Sleeve\nNeck styleV Neck\nStyleAnarkali\nMaterial typeRayon\nAbout this item\nFit Type: Anarkali Kurta; Anarkali Kurta set for women: Anarkali Kurta Pant and printed Dupatta Set\nProduct Material :- Viscose | Colour :- Teal Blue | Pattern :- Printed | Dupatta :- Chanderi Cotton |\nStyle :- Anarkali Kurta | Sleeve Length :- 3/4 Sleeve | Bottom :- Pant Includes a coordinated A-line kurta, ankle-length pants, and a stunning printed dupatta, offering a complete traditional look with minimal styling effort.\nShowcase timeless elegance with this beautifully crafted blue kurta set featuring intricate ethnic block prints and a contrasting maroon border — perfect for festive, casual, and semi-formal occasions.\nSizes:- S, M, L, XL, XXL,3XL,4XL,5XL (All Regular Sizes Available)\nAdditional Information\nManufacturerKlosia Empire, Klosia Empire\nPackerKlosia Empire\nItem Weight300 g\nItem Dimensions LxWxH30 x 10 x 3 Centimeters\nNet Quantity1 Set\nGeneric NameKurta Set\nSee lessAbout this item\nStyle\nColour\tBlack\nPattern\tFloral\nSleeve Type\t3/4 Sleeve\nBottom Style\tPants\nStyle Name\tAnarkali\nNeck Style\tV Neck\nDesign Name\tPrinted\nFit Type\tRegular\nOccasion\tFestival\nClosure Type\tPull On\nMaterials & Care\nMaterial Type\tRayon\nProduct Care Instructions\tDry Clean Only\nFabric Type\tViscose\nApparel Fabric Stretch\tNo Stretch\nApparel Fabric Weight Class\tLightweight",
+  "price": "Just ₹ 799",
+  "rating": 4.2,
+  "link": "https://amzn.to/4vYW9GN",
+  "image": "https://m.media-amazon.com/images/I/71nd1eiKq5L._SY741_.jpg",
+  "images": [
+    "https://m.media-amazon.com/images/I/71O2qO8ieRL._SY741_.jpg",
+    "https://m.media-amazon.com/images/I/71qfMkeoWCL._SY741_.jpg",
+    "https://m.media-amazon.com/images/I/71ahyKwJi1L._SY741_.jpg"
+  ],
+  "category": "Fashion",
+  "brand": "All Brands"
 }
 ]
