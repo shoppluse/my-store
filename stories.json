@@ -2,6 +2,15 @@
   {
     "id": "story-1",
     "version": 1,
+    "title": "Kurta and Pant with Dupatta Set",
+    "caption": "🛍️ Trending deal available now! Tap to open product.",
+    "productId": "json",
+    "source": "43",
+    "duration": 5000
+  },
+  {
+    "id": "story-2",
+    "version": 1,
     "title": "JBL Earbuds",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
     "productId": "69f0c165da04a7ea56858948",
@@ -9,7 +18,7 @@
     "duration": 5000
   },
   {
-    "id": "story-2",
+    "id": "story-3",
     "version": 1,
     "title": "SOFTSPUN Microfiber Cloth - 4 pcs",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -18,7 +27,7 @@
     "duration": 5000
   },
   {
-    "id": "story-3",
+    "id": "story-4",
     "version": 1,
     "title": "LCD Writing Pad",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -27,7 +36,7 @@
     "duration": 5000
   },
   {
-    "id": "story-4",
+    "id": "story-5",
     "version": 1,
     "title": "Aqua Wave Perfume - 100 ml",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -35,5 +44,13 @@
     "source": "backend",
     "duration": 5000
   }
-  
+    {
+    "id": "story-6",
+    "version": 1,
+    "title": "Fire-Boltt Ninja",
+    "caption": "🛍️ Trending deal available now! Tap to open product.",
+    "productId": "42",
+    "source": "json",
+    "duration": 5000
+  }
 ]
