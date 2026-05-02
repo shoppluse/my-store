@@ -50,6 +50,7 @@ router.post("/claim", async (req, res) => {
       message: "Reward claim submitted successfully",
       claim: newClaim
     });
+
   } catch (error) {
     console.error("Reward claim error:", error);
     res.status(500).json({
@@ -62,12 +63,8 @@ router.post("/claim", async (req, res) => {
 router.get("/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-
     const claims = await RewardClaim.find({ userId }).sort({ createdAt: -1 });
-
-    res.status(200).json({
-      claims
-    });
+    res.status(200).json({ claims });
   } catch (error) {
     console.error("Fetch user claims error:", error);
     res.status(500).json({
