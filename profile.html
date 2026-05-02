@@ -636,7 +636,24 @@ function fetchAffiliateStatus() {
 document.getElementById("supportBtn").addEventListener("click", () => {
   const phone = "919945243930";
   const text = encodeURIComponent("Hello ShopPlus Support");
-  window.location.href = "https://wa.me/" + phone + "?text=" + text;
+
+  // Try native WhatsApp URI first (works in APK/WebView + installed browser)
+  const waIntent = "intent://send?phone=" + phone + "&text=" + text +
+    "#Intent;scheme=whatsapp;package=com.whatsapp;end";
+  const waFallback = "https://wa.me/" + phone + "?text=" + text;
+
+  const isAndroid = /android/i.test(navigator.userAgent);
+
+  if (isAndroid) {
+    // intent:// scheme lets Android route to WhatsApp app from WebView/APK
+    window.location.href = waIntent;
+    // If WhatsApp isn't installed, fall back to wa.me after short delay
+    setTimeout(() => {
+      window.location.href = waFallback;
+    }, 1500);
+  } else {
+    window.location.href = waFallback;
+  }
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
