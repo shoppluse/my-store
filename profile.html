@@ -500,7 +500,7 @@ button { border: none; background: none; cursor: pointer; font-family: inherit; 
     <div class="btn-stack">
       <a href="home.html" class="action-btn btn-store">Back to Store</a>
       <button id="shareAppBtn" class="action-btn btn-share">Share App</button>
-      <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%20Support" target="_blank" rel="noopener noreferrer" class="action-btn btn-support" id="supportBtn">Support</a>
+      <button type="button" class="action-btn btn-support" id="supportBtn">Support</button>
       <button id="logoutBtn" class="action-btn btn-logout">Logout</button>
       <a href="plans.html" class="action-btn btn-upgrade">Upgrade Plan</a>
     </div>
@@ -633,12 +633,10 @@ function fetchAffiliateStatus() {
 /* ============================================================
    SUPPORT BUTTON — smart WhatsApp link
 ============================================================ */
-document.getElementById("supportBtn").addEventListener("click", (e) => {
-  e.preventDefault();
-  const text = encodeURIComponent("Hello ShopPlus Support");
+document.getElementById("supportBtn").addEventListener("click", () => {
   const phone = "919945243930";
-  // wa.me works universally on mobile browsers and desktop
-  window.open(`https://wa.me/${phone}?text=${text}`, "_blank", "noopener,noreferrer");
+  const text = encodeURIComponent("Hello ShopPlus Support");
+  window.location.href = "https://wa.me/" + phone + "?text=" + text;
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
