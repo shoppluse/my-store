@@ -6,661 +6,792 @@
   <title>My Profile - ShopPlus</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#111111" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
   <link rel="icon" href="/my-store/icons/icon-192.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <script>
     (function () {
-      const t = localStorage.getItem("theme");
-      document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+      const savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
     })();
-    if (localStorage.getItem("shopplusLoggedIn") !== "true" || !localStorage.getItem("shopplusUser")) {
+
+    const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+    const currentUserRaw = localStorage.getItem("shopplusUser");
+
+    if (isLoggedIn !== "true" || !currentUserRaw) {
       window.location.href = "login.html";
     }
   </script>
 
   <style>
-/* ===== RESET & BASE ===== */
-*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-:root {
-  --bg:          #f4f3f0;
-  --bg-2:        #eceae5;
-  --surface:     #ffffff;
-  --surface-2:   #f9f8f6;
-  --text:        #111010;
-  --text-2:      #3d3c3a;
-  --muted:       #8a8884;
-  --muted-2:     #b5b3af;
-  --border:      #e3e1dc;
-  --border-2:    #f0ede9;
-  --accent:      #e8520a;
-  --accent-2:    #ff7a3d;
-  --accent-glow: rgba(232,82,10,0.18);
-  --shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md:   0 6px 20px rgba(0,0,0,0.09);
-  --shadow-lg:   0 14px 36px rgba(0,0,0,0.12);
-  --radius-xs:   10px;
-  --radius-sm:   16px;
-  --radius-md:   22px;
-  --radius-lg:   28px;
-  --header-h:    76px;
-  --pad:         clamp(12px,3vw,28px);
-  --font-display:'Syne', sans-serif;
-  --font-body:   'DM Sans', sans-serif;
-  --star:        #f59e0b;
+    :root {
+      --bg: #f7f7f8;
+      --bg-2: #efeff2;
+      --card-bg: #ffffff;
+      --text: #111111;
+      --muted: #777777;
+      --muted-2: #9b9b9b;
+      --primary: #111111;
+      --primary-2: #2d2d2d;
+      --border: #e9e9ec;
+      --soft-border: #f0f0f2;
+      --shadow: rgba(0, 0, 0, 0.06);
+      --shadow-2: rgba(0, 0, 0, 0.09);
 
-  /* status colors */
-  --success-bg:     #f0fdf4;
-  --success-text:   #15803d;
-  --success-border: #bbf7d0;
-  --warning-bg:     #fffbeb;
-  --warning-text:   #b45309;
-  --warning-border: #fde68a;
-  --danger-bg:      #fef2f2;
-  --danger-text:    #b91c1c;
-  --danger-border:  #fecaca;
-  --info-bg:        #f8fafc;
-  --info-text:      #334155;
-  --info-border:    #e2e8f0;
-}
+      --success-bg: #f0fdf4;
+      --success-text: #15803d;
+      --success-border: #bbf7d0;
 
-[data-theme="dark"] {
-  --bg:          #0d0d0b;
-  --bg-2:        #141410;
-  --surface:     #1a1916;
-  --surface-2:   #201f1c;
-  --text:        #f5f3ee;
-  --text-2:      #ccc9c2;
-  --muted:       #7a7870;
-  --muted-2:     #504f4a;
-  --border:      #2a2925;
-  --border-2:    #222120;
-  --accent:      #ff6b25;
-  --accent-2:    #ff9060;
-  --accent-glow: rgba(255,107,37,0.22);
-  --shadow-sm:   0 2px 8px rgba(0,0,0,0.3);
-  --shadow-md:   0 6px 20px rgba(0,0,0,0.4);
-  --shadow-lg:   0 14px 36px rgba(0,0,0,0.5);
-  --star:        #fbbf24;
+      --warning-bg: #fffbeb;
+      --warning-text: #b45309;
+      --warning-border: #fde68a;
 
-  --success-bg:     rgba(22,163,74,0.12);
-  --success-text:   #4ade80;
-  --success-border: rgba(74,222,128,0.22);
-  --warning-bg:     rgba(245,158,11,0.12);
-  --warning-text:   #fbbf24;
-  --warning-border: rgba(251,191,36,0.22);
-  --danger-bg:      rgba(239,68,68,0.12);
-  --danger-text:    #f87171;
-  --danger-border:  rgba(248,113,113,0.22);
-  --info-bg:        rgba(255,255,255,0.03);
-  --info-text:      #cbd5e1;
-  --info-border:    rgba(255,255,255,0.06);
-}
+      --danger-bg: #fef2f2;
+      --danger-text: #b91c1c;
+      --danger-border: #fecaca;
 
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  transition: background 0.3s, color 0.3s;
-}
+      --info-bg: #f8fafc;
+      --info-text: #334155;
+      --info-border: #e2e8f0;
 
-a { text-decoration: none; color: inherit; }
-button { border: none; background: none; cursor: pointer; font-family: inherit; }
+      --btn-bg: linear-gradient(120deg, #111111, #2d2d2d);
+      --btn-shadow: rgba(0, 0, 0, 0.18);
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+      --support-bg: linear-gradient(120deg, #16a34a, #22c55e);
+      --support-shadow: rgba(34, 197, 94, 0.18);
 
-/* ===== HEADER ===== */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: calc(env(safe-area-inset-top) + 10px) var(--pad) 10px;
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-}
+      --share-bg: linear-gradient(120deg, #0ea5e9, #38bdf8);
+      --share-shadow: rgba(14, 165, 233, 0.18);
 
-.header-pill {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  gap: 8px;
-  align-items: center;
-  max-width: min(100%, 960px);
-  margin: 0 auto;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 8px;
-  box-shadow: var(--shadow-md);
-}
+      --logout-bg: linear-gradient(120deg, #dc2626, #ef4444);
+      --logout-shadow: rgba(239, 68, 68, 0.18);
 
-.logo-btn {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.3px;
-  white-space: nowrap;
-  transition: all 0.2s;
-  min-height: 50px;
-  text-decoration: none;
-}
-.logo-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.logo-plus { color: var(--accent); }
+      --upgrade-bg: linear-gradient(120deg, #7c3aed, #a855f7);
+      --upgrade-shadow: rgba(124, 58, 237, 0.18);
+    }
 
-.hdr-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 50px;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  transition: all 0.2s;
-  box-shadow: var(--shadow-sm);
-  font-family: var(--font-body);
-  cursor: pointer;
-  text-decoration: none;
-}
-.hdr-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    [data-theme="dark"] {
+      --bg: #0f1115;
+      --bg-2: #171a20;
+      --card-bg: #161a22;
+      --text: #f8fafc;
+      --muted: #a1a1aa;
+      --muted-2: #8b95a7;
+      --primary: #ffffff;
+      --primary-2: #d1d5db;
+      --border: #232833;
+      --soft-border: #1d2330;
+      --shadow: rgba(0, 0, 0, 0.25);
+      --shadow-2: rgba(0, 0, 0, 0.32);
 
-.page-title-btn {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: -0.2px;
-  cursor: default;
-  pointer-events: none;
-}
+      --success-bg: rgba(22, 163, 74, 0.12);
+      --success-text: #4ade80;
+      --success-border: rgba(74, 222, 128, 0.22);
 
-/* ===== PAGE WRAP ===== */
-.page-wrap {
-  padding: 16px var(--pad) 48px;
-  max-width: calc(min(100%, 960px) + 2 * var(--pad));
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-text: #fbbf24;
+      --warning-border: rgba(251, 191, 36, 0.22);
 
-/* ===== CARD ===== */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  padding: 20px;
-  animation: card-in 0.35s ease forwards;
-  opacity: 0;
-  transform: translateY(10px);
-}
-.card:nth-child(1) { animation-delay: 0ms; }
-.card:nth-child(2) { animation-delay: 60ms; }
-.card:nth-child(3) { animation-delay: 120ms; }
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-text: #f87171;
+      --danger-border: rgba(248, 113, 113, 0.22);
 
-@keyframes card-in {
-  to { opacity: 1; transform: translateY(0); }
-}
+      --info-bg: rgba(255,255,255,0.03);
+      --info-text: #cbd5e1;
+      --info-border: rgba(255,255,255,0.06);
+    }
 
-.section-heading {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 4px;
-  letter-spacing: -0.2px;
-}
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 22%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
 
-.section-sub {
-  color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.6;
-  margin-bottom: 14px;
-}
+    .main-header {
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
 
-/* ===== AVATAR / PROFILE TOP ===== */
-.profile-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 6px;
-  margin-bottom: 18px;
-}
+    .header-shell {
+      width: 100%;
+      max-width: 980px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 10px;
+      box-shadow: 0 8px 24px var(--shadow);
+    }
 
-.avatar {
-  width: 82px;
-  height: 82px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--text) 0%, var(--text-2) 100%);
-  color: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 1.9rem;
-  font-weight: 800;
-  margin-bottom: 4px;
-  box-shadow: var(--shadow-lg);
-  flex-shrink: 0;
-}
+    [data-theme="dark"] .header-shell {
+      background: rgba(22,26,34,0.88);
+      border-color: rgba(255,255,255,0.04);
+    }
 
-.profile-name {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.3px;
-  line-height: 1.2;
-}
+    .header-top {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 64px 1fr 64px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
 
-.profile-sub {
-  color: var(--muted);
-  font-size: 0.85rem;
-}
+    .header-icon-btn,
+    .theme-btn {
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.25s ease;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
 
-.verified-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  padding: 7px 14px;
-  border-radius: 99px;
-  background: var(--success-bg);
-  color: var(--success-text);
-  border: 1px solid var(--success-border);
-  font-weight: 700;
-  font-size: 0.8rem;
-  font-family: var(--font-display);
-}
+    .header-icon-btn:hover,
+    .theme-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px var(--shadow-2);
+    }
 
-/* ===== INFO GRID ===== */
-.info-grid {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 4px;
-}
+    .header-title {
+      min-height: 52px;
+      background: var(--card-bg);
+      color: var(--primary);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      padding: 0 12px;
+      text-align: center;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
 
-.info-box {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-}
+    .header-actions {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
 
-.info-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  font-family: var(--font-display);
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  margin-bottom: 5px;
-}
+    .header-btn {
+      min-height: 52px;
+      text-decoration: none;
+      background: var(--card-bg);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.86rem;
+      padding: 10px 8px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: 0.25s ease;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
 
-.info-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text);
-  word-break: break-word;
-}
+    .header-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px var(--shadow-2);
+    }
 
-/* ===== ACTION BUTTONS ===== */
-.btn-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 14px;
-}
+    .page-wrap {
+      width: 100%;
+      max-width: 980px;
+      margin: 14px auto 28px;
+      padding: 0 10px;
+    }
 
-.action-btn {
-  width: 100%;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  font-size: 0.88rem;
-  font-weight: 700;
-  font-family: var(--font-display);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 50px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-  letter-spacing: 0.1px;
-}
-.action-btn:hover { transform: translateY(-2px); }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 14px 34px var(--shadow);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
 
-.btn-store   { background: linear-gradient(120deg, #111010, #3d3c3a); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
-.btn-share   { background: linear-gradient(120deg, #0ea5e9, #38bdf8); box-shadow: 0 8px 20px rgba(14,165,233,0.22); }
-.btn-support { background: linear-gradient(120deg, #16a34a, #22c55e); box-shadow: 0 8px 20px rgba(34,197,94,0.22); }
-.btn-logout  { background: linear-gradient(120deg, #dc2626, #ef4444); box-shadow: 0 8px 20px rgba(239,68,68,0.22); }
-.btn-upgrade { background: linear-gradient(120deg, var(--accent), var(--accent-2)); box-shadow: 0 8px 20px var(--accent-glow); }
+    .section-title {
+      margin: 0 0 8px;
+      font-size: clamp(1.2rem, 3.8vw, 1.8rem);
+      color: var(--primary);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.2px;
+    }
 
-/* ===== STATUS BOX ===== */
-.status-box {
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  border: 1px solid;
-}
+    .section-sub {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
 
-.status-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
+    .profile-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 16px;
+    }
 
-.status-title {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--text);
-}
+    .avatar {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: var(--btn-bg);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      box-shadow: 0 12px 24px var(--btn-shadow);
+    }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 99px;
-  font-weight: 700;
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  border: 1px solid;
-  white-space: nowrap;
-}
+    .profile-name {
+      margin: 0;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.25;
+    }
 
-.status-desc {
-  color: var(--muted);
-  line-height: 1.6;
-  font-size: 0.86rem;
-  margin: 0 0 10px;
-}
+    .profile-sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
 
-.status-note {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xs);
-  padding: 12px 14px;
-  line-height: 1.6;
-  color: var(--text-2);
-  font-size: 0.86rem;
-}
+    .verified-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
 
-/* status variants */
-.s-success { background: var(--success-bg); border-color: var(--success-border); }
-.s-warning { background: var(--warning-bg); border-color: var(--warning-border); }
-.s-danger  { background: var(--danger-bg);  border-color: var(--danger-border); }
-.s-info    { background: var(--info-bg);    border-color: var(--info-border); }
+    .profile-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
 
-.pill-success { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
-.pill-warning { background: var(--warning-bg); color: var(--warning-text); border-color: var(--warning-border); }
-.pill-danger  { background: var(--danger-bg);  color: var(--danger-text);  border-color: var(--danger-border); }
-.pill-info    { background: var(--info-bg);    color: var(--info-text);    border-color: var(--info-border); }
+    .info-box {
+      background: rgba(17, 17, 17, 0.025);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 15px;
+    }
 
-/* ===== FOOTER ===== */
-.footer {
-  text-align: center;
-  color: var(--muted-2);
-  font-size: 0.78rem;
-  font-weight: 600;
-  font-family: var(--font-display);
-  padding: 4px 12px 28px;
-}
+    [data-theme="dark"] .info-box {
+      background: rgba(255,255,255,0.025);
+    }
 
-/* ===== MOBILE ===== */
-@media (max-width: 680px) {
-  :root { --pad: 12px; }
-  body { padding-bottom: calc(env(safe-area-inset-bottom) + 16px); }
+    .info-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
 
-  .header-pill {
-    grid-template-columns: auto 1fr auto auto;
-    gap: 6px;
-    padding: 6px;
-    border-radius: var(--radius-sm);
-  }
-  .logo-btn { font-size: 1.05rem; padding: 9px 13px; min-height: 46px; }
-  .hdr-btn { min-height: 46px; font-size: 0.72rem; padding: 8px 10px; }
-  .profile-name { font-size: 1.3rem; }
-  .avatar { width: 72px; height: 72px; font-size: 1.65rem; }
-}
+    .info-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .action-btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+      min-height: 52px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-top: 12px;
+      color: white;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .store-btn {
+      background: var(--btn-bg);
+      box-shadow: 0 12px 24px var(--btn-shadow);
+    }
+
+    .share-btn {
+      background: var(--share-bg);
+      box-shadow: 0 12px 24px var(--share-shadow);
+    }
+
+    .support-btn {
+      background: var(--support-bg);
+      box-shadow: 0 12px 24px var(--support-shadow);
+    }
+
+    .logout-btn {
+      background: var(--logout-bg);
+      box-shadow: 0 12px 24px var(--logout-shadow);
+    }
+
+    .upgrade-btn {
+      background: var(--upgrade-bg);
+      box-shadow: 0 12px 24px var(--upgrade-shadow);
+    }
+
+    .status-box {
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid;
+      margin-top: 10px;
+    }
+
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .status-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .status-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.93rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .status-info {
+      background: var(--info-bg);
+      border-color: var(--info-border);
+    }
+
+    .status-warning {
+      background: var(--warning-bg);
+      border-color: var(--warning-border);
+    }
+
+    .status-success {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+    }
+
+    .status-danger {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+    }
+
+    .pill-info {
+      background: var(--info-bg);
+      color: var(--info-text);
+      border-color: var(--info-border);
+    }
+
+    .pill-warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
+    }
+
+    .pill-success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+
+    .pill-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
+    }
+
+    .status-note {
+      margin-top: 12px;
+      background: rgba(17, 17, 17, 0.025);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 15px;
+      line-height: 1.65;
+      color: var(--text);
+      font-size: 0.93rem;
+    }
+
+    [data-theme="dark"] .status-note {
+      background: rgba(255,255,255,0.025);
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      background: transparent;
+      padding: 12px 12px 24px;
+      font-size: 14px;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      }
+
+      .card {
+        border-radius: 20px;
+        padding: 16px;
+      }
+
+      .header-shell {
+        border-radius: 20px;
+        padding: 8px;
+      }
+
+      .header-top {
+        grid-template-columns: 58px 1fr 58px;
+        gap: 7px;
+      }
+
+      .header-actions {
+        gap: 7px;
+      }
+
+      .header-btn {
+        min-height: 48px;
+        font-size: 0.8rem;
+        border-radius: 14px;
+      }
+
+      .header-title {
+        font-size: 0.95rem;
+        min-height: 48px;
+        border-radius: 14px;
+      }
+
+      .header-icon-btn,
+      .theme-btn {
+        min-height: 48px;
+        font-size: 1.2rem;
+        border-radius: 14px;
+      }
+
+      .profile-name {
+        font-size: 1.35rem;
+      }
+
+      .action-btn {
+        min-height: 50px;
+        font-size: 0.9rem;
+        border-radius: 14px;
+      }
+
+      .avatar {
+        width: 78px;
+        height: 78px;
+        font-size: 1.7rem;
+      }
+
+      .status-box {
+        border-radius: 16px;
+        padding: 14px;
+      }
+
+      .info-box,
+      .status-note {
+        border-radius: 14px;
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="main-header">
+    <div class="header-shell">
+      <div class="header-top">
+        <a href="home.html" class="header-icon-btn" title="Back to Home">‹</a>
+        <div class="header-title">My Profile</div>
+        <button id="themeToggleBtn" class="theme-btn" title="Toggle Theme">🌙</button>
+      </div>
 
-<!-- HEADER -->
-<header class="header">
-  <div class="header-pill">
-    <a href="home.html" class="logo-btn" aria-label="ShopPlus Home">
-      Shop<span class="logo-plus">+</span>
-    </a>
-
-    <div class="hdr-btn page-title-btn" aria-label="Page title">
-      My Profile
+      <div class="header-actions">
+        <a href="home.html" class="header-btn">Home</a>
+        <a href="claim-reward.html" class="header-btn">Claim Reward</a>
+      </div>
     </div>
-
-    <a href="claim-reward.html" class="hdr-btn" title="Claim Reward">🎁 Reward</a>
-
-    <button id="themeToggleBtn" class="hdr-btn" aria-label="Toggle theme" title="Toggle Theme">🌙</button>
   </div>
-</header>
 
-<!-- PAGE CONTENT -->
-<div class="page-wrap">
-
-  <!-- Profile Card -->
-  <section class="card">
-    <div class="profile-top">
-      <div class="avatar" id="profileAvatar">U</div>
-      <div class="profile-name" id="profileName">Loading…</div>
-      <div class="profile-sub">Your ShopPlus account dashboard</div>
-      <div class="verified-pill">✅ Verified Account</div>
-    </div>
-
-    <div class="info-grid">
-      <div class="info-box">
-        <div class="info-label">Email</div>
-        <div class="info-value" id="profileEmail">Loading…</div>
+  <div class="page-wrap">
+    <section class="card">
+      <div class="profile-top">
+        <div class="avatar" id="profileAvatar">U</div>
+        <h1 class="profile-name" id="profileName">Loading...</h1>
+        <p class="profile-sub">Your ShopPlus account dashboard</p>
+        <div class="verified-pill">✅ Verified Account</div>
       </div>
-      <div class="info-box">
-        <div class="info-label">Mobile Number</div>
-        <div class="info-value" id="profileMobile">Loading…</div>
+
+      <div class="profile-grid">
+        <div class="info-box">
+          <div class="info-label">Email</div>
+          <div class="info-value" id="profileEmail">Loading...</div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-label">Mobile Number</div>
+          <div class="info-value" id="profileMobile">Loading...</div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-label">User ID</div>
+          <div class="info-value" id="profileUserId">Loading...</div>
+        </div>
       </div>
-      <div class="info-box">
-        <div class="info-label">User ID</div>
-        <div class="info-value" id="profileUserId">Loading…</div>
-      </div>
-    </div>
 
-    <div class="btn-stack">
-      <a href="home.html" class="action-btn btn-store">Back to Store</a>
-      <button id="shareAppBtn" class="action-btn btn-share">Share App</button>
-      <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%20Support" target="_blank" rel="noopener noreferrer" class="action-btn btn-support">Support</a>
-      <button id="logoutBtn" class="action-btn btn-logout">Logout</button>
-      <a href="plans.html" class="action-btn btn-upgrade">Upgrade Plan</a>
-    </div>
-  </section>
+      <a href="home.html" class="action-btn store-btn">Back to Store</a>
+      <button id="shareAppBtn" class="action-btn share-btn">Share App</button>
+      <a href="https://wa.me/919945243930?text=Hello%20ShopPlus%20Support" target="_blank" class="action-btn support-btn">Support</a>
+      <button id="logoutBtn" class="action-btn logout-btn">Logout</button>
+      <a href="plans.html" class="action-btn upgrade-btn">Upgrade Plan</a>
+    </section>
 
-  <!-- Affiliate Status Card -->
-  <section class="card">
-    <div class="section-heading">Affiliate Membership</div>
-    <p class="section-sub">Your ShopPlus affiliate approval status and next steps appear here.</p>
-    <div id="affiliateStatusRoot"></div>
-  </section>
+    <section class="card">
+      <h2 class="section-title">Affiliate Membership</h2>
+      <p class="section-sub">Your ShopPlus affiliate approval status and next steps appear here.</p>
+      <div id="affiliateStatusRoot"></div>
+    </section>
+  </div>
 
-</div>
+  <div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
-<div class="footer">© 2026 ShopPlus. All rights reserved.</div>
+  <script>
+    const SUPPORT_NUMBER = "919945243930";
 
-<script>
-"use strict";
+    let storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
 
-/* ============================================================
-   THEME
-============================================================ */
-const htmlEl = document.documentElement;
-const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const htmlEl = document.documentElement;
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const profileAvatar = document.getElementById("profileAvatar");
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileMobile = document.getElementById("profileMobile");
+    const profileUserId = document.getElementById("profileUserId");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const shareAppBtn = document.getElementById("shareAppBtn");
+    const affiliateStatusRoot = document.getElementById("affiliateStatusRoot");
 
-function syncThemeBtn() {
-  themeToggleBtn.textContent = htmlEl.getAttribute("data-theme") === "dark" ? "☀️" : "🌙";
-}
-
-themeToggleBtn.addEventListener("click", () => {
-  const next = htmlEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
-  htmlEl.setAttribute("data-theme", next);
-  localStorage.setItem("theme", next);
-  syncThemeBtn();
-});
-
-syncThemeBtn();
-
-/* ============================================================
-   PROFILE INFO
-============================================================ */
-function fillProfileInfo() {
-  const user = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
-  const name = user.name || "ShopPlus User";
-  document.getElementById("profileName").textContent = name;
-  document.getElementById("profileEmail").textContent = user.email || "Not available";
-  document.getElementById("profileMobile").textContent = user.mobile || "Not available";
-  document.getElementById("profileUserId").textContent = user.id || "Not available";
-  document.getElementById("profileAvatar").textContent = name.trim().charAt(0).toUpperCase() || "U";
-}
-
-/* ============================================================
-   AFFILIATE STATUS
-============================================================ */
-function renderAffiliateStatus(status, isAffiliate) {
-  const root = document.getElementById("affiliateStatusRoot");
-  const s = (status || "none").toLowerCase();
-
-  if (s === "approved" || isAffiliate) {
-    root.innerHTML = `
-      <div class="status-box s-success">
-        <div class="status-header">
-          <span class="status-title">Affiliate Status</span>
-          <span class="status-pill pill-success">✅ Approved</span>
-        </div>
-        <p class="status-desc">Your ShopPlus affiliate membership has been approved.</p>
-        <div class="status-note">You are now an approved ShopPlus affiliate member. Continue to choose your plan.</div>
-        <div style="margin-top:12px;">
-          <a href="plans.html" class="action-btn btn-store">Next →</a>
-        </div>
-      </div>`;
-    return;
-  }
-
-  if (s === "pending") {
-    root.innerHTML = `
-      <div class="status-box s-warning">
-        <div class="status-header">
-          <span class="status-title">Affiliate Status</span>
-          <span class="status-pill pill-warning">⏳ Pending Review</span>
-        </div>
-        <p class="status-desc">Your affiliate application is under manual review by ShopPlus.</p>
-        <div class="status-note">Please wait for approval. Once approved, you can continue to select your plan.</div>
-      </div>`;
-    return;
-  }
-
-  if (s === "rejected") {
-    root.innerHTML = `
-      <div class="status-box s-danger">
-        <div class="status-header">
-          <span class="status-title">Affiliate Status</span>
-          <span class="status-pill pill-danger">❌ Rejected</span>
-        </div>
-        <p class="status-desc">Your affiliate application was not approved this time.</p>
-        <div class="status-note">You can improve your details and submit a fresh application again.</div>
-        <div style="margin-top:12px;">
-          <a href="apply-affiliate.html" class="action-btn btn-store">Apply Again</a>
-        </div>
-      </div>`;
-    return;
-  }
-
-  root.innerHTML = `
-    <div class="status-box s-info">
-      <div class="status-header">
-        <span class="status-title">Affiliate Status</span>
-        <span class="status-pill pill-info">ℹ️ Not Applied</span>
-      </div>
-      <p class="status-desc">You have not applied for the ShopPlus affiliate program yet.</p>
-      <div class="status-note">Apply first, get manually approved by ShopPlus, then select your plan.</div>
-      <div style="margin-top:12px;">
-        <a href="apply-affiliate.html" class="action-btn btn-store">Apply for Affiliate Program</a>
-      </div>
-    </div>`;
-}
-
-function fetchAffiliateStatus() {
-  try {
-    const user = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
-    renderAffiliateStatus(user.affiliateStatus || "none", user.isAffiliate === true);
-  } catch {
-    renderAffiliateStatus("none", false);
-  }
-}
-
-/* ============================================================
-   ACTIONS
-============================================================ */
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  localStorage.removeItem("shopplusLoggedIn");
-  localStorage.removeItem("shopplusUser");
-  window.location.href = "login.html";
-});
-
-document.getElementById("shareAppBtn").addEventListener("click", async () => {
-  const shareUrl = "https://shoppluse.github.io/my-store/";
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: "ShopPlus", text: "Check out ShopPlus - curated affiliate shopping platform!", url: shareUrl });
-    } else if (navigator.clipboard) {
-      await navigator.clipboard.writeText(shareUrl);
-      alert("ShopPlus link copied!");
-    } else {
-      prompt("Copy this ShopPlus link:", shareUrl);
+    function setThemeButton() {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+      themeToggleBtn.textContent = currentTheme === "dark" ? "☀️" : "🌙";
     }
-  } catch {}
-});
 
-/* ============================================================
-   INIT
-============================================================ */
-fillProfileInfo();
-fetchAffiliateStatus();
+    themeToggleBtn.addEventListener("click", () => {
+      const currentTheme = htmlEl.getAttribute("data-theme");
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      htmlEl.setAttribute("data-theme", nextTheme);
+      localStorage.setItem("theme", nextTheme);
+      setThemeButton();
+    });
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" }).catch(() => {});
-  });
-}
-</script>
+    setThemeButton();
+
+    function fillProfileInfo() {
+      storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+      const name = storedUser.name || "ShopPlus User";
+      profileName.textContent = name;
+      profileEmail.textContent = storedUser.email || "Not available";
+      profileMobile.textContent = storedUser.mobile || "Not available";
+      profileUserId.textContent = storedUser.id || "Not available";
+      profileAvatar.textContent = name.trim().charAt(0).toUpperCase() || "U";
+    }
+
+    function renderAffiliateStatus(status, isAffiliate) {
+      const safeStatus = (status || "none").toLowerCase();
+
+      if (safeStatus === "approved" || isAffiliate) {
+        affiliateStatusRoot.innerHTML = `
+          <div class="status-box status-success">
+            <div class="status-header">
+              <h3 class="status-title">Affiliate Membership</h3>
+              <div class="status-pill pill-success">✅ Approved</div>
+            </div>
+            <p class="status-desc">Your ShopPlus affiliate membership has been approved.</p>
+            <div class="status-note">
+              You are now an approved ShopPlus affiliate member. Continue to choose your plan.
+            </div>
+            <a href="plans.html" class="action-btn store-btn" style="margin-top:14px;">Next</a>
+          </div>
+        `;
+        return;
+      }
+
+      if (safeStatus === "pending") {
+        affiliateStatusRoot.innerHTML = `
+          <div class="status-box status-warning">
+            <div class="status-header">
+              <h3 class="status-title">Affiliate Membership</h3>
+              <div class="status-pill pill-warning">⏳ Pending Review</div>
+            </div>
+            <p class="status-desc">Your affiliate application is under manual review by ShopPlus.</p>
+            <div class="status-note">
+              Please wait for approval. Once approved, you can continue to select your plan.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (safeStatus === "rejected") {
+        affiliateStatusRoot.innerHTML = `
+          <div class="status-box status-danger">
+            <div class="status-header">
+              <h3 class="status-title">Affiliate Membership</h3>
+              <div class="status-pill pill-danger">❌ Rejected</div>
+            </div>
+            <p class="status-desc">Your affiliate application was not approved this time.</p>
+            <div class="status-note">
+              You can improve your details and submit a fresh application again.
+            </div>
+            <a href="apply-affiliate.html" class="action-btn store-btn" style="margin-top:14px;">Apply Again</a>
+          </div>
+        `;
+        return;
+      }
+
+      affiliateStatusRoot.innerHTML = `
+        <div class="status-box status-info">
+          <div class="status-header">
+            <h3 class="status-title">Affiliate Membership</h3>
+            <div class="status-pill pill-info">ℹ️ Not Applied</div>
+          </div>
+          <p class="status-desc">You have not applied for the ShopPlus affiliate program yet.</p>
+          <div class="status-note">
+            Apply first, get manually approved by ShopPlus, and then continue to select your plan.
+          </div>
+          <a href="apply-affiliate.html" class="action-btn store-btn" style="margin-top:14px;">Apply for Affiliate Program</a>
+        </div>
+      `;
+    }
+
+    function fetchAffiliateStatus() {
+      try {
+        storedUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+        const affiliateStatus = storedUser.affiliateStatus || "none";
+        const isAffiliate = storedUser.isAffiliate === true;
+        renderAffiliateStatus(affiliateStatus, isAffiliate);
+      } catch (error) {
+        console.error("Affiliate status local read error:", error);
+        renderAffiliateStatus("none", false);
+      }
+    }
+
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("shopplusLoggedIn");
+      localStorage.removeItem("shopplusUser");
+      window.location.href = "login.html";
+    });
+
+    shareAppBtn.addEventListener("click", async () => {
+      const shareUrl = "https://shoppluse.github.io/my-store/";
+      const shareData = {
+        title: "ShopPlus",
+        text: "Check out ShopPlus - curated affiliate shopping platform!",
+        url: shareUrl
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareUrl);
+          alert("ShopPlus link copied successfully!");
+        } else {
+          prompt("Copy this ShopPlus link:", shareUrl);
+        }
+      } catch (err) {
+        console.log("Share cancelled or failed:", err);
+      }
+    });
+
+    fillProfileInfo();
+    fetchAffiliateStatus();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
+          .then((registration) => {
+            console.log("Service Worker registered:", registration.scope);
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
