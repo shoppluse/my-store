@@ -1215,10 +1215,14 @@ async function loadAds() {
 function makeAdSlide(ad) {
   const div = document.createElement("div");
   div.className = "ad-slide";
-  const img = `<img src="${safeImg(ad.image)}" alt="Ad" loading="lazy" draggable="false" />`;
-  div.innerHTML = ad.link?.trim()
-    ? `<a href="${ad.link}" ${/^https?:\/\//i.test(ad.link) ? 'target="_blank" rel="noopener noreferrer"' : ""}>${img}</a>`
-    : `<div class="ad-plain">${img}</div>`;
+  const link = ad.link?.trim() || "";
+  const isExternal = /^https?:\/\//i.test(link);
+
+  /* Store link on the slide itself — click handled via JS so drag can intercept */
+  if (link) div.dataset.link = link;
+  if (isExternal) div.dataset.external = "true";
+
+  div.innerHTML = `<img src="${safeImg(ad.image)}" alt="Ad" loading="lazy" draggable="false" style="pointer-events:none;user-select:none;width:100%;display:block;" />`;
   return div;
 }
 
@@ -1229,20 +1233,54 @@ function setAdPos(animated) {
 }
 
 function setupAdDrag() {
-  const startDrag = (x) => { adsDrag = true; adsStartX = x; adsPrevX = x; clearInterval(adsInterval); };
-  const moveDrag = (x) => { if (!adsDrag) return; adsPrevX = x; };
-  const endDrag = (x) => {
+  let dragMoved = false;
+
+  const startDrag = (x) => {
+    adsDrag = true;
+    dragMoved = false;
+    adsStartX = x;
+    adsPrevX = x;
+    clearInterval(adsInterval);
+  };
+
+  const moveDrag = (x) => {
+    if (!adsDrag) return;
+    adsPrevX = x;
+    if (Math.abs(x - adsStartX) > 5) dragMoved = true;
+  };
+
+  const endDrag = (x, target) => {
     if (!adsDrag) return;
     adsDrag = false;
     const d = adsStartX - x;
-    if (Math.abs(d) > 50) d > 0 ? adsIdx++ : adsIdx--;
+
+    if (!dragMoved && Math.abs(d) < 5) {
+      /* Pure tap — find the clicked slide and open its link */
+      const slide = target?.closest?.(".ad-slide") || adsTrack.children[adsIdx];
+      const link = slide?.dataset?.link;
+      if (link) {
+        slide.dataset.external === "true"
+          ? window.open(link, "_blank", "noopener,noreferrer")
+          : (window.location.href = link);
+      }
+    } else if (Math.abs(d) > 40) {
+      d > 0 ? adsIdx++ : adsIdx--;
+    }
+
     setAdPos(true);
     adsInterval = setInterval(() => { adsIdx++; setAdPos(true); }, 3500);
   };
+
   adsContainer.addEventListener("touchstart", e => startDrag(e.touches[0].clientX), { passive: true });
-  adsContainer.addEventListener("touchend", e => endDrag(e.changedTouches[0].clientX));
+  adsContainer.addEventListener("touchmove", e => moveDrag(e.touches[0].clientX), { passive: true });
+  adsContainer.addEventListener("touchend", e => endDrag(e.changedTouches[0].clientX, e.target));
+
   adsContainer.addEventListener("mousedown", e => { startDrag(e.clientX); adsContainer.classList.add("dragging"); });
-  window.addEventListener("mouseup", e => { if (adsDrag) { endDrag(e.clientX); adsContainer.classList.remove("dragging"); } });
+  window.addEventListener("mousemove", e => { if (adsDrag) moveDrag(e.clientX); });
+  window.addEventListener("mouseup", e => {
+    if (adsDrag) { endDrag(e.clientX, e.target); adsContainer.classList.remove("dragging"); }
+  });
+
   window.addEventListener("resize", () => setAdPos(false));
   adsContainer.addEventListener("dragstart", e => e.preventDefault());
 }
