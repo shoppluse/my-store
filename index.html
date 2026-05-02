@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,8 +15,9 @@
 
   <!-- PWA -->
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#111111" />
+  <meta name="theme-color" content="#0a0a0a" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+  <link rel="icon" href="/my-store/icons/icon-192.png" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="ShopPlus - Smart Shopping & Rewards" />
@@ -32,7 +33,7 @@
   <meta name="twitter:image" content="https://shoppluse.github.io/my-store/icons/icon-512.png" />
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -51,242 +52,260 @@
   </script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #f7f7f8;
-      --bg-2: #efeff2;
-      --card-bg: rgba(255,255,255,0.82);
-      --text: #111111;
-      --muted: #777777;
-      --border: #e9e9ec;
-      --shadow: rgba(0, 0, 0, 0.08);
-      --shadow-2: rgba(0, 0, 0, 0.12);
-    }
+:root {
+  --bg:          #f4f3f0;
+  --bg-2:        #eceae5;
+  --surface:     #ffffff;
+  --surface-2:   #f9f8f6;
+  --text:        #111010;
+  --text-2:      #3d3c3a;
+  --muted:       #8a8884;
+  --muted-2:     #b5b3af;
+  --border:      #e3e1dc;
+  --accent:      #e8520a;
+  --accent-2:    #ff7a3d;
+  --accent-glow: rgba(232,82,10,0.18);
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:   0 6px 20px rgba(0,0,0,0.09);
+  --shadow-lg:   0 14px 36px rgba(0,0,0,0.12);
+  --radius-sm:   16px;
+  --radius-md:   22px;
+  --radius-lg:   28px;
+  --font-display:'Syne', sans-serif;
+  --font-body:   'DM Sans', sans-serif;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Poppins', sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,0.7), transparent 35%),
-        linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 32%, var(--bg) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: calc(24px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));
-      overflow: hidden;
-      position: relative;
-    }
+[data-theme="dark"] {
+  --bg:          #0d0d0b;
+  --bg-2:        #141410;
+  --surface:     #1a1916;
+  --surface-2:   #201f1c;
+  --text:        #f5f3ee;
+  --text-2:      #ccc9c2;
+  --muted:       #7a7870;
+  --muted-2:     #504f4a;
+  --border:      #2a2925;
+  --accent:      #ff6b25;
+  --accent-2:    #ff9060;
+  --accent-glow: rgba(255,107,37,0.22);
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md:   0 6px 20px rgba(0,0,0,0.4);
+  --shadow-lg:   0 14px 36px rgba(0,0,0,0.5);
+}
 
-    .bg-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(24px);
-      opacity: 0.5;
-      pointer-events: none;
-      z-index: 0;
-    }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(24px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));
+  overflow: hidden;
+  position: relative;
+  transition: background 0.3s, color 0.3s;
+}
 
-    .orb-1 {
-      width: 180px;
-      height: 180px;
-      background: rgba(0,0,0,0.04);
-      top: 10%;
-      left: 8%;
-      animation: floatOrb 6s ease-in-out infinite;
-    }
+/* ===== BACKGROUND ORBS ===== */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    .orb-2 {
-      width: 220px;
-      height: 220px;
-      background: rgba(0,0,0,0.03);
-      bottom: 10%;
-      right: 10%;
-      animation: floatOrb 7s ease-in-out infinite reverse;
-    }
+.orb-1 {
+  width: 300px;
+  height: 300px;
+  background: var(--accent-glow);
+  top: -60px;
+  right: -60px;
+  animation: floatOrb 7s ease-in-out infinite;
+}
 
-    .splash-wrap {
-      width: 100%;
-      max-width: 460px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn 0.55s ease;
-      z-index: 2;
-    }
+.orb-2 {
+  width: 240px;
+  height: 240px;
+  background: rgba(0,0,0,0.04);
+  bottom: -40px;
+  left: -40px;
+  animation: floatOrb 9s ease-in-out infinite reverse;
+}
 
-    .brand-shell {
-      width: 100%;
-      background: var(--card-bg);
-      border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 28px;
-      padding: 22px 18px;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 18px 42px var(--shadow);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      animation: floatCard 2.4s ease-in-out infinite;
-    }
+[data-theme="dark"] .orb-2 {
+  background: rgba(255,255,255,0.02);
+}
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #ffffff;
-      color: #111111;
-      padding: 14px 24px;
-      border-radius: 22px;
-      font-size: 2rem;
-      font-weight: 800;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 24px var(--shadow);
-      letter-spacing: -0.5px;
-    }
+/* ===== SPLASH WRAP ===== */
+.splash-wrap {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  animation: fadeUp 0.5s ease forwards;
+}
 
-    .brand .plus {
-      color: #2d2d2d;
-      font-size: 2.1rem;
-      font-weight: 900;
-      line-height: 1;
-    }
+/* ===== BRAND SHELL ===== */
+.brand-shell {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px 28px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: floatCard 3s ease-in-out infinite;
+}
 
-    .tagline {
-      margin: 0;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.7;
-      max-width: 320px;
-    }
+/* ===== LOGO ===== */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  box-shadow: var(--shadow-md);
+}
 
-    .loader {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 3px solid rgba(17,17,17,0.08);
-      border-top-color: #111111;
-      animation: spin 0.9s linear infinite;
-    }
+.brand .plus {
+  color: var(--accent);
+}
 
-    .loading-text {
-      font-size: 0.86rem;
-      font-weight: 700;
-      color: var(--muted);
-      letter-spacing: 0.2px;
-    }
+/* ===== TAGLINE ===== */
+.tagline {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  max-width: 300px;
+  font-family: var(--font-body);
+}
 
-    .seo-content {
-      position: absolute;
-      left: -9999px;
-      top: auto;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      white-space: normal;
-    }
+/* ===== DIVIDER ===== */
+.divider {
+  width: 40px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 99px;
+}
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.96);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+/* ===== LOADER ===== */
+.loader-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
 
-    @keyframes floatCard {
-      0% {
-        transform: translateY(0px);
-        box-shadow: 0 18px 42px var(--shadow);
-      }
-      50% {
-        transform: translateY(-4px);
-        box-shadow: 0 22px 50px var(--shadow-2);
-      }
-      100% {
-        transform: translateY(0px);
-        box-shadow: 0 18px 42px var(--shadow);
-      }
-    }
+.loader {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin 0.85s linear infinite;
+}
 
-    @keyframes floatOrb {
-      0% {
-        transform: translateY(0px) translateX(0px);
-      }
-      50% {
-        transform: translateY(-10px) translateX(6px);
-      }
-      100% {
-        transform: translateY(0px) translateX(0px);
-      }
-    }
+.loading-text {
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--muted-2);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+/* ===== SEO HIDDEN ===== */
+.seo-content {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 
-    @media (max-width: 520px) {
-      body {
-        padding: calc(34px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom));
-      }
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-      .brand-shell {
-        border-radius: 24px;
-        padding: 18px 14px;
-      }
+@keyframes floatCard {
+  0%   { transform: translateY(0px);  box-shadow: var(--shadow-lg); }
+  50%  { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(0,0,0,0.14); }
+  100% { transform: translateY(0px);  box-shadow: var(--shadow-lg); }
+}
 
-      .brand {
-        font-size: 1.65rem;
-        padding: 12px 20px;
-        border-radius: 18px;
-      }
+@keyframes floatOrb {
+  0%   { transform: translateY(0px) translateX(0px); }
+  50%  { transform: translateY(-14px) translateX(8px); }
+  100% { transform: translateY(0px) translateX(0px); }
+}
 
-      .brand .plus {
-        font-size: 1.8rem;
-      }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
-      .tagline {
-        font-size: 0.88rem;
-      }
+/* ===== MOBILE ===== */
+@media (max-width: 480px) {
+  body {
+    padding: calc(32px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom));
+  }
 
-      .loader {
-        width: 38px;
-        height: 38px;
-      }
-    }
+  .brand-shell {
+    border-radius: var(--radius-md);
+    padding: 24px 18px 22px;
+  }
+
+  .brand {
+    font-size: 1.65rem;
+    padding: 12px 22px;
+  }
+
+  .tagline { font-size: 0.85rem; }
+  .loader  { width: 32px; height: 32px; }
+}
   </style>
 </head>
 <body>
+
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
 
   <div class="splash-wrap">
     <div class="brand-shell">
-      <div class="brand">Shop<span class="plus">Plus</span></div>
+      <div class="brand">Shop<span class="plus">+</span></div>
       <p class="tagline">Smart shopping, trusted products, and seamless rewards — all in one place.</p>
-      <div class="loader"></div>
-      <div class="loading-text">Launching ShopPlus...</div>
+      <div class="divider"></div>
+      <div class="loader-wrap">
+        <div class="loader"></div>
+        <div class="loading-text">Launching ShopPlus…</div>
+      </div>
     </div>
   </div>
 
   <main class="seo-content" aria-hidden="false">
     <h1>ShopPlus - Smart Shopping & Rewards</h1>
-    <p>
-      ShopPlus is a smart shopping and rewards platform that helps users discover premium products,
-      explore trusted deals, and manage reward claims easily.
-    </p>
-
+    <p>ShopPlus is a smart shopping and rewards platform that helps users discover premium products, explore trusted deals, and manage reward claims easily.</p>
     <h2>Features of ShopPlus</h2>
     <ul>
       <li>Discover premium and trending products</li>
@@ -295,13 +314,8 @@
       <li>Reward claim support and shopping convenience</li>
       <li>Mobile-friendly progressive web app experience</li>
     </ul>
-
     <h2>Why choose ShopPlus?</h2>
-    <p>
-      ShopPlus is designed to provide a simple, fast, and user-friendly shopping experience.
-      It combines product discovery, smart browsing, and rewards support in one platform.
-    </p>
-
+    <p>ShopPlus is designed to provide a simple, fast, and user-friendly shopping experience. It combines product discovery, smart browsing, and rewards support in one platform.</p>
     <nav>
       <a href="/my-store/login.html">Login to ShopPlus</a>
       <a href="/my-store/home.html">Open ShopPlus Home</a>
@@ -309,32 +323,36 @@
   </main>
 
   <script>
+    // Apply saved theme instantly
+    (function () {
+      const t = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+    })();
+
+    // Clear old caches
     if ("caches" in window) {
       caches.keys().then((names) => {
         names.forEach((name) => caches.delete(name));
       });
     }
 
+    // Service worker refresh
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
         try {
           const registrations = await navigator.serviceWorker.getRegistrations();
-          for (const reg of registrations) {
-            await reg.unregister();
-          }
-
+          for (const reg of registrations) await reg.unregister();
           await navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" });
-          console.log("Fresh Service Worker registered");
-        } catch (error) {
-          console.error("Service Worker refresh failed:", error);
+        } catch (e) {
+          console.error("SW error:", e);
         }
       });
     }
 
+    // Redirect after splash
     setTimeout(() => {
       const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
       const user = localStorage.getItem("shopplusUser");
-
       if (isLoggedIn === "true" && user) {
         window.location.replace("home.html");
       } else {
