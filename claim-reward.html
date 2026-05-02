@@ -515,7 +515,10 @@ claimForm.addEventListener("submit", async (e) => {
   messageBox.className = "message";
 
   const userId = currentUser.id || currentUser._id;
-  if (!userId) { showMessage("User ID not found. Please login again.", "error"); return; }
+  if (!userId) {
+    showMessage("❌ User ID not found. Please logout and login again.", "error");
+    return;
+  }
 
   const payload = {
     userId,
@@ -530,26 +533,55 @@ claimForm.addEventListener("submit", async (e) => {
   };
 
   if (!payload.productId || !payload.productName || !payload.orderReference || !payload.purchaseDate) {
-    showMessage("Please fill all required fields.", "error");
+    showMessage("❌ Please fill all required fields.", "error");
     return;
   }
 
   submitBtn.disabled = true;
   submitBtn.textContent = "Submitting…";
 
+  // Show what we're sending — helps debug
+  console.log("📤 Submitting reward claim to:", BACKEND_URL + "/api/rewards/claim");
+  console.log("📦 Payload:", JSON.stringify(payload, null, 2));
+
   try {
-    const res  = await fetch(`${BACKEND_URL}/api/rewards/claim`, {
+    const res = await fetch(`${BACKEND_URL}/api/rewards/claim`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Failed to submit reward claim");
 
-    showMessage(data.message || "Reward claim submitted! Redirecting to profile…", "success");
+    console.log("📥 Response status:", res.status, res.statusText);
+
+    // Try to parse response body regardless of status
+    let data = {};
+    try {
+      const rawText = await res.text();
+      console.log("📄 Raw response:", rawText);
+      data = rawText ? JSON.parse(rawText) : {};
+    } catch (parseErr) {
+      console.error("⚠️ Could not parse response JSON:", parseErr);
+    }
+
+    if (!res.ok) {
+      throw new Error(data.message || `Server error ${res.status}: ${res.statusText}`);
+    }
+
+    showMessage("✅ " + (data.message || "Reward claim submitted successfully! Redirecting…"), "success");
     setTimeout(() => { window.location.href = "profile.html"; }, 1800);
+
   } catch (err) {
-    showMessage(err.message || "Something went wrong", "error");
+    console.error("❌ Claim submission error:", err);
+
+    // Give specific messages for common failures
+    let errMsg = err.message || "Something went wrong";
+    if (err.message && err.message.includes("Failed to fetch")) {
+      errMsg = "❌ Cannot reach server. Check your internet connection or the server may be down.";
+    } else if (err.message && err.message.includes("NetworkError")) {
+      errMsg = "❌ Network error. Please check your connection and try again.";
+    }
+
+    showMessage(errMsg, "error");
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Submit Reward Claim";
