@@ -6,623 +6,564 @@
   <title>ShopPlus - Claim Reward</title>
 
   <link rel="manifest" href="/my-store/manifest.json" />
-  <meta name="theme-color" content="#111111" />
+  <meta name="theme-color" content="#0a0a0a" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
+  <link rel="icon" href="/my-store/icons/icon-192.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      const t = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+    })();
+    const _u = localStorage.getItem("shopplusUser");
+    if (!localStorage.getItem("shopplusLoggedIn") || !_u) {
+      window.location.href = "login.html";
+    }
+  </script>
 
   <style>
-    :root {
-      --bg: #f7f7f8;
-      --bg-2: #efeff2;
-      --card-bg: #ffffff;
-      --text: #111111;
-      --muted: #777777;
-      --muted-2: #9b9b9b;
-      --primary: #111111;
-      --primary-2: #2d2d2d;
-      --border: #e9e9ec;
-      --soft-border: #f0f0f2;
-      --shadow: rgba(0, 0, 0, 0.06);
-      --shadow-2: rgba(0, 0, 0, 0.09);
-      --success: #15803d;
-      --danger: #b91c1c;
-      --success-bg: #f0fdf4;
-      --success-border: #bbf7d0;
-      --danger-bg: #fef2f2;
-      --danger-border: #fecaca;
-      --note-bg: #f8fafc;
-      --note-border: #e2e8f0;
-    }
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
-    [data-theme="dark"] {
-      --bg: #0f1115;
-      --bg-2: #171a20;
-      --card-bg: #161a22;
-      --text: #f8fafc;
-      --muted: #a1a1aa;
-      --muted-2: #8b95a7;
-      --primary: #ffffff;
-      --primary-2: #d1d5db;
-      --border: #232833;
-      --soft-border: #1d2330;
-      --shadow: rgba(0, 0, 0, 0.25);
-      --shadow-2: rgba(0, 0, 0, 0.32);
-      --success: #4ade80;
-      --danger: #f87171;
-      --success-bg: rgba(22, 163, 74, 0.12);
-      --success-border: rgba(74, 222, 128, 0.22);
-      --danger-bg: rgba(239, 68, 68, 0.12);
-      --danger-border: rgba(248, 113, 113, 0.22);
-      --note-bg: rgba(255,255,255,0.03);
-      --note-border: rgba(255,255,255,0.06);
-    }
+:root {
+  --bg:          #f4f3f0;
+  --bg-2:        #eceae5;
+  --surface:     #ffffff;
+  --surface-2:   #f9f8f6;
+  --text:        #111010;
+  --text-2:      #3d3c3a;
+  --muted:       #8a8884;
+  --muted-2:     #b5b3af;
+  --border:      #e3e1dc;
+  --border-2:    #f0ede9;
+  --accent:      #e8520a;
+  --accent-2:    #ff7a3d;
+  --accent-glow: rgba(232,82,10,0.18);
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:   0 6px 20px rgba(0,0,0,0.09);
+  --shadow-lg:   0 14px 36px rgba(0,0,0,0.12);
+  --radius-xs:   10px;
+  --radius-sm:   16px;
+  --radius-md:   22px;
+  --radius-lg:   28px;
+  --pad:         clamp(12px,3vw,28px);
+  --font-display:'Syne', sans-serif;
+  --font-body:   'DM Sans', sans-serif;
 
-    * { 
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+  --success-bg:     #f0fdf4;
+  --success-text:   #15803d;
+  --success-border: #bbf7d0;
+  --danger-bg:      #fef2f2;
+  --danger-text:    #b91c1c;
+  --danger-border:  #fecaca;
+  --note-bg:        #f8fafc;
+  --note-border:    #e2e8f0;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 24%, var(--bg) 100%);
-      color: var(--text);
-      overflow-x: hidden;
-    }
+[data-theme="dark"] {
+  --bg:          #0d0d0b;
+  --bg-2:        #141410;
+  --surface:     #1a1916;
+  --surface-2:   #201f1c;
+  --text:        #f5f3ee;
+  --text-2:      #ccc9c2;
+  --muted:       #7a7870;
+  --muted-2:     #504f4a;
+  --border:      #2a2925;
+  --border-2:    #222120;
+  --accent:      #ff6b25;
+  --accent-2:    #ff9060;
+  --accent-glow: rgba(255,107,37,0.22);
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md:   0 6px 20px rgba(0,0,0,0.4);
+  --shadow-lg:   0 14px 36px rgba(0,0,0,0.5);
 
-    /* UPDATED PREMIUM HEADER THEME */
-    .main-header {
-      background: transparent;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
-      gap: 10px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-    }
+  --success-bg:     rgba(22,163,74,0.12);
+  --success-text:   #4ade80;
+  --success-border: rgba(74,222,128,0.22);
+  --danger-bg:      rgba(239,68,68,0.12);
+  --danger-text:    #f87171;
+  --danger-border:  rgba(248,113,113,0.22);
+  --note-bg:        rgba(255,255,255,0.03);
+  --note-border:    rgba(255,255,255,0.06);
+}
 
-    .header-shell {
-      width: 100%;
-      max-width: 700px;
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(255,255,255,0.7);
-      border-radius: 24px;
-      padding: 10px;
-      box-shadow: 0 8px 24px var(--shadow);
-    }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
 
-    [data-theme="dark"] .header-shell {
-      background: rgba(22,26,34,0.88);
-      border-color: rgba(255,255,255,0.04);
-    }
+a { text-decoration: none; color: inherit; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; }
+input, textarea { font-family: inherit; }
 
-    .shopplus-logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--primary);
-      background: var(--card-bg);
-      padding: 12px 18px;
-      border-radius: 18px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      border: 1px solid var(--border);
-      box-shadow: 0 6px 16px var(--shadow);
-      margin-bottom: 10px;
-      letter-spacing: -0.3px;
-    }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-    .shopplus-logo .plus {
-      color: var(--primary-2);
-      font-size: 1.8rem;
-      font-weight: 900;
-      line-height: 1;
-    }
+/* ===== HEADER ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: calc(env(safe-area-inset-top) + 10px) var(--pad) 10px;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
 
-    .header-actions {
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      align-items: stretch;
-    }
+.header-pill {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  max-width: min(100%, 960px);
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  box-shadow: var(--shadow-md);
+}
 
-    .header-btn,
-    .dark-mode-toggle {
-      width: 100%;
-      min-height: 52px;
-      text-decoration: none;
-      background: var(--card-bg);
-      color: var(--text);
-      font-weight: 700;
-      font-size: 0.86rem;
-      padding: 10px 8px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-family: inherit;
-      cursor: pointer;
-      transition: 0.25s ease;
-      box-shadow: 0 4px 14px var(--shadow);
-    }
+.logo-btn {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  transition: all 0.2s;
+  min-height: 50px;
+  text-decoration: none;
+}
+.logo-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.logo-plus { color: var(--accent); }
 
-    .header-btn:hover,
-    .dark-mode-toggle:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px var(--shadow-2);
-    }
+.hdr-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 50px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-body);
+  cursor: pointer;
+  text-decoration: none;
+}
+.hdr-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
-    .dark-mode-toggle {
-      font-size: 1.2rem;
-      background: var(--card-bg);
-    }
+.page-title-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.2px;
+  cursor: default;
+  pointer-events: none;
+}
 
-    .page-wrap {
-      max-width: 760px;
-      margin: 14px auto;
-      padding: 0 10px 24px;
-    }
+/* ===== PAGE WRAP ===== */
+.page-wrap {
+  padding: 16px var(--pad) 48px;
+  max-width: calc(min(100%, 760px) + 2 * var(--pad));
+  margin: 0 auto;
+}
 
-    .card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 20px;
-      box-shadow: 0 14px 34px var(--shadow);
-      border: 1px solid var(--border);
-    }
+/* ===== CARD ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: card-in 0.35s ease forwards;
+}
+@keyframes card-in { to { opacity: 1; transform: translateY(0); } }
 
-    .title {
-      font-size: clamp(1.35rem, 4vw, 1.9rem);
-      font-weight: 800;
-      color: var(--primary);
-      margin: 0 0 8px;
-      text-align: center;
-      letter-spacing: -0.3px;
-    }
+/* ===== FORM HEADING ===== */
+.form-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 4vw, 1.75rem);
+  font-weight: 800;
+  color: var(--text);
+  text-align: center;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+}
 
-    .subtitle {
-      text-align: center;
-      color: var(--muted);
-      margin: 0 0 20px;
-      line-height: 1.7;
-      font-size: 0.93rem;
-    }
+.form-sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
 
-    .field {
-      margin-bottom: 14px;
-    }
+/* ===== FIELDS ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
 
-    .label {
-      display: block;
-      font-size: 0.86rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--text);
-    }
+.field {
+  margin-bottom: 12px;
+}
 
-    .input,
-    .textarea {
-      width: 100%;
-      padding: 13px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      outline: none;
-      font-size: 14px;
-      font-family: inherit;
-      background: rgba(17, 17, 17, 0.025);
-      color: var(--text);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
+.label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 7px;
+}
 
-    .textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
+.input,
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  outline: none;
+  font-size: 0.88rem;
+  font-family: var(--font-body);
+  background: var(--surface-2);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
 
-    .input:focus,
-    .textarea:focus {
-      border-color: var(--primary-2);
-      box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
-    }
+.textarea {
+  min-height: 108px;
+  resize: vertical;
+}
 
-    [data-theme="dark"] .input,
-    [data-theme="dark"] .textarea {
-      background: rgba(255,255,255,0.025);
-      color: #f8fafc;
-    }
+.input:focus,
+.textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
 
-    [data-theme="dark"] .input:focus,
-    [data-theme="dark"] .textarea:focus {
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
-    }
+.input[readonly] {
+  color: var(--muted);
+  cursor: default;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
+.input::placeholder,
+.textarea::placeholder { color: var(--muted-2); }
 
-    .btn {
-      width: 100%;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 16px;
-      padding: 14px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      font-family: inherit;
-      background: linear-gradient(120deg, #111111, #2d2d2d);
-      color: #fff;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
-      transition: 0.25s ease;
-      margin-top: 8px;
-    }
+/* ===== SUBMIT BUTTON ===== */
+.submit-btn {
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  min-height: 50px;
+  margin-top: 6px;
+  color: white;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  box-shadow: 0 8px 20px var(--accent-glow);
+  letter-spacing: 0.1px;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px var(--accent-glow); }
+.submit-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
 
-    [data-theme="dark"] .btn {
-      background: linear-gradient(120deg, #ffffff, #e5e7eb);
-      color: #111111;
-      box-shadow: 0 12px 24px rgba(255, 255, 255, 0.08);
-    }
+/* ===== MESSAGE ===== */
+.message {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  display: none;
+  line-height: 1.6;
+  white-space: pre-line;
+  font-weight: 600;
+}
+.message.success {
+  display: block;
+  background: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
+}
+.message.error {
+  display: block;
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
+}
 
-    .btn:hover {
-      transform: translateY(-2px);
-    }
+/* ===== NOTE BOX ===== */
+.note-box {
+  margin-top: 16px;
+  padding: 13px 15px;
+  border-radius: var(--radius-sm);
+  background: var(--note-bg);
+  border: 1px solid var(--note-border);
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+.note-box strong { color: var(--text-2); font-weight: 700; }
 
-    .btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  color: var(--muted-2);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  padding: 4px 12px 28px;
+}
 
-    .message {
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      font-size: 0.9rem;
-      display: none;
-      line-height: 1.6;
-      white-space: pre-line;
-      font-weight: 600;
-    }
+/* ===== MOBILE ===== */
+@media (max-width: 680px) {
+  :root { --pad: 12px; }
+  body { padding-bottom: calc(env(safe-area-inset-bottom) + 16px); }
 
-    .message.success {
-      display: block;
-      background: var(--success-bg);
-      color: var(--success);
-      border: 1px solid var(--success-border);
-    }
+  .header-pill {
+    grid-template-columns: auto 1fr auto auto;
+    gap: 6px;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+  }
+  .logo-btn { font-size: 1.05rem; padding: 9px 13px; min-height: 46px; }
+  .hdr-btn { min-height: 46px; font-size: 0.72rem; padding: 8px 10px; }
 
-    .message.error {
-      display: block;
-      background: var(--danger-bg);
-      color: var(--danger);
-      border: 1px solid var(--danger-border);
-    }
-
-    .note-box {
-      margin-top: 18px;
-      padding: 14px;
-      border-radius: 16px;
-      background: var(--note-bg);
-      border: 1px solid var(--note-border);
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 700px) {
-      body {
-        padding-bottom: calc(16px + env(safe-area-inset-bottom));
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .main-header {
-        padding: calc(10px + env(safe-area-inset-top)) 10px 8px;
-        gap: 8px;
-      }
-
-      .header-shell {
-        border-radius: 20px;
-        padding: 8px;
-      }
-
-      .shopplus-logo {
-        font-size: 1.25rem;
-        padding: 10px 14px;
-        border-radius: 16px;
-        margin-bottom: 8px;
-      }
-
-      .shopplus-logo .plus {
-        font-size: 1.5rem;
-      }
-
-      .header-actions {
-        gap: 8px;
-      }
-
-      .header-btn,
-      .dark-mode-toggle {
-        min-height: 48px;
-        font-size: 0.8rem;
-        padding: 10px 6px;
-        border-radius: 14px;
-      }
-
-      .dark-mode-toggle {
-        font-size: 1.05rem;
-      }
-
-      .page-wrap {
-        padding: 0 10px 20px;
-        margin: 12px auto;
-      }
-
-      .card {
-        padding: 16px;
-        border-radius: 20px;
-      }
-
-      .title {
-        font-size: 1.3rem;
-      }
-
-      .subtitle {
-        font-size: 0.88rem;
-      }
-
-      .input,
-      .textarea {
-        border-radius: 12px;
-      }
-
-      .btn {
-        min-height: 50px;
-        border-radius: 14px;
-      }
-
-      .note-box,
-      .message {
-        border-radius: 14px;
-      }
-    }
+  .card { padding: 16px; border-radius: var(--radius-sm); }
+  .grid { grid-template-columns: 1fr; gap: 0; }
+}
   </style>
 </head>
 <body>
-  <div class="main-header">
-    <div class="header-shell">
-      <a href="./home.html" class="shopplus-logo">Shop<span class="plus">+</span></a>
 
-      <div class="header-actions">
-        <a href="./profile.html" class="header-btn">Profile</a>
-        <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle dark mode">🌙</button>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-pill">
+    <a href="home.html" class="logo-btn" aria-label="ShopPlus Home">
+      Shop<span class="logo-plus">+</span>
+    </a>
+
+    <div class="hdr-btn page-title-btn" aria-label="Page title">
+      Claim Reward
+    </div>
+
+    <a href="profile.html" class="hdr-btn" title="Profile">👤 Profile</a>
+
+    <button id="themeToggleBtn" class="hdr-btn" aria-label="Toggle theme" title="Toggle Theme">🌙</button>
+  </div>
+</header>
+
+<!-- PAGE CONTENT -->
+<div class="page-wrap">
+  <div class="card">
+    <h1 class="form-title">Claim Your Reward</h1>
+    <p class="form-sub">
+      Submit your purchase details for manual verification.<br />
+      After review, eligible reward amounts can be processed.
+    </p>
+
+    <form id="claimForm">
+      <div class="grid">
+        <div class="field">
+          <label class="label">Full Name</label>
+          <input class="input" type="text" id="name" readonly />
+        </div>
+        <div class="field">
+          <label class="label">Email</label>
+          <input class="input" type="email" id="email" readonly />
+        </div>
       </div>
+
+      <div class="grid">
+        <div class="field">
+          <label class="label">Mobile Number</label>
+          <input class="input" type="text" id="mobile" readonly />
+        </div>
+        <div class="field">
+          <label class="label">Product ID</label>
+          <input class="input" type="text" id="productId" required placeholder="e.g. SP1001" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Product Name</label>
+        <input class="input" type="text" id="productName" required placeholder="Enter product name" />
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label class="label">Amazon Order Reference</label>
+          <input class="input" type="text" id="orderReference" placeholder="e.g. AMZ-4587" required />
+        </div>
+        <div class="field">
+          <label class="label">Purchase Date</label>
+          <input class="input" type="date" id="purchaseDate" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Proof / Note</label>
+        <textarea class="textarea" id="proofNote" placeholder="Paste short proof details, screenshot note, or order info"></textarea>
+      </div>
+
+      <button class="submit-btn" type="submit" id="submitBtn">Submit Reward Claim</button>
+    </form>
+
+    <div id="messageBox" class="message"></div>
+
+    <div class="note-box">
+      💡 Tip: Keep your Product ID like <strong>SP1001</strong> and enter the exact order reference for faster manual verification.
     </div>
   </div>
+</div>
 
-  <div class="page-wrap">
-    <div class="card">
-      <h1 class="title">Claim ShopPlus Reward</h1>
-      <p class="subtitle">
-        Submit your purchase details for manual verification.  
-        After review, eligible reward amounts can be processed.
-      </p>
+<div class="footer">© 2026 ShopPlus. All rights reserved.</div>
 
-      <form id="claimForm">
-        <div class="grid">
-          <div class="field">
-            <label class="label">Full Name</label>
-            <input class="input" type="text" id="name" readonly />
-          </div>
+<script>
+"use strict";
 
-          <div class="field">
-            <label class="label">Email</label>
-            <input class="input" type="email" id="email" readonly />
-          </div>
-        </div>
+/* ============================================================
+   AUTH
+============================================================ */
+let currentUser = {};
+try {
+  currentUser = JSON.parse(localStorage.getItem("shopplusUser") || "{}");
+} catch {
+  localStorage.removeItem("shopplusUser");
+  localStorage.removeItem("shopplusLoggedIn");
+  window.location.href = "login.html";
+}
 
-        <div class="grid">
-          <div class="field">
-            <label class="label">Mobile Number</label>
-            <input class="input" type="text" id="mobile" readonly />
-          </div>
+/* ============================================================
+   THEME
+============================================================ */
+const htmlEl = document.documentElement;
+const themeToggleBtn = document.getElementById("themeToggleBtn");
 
-          <div class="field">
-            <label class="label">Product ID</label>
-            <input class="input" type="text" id="productId" required />
-          </div>
-        </div>
+function syncThemeBtn() {
+  themeToggleBtn.textContent = htmlEl.getAttribute("data-theme") === "dark" ? "☀️" : "🌙";
+}
 
-        <div class="field">
-          <label class="label">Product Name</label>
-          <input class="input" type="text" id="productName" required />
-        </div>
+themeToggleBtn.addEventListener("click", () => {
+  const next = htmlEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  htmlEl.setAttribute("data-theme", next);
+  localStorage.setItem("theme", next);
+  syncThemeBtn();
+});
 
-        <div class="grid">
-          <div class="field">
-            <label class="label">Amazon Order Reference</label>
-            <input class="input" type="text" id="orderReference" placeholder="Example: AMZ-4587" required />
-          </div>
+syncThemeBtn();
 
-          <div class="field">
-            <label class="label">Purchase Date</label>
-            <input class="input" type="date" id="purchaseDate" required />
-          </div>
-        </div>
+/* ============================================================
+   FORM PREFILL
+============================================================ */
+const BACKEND_URL = "https://my-store-e28j.onrender.com";
 
-        <div class="field">
-          <label class="label">Proof / Note</label>
-          <textarea class="textarea" id="proofNote" placeholder="Paste short proof details, screenshot note, or order info"></textarea>
-        </div>
+document.getElementById("name").value    = currentUser.name   || "";
+document.getElementById("email").value   = currentUser.email  || "";
+document.getElementById("mobile").value  = currentUser.mobile || "";
 
-        <button class="btn" type="submit" id="submitBtn">Submit Reward Claim</button>
-      </form>
+const params = new URLSearchParams(window.location.search);
+if (params.get("productId"))   document.getElementById("productId").value   = params.get("productId");
+if (params.get("productName")) document.getElementById("productName").value = params.get("productName");
 
-      <div id="messageBox" class="message"></div>
+document.getElementById("purchaseDate").max = new Date().toISOString().split("T")[0];
 
-      <div class="note-box">
-        Tip: Keep your Product ID like <strong>SP1001</strong> and enter the exact order reference for faster manual verification.
-      </div>
-    </div>
-  </div>
+/* ============================================================
+   FORM SUBMIT
+============================================================ */
+const claimForm  = document.getElementById("claimForm");
+const submitBtn  = document.getElementById("submitBtn");
+const messageBox = document.getElementById("messageBox");
 
-  <script>
-    const currentUserRaw = localStorage.getItem("shopplusUser");
-    if (!currentUserRaw) {
-      window.location.href = "./login.html";
-    }
+function showMessage(text, type = "success") {
+  messageBox.className = "message " + type;
+  messageBox.textContent = text;
+}
 
-    let currentUser = {};
-    try {
-      currentUser = JSON.parse(currentUserRaw);
-    } catch (error) {
-      localStorage.removeItem("shopplusUser");
-      localStorage.removeItem("shopplusLoggedIn");
-      window.location.href = "./login.html";
-    }
+claimForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  messageBox.style.display = "none";
+  messageBox.className = "message";
 
-    const BACKEND_URL = "https://my-store-e28j.onrender.com";
-    const htmlEl = document.documentElement;
-    const darkToggleBtn = document.getElementById("darkModeToggle");
-    const savedTheme = localStorage.getItem("theme");
+  const userId = currentUser.id || currentUser._id;
+  if (!userId) { showMessage("User ID not found. Please login again.", "error"); return; }
 
-    if (savedTheme) {
-      htmlEl.setAttribute("data-theme", savedTheme);
-      darkToggleBtn.textContent = savedTheme === "dark" ? "☀️" : "🌙";
-    }
+  const payload = {
+    userId,
+    name:           document.getElementById("name").value.trim(),
+    email:          document.getElementById("email").value.trim(),
+    mobile:         document.getElementById("mobile").value.trim(),
+    productId:      document.getElementById("productId").value.trim(),
+    productName:    document.getElementById("productName").value.trim(),
+    orderReference: document.getElementById("orderReference").value.trim(),
+    purchaseDate:   document.getElementById("purchaseDate").value,
+    proofNote:      document.getElementById("proofNote").value.trim(),
+  };
 
-    darkToggleBtn.addEventListener("click", () => {
-      const currentTheme = htmlEl.getAttribute("data-theme");
+  if (!payload.productId || !payload.productName || !payload.orderReference || !payload.purchaseDate) {
+    showMessage("Please fill all required fields.", "error");
+    return;
+  }
 
-      if (currentTheme === "dark") {
-        htmlEl.setAttribute("data-theme", "light");
-        localStorage.setItem("theme", "light");
-        darkToggleBtn.textContent = "🌙";
-      } else {
-        htmlEl.setAttribute("data-theme", "dark");
-        localStorage.setItem("theme", "dark");
-        darkToggleBtn.textContent = "☀️";
-      }
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Submitting…";
+
+  try {
+    const res  = await fetch(`${BACKEND_URL}/api/rewards/claim`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to submit reward claim");
 
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const mobileInput = document.getElementById("mobile");
-    const productIdInput = document.getElementById("productId");
-    const productNameInput = document.getElementById("productName");
-    const orderReferenceInput = document.getElementById("orderReference");
-    const purchaseDateInput = document.getElementById("purchaseDate");
-    const proofNoteInput = document.getElementById("proofNote");
-    const claimForm = document.getElementById("claimForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const messageBox = document.getElementById("messageBox");
+    showMessage(data.message || "Reward claim submitted! Redirecting to profile…", "success");
+    setTimeout(() => { window.location.href = "profile.html"; }, 1800);
+  } catch (err) {
+    showMessage(err.message || "Something went wrong", "error");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Submit Reward Claim";
+  }
+});
 
-    function showMessage(text, type = "success") {
-      messageBox.className = "message " + type;
-      messageBox.textContent = text;
-    }
-
-    nameInput.value = currentUser.name || "";
-    emailInput.value = currentUser.email || "";
-    mobileInput.value = currentUser.mobile || "";
-
-    const params = new URLSearchParams(window.location.search);
-    const productIdFromUrl = params.get("productId");
-    const productNameFromUrl = params.get("productName");
-
-    if (productIdFromUrl) productIdInput.value = productIdFromUrl;
-    if (productNameFromUrl) productNameInput.value = productNameFromUrl;
-
-    const today = new Date().toISOString().split("T")[0];
-    purchaseDateInput.max = today;
-
-    claimForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      showMessage("", "success");
-      messageBox.style.display = "none";
-
-      const userId = currentUser.id || currentUser._id;
-      if (!userId) {
-        showMessage("User ID not found. Please login again.", "error");
-        return;
-      }
-
-      const payload = {
-        userId: userId,
-        name: nameInput.value.trim(),
-        email: emailInput.value.trim(),
-        mobile: mobileInput.value.trim(),
-        productId: productIdInput.value.trim(),
-        productName: productNameInput.value.trim(),
-        orderReference: orderReferenceInput.value.trim(),
-        purchaseDate: purchaseDateInput.value,
-        proofNote: proofNoteInput.value.trim()
-      };
-
-      if (!payload.productId || !payload.productName || !payload.orderReference || !payload.purchaseDate) {
-        showMessage("Please fill all required fields.", "error");
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/rewards/claim`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.message || "Failed to submit reward claim");
-        }
-
-        showMessage(data.message || "Reward claim submitted successfully! Redirecting to profile...", "success");
-
-        setTimeout(() => {
-          window.location.href = "./profile.html";
-        }, 1800);
-
-      } catch (error) {
-        showMessage(error.message || "Something went wrong", "error");
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Reward Claim";
-      }
-    });
-
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" })
-          .then((registration) => {
-            console.log("Service Worker registered:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
-      });
-    }
-  </script>
+/* ============================================================
+   SERVICE WORKER
+============================================================ */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/my-store/sw.js", { scope: "/my-store/" }).catch(() => {});
+  });
+}
+</script>
 </body>
 </html>
