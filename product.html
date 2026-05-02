@@ -614,19 +614,85 @@
     }
 
     async function shareProduct(id, name, source) {
-      const base = `${window.location.origin}/my-store`;
-      const url = `${base}/product.html?id=${id}&source=${encodeURIComponent(source || "json")}`;
+      /* Build URL from the actual current page location so it always works
+         whether hosted on GitHub Pages, custom domain, or localhost.
+         e.g. https://shoppluse.github.io/my-store/product.html?id=...  */
+      const currentPage = window.location.href.split("?")[0]; // strip existing params
+      const url = `${currentPage}?id=${id}&source=${encodeURIComponent(source || "json")}`;
       const nm = decodeURIComponent(name);
+      const shareText = `🛍️ Check out "${nm}" on ShopPlus!\n\n${url}`;
+
       try {
         if (navigator.share) {
-          await navigator.share({ title: nm, text: `Check out: ${nm}`, url });
+          /* Native share sheet — works on Android Chrome, iOS Safari, etc.
+             Opens WhatsApp, Telegram, Instagram, Gmail, SMS — whatever the user picks */
+          await navigator.share({
+            title: `${nm} — ShopPlus`,
+            text: `🛍️ Check out "${nm}" on ShopPlus!`,
+            url: url,
+          });
         } else if (navigator.clipboard) {
-          await navigator.clipboard.writeText(url);
-          alert(`Link copied!\n\n${nm}\n${url}`);
+          /* Desktop fallback — copy to clipboard */
+          await navigator.clipboard.writeText(shareText);
+          showToast("🔗 Product link copied to clipboard!");
         } else {
-          prompt("Copy this link:", url);
+          /* Last resort */
+          prompt("Copy this product link:", url);
         }
-      } catch (e) { console.log("Share cancelled", e); }
+      } catch (e) {
+        /* User cancelled native share — not an error */
+        if (e.name !== "AbortError") {
+          console.warn("Share failed:", e);
+          /* Try clipboard as backup */
+          try {
+            await navigator.clipboard.writeText(shareText);
+            showToast("🔗 Link copied to clipboard!");
+          } catch {
+            prompt("Copy this product link:", url);
+          }
+        }
+      }
+    }
+
+    /* Toast notification for clipboard copy feedback */
+    function showToast(msg) {
+      const existing = document.getElementById("sp-toast");
+      if (existing) existing.remove();
+
+      const toast = document.createElement("div");
+      toast.id = "sp-toast";
+      toast.textContent = msg;
+      toast.style.cssText = `
+        position: fixed;
+        bottom: calc(env(safe-area-inset-bottom) + 24px);
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: #111010;
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 99px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        z-index: 9999;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        pointer-events: none;
+      `;
+      document.body.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.style.opacity = "1";
+        toast.style.transform = "translateX(-50%) translateY(0)";
+      });
+
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(-50%) translateY(10px)";
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
     }
 
     /* ===== FETCH ===== */
