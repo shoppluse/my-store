@@ -3,7 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Product Details - ShopPlus</title>
+  <title>ShopPlus — Discover Amazing Products</title>
+
+  <!-- ===== OPEN GRAPH (WhatsApp / Telegram / Twitter preview) ===== -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:site_name"   content="ShopPlus" />
+  <meta property="og:title"       content="ShopPlus — Curated Shopping" />
+  <meta property="og:description" content="Discover top products handpicked for you on ShopPlus. Tap to explore!" />
+  <meta property="og:image"       content="https://shoppluse.github.io/my-store/icons/icon-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height"content="512" />
+  <meta property="og:url"         content="https://shoppluse.github.io/my-store/" />
+
+  <!-- Twitter card -->
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       content="ShopPlus — Curated Shopping" />
+  <meta name="twitter:description" content="Discover top products handpicked for you on ShopPlus. Tap to explore!" />
+  <meta name="twitter:image"       content="https://shoppluse.github.io/my-store/icons/icon-512.png" />
+
+  <!-- General -->
+  <meta name="description" content="Discover top products handpicked for you on ShopPlus." />
+
   <link rel="manifest" href="/my-store/manifest.json" />
   <meta name="theme-color" content="#0a0a0a" />
   <link rel="apple-touch-icon" href="/my-store/icons/icon-192.png" />
@@ -613,42 +633,50 @@
       return { summary, highlights: highlights.map((t, i) => ({ icon: icons[i % icons.length], text: t })) };
     }
 
+    function slugify(text) {
+      return String(text || "")
+        .toLowerCase().trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_]+/g, "-")
+        .replace(/--+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 50);
+    }
+
     async function shareProduct(id, name, source) {
-      /* Build URL from the actual current page location so it always works
-         whether hosted on GitHub Pages, custom domain, or localhost.
-         e.g. https://shoppluse.github.io/my-store/product.html?id=...  */
-      const currentPage = window.location.href.split("?")[0]; // strip existing params
-      const url = `${currentPage}?id=${id}&source=${encodeURIComponent(source || "json")}`;
       const nm = decodeURIComponent(name);
-      const shareText = `🛍️ Check out "${nm}" on ShopPlus!\n\n${url}`;
+      const slug = slugify(nm);
+
+      /* Clean professional URL format:
+         https://shoppluse.github.io/my-store/product.html#shopplus.product44
+         Looks like: shoppluse.github.io/my-store/product.html#shopplus.product44
+         We keep real params as a fallback query so the page still works */
+      const basePage = window.location.href.split("?")[0].split("#")[0];
+      const cleanUrl = `${basePage}?id=${id}&src=${encodeURIComponent(source || "json")}#shopplus.product${id}`;
+
+      const shareTitle = `ShopPlus — ${nm}`;
+      const shareText  = `🛍️ *${nm}*\n\nShop now on ShopPlus 👇`;
 
       try {
         if (navigator.share) {
-          /* Native share sheet — works on Android Chrome, iOS Safari, etc.
-             Opens WhatsApp, Telegram, Instagram, Gmail, SMS — whatever the user picks */
           await navigator.share({
-            title: `${nm} — ShopPlus`,
-            text: `🛍️ Check out "${nm}" on ShopPlus!`,
-            url: url,
+            title: shareTitle,
+            text: shareText,
+            url: cleanUrl,
           });
         } else if (navigator.clipboard) {
-          /* Desktop fallback — copy to clipboard */
-          await navigator.clipboard.writeText(shareText);
-          showToast("🔗 Product link copied to clipboard!");
+          await navigator.clipboard.writeText(cleanUrl);
+          showToast("🔗 Link copied to clipboard!");
         } else {
-          /* Last resort */
-          prompt("Copy this product link:", url);
+          prompt("Copy this product link:", cleanUrl);
         }
       } catch (e) {
-        /* User cancelled native share — not an error */
         if (e.name !== "AbortError") {
-          console.warn("Share failed:", e);
-          /* Try clipboard as backup */
           try {
-            await navigator.clipboard.writeText(shareText);
-            showToast("🔗 Link copied to clipboard!");
+            await navigator.clipboard.writeText(cleanUrl);
+            showToast("🔗 Link copied!");
           } catch {
-            prompt("Copy this product link:", url);
+            prompt("Copy this product link:", cleanUrl);
           }
         }
       }
@@ -708,6 +736,13 @@
       const arr = await r.json();
       const data = Array.isArray(arr) ? arr : (arr.products || arr.data || []);
       return data.find(p => String(p._id || p.id) === String(pid));
+    }
+
+    /* Update browser tab title + URL hash to look clean */
+    function updatePageMeta(name, id) {
+      document.title = `${name} — ShopPlus`;
+      /* Set clean hash without triggering a page scroll */
+      history.replaceState(null, "", `#shopplus.product${id}`);
     }
 
     /* ===== RENDER ===== */
@@ -776,7 +811,8 @@
     async function loadProduct() {
       const params = new URLSearchParams(window.location.search);
       const pid    = params.get("id");
-      const source = params.get("source") || "json";
+      /* support both ?source= (old) and ?src= (new clean URLs) */
+      const source = params.get("source") || params.get("src") || "json";
       const root   = document.getElementById("product-root");
 
       if (!pid) { renderError(root, "No product ID provided. Please open a product from the store."); return; }
@@ -785,14 +821,17 @@
         const raw = await fetchProduct(pid, source);
         if (!raw) throw new Error("Product not found");
 
-        const images  = getImages(raw);
-        const rating  = getRating(raw.rating);
-        const price   = formatPrice(raw.price);
+        const images   = getImages(raw);
+        const rating   = getRating(raw.rating);
+        const price    = formatPrice(raw.price);
         const descData = splitDescription(raw.description);
-        const name    = raw.name || "Unnamed Product";
-        const id      = String(raw._id || raw.id || pid);
-        const cat     = raw.category || "General";
-        const link    = raw.link || "#";
+        const name     = raw.name || "Unnamed Product";
+        const id       = String(raw._id || raw.id || pid);
+        const cat      = raw.category || "General";
+        const link     = raw.link || "#";
+
+        /* Update tab title and URL hash */
+        updatePageMeta(name, id);
 
         const { slides, dots, thumbs } = buildCarousel(images, name);
 
