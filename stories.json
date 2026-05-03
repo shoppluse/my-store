@@ -2,6 +2,15 @@
     {
     "id": "story-1",
     "version": 1,
+    "title": "STRIFF Laptop Tabletop Stand",
+    "caption": "🛍️ Trending deal available now! Tap to open product.",
+    "productId": "69f65fe743a66b1fa7e83cdb",
+    "source": "backend",
+    "duration": 5000
+  },
+    {
+    "id": "story-2",
+    "version": 1,
     "title": "Women's Silk Deep V Cut Blouse",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
     "productId": "44",
@@ -9,7 +18,7 @@
     "duration": 5000
   },
   {
-    "id": "story-2",
+    "id": "story-3",
     "version": 1,
     "title": "Kurta and Pant with Dupatta Set",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -18,7 +27,7 @@
     "duration": 5000
   },
   {
-    "id": "story-3",
+    "id": "story-4",
     "version": 1,
     "title": "JBL Earbuds",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -27,7 +36,7 @@
     "duration": 5000
   },
   {
-    "id": "story-4",
+    "id": "story-5",
     "version": 1,
     "title": "SOFTSPUN Microfiber Cloth - 4 pcs",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -36,7 +45,7 @@
     "duration": 5000
   },
   {
-    "id": "story-5",
+    "id": "story-6",
     "version": 1,
     "title": "LCD Writing Pad",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -45,7 +54,7 @@
     "duration": 5000
   },
   {
-    "id": "story-6",
+    "id": "story-7",
     "version": 1,
     "title": "Aqua Wave Perfume - 100 ml",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
@@ -54,7 +63,7 @@
     "duration": 5000
   },
     {
-    "id": "story-7",
+    "id": "story-8",
     "version": 1,
     "title": "Fire-Boltt Ninja",
     "caption": "🛍️ Trending deal available now! Tap to open product.",
