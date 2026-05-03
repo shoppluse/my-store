@@ -82,7 +82,7 @@ body {
   transition: background 0.3s, color 0.3s;
   max-width: var(--max-w);
   margin: 0 auto;
-  padding-bottom: 80px;
+  padding-bottom: 20px;
 }
 
 img { display: block; max-width: 100%; }
@@ -181,18 +181,7 @@ input { font-family: inherit; }
   position: relative;
 }
 .icon-btn:hover { background: var(--border); }
-.cart-badge {
-  position: absolute;
-  top: -3px; right: -3px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.55rem;
-  font-weight: 800;
-  width: 15px; height: 15px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display);
-}
+
 
 /* ===== SEARCH ===== */
 .search-section {
@@ -578,19 +567,7 @@ input { font-family: inherit; }
   letter-spacing: 0.3px;
 }
 
-.product-wishlist {
-  position: absolute;
-  top: 6px; right: 6px;
-  width: 28px; height: 28px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.75rem;
-  transition: background 0.2s;
-  cursor: pointer;
-}
-.product-wishlist:hover { background: #fee2e2; }
+
 
 .product-body {
   padding: 8px 10px 10px;
@@ -650,35 +627,7 @@ input { font-family: inherit; }
   color: #16a34a;
 }
 
-.product-cashback {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.62rem;
-  color: var(--text-2);
-  background: var(--bg-2);
-  border-radius: 99px;
-  padding: 3px 8px;
-  width: fit-content;
-}
 
-.add-to-cart-btn {
-  margin-top: 4px;
-  width: 100%;
-  padding: 8px;
-  background: var(--text);
-  color: var(--bg);
-  border-radius: var(--radius-xs);
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  transition: background 0.2s, transform 0.1s;
-  cursor: pointer;
-  border: none;
-}
-.add-to-cart-btn:hover { background: var(--accent); transform: scale(1.02); }
-.add-to-cart-btn:active { transform: scale(0.98); }
 
 /* ===== GRID MESSAGE & SKELETON ===== */
 .grid-message {
@@ -813,50 +762,7 @@ input { font-family: inherit; }
 .story-caption { font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
 .story-hint { margin-top: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.55); }
 
-/* ===== BOTTOM NAV ===== */
-.bottom-nav {
-  position: fixed;
-  bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: var(--max-w);
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  display: flex;
-  padding-bottom: env(safe-area-inset-bottom);
-  z-index: 100;
-}
-.nav-item {
-  flex: 1;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 3px;
-  padding: 10px 0;
-  cursor: pointer;
-  transition: color 0.2s;
-  color: var(--muted);
-  font-size: 0.58rem;
-  font-weight: 600;
-  font-family: var(--font-display);
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-.nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
-.nav-item.active { color: var(--accent); }
-.nav-center-btn {
-  flex: 1;
-  display: flex; align-items: center; justify-content: center;
-  padding: 6px 0 10px;
-  cursor: pointer;
-}
-.nav-center-inner {
-  width: 50px; height: 50px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px var(--accent-glow);
-  font-family: var(--font-display);
-  font-size: 1.1rem; font-weight: 800; color: #fff;
-  line-height: 1;
-}
+
 
 /* Logo story ring */
 .logo-text.has-story {
@@ -945,14 +851,8 @@ input { font-family: inherit; }
       <!-- Install -->
       <button class="icon-btn install-btn" id="installBtn" type="button" title="Install App">⬇</button>
 
-      <!-- Wishlist -->
-      <button class="icon-btn" aria-label="Wishlist">♡</button>
-
-      <!-- Cart -->
-      <a href="#" class="icon-btn" aria-label="Cart" style="position:relative;">
-        🛒
-        <span class="cart-badge">0</span>
-      </a>
+      <!-- Profile -->
+      <a href="profile.html" class="icon-btn" aria-label="Profile">👤</a>
     </div>
   </div>
 </header>
@@ -1090,28 +990,7 @@ input { font-family: inherit; }
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <a href="index.html" class="nav-item active">
-    <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    home
-  </a>
-  <a href="#" class="nav-item">
-    <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-    shop
-  </a>
-  <div class="nav-center-btn" id="storyNavBtn">
-    <div class="nav-center-inner">S+</div>
-  </div>
-  <a href="#" class="nav-item">
-    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    discover
-  </a>
-  <a href="profile.html" class="nav-item">
-    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    profile
-  </a>
-</nav>
+
 
 <script>
 "use strict";
@@ -1288,19 +1167,87 @@ brandMenu.querySelectorAll(".brand-item").forEach(item => {
 });
 
 /* ===== HERO CAROUSEL ===== */
-let heroIdx = 0, heroCount = 2, heroInterval = null;
-function setHeroPos(animated) {
+let heroRealCount = 2, heroIdx = 0, heroInterval = null, heroTransitioning = false;
+
+function buildHeroDots(count) {
+  const dots = $("heroDots");
+  dots.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement("div");
+    d.className = "dot" + (i === 0 ? " active" : "");
+    d.addEventListener("click", () => jumpToSlide(i));
+    dots.appendChild(d);
+  }
+}
+
+function updateDots(realIdx) {
+  $("heroDots").querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === realIdx));
+}
+
+function setHeroPosRaw(idx, animated) {
   const track = $("heroTrack");
   track.style.transition = animated ? "transform 0.5s cubic-bezier(0.4,0,0.2,1)" : "none";
-  track.style.transform = `translateX(${-heroIdx * 100}%)`;
-  $("heroDots").querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === heroIdx));
+  track.style.transform = `translateX(${-idx * 100}%)`;
 }
+
+function jumpToSlide(realIdx) {
+  heroIdx = realIdx + 1; // +1 because of leading clone
+  setHeroPosRaw(heroIdx, true);
+  updateDots(realIdx);
+  startHeroAuto();
+}
+
 function startHeroAuto() {
   clearInterval(heroInterval);
-  heroInterval = setInterval(() => { heroIdx = (heroIdx + 1) % heroCount; setHeroPos(true); }, 4000);
+  heroInterval = setInterval(() => {
+    if (heroTransitioning) return;
+    heroIdx++;
+    setHeroPosRaw(heroIdx, true);
+    const realIdx = (heroIdx - 1) % heroRealCount;
+    updateDots(realIdx);
+  }, 3500);
 }
-$("heroDots").querySelectorAll(".dot").forEach((d, i) => d.addEventListener("click", () => { heroIdx = i; setHeroPos(true); startHeroAuto(); }));
-startHeroAuto();
+
+function initHeroCarousel(slides) {
+  // slides = array of DOM elements (the real slides)
+  heroRealCount = slides.length;
+  const track = $("heroTrack");
+  track.style.transition = "none";
+  track.innerHTML = "";
+
+  // Clone last slide → prepend
+  const cloneFirst = slides[slides.length - 1].cloneNode(true);
+  track.appendChild(cloneFirst);
+  // Real slides
+  slides.forEach(s => track.appendChild(s));
+  // Clone first slide → append
+  const cloneLast = slides[0].cloneNode(true);
+  track.appendChild(cloneLast);
+
+  // Start at index 1 (first real slide)
+  heroIdx = 1;
+  setHeroPosRaw(heroIdx, false);
+  buildHeroDots(heroRealCount);
+
+  // On transition end: if we've reached a clone, snap silently
+  track.addEventListener("transitionend", () => {
+    heroTransitioning = false;
+    const totalSlides = heroRealCount + 2; // real + 2 clones
+    if (heroIdx >= totalSlides - 1) {
+      // Jumped past last clone → snap to first real
+      heroIdx = 1;
+      setHeroPosRaw(heroIdx, false);
+    } else if (heroIdx <= 0) {
+      // Jumped before first clone → snap to last real
+      heroIdx = heroRealCount;
+      setHeroPosRaw(heroIdx, false);
+    }
+  });
+
+  track.addEventListener("transitionstart", () => { heroTransitioning = true; });
+
+  startHeroAuto();
+}
 
 /* ===== ADS → inject into hero carousel ===== */
 async function loadAds() {
@@ -1309,28 +1256,35 @@ async function loadAds() {
     if (!r.ok) throw new Error();
     const ads = await r.json();
     if (!Array.isArray(ads) || !ads.length) return;
-    const track = $("heroTrack");
-    const dots = $("heroDots");
-    track.innerHTML = "";
-    dots.innerHTML = "";
-    heroCount = ads.length;
-    heroIdx = 0;
-    ads.forEach((ad, i) => {
+
+    const slides = ads.map((ad, i) => {
       const slide = document.createElement("div");
       slide.className = "carousel-slide";
       const link = ad.link?.trim() || "";
-      slide.innerHTML = `<img src="${safeImg(ad.image)}" alt="Ad" loading="${i === 0 ? 'eager' : 'lazy'}" style="width:100%;aspect-ratio:16/7;object-fit:cover;display:block;" />`;
-      if (link) slide.style.cursor = "pointer";
-      if (link) slide.addEventListener("click", () => { /^https?:\/\//i.test(link) ? window.open(link, "_blank", "noopener") : (window.location.href = link); });
-      track.appendChild(slide);
-      const dot = document.createElement("div");
-      dot.className = "dot" + (i === 0 ? " active" : "");
-      dot.addEventListener("click", () => { heroIdx = i; setHeroPos(true); startHeroAuto(); });
-      dots.appendChild(dot);
+      slide.innerHTML = `<img src="${safeImg(ad.image)}" alt="Ad" loading="${i === 0 ? 'eager' : 'lazy'}" style="width:100%;aspect-ratio:16/7;object-fit:cover;display:block;pointer-events:none;" />`;
+      if (link) {
+        slide.style.cursor = "pointer";
+        slide.dataset.link = link;
+        slide.dataset.external = /^https?:\/\//i.test(link) ? "true" : "false";
+      }
+      return slide;
     });
-    setHeroPos(false);
-    startHeroAuto();
-  } catch { /* keep default slides */ }
+
+    // Click handler on track (handles clones too)
+    $("heroTrack").addEventListener("click", e => {
+      const slide = e.target.closest(".carousel-slide");
+      if (!slide || !slide.dataset.link) return;
+      slide.dataset.external === "true"
+        ? window.open(slide.dataset.link, "_blank", "noopener")
+        : (window.location.href = slide.dataset.link);
+    });
+
+    initHeroCarousel(slides);
+  } catch {
+    // Keep default placeholder slides, just init them
+    const existingSlides = Array.from($("heroTrack").querySelectorAll(".carousel-slide"));
+    if (existingSlides.length) initHeroCarousel(existingSlides);
+  }
 }
 
 /* ===== APPS ===== */
@@ -1432,24 +1386,21 @@ function renderProducts(list) {
           <span class="product-price">₹${p.price}</span>
           ${p.mrp ? `<span class="product-mrp">₹${p.mrp}</span>` : ""}
           ${discount ? `<span class="product-discount">(${discount}% off)</span>` : ""}
-         </div>
-         <div class="product-cashback">% get 5% cashback</div>`
+         </div>`
       : "";
 
     a.innerHTML = `
       <div class="product-img-wrap">
         <img src="${safeImg(p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" />
         ${discount ? `<div class="product-offer-badge">${discount}% OFF</div>` : ""}
-        <button class="product-wishlist" onclick="event.preventDefault()">♡</button>
       </div>
       <div class="product-body">
         <div class="product-category">${p.category || ""}</div>
         <div class="product-name">${p.name}</div>
         <div class="product-rating">
-          ${p.rating ? `${p.rating} ⭐ <span style="color:var(--muted);font-weight:400;font-size:0.65rem;">· verified</span>` : `<span class="no-rating">No rating yet</span>`}
+          ${p.rating ? `${p.rating} ⭐` : `<span class="no-rating">No rating yet</span>`}
         </div>
         ${priceHTML}
-        <button class="add-to-cart-btn" onclick="event.preventDefault();this.textContent='✓ Added!';setTimeout(()=>this.textContent='add to cart',1500)">add to cart</button>
       </div>`;
     productGrid.appendChild(a);
   });
@@ -1457,7 +1408,6 @@ function renderProducts(list) {
 
 /* ===== STORIES ===== */
 const storyBtn = $("storyBtn");
-const storyNavBtn = $("storyNavBtn");
 const storyOverlay = $("storyOverlay");
 const storyClose = $("storyClose");
 const storyPrev = $("storyPrev");
@@ -1495,7 +1445,6 @@ function updateStoryBtn() {
 }
 const openStoriesHandler = () => { if (stories.length) openStories(0); };
 storyBtn.addEventListener("click", openStoriesHandler);
-storyNavBtn.addEventListener("click", openStoriesHandler);
 
 function openStories(idx) {
   storyIdx = Math.max(0, Math.min(idx, stories.length - 1));
@@ -1552,7 +1501,13 @@ document.addEventListener("keydown", e => {
 document.addEventListener("DOMContentLoaded", () => {
   showSkeletons();
   loadApps();
-  loadAds();
+  loadAds().then(() => {
+    // If loadAds didn't initialize (no ads.json), init with placeholders
+    if (!$("heroTrack").querySelector(".carousel-slide:nth-child(3)")) {
+      const existingSlides = Array.from($("heroTrack").querySelectorAll(".carousel-slide"));
+      if (existingSlides.length) initHeroCarousel(existingSlides);
+    }
+  });
   loadProducts();
   if (isStandalone()) installBtn.classList.remove("show");
 });
