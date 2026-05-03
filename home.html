@@ -1204,7 +1204,56 @@ function jumpToSlide(realIdx) {
   startHeroAuto();
 }
 
-function startHeroAuto() {
+function startHeroAuto() 
+  function setupHeroDrag() {
+  const track = $("heroTrack");
+  const wrap  = $("heroCarousel");
+  let startX = 0, isDragging = false;
+
+  // Touch
+  wrap.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+    clearInterval(heroInterval); // pause auto-slide while swiping
+  }, { passive: true });
+
+  wrap.addEventListener("touchend", e => {
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      diff > 0 ? heroIdx++ : heroIdx--;
+      setHeroPosRaw(heroIdx, true);
+      updateDots((heroIdx - 1 + heroRealCount) % heroRealCount);
+    }
+    startHeroAuto(); // resume
+  }, { passive: true });
+
+  // Mouse drag
+  wrap.addEventListener("mousedown", e => {
+    startX = e.clientX;
+    isDragging = true;
+    clearInterval(heroInterval);
+    wrap.style.cursor = "grabbing";
+  });
+
+  window.addEventListener("mouseup", e => {
+    if (!isDragging) return;
+    isDragging = false;
+    wrap.style.cursor = "";
+    const diff = startX - e.clientX;
+    if (Math.abs(diff) > 40) {
+      diff > 0 ? heroIdx++ : heroIdx--;
+      setHeroPosRaw(heroIdx, true);
+      updateDots((heroIdx - 1 + heroRealCount) % heroRealCount);
+    }
+    startHeroAuto();
+    setupHeroDrag();
+  });
+
+  wrap.addEventListener("dragstart", e => e.preventDefault());
+  wrap.style.cursor = "grab";
+}
   clearInterval(heroInterval);
   heroInterval = setInterval(() => {
     if (heroTransitioning) return;
