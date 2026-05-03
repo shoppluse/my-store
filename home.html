@@ -45,8 +45,9 @@
   --radius-sm:   16px;
   --radius-md:   22px;
   --radius-lg:   28px;
-  --content-w:   1200px;         /* unified max-width for ALL sections */
-  --pad:         clamp(14px,2.5vw,32px);
+  --header-h:    60px;
+  --max-w:       1480px;
+  --pad:         16px;
   --font-display:'Syne', sans-serif;
   --font-body:   'DM Sans', sans-serif;
   --star:        #f59e0b;
@@ -79,310 +80,411 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   transition: background 0.3s, color 0.3s;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding-bottom: 20px;
 }
 
 img { display: block; max-width: 100%; }
 a { text-decoration: none; color: inherit; }
 button { border: none; background: none; cursor: pointer; font-family: inherit; }
 input { font-family: inherit; }
-
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-
-/* ===== UNIFIED CONTENT ROW ===== */
-/* Every section uses this to stay consistently centered */
-.content-row {
-  width: 100%;
-  max-width: calc(var(--content-w) + 2 * var(--pad));
-  margin: 0 auto;
-  padding-left: var(--pad);
-  padding-right: var(--pad);
-}
+::-webkit-scrollbar { width: 0; height: 0; }
 
 /* ===== HEADER ===== */
 .header {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: calc(env(safe-area-inset-top) + 10px) 0 10px;
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-}
-
-.header-pill {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto auto;
-  gap: 8px;
-  align-items: center;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 8px;
-  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid var(--border);
+  padding: calc(env(safe-area-inset-top) + 10px) var(--pad) 10px;
 }
 
-.logo-btn {
+.header-row {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 10px 20px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-2);
-  border: 1px solid var(--border);
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.logo-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.logo-text {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
-  letter-spacing: -0.3px;
-  white-space: nowrap;
-  transition: all 0.2s;
-  min-height: 50px;
+  letter-spacing: -0.5px;
+  line-height: 1;
   cursor: pointer;
-  position: relative;
-  overflow: visible;
-  isolation: isolate;
 }
-.logo-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.logo-plus { color: var(--accent); }
-
-/* Story ring */
-.logo-btn.has-story::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: calc(var(--radius-sm) + 2px);
-  background: linear-gradient(135deg, #00d4ff, #00ff95, #4f46e5, #ff9800, #00d4ff);
-  background-size: 300% 300%;
-  z-index: -1;
-  animation: story-ring-shift 3s linear infinite;
-}
-.logo-btn.story-seen::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: calc(var(--radius-sm) + 1px);
-  background: linear-gradient(135deg, #d1d5db, #9ca3af);
-  z-index: -1;
-  opacity: 0.9;
-}
-@keyframes story-ring-shift {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+.logo-text .logo-plus { color: var(--accent); }
+.logo-sub {
+  font-size: 0.58rem;
+  color: var(--muted);
+  font-style: italic;
+  letter-spacing: 0.3px;
 }
 
-/* Desktop search in header */
-.header-search-wrap {
-  flex: 1;
-  position: relative;
-}
-.header-search-input {
-  width: 100%;
-  padding: 12px 18px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-2);
-  color: var(--text);
-  font-size: 0.88rem;
-  font-family: var(--font-body);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-  min-height: 50px;
-}
-.header-search-input::placeholder { color: var(--muted); }
-.header-search-input:focus {
-  border-color: var(--accent);
-  background: var(--surface);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.hdr-btn {
+.header-tier {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 50px;
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
+  gap: 5px;
   background: var(--bg-2);
   border: 1px solid var(--border);
-  font-size: 0.82rem;
+  border-radius: 99px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
   font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  transition: all 0.2s;
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  text-decoration: none;
-}
-.hdr-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-
-/* Brand dropdown */
-.brand-wrap { position: relative; }
-.brand-arrow { font-size: 0.65rem; transition: transform 0.2s; opacity: 0.6; }
-.brand-wrap.open .brand-arrow { transform: rotate(180deg); }
-
-.brand-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 190px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-lg);
-  z-index: 200;
-  padding: 6px;
-  display: none;
-  max-height: 300px;
-  overflow-y: auto;
-}
-.brand-wrap.open .brand-menu { display: block; }
-
-.brand-item {
-  padding: 10px 12px;
-  border-radius: var(--radius-xs);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-  color: var(--text-2);
-}
-.brand-item:hover { background: var(--bg-2); }
-.brand-item.active {
-  background: var(--accent-glow);
   color: var(--accent);
-  font-weight: 700;
+  font-family: var(--font-display);
+}
+.tier-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
 }
 
-.install-btn { display: none; }
-.install-btn.show { display: flex; }
-
-/* ===== BELOW-HEADER SEARCH (mobile only) ===== */
-.mobile-search-wrap {
-  padding: 8px 0 0;
-  display: none;
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.mobile-search-input {
-  width: 100%;
-  padding: 14px 20px;
-  border-radius: var(--radius-sm);
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg-2);
   border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: var(--text-2);
+  transition: background 0.2s;
+  position: relative;
+}
+.icon-btn:hover { background: var(--border); }
+
+
+/* ===== SEARCH ===== */
+.search-section {
   background: var(--surface);
-  color: var(--text);
-  font-size: 0.9rem;
-  outline: none;
-  box-shadow: var(--shadow-sm);
+  padding: 10px var(--pad) 12px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 68px;
+  z-index: 99;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-2);
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  padding: 10px 16px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.mobile-search-input::placeholder { color: var(--muted); }
-.mobile-search-input:focus {
+.search-bar:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow), var(--shadow-sm);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
+.search-bar svg { width: 16px; height: 16px; fill: var(--muted); flex-shrink: 0; }
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.88rem;
+  outline: none;
+}
+.search-input::placeholder { color: var(--muted); }
 
-/* ===== CATEGORIES ===== */
-.cats-wrap { padding: 12px 0 0; }
+/* ===== CATEGORY CIRCLES ===== */
+.cats-section {
+  background: var(--surface);
+  padding: 14px var(--pad);
+  border-bottom: 1px solid var(--border);
+}
 .cats-scroll {
   display: flex;
-  gap: 8px;
+  gap: 16px;
   overflow-x: auto;
-  padding-bottom: 4px;
   scrollbar-width: none;
+  padding-bottom: 2px;
 }
-.cats-scroll::-webkit-scrollbar { display: none; }
-
-.cat-chip {
+.cat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  padding: 10px 12px;
-  min-width: 72px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all 0.2s;
+  gap: 6px;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
+  cursor: pointer;
 }
-.cat-chip svg { width: 20px; height: 20px; fill: currentColor; }
-.cat-chip span { font-size: 0.6rem; font-weight: 700; font-family: var(--font-display); text-align: center; line-height: 1.1; }
-.cat-chip:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.cat-chip.active {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+.cat-circle {
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  border: 2px solid var(--border);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, transform 0.2s;
+  font-size: 1.5rem;
+}
+.cat-item:hover .cat-circle { transform: translateY(-2px); }
+.cat-item.active .cat-circle {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+.cat-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-2);
+  text-align: center;
+  font-family: var(--font-display);
+  line-height: 1.2;
+  max-width: 62px;
+}
+.cat-item.active .cat-label { color: var(--accent); }
+
+/* ===== HERO CAROUSEL ===== */
+.hero-section {
+  padding: 14px var(--pad) 0;
+}
+.carousel-wrap {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
 }
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+}
+.carousel-slide img {
+  width: 100%;
+  aspect-ratio: 16/7;
+  object-fit: cover;
+  display: block;
+}
+.carousel-slide .slide-placeholder {
+  width: 100%;
+  aspect-ratio: 16/7;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 24px;
+  color: #fff;
+}
+.slide-placeholder h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.slide-placeholder p {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+.slide-cta {
+  background: #fff;
+  color: var(--accent);
+  border-radius: 99px;
+  padding: 7px 16px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+}
 
-/* ===== DESKTOP TWO-COLUMN LAYOUT ===== */
-/* On desktop: left sidebar (apps + filters) + main content */
-.desktop-layout {
-  display: block; /* default: stacked */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 0 4px;
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s, width 0.2s;
+  cursor: pointer;
+}
+.dot.active {
+  background: var(--accent);
+  width: 18px;
+  border-radius: 99px;
+}
+
+/* ===== SECTION HEADER ===== */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px var(--pad) 10px;
+}
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-icon {
+  font-size: 1.2rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.section-see-all {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: var(--font-display);
+}
+
+/* ===== FILTER PILLS ===== */
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 var(--pad) 0;
+  scrollbar-width: none;
+}
+.filter-pill {
+  flex-shrink: 0;
+  padding: 7px 16px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.filter-pill:hover { border-color: var(--accent); color: var(--accent); }
+.filter-pill.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ===== HORIZONTAL CARDS (deals) ===== */
+.h-scroll-section {
+  padding: 0 var(--pad) 0;
+}
+.h-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.deal-card {
+  flex-shrink: 0;
+  width: 140px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.deal-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.deal-card-img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+.deal-card-label {
+  padding: 8px 10px 10px;
+}
+.deal-name {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.deal-arrow {
+  position: absolute;
+  bottom: 8px; right: 8px;
+  width: 22px; height: 22px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
 }
 
 /* ===== APP SHORTCUTS ===== */
-.apps-section { padding: 16px 0 0; }
-.section-title {
-  font-family: var(--font-display);
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--muted);
-  margin-bottom: 10px;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
+.apps-section {
+  padding: 0 var(--pad) 0;
 }
 .apps-slider {
   overflow: hidden;
   cursor: grab;
   user-select: none;
-  -webkit-user-select: none;
   touch-action: pan-y;
 }
 .apps-slider.dragging { cursor: grabbing; }
 .apps-track {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   width: max-content;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
 .app-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  min-width: 68px;
+  min-width: 62px;
   text-align: center;
+  flex-shrink: 0;
 }
 .app-icon {
-  width: 50px;
-  height: 50px;
+  width: 52px; height: 52px;
   border-radius: var(--radius-sm);
   background: var(--surface);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
-  padding: 8px;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px;
 }
 .app-card:hover .app-icon { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .app-icon img { width: 100%; height: 100%; object-fit: contain; }
 .app-name { font-size: 0.6rem; font-weight: 600; color: var(--text-2); line-height: 1.2; }
-.apps-empty { font-size: 0.85rem; color: var(--muted); padding: 8px 0; }
 
 /* ===== ADS ===== */
-.ads-section { padding: 14px 0 0; display: none; }
+.ads-section {
+  padding: 0 var(--pad) 0;
+  display: none;
+}
 .ads-container {
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
-  touch-action: pan-y;
   cursor: grab;
 }
 .ads-container.dragging { cursor: grabbing; }
@@ -393,34 +495,16 @@ input { font-family: inherit; }
   will-change: transform;
 }
 .ad-slide { flex: 0 0 100%; min-width: 100%; }
-.ad-slide a, .ad-slide .ad-plain { display: block; }
-.ad-slide img { width: 100%; aspect-ratio: 21/5; object-fit: cover; background: var(--surface-2); pointer-events: none; user-select: none; }
+.ad-slide img { width: 100%; aspect-ratio: 16/5; object-fit: cover; background: var(--surface-2); pointer-events: none; }
 
 /* ===== PRODUCT GRID ===== */
-.grid-wrap { padding: 16px 0 48px; }
-.grid-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
+.grid-section {
+  padding: 0 var(--pad) 20px;
 }
-.grid-heading {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.2px;
-}
-.grid-count {
-  font-size: 0.8rem;
-  color: var(--muted);
-  font-weight: 600;
-}
-
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .product-card {
@@ -435,64 +519,110 @@ input { font-family: inherit; }
   opacity: 0;
   transform: translateY(10px);
   animation: card-in 0.35s ease forwards;
+  cursor: pointer;
 }
 @keyframes card-in { to { opacity: 1; transform: translateY(0); } }
-.product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 
 .product-img-wrap {
   aspect-ratio: 1;
   background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px;
   overflow: hidden;
+  position: relative;
 }
 .product-img-wrap img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
 }
 .product-card:hover .product-img-wrap img { transform: scale(1.05); }
 
+.product-offer-badge {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 99px;
+  font-family: var(--font-display);
+  letter-spacing: 0.3px;
+}
+
+
+
 .product-body {
-  padding: 10px 14px 14px;
+  padding: 8px 10px 10px;
   border-top: 1px solid var(--border-2);
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  flex: 1;
+  gap: 4px;
 }
+
+.product-category {
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
 .product-name {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text);
-  text-align: center;
-  line-height: 1.35;
-  min-height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  line-height: 1.3;
+  min-height: 32px;
 }
+
 .product-rating {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--star);
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 .no-rating { color: var(--muted); font-weight: 500; }
 
+.product-price-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.product-price {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.product-mrp {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.product-discount {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+
+
+/* ===== GRID MESSAGE & SKELETON ===== */
 .grid-message {
   grid-column: 1/-1;
   text-align: center;
-  padding: 60px 20px;
+  padding: 48px 20px;
   font-size: 0.9rem;
   color: var(--muted);
 }
 .grid-message.error { color: #ef4444; }
-
-/* Skeleton */
 .skeleton {
   background: linear-gradient(90deg, var(--surface-2) 25%, var(--border-2) 50%, var(--surface-2) 75%);
   background-size: 200% 100%;
@@ -504,58 +634,52 @@ input { font-family: inherit; }
 .skeleton-img { aspect-ratio: 1; }
 .skeleton-body { padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
 .skeleton-line { height: 12px; }
-.skeleton-line.short { width: 60%; margin: 0 auto; }
+.skeleton-line.short { width: 60%; }
 
 /* ===== STORY MODAL ===== */
 .story-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
+  position: fixed; inset: 0; z-index: 9999;
   background: rgba(0,0,0,0.92);
-  display: none;
-  align-items: center;
-  justify-content: center;
+  display: none; align-items: center; justify-content: center;
   backdrop-filter: blur(16px);
 }
 .story-overlay.open { display: flex; }
 .story-frame {
-  width: min(100vw, 420px);
-  height: 100svh;
-  position: relative;
-  overflow: hidden;
+  width: min(100vw, 420px); height: 100svh;
+  position: relative; overflow: hidden;
   background: linear-gradient(180deg, #0a0a0c 0%, #121218 100%);
 }
 .story-progress {
   position: absolute;
   top: calc(env(safe-area-inset-top) + 10px);
-  left: 12px; right: 12px;
-  z-index: 12;
-  display: flex;
-  gap: 5px;
+  left: 12px; right: 12px; z-index: 12;
+  display: flex; gap: 5px;
 }
-.prog-bar { flex: 1; height: 2.5px; background: rgba(255,255,255,0.2); border-radius: 99px; overflow: hidden; }
-.prog-fill { height: 100%; width: 0%; background: #fff; border-radius: 99px; transition: width 0.05s linear; }
+.prog-bar {
+  flex: 1; height: 2.5px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 99px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%; width: 0%;
+  background: #fff; border-radius: 99px;
+  transition: width 0.05s linear;
+}
 .story-topbar {
   position: absolute;
   top: calc(env(safe-area-inset-top) + 22px);
-  left: 14px; right: 14px;
-  z-index: 13;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  left: 14px; right: 14px; z-index: 13;
+  display: flex; align-items: center; justify-content: space-between;
 }
 .story-brand { display: flex; align-items: center; gap: 10px; }
 .story-avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
+  width: 32px; height: 32px; border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 800; font-size: 0.75rem; color: #fff; flex-shrink: 0;
+  font-family: var(--font-display); font-weight: 800; font-size: 0.75rem; color: #fff; flex-shrink: 0;
 }
 .story-brand-name {
-  font-family: var(--font-display);
-  font-size: 0.88rem; font-weight: 700; color: #fff;
+  font-family: var(--font-display); font-size: 0.88rem; font-weight: 700; color: #fff;
   max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .story-x {
@@ -565,7 +689,6 @@ input { font-family: inherit; }
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: background 0.2s;
 }
-.story-x:hover { background: rgba(255,255,255,0.2); }
 .story-zone { position: absolute; top: 0; bottom: 0; width: 30%; z-index: 11; cursor: pointer; }
 .story-zone-left { left: 0; }
 .story-zone-right { right: 0; }
@@ -592,20 +715,22 @@ input { font-family: inherit; }
 .story-tag::before {
   content: ""; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
   width: 22px; height: 22px; border-radius: 50%;
-  background: #d0d5dd; box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.8); z-index: 2;
+  background: #d0d5dd; box-shadow: inset 0 2px 4px rgba(0,0,0,0.15); z-index: 2;
 }
 .story-tag::after {
   content: ""; position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
   width: 10px; height: 10px; border-radius: 50%;
-  background: #6b7280; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2); z-index: 3;
+  background: #6b7280; z-index: 3;
 }
 .tag-header { padding: 42px 14px 10px; text-align: center; border-bottom: 1px dashed #e5e7eb; }
 .tag-badge {
   display: inline-block; padding: 4px 10px; border-radius: 99px;
-  background: rgba(232,82,10,0.1); color: #e8520a;
+  background: var(--accent-glow, rgba(232,82,10,0.1)); color: #e8520a;
   font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px;
 }
-.tag-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: #111; line-height: 1.25; }
+.tag-title {
+  font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: #111; line-height: 1.25;
+}
 .tag-img-wrap {
   flex: 1; min-height: 0; aspect-ratio: 1; max-height: 240px;
   background: #fff; display: flex; align-items: center; justify-content: center;
@@ -614,154 +739,92 @@ input { font-family: inherit; }
 .tag-img { width: 100%; height: 100%; object-fit: contain; }
 .story-bottom {
   position: absolute; left: 14px; right: 14px;
-  bottom: calc(env(safe-area-inset-bottom) + 16px);
-  z-index: 14; padding: 14px 16px;
+  bottom: calc(env(safe-area-inset-bottom) + 16px); z-index: 14;
+  padding: 14px 16px;
   background: rgba(10,10,12,0.75); backdrop-filter: blur(14px);
   border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-sm); color: #fff;
 }
 .story-caption { font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
 .story-hint { margin-top: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.55); }
 
-/* ===== DESKTOP LAYOUT (≥900px) ===== */
-@media (min-width: 900px) {
-  /* Move search inside header pill */
-  .mobile-search-wrap { display: none !important; }
 
-  .header-pill {
-    grid-template-columns: auto 1fr auto auto auto;
-  }
 
-  /* Two-column layout below header */
-  .desktop-layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 24px;
-    align-items: start;
-    padding-top: 16px;
-    padding-bottom: 48px;
-  }
-
-  /* Left sidebar */
-  .sidebar {
-    position: sticky;
-    top: calc(76px + 10px); /* below header */
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .sidebar-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    box-shadow: var(--shadow-sm);
-  }
-
-  /* Categories vertical in sidebar */
-  .cats-wrap { padding: 0; }
-  .cats-scroll {
-    flex-direction: column;
-    overflow-x: unset;
-    overflow-y: auto;
-    padding-bottom: 0;
-    gap: 6px;
-    max-height: 420px;
-  }
-  .cat-chip {
-    flex-direction: row;
-    justify-content: flex-start;
-    min-width: unset;
-    width: 100%;
-    padding: 10px 14px;
-    gap: 10px;
-    border-radius: var(--radius-xs);
-  }
-  .cat-chip span { font-size: 0.82rem; font-weight: 600; }
-
-  /* Apps section in sidebar */
-  .apps-section { padding: 0; }
-  .apps-slider { overflow: hidden; }
-  .apps-track {
-    flex-wrap: wrap;
-    width: auto;
-    gap: 8px;
-  }
-  .app-card { min-width: 52px; }
-  .app-icon { width: 46px; height: 46px; }
-
-  /* Main content area */
-  .main-content {
-    min-width: 0; /* prevent overflow */
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  /* Ads full width in main */
-  .ads-section { padding: 0 0 16px; }
-  .ad-slide img { aspect-ratio: 16/4; }
-
-  /* Product grid: 3 columns on medium desktop, 4 on wide */
-  .product-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .grid-wrap { padding: 0; }
+/* ===== STORY RING ON LOGO ===== */
+.logo-text {
+  position: relative;
+  z-index: 0;
+  padding: 3px 6px;
+  border-radius: var(--radius-xs);
 }
 
-@media (min-width: 1100px) {
-  .product-grid { grid-template-columns: repeat(4, 1fr); }
-  .desktop-layout { grid-template-columns: 280px 1fr; }
+/* Unseen: animated coloured ring */
+.logo-text.has-story::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(var(--radius-xs) + 3px);
+  background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7, #f9ce34);
+  background-size: 300% 300%;
+  z-index: -1;
+  animation: story-ring-spin 2.5s linear infinite;
+}
+.logo-text.has-story::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  z-index: -1;
 }
 
-@media (min-width: 1400px) {
-  .product-grid { grid-template-columns: repeat(5, 1fr); }
+/* Seen: flat grey ring */
+.logo-text.story-seen::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(var(--radius-xs) + 3px);
+  background: var(--muted-2);
+  z-index: -1;
+  animation: none;
+}
+.logo-text.story-seen::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  z-index: -1;
 }
 
-/* ===== MOBILE (< 900px) ===== */
-@media (max-width: 899px) {
-  .header-search-wrap { display: none; }
-  .mobile-search-wrap { display: block; }
-  .sidebar { display: contents; } /* flatten sidebar on mobile */
-
-  .desktop-layout {
-    display: block;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .sidebar-card {
-    background: none;
-    border: none;
-    padding: 0;
-    box-shadow: none;
-  }
-
-  .apps-section { padding: 14px 0 0; }
-  .ads-section { padding: 12px 0 0; }
-  .grid-wrap { padding: 14px 0 40px; }
-
-  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .product-name { font-size: 0.75rem; min-height: 30px; }
+@keyframes story-ring-spin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-@media (max-width: 680px) {
-  :root { --pad: 12px; }
-  body { padding-bottom: calc(env(safe-area-inset-bottom) + 16px); }
+/* Install */
+.install-btn { display: none; }
+.install-btn.show { display: flex; }
 
-  .header-pill {
-    grid-template-columns: auto auto auto;
-    gap: 6px;
-    padding: 6px;
-    border-radius: var(--radius-sm);
-  }
-  .logo-btn { font-size: 1.05rem; padding: 9px 13px; min-height: 46px; }
-  .hdr-btn { min-height: 46px; font-size: 0.72rem; padding: 8px 10px; }
-  .story-frame { width: 100vw; }
-  .story-tag { width: min(82vw, 290px); max-height: calc(100svh - 240px); }
+/* Brand filter */
+.brand-wrap { position: relative; }
+.brand-arrow { font-size: 0.65rem; transition: transform 0.2s; opacity: 0.6; }
+.brand-wrap.open .brand-arrow { transform: rotate(180deg); }
+.brand-menu {
+  position: absolute; top: calc(100% + 6px); right: 0;
+  min-width: 160px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg); z-index: 200; padding: 6px;
+  display: none; max-height: 260px; overflow-y: auto;
 }
+.brand-wrap.open .brand-menu { display: block; }
+.brand-item {
+  padding: 9px 12px; border-radius: var(--radius-xs);
+  font-size: 0.82rem; font-weight: 500; cursor: pointer;
+  transition: background 0.15s; color: var(--text-2);
+}
+.brand-item:hover { background: var(--bg-2); }
+.brand-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 700; }
 </style>
 </head>
 
@@ -769,23 +832,25 @@ input { font-family: inherit; }
 
 <!-- HEADER -->
 <header class="header">
-  <div class="content-row">
-    <div class="header-pill" id="headerPill">
-      <button class="logo-btn" id="storyBtn" type="button" aria-label="Open stories">
-        Shop<span class="logo-plus">+</span>
-      </button>
+  <div class="header-row">
+    <!-- Logo -->
+    <div class="logo-area">
+      <div class="logo-text" id="storyBtn">Shop<span class="logo-plus">+</span></div>
+      <div class="logo-sub">we have deals™</div>
+    </div>
 
-      <!-- Search in header (desktop only) -->
-      <div class="header-search-wrap">
-        <input class="header-search-input" id="searchInput" type="search"
-          placeholder="Search phones, fashion, gadgets…" autocomplete="off" />
-      </div>
+    <!-- Tier badge -->
+    <div class="header-tier">
+      <div class="tier-dot"></div>
+      Welcome Tier
+    </div>
 
+    <!-- Icons -->
+    <div class="header-icons">
       <!-- Brand filter -->
       <div class="brand-wrap" id="brandWrap">
-        <button class="hdr-btn" id="brandToggle" type="button" aria-expanded="false">
-          <span id="brandLabel">🏷️ Brand</span>
-          <span class="brand-arrow" id="brandArrow">▾</span>
+        <button class="icon-btn" id="brandToggle" type="button" style="font-size:0.75rem;gap:2px;" aria-expanded="false">
+          🏷️ <span class="brand-arrow" id="brandArrow">▾</span>
         </button>
         <div class="brand-menu" id="brandMenu" role="listbox">
           <div class="brand-item active" data-brand="all" role="option">All Brands</div>
@@ -801,77 +866,118 @@ input { font-family: inherit; }
         </div>
       </div>
 
-      <button class="hdr-btn install-btn" id="installBtn" type="button">⬇ Install</button>
-      <a href="profile.html" class="hdr-btn" aria-label="Profile" style="font-size:1.1rem;">👤</a>
+      <!-- Install -->
+      <button class="icon-btn install-btn" id="installBtn" type="button" title="Install App">⬇</button>
+
+      <!-- Profile -->
+      <a href="profile.html" class="icon-btn" aria-label="Profile">👤</a>
     </div>
   </div>
 </header>
 
-<!-- MOBILE SEARCH -->
-<div class="content-row">
-  <div class="mobile-search-wrap">
-    <input class="mobile-search-input" id="searchInputMobile" type="search"
-      placeholder="Search phones, fashion, gadgets…" autocomplete="off" />
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-bar">
+    <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    <input class="search-input" id="searchInput" type="search" placeholder="Search phones, fashion, gadgets…" autocomplete="off" />
   </div>
 </div>
 
-<!-- DESKTOP TWO-COLUMN LAYOUT -->
-<div class="content-row">
-  <div class="desktop-layout">
+<!-- CATEGORY CIRCLES -->
+<div class="cats-section">
+  <div class="cats-scroll" id="catsScroll"></div>
+</div>
 
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar">
-
-      <!-- Categories -->
-      <div class="sidebar-card">
-        <div class="section-title">Categories</div>
-        <div class="cats-wrap">
-          <div class="cats-scroll" id="catsScroll"></div>
+<!-- HERO CAROUSEL (ads) -->
+<div class="hero-section">
+  <div class="carousel-wrap" id="heroCarousel">
+    <div class="carousel-track" id="heroTrack">
+      <!-- Default slides shown until ads load -->
+      <div class="carousel-slide">
+        <div class="slide-placeholder">
+          <h2>New arrivals.<br/>Shop now.</h2>
+          <p>Discover trending products across all categories.</p>
+          <div class="slide-cta">Shop now →</div>
         </div>
       </div>
-
-      <!-- Top Shopping Apps -->
-      <div class="sidebar-card">
-        <div class="section-title">Top Shopping Apps</div>
-        <section class="apps-section">
-          <div class="apps-slider" id="appsSlider">
-            <div class="apps-track" id="appsTrack">
-              <span class="apps-empty">Loading…</span>
-            </div>
-          </div>
-        </section>
-      </div>
-
-    </aside>
-
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-content">
-
-      <!-- Ads -->
-      <section class="ads-section" id="adsSection">
-        <div class="ads-container" id="adsContainer">
-          <div class="ads-viewport">
-            <div class="ads-track" id="adsTrack"></div>
-          </div>
+      <div class="carousel-slide">
+        <div class="slide-placeholder" style="background:linear-gradient(135deg,#1a1916,#3d3c3a);">
+          <h2>Top brands.<br/>Best prices.</h2>
+          <p>Apple, Samsung, Nike and more.</p>
+          <div class="slide-cta" style="color:#111;">Explore →</div>
         </div>
-      </section>
-
-      <!-- Products -->
-      <div class="grid-wrap">
-        <div class="grid-header">
-          <div class="grid-heading">Products</div>
-          <div class="grid-count" id="gridCount"></div>
-        </div>
-        <div class="product-grid" id="productGrid"></div>
       </div>
+    </div>
+    <div class="carousel-dots" id="heroDots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+</div>
 
-    </div><!-- /main-content -->
+<!-- TODAY'S DEALS SECTION -->
+<div class="section-header">
+  <div class="section-title-row">
+    <span class="section-icon">%</span>
+    <span class="section-title">today's unmissable deals</span>
+  </div>
+  <span class="section-see-all">see all ›</span>
+</div>
+<div class="h-scroll-section">
+  <div class="h-scroll" id="dealsScroll">
+    <!-- Filled by JS from categories -->
+  </div>
+</div>
 
-  </div><!-- /desktop-layout -->
-</div><!-- /content-row -->
+<!-- FILTER PILLS -->
+<div class="section-header">
+  <div class="section-title-row">
+    <span class="section-icon">🏷️</span>
+    <span class="section-title">best of shop+</span>
+  </div>
+</div>
+<div class="filter-pills" id="filterPills">
+  <!-- filled by JS -->
+</div>
+
+<!-- APP SHORTCUTS -->
+<div class="section-header">
+  <div class="section-title-row">
+    <span class="section-icon">📱</span>
+    <span class="section-title">top shopping apps</span>
+  </div>
+</div>
+<div class="apps-section">
+  <div class="apps-slider" id="appsSlider">
+    <div class="apps-track" id="appsTrack">
+      <span style="font-size:0.85rem;color:var(--muted);">Loading…</span>
+    </div>
+  </div>
+</div>
+
+<!-- ADS (fallback) -->
+<section class="ads-section" id="adsSection">
+  <div class="ads-container" id="adsContainer">
+    <div class="ads-viewport">
+      <div class="ads-track" id="adsTrack"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<div id="gridAnchor" class="section-header" style="margin-top:8px;">
+  <div class="section-title-row">
+    <span class="section-icon">✨</span>
+    <span class="section-title" id="gridTitle">all products</span>
+  </div>
+  <span class="section-see-all" id="gridCount"></span>
+</div>
+<div class="grid-section">
+  <div class="product-grid" id="productGrid"></div>
+</div>
 
 <!-- STORY MODAL -->
-<div class="story-overlay" id="storyOverlay" role="dialog" aria-modal="true" aria-label="Story viewer">
+<div class="story-overlay" id="storyOverlay" role="dialog" aria-modal="true">
   <div class="story-frame">
     <div class="story-progress" id="storyProgress"></div>
     <div class="story-topbar">
@@ -879,13 +985,13 @@ input { font-family: inherit; }
         <div class="story-avatar">S+</div>
         <div class="story-brand-name" id="storyBrandName">ShopPlus</div>
       </div>
-      <button class="story-x" id="storyClose" aria-label="Close">✕</button>
+      <button class="story-x" id="storyClose">✕</button>
     </div>
     <div class="story-zone story-zone-left" id="storyPrev"></div>
     <div class="story-zone story-zone-right" id="storyNext"></div>
     <div class="story-stage">
       <div class="story-string"></div>
-      <div class="story-tag" id="storyTag" role="button" tabindex="0" aria-label="Open product">
+      <div class="story-tag" id="storyTag" role="button" tabindex="0">
         <div class="tag-header">
           <div class="tag-badge">ShopPlus Pick</div>
           <div class="tag-title" id="storyTagTitle">Featured Product</div>
@@ -902,36 +1008,17 @@ input { font-family: inherit; }
   </div>
 </div>
 
+
+
 <script>
 "use strict";
-
-const BACKEND   = "https://my-store-e28j.onrender.com";
+const BACKEND = "https://my-store-e28j.onrender.com";
 const STORY_KEY = "sp_story_sig";
 const FALLBACK_IMG = "https://via.placeholder.com/300x300/f4f3f0/aaa?text=No+Image";
 
-/* ===== CATEGORIES ===== */
-const CATS = [
-  { name: "Overall",     icon: `<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="10"/></svg>` },
-  { name: "Electronics", icon: `<svg viewBox="0 0 24 24" width="18" height="18"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20" stroke-width="2"/><line x1="12" y1="18" x2="12" y2="20" stroke-width="2"/></svg>` },
-  { name: "Fashion",     icon: `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 3l3 3h6l3-3 3 3-3 3v12H6V9L3 6z"/></svg>` },
-  { name: "Home",        icon: `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>` },
-  { name: "Accessories", icon: `<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>` },
-  { name: "Sports",      icon: `<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M4.5 4.5l15 15M4.5 19.5l15-15"/></svg>` },
-  { name: "Beauty",      icon: `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2c2 4 6 6 6 10a6 6 0 0 1-12 0c0-4 4-6 6-10z"/></svg>` },
-  { name: "Gadgets",     icon: `<svg viewBox="0 0 24 24" width="18" height="18"><rect x="7" y="2" width="10" height="20" rx="3"/><circle cx="12" cy="19" r="1"/></svg>` },
-];
-
-/* ===== STATE ===== */
-let allProducts = [], jsonCache = [], backendCache = [];
-let stories = [], storySig = "";
-let storyIdx = 0, storyTimerID = null, storyRafID = null;
-let storyStart = 0, storyDuration = 5000;
-let activeCat = "Overall";
-
 const $ = id => document.getElementById(id);
 const norm = str => String(str || "").trim().toLowerCase();
-const safeImg = src => src && String(src).trim() ? String(src).trim() : FALLBACK_IMG;
-
+function safeImg(src) { return src && String(src).trim() ? String(src).trim() : FALLBACK_IMG; }
 function getRating(v) {
   if (v == null || v === "") return null;
   const n = parseFloat(String(v).replace(/[^\d.]/g, ""));
@@ -955,170 +1042,288 @@ function normalizeProduct(p, source, idx) {
     brand: p.brand || "",
     rating: getRating(p.rating),
     description: p.description || "",
+    price: p.price || null,
+    mrp: p.mrp || p.originalPrice || null,
     timeValue: isNaN(tv) ? 0 : tv,
     fallbackOrder: typeof p.sortOrder === "number" ? p.sortOrder : (source === "json" ? idx + 1 : 0),
   };
 }
 function buildSig(arr) {
   if (!arr?.length) return "";
-  return JSON.stringify(arr.map(s => ({
-    id: String(s.id || ""), title: String(s.title || ""),
-    image: String(s.image || ""), caption: String(s.caption || ""),
-    productId: String(s.productId || ""), source: String(s.source || "json"),
-    duration: Number(s.duration || 5000),
-  })));
+  return JSON.stringify(arr.map(s => ({ id: String(s.id || ""), title: String(s.title || ""), image: String(s.image || ""), caption: String(s.caption || ""), productId: String(s.productId || ""), source: String(s.source || "json"), duration: Number(s.duration || 5000) })));
 }
+
+/* ===== STATE ===== */
+let allProducts = [], jsonCache = [], backendCache = [];
+let stories = [], storySig = "", storyIdx = 0, storyTimerID = null, storyRafID = null, storyStart = 0, storyDuration = 5000;
+let activeCat = "Overall";
 
 /* ===== INSTALL ===== */
 const installBtn = $("installBtn");
 let deferredPrompt = null;
-function isStandalone() {
-  return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-}
-window.addEventListener("beforeinstallprompt", e => {
-  e.preventDefault(); deferredPrompt = e;
-  if (!isStandalone()) installBtn.classList.add("show");
-});
-installBtn.addEventListener("click", async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  if (outcome === "accepted") installBtn.classList.remove("show");
-  deferredPrompt = null;
-});
+function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPrompt = e; if (!isStandalone()) installBtn.classList.add("show"); });
+installBtn.addEventListener("click", async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === "accepted") installBtn.classList.remove("show"); deferredPrompt = null; });
 window.addEventListener("appinstalled", () => { installBtn.classList.remove("show"); deferredPrompt = null; });
 
 /* ===== CATEGORIES ===== */
+const CATS = [
+  { name: "Overall", emoji: "🛍️" },
+  { name: "Electronics", emoji: "📱" },
+  { name: "Fashion", emoji: "👗" },
+  { name: "Home", emoji: "🏠" },
+  { name: "Accessories", emoji: "⌚" },
+  { name: "Sports", emoji: "⚽" },
+  { name: "Beauty", emoji: "💄" },
+  { name: "Gadgets", emoji: "🎮" },
+];
 const catsScroll = $("catsScroll");
 CATS.forEach(cat => {
-  const el = document.createElement("button");
-  el.className = "cat-chip" + (cat.name === activeCat ? " active" : "");
+  const el = document.createElement("div");
+  el.className = "cat-item" + (cat.name === activeCat ? " active" : "");
   el.dataset.cat = cat.name;
-  el.innerHTML = cat.icon + `<span>${cat.name}</span>`;
-  el.setAttribute("aria-label", cat.name);
+  el.innerHTML = `<div class="cat-circle">${cat.emoji}</div><div class="cat-label">${cat.name}</div>`;
   el.addEventListener("click", () => {
     if (activeCat === cat.name) return;
     activeCat = cat.name;
-    catsScroll.querySelectorAll(".cat-chip").forEach(c =>
-      c.classList.toggle("active", c.dataset.cat === activeCat));
+    catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === activeCat));
+    updateFilterPills();
     filterAndRender();
   });
   catsScroll.appendChild(el);
 });
 
-/* ===== SEARCH (sync both inputs) ===== */
-const searchInput       = $("searchInput");
-const searchInputMobile = $("searchInputMobile");
-
-function onSearchChange(val) {
-  searchInput.value = val;
-  searchInputMobile.value = val;
-  activeCat = "Overall";
-  catsScroll.querySelectorAll(".cat-chip").forEach(c =>
-    c.classList.toggle("active", c.dataset.cat === "Overall"));
-  syncBrand();
-  filterAndRender();
+/* ===== FILTER PILLS ===== */
+const FILTER_PILLS = ["skincare", "fragrance", "combo", "all", "fashion", "electronics", "sports"];
+function buildFilterPills() {
+  const fp = $("filterPills");
+  fp.innerHTML = "";
+  const cats = ["all", ...new Set(allProducts.map(p => norm(p.category)).filter(Boolean))];
+  cats.slice(0, 8).forEach(cat => {
+    const p = document.createElement("button");
+    p.className = "filter-pill" + (cat === "all" && activeCat === "Overall" ? " active" : (norm(activeCat) === cat ? " active" : ""));
+    p.textContent = cat === "all" ? "all" : cat;
+    p.addEventListener("click", () => {
+      activeCat = cat === "all" ? "Overall" : cat.charAt(0).toUpperCase() + cat.slice(1);
+      catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === activeCat));
+      fp.querySelectorAll(".filter-pill").forEach(el => el.classList.remove("active"));
+      p.classList.add("active");
+      filterAndRender();
+    });
+    fp.appendChild(p);
+  });
 }
-searchInput.addEventListener("input", e => onSearchChange(e.target.value));
-searchInputMobile.addEventListener("input", e => onSearchChange(e.target.value));
+function updateFilterPills() { buildFilterPills(); }
+
+/* ===== DEALS HORIZONTAL SCROLL ===== */
+function buildDealsSection() {
+  const scroll = $("dealsScroll");
+  scroll.innerHTML = "";
+  const cats = [...new Set(allProducts.map(p => p.category).filter(Boolean))].slice(0, 8);
+  cats.forEach(cat => {
+    const prod = allProducts.find(p => p.category === cat);
+    const div = document.createElement("a");
+    div.className = "deal-card";
+    div.href = "#";
+    div.innerHTML = `
+      <img class="deal-card-img" src="${safeImg(prod?.image)}" alt="${cat}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" />
+      <div class="deal-card-label">
+        <div class="deal-name">${cat.toLowerCase()}</div>
+      </div>
+      <div class="deal-arrow">›</div>`;
+    div.addEventListener("click", e => {
+      e.preventDefault();
+      activeCat = cat;
+      catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === activeCat));
+      buildFilterPills();
+      filterAndRender();
+      // Scroll to products grid with a small delay so render completes first
+      setTimeout(() => {
+        const gridSection = $("gridAnchor");
+        if (gridSection) gridSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 60);
+    });
+    scroll.appendChild(div);
+  });
+}
+
+/* ===== SEARCH ===== */
+const searchInput = $("searchInput");
+searchInput.addEventListener("input", () => {
+  activeCat = "Overall";
+  catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === "Overall"));
+  filterAndRender();
+});
 
 /* ===== BRAND FILTER ===== */
-const brandWrap   = $("brandWrap");
+const brandWrap = $("brandWrap");
 const brandToggle = $("brandToggle");
-const brandMenu   = $("brandMenu");
-const brandLabel  = $("brandLabel");
-
-brandToggle.addEventListener("click", e => {
-  e.stopPropagation();
-  const open = brandWrap.classList.toggle("open");
-  brandToggle.setAttribute("aria-expanded", open);
-});
-document.addEventListener("click", e => {
-  if (!brandWrap.contains(e.target)) {
-    brandWrap.classList.remove("open");
-    brandToggle.setAttribute("aria-expanded", "false");
-  }
-});
+const brandMenu = $("brandMenu");
+brandToggle.addEventListener("click", e => { e.stopPropagation(); brandWrap.classList.toggle("open"); });
+document.addEventListener("click", e => { if (!brandWrap.contains(e.target)) brandWrap.classList.remove("open"); });
 brandMenu.querySelectorAll(".brand-item").forEach(item => {
   item.addEventListener("click", () => {
     const brand = item.dataset.brand;
-    setActiveBrand(brand);
-    onSearchChange(brand === "all" ? "" : brand);
-    brandLabel.textContent = brand === "all" ? "🏷️ Brand" : `🏷️ ${brand}`;
+    brandMenu.querySelectorAll(".brand-item").forEach(el => el.classList.toggle("active", el.dataset.brand === brand));
+    searchInput.value = brand === "all" ? "" : brand;
+    activeCat = "Overall";
+    catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === "Overall"));
+    filterAndRender();
     brandWrap.classList.remove("open");
-    brandToggle.setAttribute("aria-expanded", "false");
   });
 });
-function setActiveBrand(brand) {
-  brandMenu.querySelectorAll(".brand-item").forEach(el =>
-    el.classList.toggle("active", el.dataset.brand.toLowerCase() === brand.toLowerCase()));
+
+/* ===== HERO CAROUSEL ===== */
+let heroRealCount = 2, heroIdx = 0, heroInterval = null, heroTransitioning = false;
+
+function buildHeroDots(count) {
+  const dots = $("heroDots");
+  dots.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement("div");
+    d.className = "dot" + (i === 0 ? " active" : "");
+    d.addEventListener("click", () => jumpToSlide(i));
+    dots.appendChild(d);
+  }
 }
-function syncBrand() {
-  const q = norm(searchInput.value);
-  let matched = "all";
-  brandMenu.querySelectorAll(".brand-item").forEach(el => {
-    if (el.dataset.brand.toLowerCase() !== "all" && el.dataset.brand.toLowerCase() === q)
-      matched = el.dataset.brand.toLowerCase();
+
+function updateDots(realIdx) {
+  $("heroDots").querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === realIdx));
+}
+
+function setHeroPosRaw(idx, animated) {
+  const track = $("heroTrack");
+  track.style.transition = animated ? "transform 0.5s cubic-bezier(0.4,0,0.2,1)" : "none";
+  track.style.transform = `translateX(${-idx * 100}%)`;
+}
+
+function jumpToSlide(realIdx) {
+  heroIdx = realIdx + 1; // +1 because of leading clone
+  setHeroPosRaw(heroIdx, true);
+  updateDots(realIdx);
+  startHeroAuto();
+}
+
+function startHeroAuto() {
+  clearInterval(heroInterval);
+  heroInterval = setInterval(() => {
+    if (heroTransitioning) return;
+    heroIdx++;
+    setHeroPosRaw(heroIdx, true);
+    const realIdx = (heroIdx - 1) % heroRealCount;
+    updateDots(realIdx);
+  }, 3500);
+}
+
+function initHeroCarousel(slides) {
+  // slides = array of DOM elements (the real slides)
+  heroRealCount = slides.length;
+  const track = $("heroTrack");
+  track.style.transition = "none";
+  track.innerHTML = "";
+
+  // Clone last slide → prepend
+  const cloneFirst = slides[slides.length - 1].cloneNode(true);
+  track.appendChild(cloneFirst);
+  // Real slides
+  slides.forEach(s => track.appendChild(s));
+  // Clone first slide → append
+  const cloneLast = slides[0].cloneNode(true);
+  track.appendChild(cloneLast);
+
+  // Start at index 1 (first real slide)
+  heroIdx = 1;
+  setHeroPosRaw(heroIdx, false);
+  buildHeroDots(heroRealCount);
+
+  // On transition end: if we've reached a clone, snap silently
+  track.addEventListener("transitionend", () => {
+    heroTransitioning = false;
+    const totalSlides = heroRealCount + 2; // real + 2 clones
+    if (heroIdx >= totalSlides - 1) {
+      // Jumped past last clone → snap to first real
+      heroIdx = 1;
+      setHeroPosRaw(heroIdx, false);
+    } else if (heroIdx <= 0) {
+      // Jumped before first clone → snap to last real
+      heroIdx = heroRealCount;
+      setHeroPosRaw(heroIdx, false);
+    }
   });
-  setActiveBrand(matched);
-  brandLabel.textContent = matched === "all" ? "🏷️ Brand" : `🏷️ ${matched.charAt(0).toUpperCase() + matched.slice(1)}`;
+
+  track.addEventListener("transitionstart", () => { heroTransitioning = true; });
+
+  startHeroAuto();
 }
 
-/* ===== APP SHORTCUTS ===== */
-const appsSlider = $("appsSlider");
-const appsTrack  = $("appsTrack");
-let appsRaf = null, appsOffset = 0, appsSetW = 0;
-let appsPaused = false, appsDrag = false, appsDragX = 0, appsDragStart = 0;
-const APPS_SPEED = 0.14;
-const isDesktop = () => window.innerWidth >= 900;
+/* ===== ADS → inject into hero carousel ===== */
+async function loadAds() {
+  try {
+    const r = await fetch("ads.json", { cache: "no-store" });
+    if (!r.ok) throw new Error();
+    const ads = await r.json();
+    if (!Array.isArray(ads) || !ads.length) return;
 
+    const slides = ads.map((ad, i) => {
+      const slide = document.createElement("div");
+      slide.className = "carousel-slide";
+      const link = ad.link?.trim() || "";
+      slide.innerHTML = `<img src="${safeImg(ad.image)}" alt="Ad" loading="${i === 0 ? 'eager' : 'lazy'}" style="width:100%;aspect-ratio:16/7;object-fit:cover;display:block;pointer-events:none;" />`;
+      if (link) {
+        slide.style.cursor = "pointer";
+        slide.dataset.link = link;
+        slide.dataset.external = /^https?:\/\//i.test(link) ? "true" : "false";
+      }
+      return slide;
+    });
+
+    // Click handler on track (handles clones too)
+    $("heroTrack").addEventListener("click", e => {
+      const slide = e.target.closest(".carousel-slide");
+      if (!slide || !slide.dataset.link) return;
+      slide.dataset.external === "true"
+        ? window.open(slide.dataset.link, "_blank", "noopener")
+        : (window.location.href = slide.dataset.link);
+    });
+
+    initHeroCarousel(slides);
+  } catch {
+    // Keep default placeholder slides, just init them
+    const existingSlides = Array.from($("heroTrack").querySelectorAll(".carousel-slide"));
+    if (existingSlides.length) initHeroCarousel(existingSlides);
+  }
+}
+
+/* ===== APPS ===== */
+const appsSlider = $("appsSlider");
+const appsTrack = $("appsTrack");
+let appsRaf = null, appsOffset = 0, appsSetW = 0, appsPaused = false, appsDrag = false, appsDragX = 0, appsDragStart = 0;
+const APPS_SPEED = 0.12;
 async function loadApps() {
   try {
     const r = await fetch("apps.json", { cache: "no-store" });
     if (!r.ok) throw new Error();
     const apps = await r.json();
-    if (!Array.isArray(apps) || !apps.length) {
-      appsTrack.innerHTML = `<span class="apps-empty">No apps found.</span>`; return;
-    }
+    if (!Array.isArray(apps) || !apps.length) { appsTrack.innerHTML = `<span style="font-size:0.85rem;color:var(--muted)">No apps found.</span>`; return; }
     appsTrack.innerHTML = "";
     const makeCard = app => {
       const a = document.createElement("a");
       a.className = "app-card";
       a.href = app.link || "#";
       if (/^https?:\/\//i.test(app.link || "")) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
-      a.innerHTML = `<div class="app-icon"><img src="${safeImg(app.image)}" alt="${app.name||"App"}" loading="lazy"/></div><div class="app-name">${app.name||"App"}</div>`;
+      a.innerHTML = `<div class="app-icon"><img src="${safeImg(app.image)}" alt="${app.name || "App"}" loading="lazy" /></div><div class="app-name">${app.name || "App"}</div>`;
       return a;
     };
-    if (isDesktop()) {
-      // Desktop: wrap grid, no marquee
-      apps.forEach(app => appsTrack.appendChild(makeCard(app)));
-    } else {
-      // Mobile: marquee
-      apps.concat(apps).forEach(app => appsTrack.appendChild(makeCard(app)));
-      requestAnimationFrame(() => {
-        appsSetW = appsTrack.scrollWidth / 2;
-        startAppsScroll();
-        setupAppsDrag();
-      });
-    }
-  } catch {
-    appsTrack.innerHTML = `<span class="apps-empty">Couldn't load apps.</span>`;
-  }
+    apps.concat(apps).forEach(app => appsTrack.appendChild(makeCard(app)));
+    requestAnimationFrame(() => { appsSetW = appsTrack.scrollWidth / 2; startAppsScroll(); setupAppsDrag(); });
+  } catch { appsTrack.innerHTML = `<span style="font-size:0.85rem;color:var(--muted)">Couldn't load apps.</span>`; }
 }
-
 function startAppsScroll() {
   cancelAnimationFrame(appsRaf);
   let last = 0;
   const step = ts => {
-    if (last) {
-      const dt = ts - last;
-      if (!appsPaused && !appsDrag && appsSetW) {
-        appsOffset = (appsOffset + APPS_SPEED * dt) % appsSetW;
-        appsTrack.style.transform = `translateX(${-appsOffset}px)`;
-      }
-    }
-    last = ts;
-    appsRaf = requestAnimationFrame(step);
+    if (last) { const dt = ts - last; if (!appsPaused && !appsDrag && appsSetW) { appsOffset = (appsOffset + APPS_SPEED * dt) % appsSetW; appsTrack.style.transform = `translateX(${-appsOffset}px)`; } }
+    last = ts; appsRaf = requestAnimationFrame(step);
   };
   appsRaf = requestAnimationFrame(step);
 }
@@ -1126,166 +1331,100 @@ function setupAppsDrag() {
   appsSlider.addEventListener("mouseenter", () => appsPaused = true);
   appsSlider.addEventListener("mouseleave", () => { if (!appsDrag) appsPaused = false; });
   appsSlider.addEventListener("touchstart", e => { appsDrag = true; appsDragX = e.touches[0].clientX; appsDragStart = appsOffset; }, { passive: true });
-  appsSlider.addEventListener("touchmove", e => {
-    if (!appsDrag) return;
-    const d = appsDragX - e.touches[0].clientX;
-    appsOffset = ((appsDragStart + d) % appsSetW + appsSetW) % appsSetW;
-    appsTrack.style.transform = `translateX(${-appsOffset}px)`;
-  }, { passive: false });
+  appsSlider.addEventListener("touchmove", e => { if (!appsDrag) return; const d = appsDragX - e.touches[0].clientX; appsOffset = ((appsDragStart + d) % appsSetW + appsSetW) % appsSetW; appsTrack.style.transform = `translateX(${-appsOffset}px)`; }, { passive: false });
   appsSlider.addEventListener("touchend", () => { appsDrag = false; setTimeout(() => appsPaused = false, 400); });
   appsSlider.addEventListener("mousedown", e => { appsDrag = true; appsDragX = e.clientX; appsDragStart = appsOffset; appsSlider.classList.add("dragging"); });
-  window.addEventListener("mousemove", e => {
-    if (!appsDrag) return;
-    const d = appsDragX - e.clientX;
-    appsOffset = ((appsDragStart + d) % appsSetW + appsSetW) % appsSetW;
-    appsTrack.style.transform = `translateX(${-appsOffset}px)`;
-  });
+  window.addEventListener("mousemove", e => { if (!appsDrag) return; const d = appsDragX - e.clientX; appsOffset = ((appsDragStart + d) % appsSetW + appsSetW) % appsSetW; appsTrack.style.transform = `translateX(${-appsOffset}px)`; });
   window.addEventListener("mouseup", () => { if (appsDrag) { appsDrag = false; appsPaused = false; appsSlider.classList.remove("dragging"); } });
   appsSlider.addEventListener("dragstart", e => e.preventDefault());
 }
 
-/* ===== ADS ===== */
-const adsSection  = $("adsSection");
-const adsContainer= $("adsContainer");
-const adsTrack    = $("adsTrack");
-let adsCount = 0, adsIdx = 1, adsInterval = null;
-let adsDrag = false, adsStartX = 0;
-
-async function loadAds() {
-  try {
-    const r = await fetch("ads.json", { cache: "no-store" });
-    if (!r.ok) throw new Error();
-    const ads = await r.json();
-    if (!Array.isArray(ads) || !ads.length) return;
-    adsSection.style.display = "block";
-    adsCount = ads.length;
-    if (adsCount === 1) {
-      adsTrack.appendChild(makeAdSlide(ads[0])); adsIdx = 0; setAdPos(false); return;
-    }
-    adsTrack.appendChild(makeAdSlide(ads[ads.length - 1]));
-    ads.forEach(a => adsTrack.appendChild(makeAdSlide(a)));
-    adsTrack.appendChild(makeAdSlide(ads[0]));
-    adsIdx = 1; setAdPos(false);
-    adsTrack.addEventListener("transitionend", () => {
-      if (adsIdx === adsCount + 1) { adsIdx = 1; setAdPos(false); }
-      if (adsIdx === 0) { adsIdx = adsCount; setAdPos(false); }
-    });
-    adsInterval = setInterval(() => { adsIdx++; setAdPos(true); }, 3500);
-    setupAdDrag();
-  } catch {}
-}
-function makeAdSlide(ad) {
-  const div = document.createElement("div");
-  div.className = "ad-slide";
-  const img = `<img src="${safeImg(ad.image)}" alt="Ad" loading="lazy" draggable="false"/>`;
-  div.innerHTML = ad.link?.trim()
-    ? `<a href="${ad.link}" ${/^https?:\/\//i.test(ad.link) ? 'target="_blank" rel="noopener noreferrer"' : ""}>${img}</a>`
-    : `<div class="ad-plain">${img}</div>`;
-  return div;
-}
-function setAdPos(animated) {
-  const w = adsContainer.clientWidth;
-  adsTrack.style.transition = animated ? "transform 0.5s cubic-bezier(0.4,0,0.2,1)" : "none";
-  adsTrack.style.transform = `translateX(${-adsIdx * w}px)`;
-}
-function setupAdDrag() {
-  const startDrag = x => { adsDrag = true; adsStartX = x; clearInterval(adsInterval); };
-  const endDrag = x => {
-    if (!adsDrag) return; adsDrag = false;
-    const d = adsStartX - x;
-    if (Math.abs(d) > 50) d > 0 ? adsIdx++ : adsIdx--;
-    setAdPos(true);
-    adsInterval = setInterval(() => { adsIdx++; setAdPos(true); }, 3500);
-  };
-  adsContainer.addEventListener("touchstart", e => startDrag(e.touches[0].clientX), { passive: true });
-  adsContainer.addEventListener("touchend", e => endDrag(e.changedTouches[0].clientX));
-  adsContainer.addEventListener("mousedown", e => { startDrag(e.clientX); adsContainer.classList.add("dragging"); });
-  window.addEventListener("mouseup", e => { if (adsDrag) { endDrag(e.clientX); adsContainer.classList.remove("dragging"); } });
-  window.addEventListener("resize", () => setAdPos(false));
-  adsContainer.addEventListener("dragstart", e => e.preventDefault());
-}
-
 /* ===== PRODUCTS ===== */
 const productGrid = $("productGrid");
-const gridCount   = $("gridCount");
-
-function showSkeletons(n = 8) {
-  productGrid.innerHTML = Array.from({ length: n }, () => `
-    <div class="skeleton-card">
-      <div class="skeleton skeleton-img"></div>
-      <div class="skeleton-body">
-        <div class="skeleton skeleton-line"></div>
-        <div class="skeleton skeleton-line short"></div>
-      </div>
-    </div>`).join("");
+function showSkeletons(n = 4) {
+  productGrid.innerHTML = Array.from({ length: n }, () => `<div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div></div>`).join("");
 }
 function mergeProducts() {
+  const norm_json = jsonCache.map((p, i) => normalizeProduct(p, "json", i));
+  const norm_be = backendCache.map((p, i) => normalizeProduct(p, "backend", i));
   const map = new Map();
-  [...jsonCache.map((p,i) => normalizeProduct(p,"json",i)),
-   ...backendCache.map((p,i) => normalizeProduct(p,"backend",i))]
-    .forEach(p => map.set(`${p.source}-${p.id}`, p));
-  allProducts = [...map.values()].sort((a, b) =>
-    a.timeValue !== b.timeValue ? b.timeValue - a.timeValue : b.fallbackOrder - a.fallbackOrder);
+  [...norm_json, ...norm_be].forEach(p => map.set(`${p.source}-${p.id}`, p));
+  allProducts = [...map.values()].sort((a, b) => { if (a.timeValue !== b.timeValue) return b.timeValue - a.timeValue; return b.fallbackOrder - a.fallbackOrder; });
+  buildFilterPills();
+  buildDealsSection();
   filterAndRender();
 }
 async function loadProducts() {
   showSkeletons();
-  const jsonP = fetch("products.json", { cache: "no-store" })
-    .then(r => r.ok ? r.json() : Promise.reject()).then(d => extractArr(d)).catch(() => []);
-  const beP = fetch(`${BACKEND}/api/products`, { cache: "no-store" })
-    .then(r => r.ok ? r.json() : Promise.reject()).then(d => extractArr(d)).catch(() => null);
+  const jsonP = fetch("products.json", { cache: "no-store" }).then(r => r.ok ? r.json() : Promise.reject()).then(d => extractArr(d)).catch(() => []);
+  const beP = fetch(`${BACKEND}/api/products`, { cache: "no-store" }).then(r => r.ok ? r.json() : Promise.reject()).then(d => extractArr(d)).catch(() => null);
   jsonCache = await jsonP;
   const fast = await Promise.race([beP, new Promise(r => setTimeout(() => r("TO"), 2500))]);
   if (fast !== "TO" && fast !== null) { backendCache = fast; mergeProducts(); loadStories(); return; }
   if (jsonCache.length) { mergeProducts(); loadStories(); }
   else productGrid.innerHTML = `<div class="grid-message">Loading products…</div>`;
-  beP.then(data => {
-    if (Array.isArray(data)) { backendCache = data; mergeProducts(); loadStories(); }
-    else if (!jsonCache.length) productGrid.innerHTML = `<div class="grid-message error">Failed to load products.</div>`;
-  });
+  beP.then(data => { if (Array.isArray(data)) { backendCache = data; mergeProducts(); loadStories(); } else if (!jsonCache.length) { productGrid.innerHTML = `<div class="grid-message error">Failed to load products.</div>`; } });
 }
 function filterAndRender() {
   const q = norm(searchInput.value);
-  const list = allProducts.filter(p => {
+  let list = allProducts.filter(p => {
     const catOk = activeCat === "Overall" || norm(p.category) === norm(activeCat);
     const qOk = !q || norm(p.name).includes(q) || norm(p.brand).includes(q) || norm(p.description).includes(q);
     return catOk && qOk;
   });
+  const title = $("gridTitle");
+  const count = $("gridCount");
+  title.textContent = activeCat === "Overall" ? "all products" : activeCat.toLowerCase();
+  count.textContent = list.length ? `${list.length} items` : "";
   renderProducts(list);
 }
 function renderProducts(list) {
-  if (gridCount) gridCount.textContent = list.length ? `${list.length} items` : "";
   if (!list.length) { productGrid.innerHTML = `<div class="grid-message">No products found.</div>`; return; }
   productGrid.innerHTML = "";
   list.forEach((p, i) => {
     const a = document.createElement("a");
     a.className = "product-card";
     a.href = `product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;
-    a.style.animationDelay = `${Math.min(i * 25, 250)}ms`;
+    a.style.animationDelay = `${Math.min(i * 30, 300)}ms`;
+
+    const discount = p.mrp && p.price ? Math.round((1 - p.price / p.mrp) * 100) : null;
+    const priceHTML = p.price
+      ? `<div class="product-price-row">
+          <span class="product-price">₹${p.price}</span>
+          ${p.mrp ? `<span class="product-mrp">₹${p.mrp}</span>` : ""}
+          ${discount ? `<span class="product-discount">(${discount}% off)</span>` : ""}
+         </div>`
+      : "";
+
     a.innerHTML = `
       <div class="product-img-wrap">
-        <img src="${safeImg(p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'"/>
+        <img src="${safeImg(p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" />
+        ${discount ? `<div class="product-offer-badge">${discount}% OFF</div>` : ""}
       </div>
       <div class="product-body">
+        <div class="product-category">${p.category || ""}</div>
         <div class="product-name">${p.name}</div>
-        <div class="product-rating">${p.rating ? `${p.rating} ⭐` : `<span class="no-rating">No rating yet</span>`}</div>
+        <div class="product-rating">
+          ${p.rating ? `${p.rating} ⭐` : `<span class="no-rating">No rating yet</span>`}
+        </div>
+        ${priceHTML}
       </div>`;
     productGrid.appendChild(a);
   });
 }
 
 /* ===== STORIES ===== */
-const storyBtn      = $("storyBtn");
-const storyOverlay  = $("storyOverlay");
-const storyClose    = $("storyClose");
-const storyPrev     = $("storyPrev");
-const storyNext     = $("storyNext");
+const storyBtn = $("storyBtn");
+const storyOverlay = $("storyOverlay");
+const storyClose = $("storyClose");
+const storyPrev = $("storyPrev");
+const storyNext = $("storyNext");
 const storyProgress = $("storyProgress");
-const storyBrandName= $("storyBrandName");
-const storyTag      = $("storyTag");
+const storyBrandName = $("storyBrandName");
+const storyTag = $("storyTag");
 const storyTagTitle = $("storyTagTitle");
-const storyTagImg   = $("storyTagImg");
-const storyCaption  = $("storyCaption");
+const storyTagImg = $("storyTagImg");
+const storyCaption = $("storyCaption");
 
 function findProductForStory(story) {
   if (!story?.productId) return null;
@@ -1311,72 +1450,71 @@ function updateStoryBtn() {
   const seen = localStorage.getItem(STORY_KEY) === storySig;
   storyBtn.classList.add(seen ? "story-seen" : "has-story");
 }
-storyBtn.addEventListener("click", () => {
-  if (stories.length) openStories(0);
-  else window.location.href = "home.html";
-});
+const openStoriesHandler = () => { if (stories.length) openStories(0); };
+storyBtn.addEventListener("click", openStoriesHandler);
+
 function openStories(idx) {
   storyIdx = Math.max(0, Math.min(idx, stories.length - 1));
   storyOverlay.classList.add("open");
   document.body.style.overflow = "hidden";
-  buildProgressBars(); showStory(storyIdx);
-  localStorage.setItem(STORY_KEY, storySig); updateStoryBtn();
+  buildProgressBars();
+  showStory(storyIdx);
+  localStorage.setItem(STORY_KEY, storySig);
+  updateStoryBtn();
 }
-function closeStories() {
-  storyOverlay.classList.remove("open");
-  document.body.style.overflow = "";
-  clearTimeout(storyTimerID); cancelAnimationFrame(storyRafID);
-  storyTimerID = storyRafID = null;
-}
-function buildProgressBars() {
-  storyProgress.innerHTML = stories.map((_,i) =>
-    `<div class="prog-bar"><div class="prog-fill" id="sf-${i}"></div></div>`).join("");
-}
+function closeStories() { storyOverlay.classList.remove("open"); document.body.style.overflow = ""; clearStoryTimers(); }
+function clearStoryTimers() { clearTimeout(storyTimerID); cancelAnimationFrame(storyRafID); storyTimerID = storyRafID = null; }
+function buildProgressBars() { storyProgress.innerHTML = stories.map((_, i) => `<div class="prog-bar"><div class="prog-fill" id="sf-${i}"></div></div>`).join(""); }
 function showStory(idx) {
-  clearTimeout(storyTimerID); cancelAnimationFrame(storyRafID);
-  const s = stories[idx]; if (!s) { closeStories(); return; }
-  storyIdx = idx; storyDuration = Math.max(1500, Number(s.duration) || 5000);
+  clearStoryTimers();
+  const s = stories[idx];
+  if (!s) { closeStories(); return; }
+  storyIdx = idx;
+  storyDuration = Math.max(1500, Number(s.duration) || 5000);
   const prod = findProductForStory(s);
   const img = prod?.image || safeImg(s.image);
   const title = prod?.name || s.title || "Featured Product";
-  storyTagImg.src = img; storyTagImg.alt = title;
-  storyTagTitle.textContent = title; storyBrandName.textContent = title;
-  storyCaption.textContent = s.caption || title;
-  stories.forEach((_,i) => { const f = document.getElementById(`sf-${i}`); if (f) f.style.width = i < idx ? "100%" : "0%"; });
+  storyTagImg.src = img; storyTagImg.alt = title; storyTagTitle.textContent = title;
+  storyBrandName.textContent = title; storyCaption.textContent = s.caption || title;
+  stories.forEach((_, i) => { const f = document.getElementById(`sf-${i}`); if (f) f.style.width = i < idx ? "100%" : "0%"; });
   storyStart = performance.now();
-  const fill = document.getElementById(`sf-${storyIdx}`);
-  if (fill) {
-    const tick = now => {
-      const pct = Math.min(((now - storyStart) / storyDuration) * 100, 100);
-      fill.style.width = pct + "%";
-      if (pct < 100 && storyOverlay.classList.contains("open")) storyRafID = requestAnimationFrame(tick);
-    };
-    storyRafID = requestAnimationFrame(tick);
-  }
-  storyTimerID = setTimeout(() => storyIdx < stories.length - 1 ? showStory(storyIdx + 1) : closeStories(), storyDuration);
+  animateProgress();
+  storyTimerID = setTimeout(nextStory, storyDuration);
 }
+function animateProgress() {
+  const fill = document.getElementById(`sf-${storyIdx}`);
+  if (!fill) return;
+  const tick = now => { const pct = Math.min(((now - storyStart) / storyDuration) * 100, 100); fill.style.width = pct + "%"; if (pct < 100 && storyOverlay.classList.contains("open")) storyRafID = requestAnimationFrame(tick); };
+  storyRafID = requestAnimationFrame(tick);
+}
+function nextStory() { storyIdx < stories.length - 1 ? showStory(storyIdx + 1) : closeStories(); }
+function prevStory() { showStory(Math.max(0, storyIdx - 1)); }
+function openStoryProduct() { const s = stories[storyIdx]; if (!s?.productId) return; window.location.href = `product.html?id=${encodeURIComponent(s.productId)}&source=${encodeURIComponent(s.source || "json")}`; }
+
 storyClose.addEventListener("click", e => { e.stopPropagation(); closeStories(); });
-storyPrev.addEventListener("click", e => { e.stopPropagation(); showStory(Math.max(0, storyIdx - 1)); });
-storyNext.addEventListener("click", e => { e.stopPropagation(); storyIdx < stories.length - 1 ? showStory(storyIdx + 1) : closeStories(); });
-storyTag.addEventListener("click", e => {
-  e.stopPropagation();
-  const s = stories[storyIdx];
-  if (s?.productId) window.location.href = `product.html?id=${encodeURIComponent(s.productId)}&source=${encodeURIComponent(s.source||"json")}`;
-});
-storyTag.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); storyTag.click(); } });
+storyPrev.addEventListener("click", e => { e.stopPropagation(); prevStory(); });
+storyNext.addEventListener("click", e => { e.stopPropagation(); nextStory(); });
+storyTag.addEventListener("click", e => { e.stopPropagation(); openStoryProduct(); });
+storyTag.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openStoryProduct(); } });
 storyOverlay.addEventListener("click", e => { if (e.target === storyOverlay) closeStories(); });
 document.addEventListener("keydown", e => {
   if (!storyOverlay.classList.contains("open")) return;
   if (e.key === "Escape") closeStories();
-  if (e.key === "ArrowRight") storyNext.click();
-  if (e.key === "ArrowLeft") storyPrev.click();
+  if (e.key === "ArrowRight") nextStory();
+  if (e.key === "ArrowLeft") prevStory();
 });
 
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", () => {
   showSkeletons();
   loadApps();
-  loadAds();
+  loadAds().then(() => {
+    // If loadAds didn't initialize (no ads.json), init with placeholders
+    if (!$("heroTrack").querySelector(".carousel-slide:nth-child(3)")) {
+      const existingSlides = Array.from($("heroTrack").querySelectorAll(".carousel-slide"));
+      if (existingSlides.length) initHeroCarousel(existingSlides);
+    }
+  });
   loadProducts();
   if (isStandalone()) installBtn.classList.remove("show");
 });
