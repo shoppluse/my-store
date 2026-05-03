@@ -21,7 +21,6 @@
 </script>
 
 <style>
-/* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
 :root {
@@ -32,7 +31,6 @@
   --text:        #111010;
   --text-2:      #3d3c3a;
   --muted:       #8a8884;
-  --muted-2:     #b5b3af;
   --border:      #e3e1dc;
   --border-2:    #f0ede9;
   --accent:      #e8520a;
@@ -45,12 +43,12 @@
   --radius-sm:   16px;
   --radius-md:   22px;
   --radius-lg:   28px;
-  --header-h:    60px;
-  --max-w:       1480px;
   --pad:         16px;
   --font-display:'Syne', sans-serif;
   --font-body:   'DM Sans', sans-serif;
   --star:        #f59e0b;
+  --nav-h:       62px;
+  --max-w:       500px;
 }
 
 [data-theme="dark"] {
@@ -61,7 +59,6 @@
   --text:        #f5f3ee;
   --text-2:      #ccc9c2;
   --muted:       #7a7870;
-  --muted-2:     #504f4a;
   --border:      #2a2925;
   --border-2:    #222120;
   --accent:      #ff6b25;
@@ -75,906 +72,454 @@
 
 body {
   font-family: var(--font-body);
-  background: var(--bg);
+  background: var(--bg-2);
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  transition: background 0.3s, color 0.3s;
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding-bottom: 20px;
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 8px);
 }
 
 img { display: block; max-width: 100%; }
 a { text-decoration: none; color: inherit; }
 button { border: none; background: none; cursor: pointer; font-family: inherit; }
 input { font-family: inherit; }
-::-webkit-scrollbar { width: 0; height: 0; }
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
 
-/* ===== HEADER ===== */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: calc(env(safe-area-inset-top) + 10px) var(--pad) 10px;
+/* ===== APP SHELL ===== */
+.app-shell {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  background: var(--bg);
+  min-height: 100vh;
+  position: relative;
+  box-shadow: 0 0 60px rgba(0,0,0,0.15);
 }
 
-.header-row {
+/* ===== ANNOUNCEMENT BAR ===== */
+.announce-bar {
+  background: var(--accent);
+  color: #fff;
+  text-align: center;
+  padding: calc(env(safe-area-inset-top) + 9px) var(--pad) 9px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  line-height: 1.3;
+}
+
+/* ===== TOP HEADER ===== */
+.top-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-2);
+  padding: 11px var(--pad);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-.logo-area {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-.logo-text {
+.logo-btn {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
   letter-spacing: -0.5px;
-  line-height: 1;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 2px 6px;
+  border-radius: 8px;
+  position: relative;
+  isolation: isolate;
 }
-.logo-text .logo-plus { color: var(--accent); }
-.logo-sub {
-  font-size: 0.58rem;
-  color: var(--muted);
-  font-style: italic;
-  letter-spacing: 0.3px;
-}
+.logo-btn .plus { color: var(--accent); }
 
-.header-tier {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 4px 10px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--accent);
-  font-family: var(--font-display);
+.logo-btn.has-story::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #00d4ff, #00ff95, #4f46e5, #ff9800, #00d4ff);
+  background-size: 300% 300%;
+  z-index: -1;
+  animation: ring-shift 3s linear infinite;
 }
-.tier-dot {
-  width: 8px; height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
+.logo-btn.story-seen::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #d1d5db, #9ca3af);
+  z-index: -1;
+  opacity: 0.8;
 }
+@keyframes ring-shift { 0%{background-position:0% 50%} 100%{background-position:100% 50%} }
 
-.header-icons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.icon-btn {
+.header-icons { display: flex; align-items: center; gap: 8px; }
+.hdr-icon {
   width: 36px; height: 36px;
   border-radius: 50%;
   background: var(--bg-2);
   border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  color: var(--text-2);
-  transition: background 0.2s;
-  position: relative;
+  font-size: 0.95rem; cursor: pointer; transition: all 0.2s;
+  text-decoration: none; color: var(--text);
 }
-.icon-btn:hover { background: var(--border); }
-
+.hdr-icon:hover { background: var(--border); }
 
 /* ===== SEARCH ===== */
 .search-section {
   background: var(--surface);
   padding: 10px var(--pad) 12px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 68px;
-  z-index: 99;
+  border-bottom: 1px solid var(--border-2);
 }
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.search-box {
+  display: flex; align-items: center; gap: 10px;
   background: var(--bg-2);
   border: 1.5px solid var(--border);
   border-radius: 99px;
   padding: 10px 16px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.2s;
 }
-.search-bar:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-.search-bar svg { width: 16px; height: 16px; fill: var(--muted); flex-shrink: 0; }
-.search-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: var(--text);
-  font-size: 0.88rem;
-  outline: none;
-}
+.search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.search-icon { color: var(--muted); font-size: 0.85rem; flex-shrink: 0; }
+.search-input { flex: 1; border: none; background: transparent; font-size: 0.88rem; color: var(--text); outline: none; }
 .search-input::placeholder { color: var(--muted); }
 
-/* ===== CATEGORY CIRCLES ===== */
-.cats-section {
-  background: var(--surface);
-  padding: 14px var(--pad);
-  border-bottom: 1px solid var(--border);
-}
-.cats-scroll {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 2px;
-}
-.cat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-.cat-circle {
-  width: 62px; height: 62px;
-  border-radius: 50%;
-  background: var(--bg-2);
-  border: 2px solid var(--border);
-  overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  transition: border-color 0.2s, transform 0.2s;
-  font-size: 1.5rem;
-}
-.cat-item:hover .cat-circle { transform: translateY(-2px); }
-.cat-item.active .cat-circle {
-  border-color: var(--accent);
-  background: var(--accent-glow);
-}
-.cat-label {
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: var(--text-2);
-  text-align: center;
-  font-family: var(--font-display);
-  line-height: 1.2;
-  max-width: 62px;
-}
-.cat-item.active .cat-label { color: var(--accent); }
-
-/* ===== HERO CAROUSEL ===== */
-.hero-section {
-  padding: 14px var(--pad) 0;
-}
-.carousel-wrap {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  position: relative;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-md);
-}
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
-}
-.carousel-slide {
-  flex: 0 0 100%;
-  min-width: 100%;
-}
-.carousel-slide img {
-  width: 100%;
-  aspect-ratio: 16/7;
-  object-fit: cover;
-  display: block;
-}
-.carousel-slide .slide-placeholder {
-  width: 100%;
-  aspect-ratio: 16/7;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 20px 24px;
-  color: #fff;
-}
-.slide-placeholder h2 {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 6px;
-}
-.slide-placeholder p {
-  font-size: 0.8rem;
-  opacity: 0.9;
-  margin-bottom: 12px;
-}
-.slide-cta {
-  background: #fff;
-  color: var(--accent);
-  border-radius: 99px;
-  padding: 7px 16px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  font-family: var(--font-display);
-}
-
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  padding: 8px 0 4px;
-}
-.dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--border);
-  transition: background 0.2s, width 0.2s;
-  cursor: pointer;
-}
-.dot.active {
-  background: var(--accent);
-  width: 18px;
-  border-radius: 99px;
-}
-
 /* ===== SECTION HEADER ===== */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.sec-hdr {
+  display: flex; align-items: center; gap: 8px;
   padding: 18px var(--pad) 10px;
 }
-.section-title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-icon {
-  font-size: 1.2rem;
-}
-.section-title {
+.sec-hdr-icon { font-size: 1.05rem; }
+.sec-hdr-title {
   font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--text);
-}
-.section-see-all {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
-  font-family: var(--font-display);
+  font-size: 1rem; font-weight: 800;
+  color: var(--text); letter-spacing: -0.2px;
 }
 
-/* ===== FILTER PILLS ===== */
-.filter-pills {
-  display: flex;
-  gap: 8px;
+/* ===== CATEGORY PILLS ===== */
+.pills-row {
+  padding: 0 var(--pad) 4px;
+  display: flex; gap: 8px;
   overflow-x: auto;
-  padding: 0 var(--pad) 0;
-  scrollbar-width: none;
 }
-.filter-pill {
-  flex-shrink: 0;
-  padding: 7px 16px;
-  border-radius: 99px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  font-family: var(--font-display);
+.cat-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 8px 16px; border-radius: 99px;
   border: 1.5px solid var(--border);
   background: var(--surface);
-  color: var(--text-2);
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--text-2); white-space: nowrap;
+  cursor: pointer; transition: all 0.2s;
+  flex-shrink: 0; font-family: var(--font-display);
 }
-.filter-pill:hover { border-color: var(--accent); color: var(--accent); }
-.filter-pill.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
+.cat-pill svg { width: 13px; height: 13px; fill: currentColor; }
+.cat-pill:hover { border-color: var(--accent); color: var(--accent); }
+.cat-pill.active { background: var(--text); border-color: var(--text); color: var(--bg); }
 
-/* ===== HORIZONTAL CARDS (deals) ===== */
-.h-scroll-section {
-  padding: 0 var(--pad) 0;
-}
-.h-scroll {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 4px;
-}
-.deal-card {
-  flex-shrink: 0;
-  width: 140px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+/* ===== REVIEW CARD ===== */
+.review-card {
+  margin: 6px var(--pad) 0;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex; gap: 14px; align-items: flex-start;
   box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  position: relative;
 }
-.deal-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.deal-card-img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  display: block;
-}
-.deal-card-label {
-  padding: 8px 10px 10px;
-}
-.deal-name {
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.2;
-}
-.deal-arrow {
-  position: absolute;
-  bottom: 8px; right: 8px;
-  width: 22px; height: 22px;
-  background: var(--accent);
-  color: #fff;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem;
-}
+.review-img { width: 88px; height: 88px; border-radius: var(--radius-sm); object-fit: contain; background: var(--bg-2); flex-shrink: 0; padding: 6px; }
+.review-right { flex: 1; min-width: 0; }
+.review-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.review-stars { color: var(--star); font-size: 0.8rem; font-weight: 700; }
+.review-pname { color: var(--muted); font-size: 0.72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.review-title { font-family: var(--font-display); font-size: 0.9rem; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+.review-text { font-size: 0.78rem; color: var(--text-2); line-height: 1.55; margin-bottom: 5px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.review-author { font-size: 0.7rem; color: var(--muted); font-style: italic; }
 
-/* ===== APP SHORTCUTS ===== */
-.apps-section {
-  padding: 0 var(--pad) 0;
-}
-.apps-slider {
-  overflow: hidden;
-  cursor: grab;
-  user-select: none;
-  touch-action: pan-y;
-}
-.apps-slider.dragging { cursor: grabbing; }
-.apps-track {
-  display: flex;
-  gap: 14px;
-  width: max-content;
-  padding-bottom: 4px;
+/* ===== APPS ROW ===== */
+.apps-row {
+  padding: 0 var(--pad);
+  display: flex; gap: 12px;
+  overflow-x: auto;
 }
 .app-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  min-width: 62px;
-  text-align: center;
-  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  flex-shrink: 0; min-width: 60px;
+  text-decoration: none;
 }
-.app-icon {
-  width: 52px; height: 52px;
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+.app-icon-wrap {
+  width: 54px; height: 54px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm); padding: 8px;
   display: flex; align-items: center; justify-content: center;
-  padding: 8px;
+  transition: transform 0.2s, box-shadow 0.2s; overflow: hidden;
 }
-.app-card:hover .app-icon { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.app-icon img { width: 100%; height: 100%; object-fit: contain; }
-.app-name { font-size: 0.6rem; font-weight: 600; color: var(--text-2); line-height: 1.2; }
+.app-card:hover .app-icon-wrap { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.app-icon-wrap img { width: 100%; height: 100%; object-fit: contain; }
+.app-label { font-size: 0.6rem; font-weight: 600; color: var(--text-2); text-align: center; line-height: 1.2; }
 
 /* ===== ADS ===== */
-.ads-section {
-  padding: 0 var(--pad) 0;
+.ads-wrap {
+  padding: 4px var(--pad) 0;
   display: none;
 }
 .ads-container {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-md);
-  cursor: grab;
+  border-radius: var(--radius-md); overflow: hidden;
+  border: 1px solid var(--border); box-shadow: var(--shadow-md);
+  cursor: grab; touch-action: pan-y;
 }
 .ads-container.dragging { cursor: grabbing; }
 .ads-viewport { overflow: hidden; }
-.ads-track {
-  display: flex;
-  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
-  will-change: transform;
-}
+.ads-track { display: flex; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
 .ad-slide { flex: 0 0 100%; min-width: 100%; }
-.ad-slide img { width: 100%; aspect-ratio: 16/5; object-fit: cover; background: var(--surface-2); pointer-events: none; }
+.ad-slide img { width: 100%; aspect-ratio: 16/5; object-fit: cover; display: block; pointer-events: none; user-select: none; }
+.ads-dots { display: flex; justify-content: center; gap: 6px; padding: 8px 0 2px; }
+.ads-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all 0.2s; }
+.ads-dot.active { background: var(--accent); width: 18px; border-radius: 99px; }
+
+/* ===== HORIZONTAL PRODUCT SCROLL ===== */
+.hscroll-wrap { padding: 0 var(--pad); overflow-x: auto; display: flex; gap: 10px; }
+.hprod-card {
+  flex: 0 0 148px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm); overflow: hidden;
+  text-decoration: none; display: flex; flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hprod-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.hprod-img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; padding: 10px; }
+.hprod-body { padding: 8px 9px 10px; border-top: 1px solid var(--border-2); }
+.hprod-name { font-size: 0.73rem; font-weight: 600; color: var(--text); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 3px; }
+.hprod-rating { font-size: 0.67rem; font-weight: 700; color: var(--star); }
 
 /* ===== PRODUCT GRID ===== */
-.grid-section {
-  padding: 0 var(--pad) 20px;
-}
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
+.grid-wrap { padding: 0 var(--pad) 8px; }
+.product-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
 .product-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
-  opacity: 0;
-  transform: translateY(10px);
-  animation: card-in 0.35s ease forwards;
-  cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); overflow: hidden;
+  display: flex; flex-direction: column;
+  text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+  opacity: 0; transform: translateY(8px);
+  animation: card-in 0.3s ease forwards;
 }
-@keyframes card-in { to { opacity: 1; transform: translateY(0); } }
-.product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-
-.product-img-wrap {
-  aspect-ratio: 1;
-  background: #fff;
-  display: flex; align-items: center; justify-content: center;
-  padding: 10px;
-  overflow: hidden;
-  position: relative;
-}
-.product-img-wrap img {
-  width: 100%; height: 100%;
-  object-fit: contain;
-  transition: transform 0.3s;
-}
-.product-card:hover .product-img-wrap img { transform: scale(1.05); }
-
-.product-offer-badge {
-  position: absolute;
-  top: 8px; left: 8px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.58rem;
-  font-weight: 800;
-  padding: 3px 7px;
-  border-radius: 99px;
-  font-family: var(--font-display);
-  letter-spacing: 0.3px;
-}
-
-
-
-.product-body {
-  padding: 8px 10px 10px;
-  border-top: 1px solid var(--border-2);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.product-category {
-  font-size: 0.58rem;
-  font-weight: 600;
-  color: var(--accent);
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.product-name {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.3;
-  min-height: 32px;
-}
-
-.product-rating {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--star);
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
+@keyframes card-in { to { opacity:1; transform:translateY(0); } }
+.product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.prod-img-wrap { aspect-ratio: 1; background: #fff; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
+.prod-img-wrap img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; }
+.product-card:hover .prod-img-wrap img { transform: scale(1.04); }
+.prod-body { padding: 8px 10px 10px; border-top: 1px solid var(--border-2); }
+.prod-name { font-size: 0.76rem; font-weight: 600; color: var(--text); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
+.prod-rating { font-size: 0.67rem; font-weight: 700; color: var(--star); }
 .no-rating { color: var(--muted); font-weight: 500; }
 
-.product-price-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-.product-price {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--text);
-}
-.product-mrp {
-  font-size: 0.7rem;
-  color: var(--muted);
-  text-decoration: line-through;
-}
-.product-discount {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #16a34a;
+.grid-message { grid-column:1/-1; text-align:center; padding:40px 20px; font-size:0.88rem; color:var(--muted); }
+.grid-message.error { color:#ef4444; }
+
+/* ===== DESKTOP ===== */
+@media (min-width: 900px) {
+  .product-grid { grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .ad-slide img { aspect-ratio: 21/5; }
+  .app-shell { max-width: 1400px; }
+  .bottom-nav { max-width: 1400px; }
 }
 
+/* Skeleton */
+.skeleton { background: linear-gradient(90deg,var(--surface-2) 25%,var(--border-2) 50%,var(--surface-2) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:8px; }
+@keyframes shimmer { to{background-position:-200% 0} }
+.skel-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; }
+.skel-img { aspect-ratio:1; }
+.skel-body { padding:8px 10px 10px; display:flex; flex-direction:column; gap:7px; }
+.skel-line { height:11px; }
+.skel-line.s { width:55%; }
 
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: var(--max-w);
+  z-index: 200;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex; align-items: stretch;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.1);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  padding: 10px 4px; cursor: pointer;
+  text-decoration: none; color: var(--muted);
+  min-height: var(--nav-h); border: none; background: none;
+  font-family: inherit; transition: color 0.2s;
+}
+.nav-item.active, .nav-item:hover { color: var(--accent); }
+.nav-icon { font-size: 1.2rem; line-height: 1; }
+.nav-label { font-size: 0.58rem; font-weight: 700; font-family: var(--font-display); letter-spacing: 0.3px; }
 
-/* ===== GRID MESSAGE & SKELETON ===== */
-.grid-message {
-  grid-column: 1/-1;
-  text-align: center;
-  padding: 48px 20px;
-  font-size: 0.9rem;
-  color: var(--muted);
+.nav-center-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 4px; }
+.nav-center-btn {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  border: none; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 1.25rem;
 }
-.grid-message.error { color: #ef4444; }
-.skeleton {
-  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border-2) 50%, var(--surface-2) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  border-radius: 8px;
+.nav-center-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px var(--accent-glow); }
+
+/* Brand menu from nav */
+.brand-nav { flex: 1; position: relative; display: flex; }
+.brand-nav .nav-item { width: 100%; }
+.brand-popup {
+  position: absolute; bottom: calc(100% + 6px); left: 0; right: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
+  z-index: 300; padding: 6px; display: none;
+  max-height: 250px; overflow-y: auto;
 }
-@keyframes shimmer { to { background-position: -200% 0; } }
-.skeleton-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
-.skeleton-img { aspect-ratio: 1; }
-.skeleton-body { padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
-.skeleton-line { height: 12px; }
-.skeleton-line.short { width: 60%; }
+.brand-popup.open { display: block; }
+.brand-popup-item {
+  padding: 9px 12px; border-radius: var(--radius-xs);
+  font-size: 0.83rem; font-weight: 500; cursor: pointer;
+  color: var(--text-2); transition: background 0.15s;
+}
+.brand-popup-item:hover { background: var(--bg-2); }
+.brand-popup-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 700; }
 
 /* ===== STORY MODAL ===== */
-.story-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,0.92);
-  display: none; align-items: center; justify-content: center;
-  backdrop-filter: blur(16px);
-}
-.story-overlay.open { display: flex; }
-.story-frame {
-  width: min(100vw, 420px); height: 100svh;
-  position: relative; overflow: hidden;
-  background: linear-gradient(180deg, #0a0a0c 0%, #121218 100%);
-}
-.story-progress {
-  position: absolute;
-  top: calc(env(safe-area-inset-top) + 10px);
-  left: 12px; right: 12px; z-index: 12;
-  display: flex; gap: 5px;
-}
-.prog-bar {
-  flex: 1; height: 2.5px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 99px; overflow: hidden;
-}
-.prog-fill {
-  height: 100%; width: 0%;
-  background: #fff; border-radius: 99px;
-  transition: width 0.05s linear;
-}
-.story-topbar {
-  position: absolute;
-  top: calc(env(safe-area-inset-top) + 22px);
-  left: 14px; right: 14px; z-index: 13;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.story-brand { display: flex; align-items: center; gap: 10px; }
-.story-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 800; font-size: 0.75rem; color: #fff; flex-shrink: 0;
-}
-.story-brand-name {
-  font-family: var(--font-display); font-size: 0.88rem; font-weight: 700; color: #fff;
-  max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.story-x {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-  color: #fff; font-size: 1.2rem;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background 0.2s;
-}
-.story-zone { position: absolute; top: 0; bottom: 0; width: 30%; z-index: 11; cursor: pointer; }
-.story-zone-left { left: 0; }
-.story-zone-right { right: 0; }
-.story-stage {
-  position: absolute; inset: 0; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: calc(env(safe-area-inset-top) + 80px) 24px calc(env(safe-area-inset-bottom) + 140px);
-}
-.story-string {
-  width: 2px; height: 40px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.1));
-  border-radius: 99px; flex-shrink: 0;
-}
-.story-tag {
-  background: #fff; border-radius: 22px;
-  width: min(78vw, 300px);
-  box-shadow: 0 28px 60px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.25);
-  display: flex; flex-direction: column; overflow: hidden;
-  cursor: pointer; transform: rotate(-1.2deg); transform-origin: top center;
-  position: relative; transition: transform 0.15s;
-  max-height: calc(100svh - 260px);
-}
-.story-tag:hover { transform: rotate(0deg) scale(1.01); }
-.story-tag::before {
-  content: ""; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-  width: 22px; height: 22px; border-radius: 50%;
-  background: #d0d5dd; box-shadow: inset 0 2px 4px rgba(0,0,0,0.15); z-index: 2;
-}
-.story-tag::after {
-  content: ""; position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
-  width: 10px; height: 10px; border-radius: 50%;
-  background: #6b7280; z-index: 3;
-}
-.tag-header { padding: 42px 14px 10px; text-align: center; border-bottom: 1px dashed #e5e7eb; }
-.tag-badge {
-  display: inline-block; padding: 4px 10px; border-radius: 99px;
-  background: var(--accent-glow, rgba(232,82,10,0.1)); color: #e8520a;
-  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px;
-}
-.tag-title {
-  font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: #111; line-height: 1.25;
-}
-.tag-img-wrap {
-  flex: 1; min-height: 0; aspect-ratio: 1; max-height: 240px;
-  background: #fff; display: flex; align-items: center; justify-content: center;
-  padding: 16px; overflow: hidden;
-}
-.tag-img { width: 100%; height: 100%; object-fit: contain; }
-.story-bottom {
-  position: absolute; left: 14px; right: 14px;
-  bottom: calc(env(safe-area-inset-bottom) + 16px); z-index: 14;
-  padding: 14px 16px;
-  background: rgba(10,10,12,0.75); backdrop-filter: blur(14px);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-sm); color: #fff;
-}
-.story-caption { font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
-.story-hint { margin-top: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.55); }
-
-
-
-/* ===== STORY RING ON LOGO ===== */
-.logo-text {
-  position: relative;
-  z-index: 0;
-  padding: 3px 6px;
-  border-radius: var(--radius-xs);
-}
-
-/* Unseen: animated coloured ring */
-.logo-text.has-story::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: calc(var(--radius-xs) + 3px);
-  background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7, #f9ce34);
-  background-size: 300% 300%;
-  z-index: -1;
-  animation: story-ring-spin 2.5s linear infinite;
-}
-.logo-text.has-story::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: var(--radius-xs);
-  background: var(--surface);
-  z-index: -1;
-}
-
-/* Seen: flat grey ring */
-.logo-text.story-seen::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: calc(var(--radius-xs) + 3px);
-  background: var(--muted-2);
-  z-index: -1;
-  animation: none;
-}
-.logo-text.story-seen::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: var(--radius-xs);
-  background: var(--surface);
-  z-index: -1;
-}
-
-@keyframes story-ring-spin {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Install */
-.install-btn { display: none; }
-.install-btn.show { display: flex; }
-
-/* Brand filter */
-.brand-wrap { position: relative; }
-.brand-arrow { font-size: 0.65rem; transition: transform 0.2s; opacity: 0.6; }
-.brand-wrap.open .brand-arrow { transform: rotate(180deg); }
-.brand-menu {
-  position: absolute; top: calc(100% + 6px); right: 0;
-  min-width: 160px; background: var(--surface);
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-lg); z-index: 200; padding: 6px;
-  display: none; max-height: 260px; overflow-y: auto;
-}
-.brand-wrap.open .brand-menu { display: block; }
-.brand-item {
-  padding: 9px 12px; border-radius: var(--radius-xs);
-  font-size: 0.82rem; font-weight: 500; cursor: pointer;
-  transition: background 0.15s; color: var(--text-2);
-}
-.brand-item:hover { background: var(--bg-2); }
-.brand-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 700; }
+.story-overlay { position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.92); display:none; align-items:center; justify-content:center; backdrop-filter:blur(16px); }
+.story-overlay.open { display:flex; }
+.story-frame { width:min(100vw,420px); height:100svh; position:relative; overflow:hidden; background:linear-gradient(180deg,#0a0a0c 0%,#121218 100%); }
+.story-progress { position:absolute; top:calc(env(safe-area-inset-top)+10px); left:12px; right:12px; z-index:12; display:flex; gap:5px; }
+.prog-bar { flex:1; height:2.5px; background:rgba(255,255,255,0.2); border-radius:99px; overflow:hidden; }
+.prog-fill { height:100%; width:0%; background:#fff; border-radius:99px; }
+.story-topbar { position:absolute; top:calc(env(safe-area-inset-top)+22px); left:14px; right:14px; z-index:13; display:flex; align-items:center; justify-content:space-between; }
+.story-brand { display:flex; align-items:center; gap:10px; }
+.story-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:0.75rem; color:#fff; }
+.story-bname { font-family:var(--font-display); font-size:0.88rem; font-weight:700; color:#fff; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.story-x { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.story-zone { position:absolute; top:0; bottom:0; width:30%; z-index:11; cursor:pointer; }
+.story-zone-l { left:0; } .story-zone-r { right:0; }
+.story-stage { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:calc(env(safe-area-inset-top)+80px) 24px calc(env(safe-area-inset-bottom)+140px); }
+.story-string { width:2px; height:40px; background:linear-gradient(180deg,rgba(255,255,255,0.7),rgba(255,255,255,0.1)); border-radius:99px; flex-shrink:0; }
+.story-tag { background:#fff; border-radius:22px; width:min(78vw,300px); box-shadow:0 28px 60px rgba(0,0,0,0.5),0 8px 20px rgba(0,0,0,0.25); display:flex; flex-direction:column; overflow:hidden; cursor:pointer; transform:rotate(-1.2deg); transform-origin:top center; position:relative; transition:transform 0.15s; max-height:calc(100svh - 260px); }
+.story-tag:hover { transform:rotate(0deg) scale(1.01); }
+.story-tag::before { content:""; position:absolute; top:12px; left:50%; transform:translateX(-50%); width:22px; height:22px; border-radius:50%; background:#d0d5dd; box-shadow:inset 0 2px 4px rgba(0,0,0,0.15); z-index:2; }
+.story-tag::after { content:""; position:absolute; top:18px; left:50%; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background:#6b7280; z-index:3; }
+.tag-hdr { padding:42px 14px 10px; text-align:center; border-bottom:1px dashed #e5e7eb; }
+.tag-badge { display:inline-block; padding:4px 10px; border-radius:99px; background:rgba(232,82,10,0.1); color:#e8520a; font-size:0.65rem; font-weight:800; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:6px; }
+.tag-title { font-family:var(--font-display); font-size:0.95rem; font-weight:700; color:#111; line-height:1.25; }
+.tag-img-wrap { flex:1; min-height:0; aspect-ratio:1; max-height:240px; background:#fff; display:flex; align-items:center; justify-content:center; padding:16px; overflow:hidden; }
+.tag-img { width:100%; height:100%; object-fit:contain; }
+.story-bottom { position:absolute; left:14px; right:14px; bottom:calc(env(safe-area-inset-bottom)+16px); z-index:14; padding:14px 16px; background:rgba(10,10,12,0.75); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius-sm); color:#fff; }
+.story-caption { font-size:0.95rem; font-weight:600; line-height:1.4; }
+.story-hint { margin-top:6px; font-size:0.75rem; color:rgba(255,255,255,0.55); }
 </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
-<header class="header">
-  <div class="header-row">
-    <!-- Logo -->
-    <div class="logo-area">
-      <div class="logo-text" id="storyBtn">Shop<span class="logo-plus">+</span></div>
-      <div class="logo-sub">we have deals™</div>
-    </div>
+<div class="app-shell">
 
-    <!-- Tier badge -->
-    <div class="header-tier">
-      <div class="tier-dot"></div>
-      Welcome Tier
-    </div>
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="announce-bar" id="announceBar">⚡ Shop Now & Earn Rewards on Every Purchase ⚡</div>
 
-    <!-- Icons -->
+  <!-- HEADER -->
+  <header class="top-header">
+    <button class="logo-btn" id="storyBtn" aria-label="Stories">Shop<span class="plus">+</span></button>
     <div class="header-icons">
-      <!-- Brand filter -->
-      <div class="brand-wrap" id="brandWrap">
-        <button class="icon-btn" id="brandToggle" type="button" style="font-size:0.75rem;gap:2px;" aria-expanded="false">
-          🏷️ <span class="brand-arrow" id="brandArrow">▾</span>
-        </button>
-        <div class="brand-menu" id="brandMenu" role="listbox">
-          <div class="brand-item active" data-brand="all" role="option">All Brands</div>
-          <div class="brand-item" data-brand="Apple" role="option">Apple</div>
-          <div class="brand-item" data-brand="Samsung" role="option">Samsung</div>
-          <div class="brand-item" data-brand="Nike" role="option">Nike</div>
-          <div class="brand-item" data-brand="Puma" role="option">Puma</div>
-          <div class="brand-item" data-brand="Boat" role="option">Boat</div>
-          <div class="brand-item" data-brand="Adidas" role="option">Adidas</div>
-          <div class="brand-item" data-brand="Sony" role="option">Sony</div>
-          <div class="brand-item" data-brand="Realme" role="option">Realme</div>
-          <div class="brand-item" data-brand="OnePlus" role="option">OnePlus</div>
-        </div>
-      </div>
+      <button class="hdr-icon" id="installBtn" style="display:none;" title="Install">⬇</button>
+      <button class="hdr-icon" id="themeBtn" title="Theme">🌙</button>
+      <a href="profile.html" class="hdr-icon" title="Profile">👤</a>
+    </div>
+  </header>
 
-      <!-- Install -->
-      <button class="icon-btn install-btn" id="installBtn" type="button" title="Install App">⬇</button>
-
-      <!-- Profile -->
-      <a href="profile.html" class="icon-btn" aria-label="Profile">👤</a>
+  <!-- SEARCH -->
+  <div class="search-section">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="search" placeholder="Search products, brands…" autocomplete="off" />
     </div>
   </div>
-</header>
 
-<!-- SEARCH -->
-<div class="search-section">
-  <div class="search-bar">
-    <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
-    <input class="search-input" id="searchInput" type="search" placeholder="Search phones, fashion, gadgets…" autocomplete="off" />
-  </div>
-</div>
+  <!-- CATEGORIES -->
+  <div class="sec-hdr"><span class="sec-hdr-icon">🏷️</span><span class="sec-hdr-title">Browse by Category</span></div>
+  <div class="pills-row" id="catPills"></div>
 
-<!-- CATEGORY CIRCLES -->
-<div class="cats-section">
-  <div class="cats-scroll" id="catsScroll"></div>
-</div>
+  <!-- FEATURED REVIEW -->
+  <div id="reviewWrap"></div>
 
-<!-- HERO CAROUSEL (ads) -->
-<div class="hero-section">
-  <div class="carousel-wrap" id="heroCarousel">
-    <div class="carousel-track" id="heroTrack">
-      <!-- Default slides shown until ads load -->
-      <div class="carousel-slide">
-        <div class="slide-placeholder">
-          <h2>New arrivals.<br/>Shop now.</h2>
-          <p>Discover trending products across all categories.</p>
-          <div class="slide-cta">Shop now →</div>
-        </div>
-      </div>
-      <div class="carousel-slide">
-        <div class="slide-placeholder" style="background:linear-gradient(135deg,#1a1916,#3d3c3a);">
-          <h2>Top brands.<br/>Best prices.</h2>
-          <p>Apple, Samsung, Nike and more.</p>
-          <div class="slide-cta" style="color:#111;">Explore →</div>
-        </div>
-      </div>
+  <!-- TOP APPS -->
+  <div class="sec-hdr"><span class="sec-hdr-icon">🛒</span><span class="sec-hdr-title">Top Shopping Apps</span></div>
+  <div class="apps-row" id="appsRow"><span style="color:var(--muted);font-size:0.82rem;">Loading…</span></div>
+
+  <!-- ADS -->
+  <div class="sec-hdr" id="adsHdr" style="display:none;"><span class="sec-hdr-icon">🔥</span><span class="sec-hdr-title">Featured Deals</span></div>
+  <div class="ads-wrap" id="adsWrap">
+    <div class="ads-container" id="adsContainer">
+      <div class="ads-viewport"><div class="ads-track" id="adsTrack"></div></div>
     </div>
-    <div class="carousel-dots" id="heroDots">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-    </div>
+    <div class="ads-dots" id="adsDots"></div>
   </div>
+
+  <!-- NEW ARRIVALS -->
+  <div class="sec-hdr"><span class="sec-hdr-icon">✨</span><span class="sec-hdr-title">New Arrivals</span></div>
+  <div class="hscroll-wrap" id="newArrivals"><span style="color:var(--muted);font-size:0.82rem;padding:4px 0;">Loading…</span></div>
+
+  <!-- ALL PRODUCTS -->
+  <div class="sec-hdr"><span class="sec-hdr-icon">📦</span><span class="sec-hdr-title">All Products</span></div>
+  <div class="grid-wrap">
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+
 </div>
 
-<!-- TODAY'S DEALS SECTION -->
-<div class="section-header">
-  <div class="section-title-row">
-    <span class="section-icon">%</span>
-    <span class="section-title">today's unmissable deals</span>
-  </div>
-  <span class="section-see-all">see all ›</span>
-</div>
-<div class="h-scroll-section">
-  <div class="h-scroll" id="dealsScroll">
-    <!-- Filled by JS from categories -->
-  </div>
-</div>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+  </button>
 
-<!-- FILTER PILLS -->
-<div class="section-header">
-  <div class="section-title-row">
-    <span class="section-icon">🏷️</span>
-    <span class="section-title">best of shop+</span>
-  </div>
-</div>
-<div class="filter-pills" id="filterPills">
-  <!-- filled by JS -->
-</div>
-
-<!-- APP SHORTCUTS -->
-<div class="section-header">
-  <div class="section-title-row">
-    <span class="section-icon">📱</span>
-    <span class="section-title">top shopping apps</span>
-  </div>
-</div>
-<div class="apps-section">
-  <div class="apps-slider" id="appsSlider">
-    <div class="apps-track" id="appsTrack">
-      <span style="font-size:0.85rem;color:var(--muted);">Loading…</span>
+  <div class="brand-nav" id="brandNav">
+    <button class="nav-item" id="brandNavBtn">
+      <span class="nav-icon">🏷️</span><span class="nav-label">Brand</span>
+    </button>
+    <div class="brand-popup" id="brandPopup">
+      <div class="brand-popup-item active" data-brand="all">All Brands</div>
+      <div class="brand-popup-item" data-brand="Apple">Apple</div>
+      <div class="brand-popup-item" data-brand="Samsung">Samsung</div>
+      <div class="brand-popup-item" data-brand="Nike">Nike</div>
+      <div class="brand-popup-item" data-brand="Puma">Puma</div>
+      <div class="brand-popup-item" data-brand="Boat">Boat</div>
+      <div class="brand-popup-item" data-brand="Adidas">Adidas</div>
+      <div class="brand-popup-item" data-brand="Sony">Sony</div>
+      <div class="brand-popup-item" data-brand="Realme">Realme</div>
+      <div class="brand-popup-item" data-brand="OnePlus">OnePlus</div>
     </div>
   </div>
-</div>
 
-<!-- ADS (fallback) -->
-<section class="ads-section" id="adsSection">
-  <div class="ads-container" id="adsContainer">
-    <div class="ads-viewport">
-      <div class="ads-track" id="adsTrack"></div>
-    </div>
+  <div class="nav-center-wrap">
+    <button class="nav-center-btn" id="storyNavBtn" aria-label="Stories">⚡</button>
   </div>
-</section>
 
-<!-- PRODUCTS -->
-<div id="gridAnchor" class="section-header" style="margin-top:8px;">
-  <div class="section-title-row">
-    <span class="section-icon">✨</span>
-    <span class="section-title" id="gridTitle">all products</span>
-  </div>
-  <span class="section-see-all" id="gridCount"></span>
-</div>
-<div class="grid-section">
-  <div class="product-grid" id="productGrid"></div>
-</div>
+  <a href="profile.html" class="nav-item">
+    <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
+  </a>
+  <a href="claim-reward.html" class="nav-item">
+    <span class="nav-icon">🎁</span><span class="nav-label">Rewards</span>
+  </a>
+</nav>
 
 <!-- STORY MODAL -->
 <div class="story-overlay" id="storyOverlay" role="dialog" aria-modal="true">
@@ -983,16 +528,16 @@ input { font-family: inherit; }
     <div class="story-topbar">
       <div class="story-brand">
         <div class="story-avatar">S+</div>
-        <div class="story-brand-name" id="storyBrandName">ShopPlus</div>
+        <div class="story-bname" id="storyBrandName">ShopPlus</div>
       </div>
       <button class="story-x" id="storyClose">✕</button>
     </div>
-    <div class="story-zone story-zone-left" id="storyPrev"></div>
-    <div class="story-zone story-zone-right" id="storyNext"></div>
+    <div class="story-zone story-zone-l" id="storyPrev"></div>
+    <div class="story-zone story-zone-r" id="storyNext"></div>
     <div class="story-stage">
       <div class="story-string"></div>
       <div class="story-tag" id="storyTag" role="button" tabindex="0">
-        <div class="tag-header">
+        <div class="tag-hdr">
           <div class="tag-badge">ShopPlus Pick</div>
           <div class="tag-title" id="storyTagTitle">Featured Product</div>
         </div>
@@ -1008,518 +553,343 @@ input { font-family: inherit; }
   </div>
 </div>
 
-
-
 <script>
 "use strict";
-const BACKEND = "https://my-store-e28j.onrender.com";
+const BACKEND   = "https://my-store-e28j.onrender.com";
 const STORY_KEY = "sp_story_sig";
-const FALLBACK_IMG = "https://via.placeholder.com/300x300/f4f3f0/aaa?text=No+Image";
+const FALLBACK  = "https://via.placeholder.com/300x300/f4f3f0/aaa?text=No+Image";
 
-const $ = id => document.getElementById(id);
-const norm = str => String(str || "").trim().toLowerCase();
-function safeImg(src) { return src && String(src).trim() ? String(src).trim() : FALLBACK_IMG; }
-function getRating(v) {
-  if (v == null || v === "") return null;
-  const n = parseFloat(String(v).replace(/[^\d.]/g, ""));
-  return isNaN(n) || n <= 0 ? null : n.toFixed(1);
-}
-function extractArr(data) {
-  if (Array.isArray(data)) return data;
-  if (data?.products) return data.products;
-  if (data?.data) return data.data;
-  return [];
-}
-function normalizeProduct(p, source, idx) {
-  const id = String(p._id || p.id || `${source}-${idx}`);
-  const img = p.image?.trim() || (Array.isArray(p.images) && p.images[0]) || FALLBACK_IMG;
-  const tv = new Date(p.updatedAt || p.createdAt || 0).getTime();
-  return {
-    id, source,
-    name: p.name || "Unnamed",
-    image: img,
-    category: p.category || "Overall",
-    brand: p.brand || "",
-    rating: getRating(p.rating),
-    description: p.description || "",
-    price: p.price || null,
-    mrp: p.mrp || p.originalPrice || null,
-    timeValue: isNaN(tv) ? 0 : tv,
-    fallbackOrder: typeof p.sortOrder === "number" ? p.sortOrder : (source === "json" ? idx + 1 : 0),
-  };
-}
-function buildSig(arr) {
-  if (!arr?.length) return "";
-  return JSON.stringify(arr.map(s => ({ id: String(s.id || ""), title: String(s.title || ""), image: String(s.image || ""), caption: String(s.caption || ""), productId: String(s.productId || ""), source: String(s.source || "json"), duration: Number(s.duration || 5000) })));
-}
-
-/* ===== STATE ===== */
-let allProducts = [], jsonCache = [], backendCache = [];
-let stories = [], storySig = "", storyIdx = 0, storyTimerID = null, storyRafID = null, storyStart = 0, storyDuration = 5000;
-let activeCat = "Overall";
-
-/* ===== INSTALL ===== */
-const installBtn = $("installBtn");
-let deferredPrompt = null;
-function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
-window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPrompt = e; if (!isStandalone()) installBtn.classList.add("show"); });
-installBtn.addEventListener("click", async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === "accepted") installBtn.classList.remove("show"); deferredPrompt = null; });
-window.addEventListener("appinstalled", () => { installBtn.classList.remove("show"); deferredPrompt = null; });
-
-/* ===== CATEGORIES ===== */
 const CATS = [
-  { name: "Overall", emoji: "🛍️" },
-  { name: "Electronics", emoji: "📱" },
-  { name: "Fashion", emoji: "👗" },
-  { name: "Home", emoji: "🏠" },
-  { name: "Accessories", emoji: "⌚" },
-  { name: "Sports", emoji: "⚽" },
-  { name: "Beauty", emoji: "💄" },
-  { name: "Gadgets", emoji: "🎮" },
+  { name:"Overall",     icon:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>` },
+  { name:"Electronics", icon:`<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/></svg>` },
+  { name:"Fashion",     icon:`<svg viewBox="0 0 24 24"><path d="M6 3l3 3h6l3-3 3 3-3 3v12H6V9L3 6z"/></svg>` },
+  { name:"Home",        icon:`<svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>` },
+  { name:"Accessories", icon:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>` },
+  { name:"Sports",      icon:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>` },
+  { name:"Beauty",      icon:`<svg viewBox="0 0 24 24"><path d="M12 2c2 4 6 6 6 10a6 6 0 0 1-12 0c0-4 4-6 6-10z"/></svg>` },
+  { name:"Gadgets",     icon:`<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="3"/></svg>` },
 ];
-const catsScroll = $("catsScroll");
-CATS.forEach(cat => {
-  const el = document.createElement("div");
-  el.className = "cat-item" + (cat.name === activeCat ? " active" : "");
-  el.dataset.cat = cat.name;
-  el.innerHTML = `<div class="cat-circle">${cat.emoji}</div><div class="cat-label">${cat.name}</div>`;
-  el.addEventListener("click", () => {
-    if (activeCat === cat.name) return;
-    activeCat = cat.name;
-    catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === activeCat));
-    updateFilterPills();
+
+let allProducts=[],jsonCache=[],backendCache=[];
+let stories=[],storySig="",storyIdx=0;
+let storyTimerID=null,storyRafID=null,storyStart=0,storyDuration=5000;
+let activeCat="Overall",activeBrand="all";
+
+const $=id=>document.getElementById(id);
+const norm=s=>String(s||"").trim().toLowerCase();
+function safeImg(s){return s&&String(s).trim()?String(s).trim():FALLBACK;}
+function getRating(v){if(v==null||v==="")return null;const n=parseFloat(String(v).replace(/[^\d.]/g,""));return isNaN(n)||n<=0?null:n.toFixed(1);}
+function extractArr(d){if(Array.isArray(d))return d;if(d?.products)return d.products;if(d?.data)return d.data;return[];}
+function normalizeProduct(p,src,idx){
+  const id=String(p._id||p.id||`${src}-${idx}`);
+  const img=p.image?.trim()||(Array.isArray(p.images)&&p.images[0])||FALLBACK;
+  const tv=new Date(p.updatedAt||p.createdAt||0).getTime();
+  return{id,source:src,name:p.name||"Unnamed",image:img,category:p.category||"Overall",brand:p.brand||"",rating:getRating(p.rating),description:p.description||"",timeValue:isNaN(tv)?0:tv,fallbackOrder:typeof p.sortOrder==="number"?p.sortOrder:(src==="json"?idx+1:0)};
+}
+function buildSig(arr){if(!arr?.length)return"";return JSON.stringify(arr.map(s=>({id:String(s.id||""),title:String(s.title||""),image:String(s.image||""),caption:String(s.caption||""),productId:String(s.productId||""),source:String(s.source||"json"),duration:Number(s.duration||5000)})));}
+
+/* THEME */
+const html=document.documentElement;
+const themeBtn=$("themeBtn");
+function syncTheme(){themeBtn.textContent=html.getAttribute("data-theme")==="dark"?"☀️":"🌙";}
+themeBtn.addEventListener("click",()=>{const n=html.getAttribute("data-theme")==="dark"?"light":"dark";html.setAttribute("data-theme",n);localStorage.setItem("theme",n);syncTheme();});
+syncTheme();
+
+/* INSTALL */
+const installBtn=$("installBtn");
+let deferredPrompt=null;
+function isStandalone(){return window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;if(!isStandalone())installBtn.style.display="flex";});
+installBtn.addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;if(outcome==="accepted")installBtn.style.display="none";deferredPrompt=null;});
+window.addEventListener("appinstalled",()=>{installBtn.style.display="none";deferredPrompt=null;});
+
+/* ANNOUNCEMENT */
+async function loadAnnouncement(){
+  try{const r=await fetch("announcement.json",{cache:"no-store"});if(!r.ok)return;const d=await r.json();if(d?.text)$("announceBar").textContent=d.text;}catch{}
+}
+
+/* CATEGORY PILLS */
+const catPills=$("catPills");
+CATS.forEach(cat=>{
+  const btn=document.createElement("button");
+  btn.className="cat-pill"+(cat.name===activeCat?" active":"");
+  btn.dataset.cat=cat.name;
+  btn.innerHTML=cat.icon+cat.name;
+  btn.addEventListener("click",()=>{
+    if(activeCat===cat.name)return;
+    activeCat=cat.name;
+    catPills.querySelectorAll(".cat-pill").forEach(c=>c.classList.toggle("active",c.dataset.cat===activeCat));
     filterAndRender();
   });
-  catsScroll.appendChild(el);
+  catPills.appendChild(btn);
 });
 
-/* ===== FILTER PILLS ===== */
-const FILTER_PILLS = ["skincare", "fragrance", "combo", "all", "fashion", "electronics", "sports"];
-function buildFilterPills() {
-  const fp = $("filterPills");
-  fp.innerHTML = "";
-  const cats = ["all", ...new Set(allProducts.map(p => norm(p.category)).filter(Boolean))];
-  cats.slice(0, 8).forEach(cat => {
-    const p = document.createElement("button");
-    p.className = "filter-pill" + (cat === "all" && activeCat === "Overall" ? " active" : (norm(activeCat) === cat ? " active" : ""));
-    p.textContent = cat === "all" ? "all" : cat;
-    p.addEventListener("click", () => {
-      activeCat = cat === "all" ? "Overall" : cat.charAt(0).toUpperCase() + cat.slice(1);
-      catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === activeCat));
-      fp.querySelectorAll(".filter-pill").forEach(el => el.classList.remove("active"));
-      p.classList.add("active");
-      filterAndRender();
-    });
-    fp.appendChild(p);
-  });
-}
-function updateFilterPills() { buildFilterPills(); }
-
-/* ===== DEALS HORIZONTAL SCROLL ===== */
-function buildDealsSection() {
-  const scroll = $("dealsScroll");
-  scroll.innerHTML = "";
-  const cats = [...new Set(allProducts.map(p => p.category).filter(Boolean))].slice(0, 8);
-  cats.forEach(cat => {
-    const prod = allProducts.find(p => p.category === cat);
-    const div = document.createElement("a");
-    div.className = "deal-card";
-    div.href = "#";
-    div.innerHTML = `
-      <img class="deal-card-img" src="${safeImg(prod?.image)}" alt="${cat}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" />
-      <div class="deal-card-label">
-        <div class="deal-name">${cat.toLowerCase()}</div>
-      </div>
-      <div class="deal-arrow">›</div>`;
-    div.addEventListener("click", e => {
-      e.preventDefault();
-      activeCat = cat;
-      catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === activeCat));
-      buildFilterPills();
-      filterAndRender();
-      // Scroll to products grid with a small delay so render completes first
-      setTimeout(() => {
-        const gridSection = $("gridAnchor");
-        if (gridSection) gridSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 60);
-    });
-    scroll.appendChild(div);
-  });
-}
-
-/* ===== SEARCH ===== */
-const searchInput = $("searchInput");
-searchInput.addEventListener("input", () => {
-  activeCat = "Overall";
-  catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === "Overall"));
+/* SEARCH */
+const searchInput=$("searchInput");
+searchInput.addEventListener("input",()=>{
+  activeCat="Overall";
+  catPills.querySelectorAll(".cat-pill").forEach(c=>c.classList.toggle("active",c.dataset.cat==="Overall"));
   filterAndRender();
 });
 
-/* ===== BRAND FILTER ===== */
-const brandWrap = $("brandWrap");
-const brandToggle = $("brandToggle");
-const brandMenu = $("brandMenu");
-brandToggle.addEventListener("click", e => { e.stopPropagation(); brandWrap.classList.toggle("open"); });
-document.addEventListener("click", e => { if (!brandWrap.contains(e.target)) brandWrap.classList.remove("open"); });
-brandMenu.querySelectorAll(".brand-item").forEach(item => {
-  item.addEventListener("click", () => {
-    const brand = item.dataset.brand;
-    brandMenu.querySelectorAll(".brand-item").forEach(el => el.classList.toggle("active", el.dataset.brand === brand));
-    searchInput.value = brand === "all" ? "" : brand;
-    activeCat = "Overall";
-    catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === "Overall"));
+/* BRAND */
+const brandNav=$("brandNav");
+const brandNavBtn=$("brandNavBtn");
+const brandPopup=$("brandPopup");
+brandNavBtn.addEventListener("click",e=>{e.stopPropagation();brandPopup.classList.toggle("open");});
+document.addEventListener("click",e=>{if(!brandNav.contains(e.target))brandPopup.classList.remove("open");});
+brandPopup.querySelectorAll(".brand-popup-item").forEach(item=>{
+  item.addEventListener("click",()=>{
+    activeBrand=item.dataset.brand;
+    brandPopup.querySelectorAll(".brand-popup-item").forEach(el=>el.classList.toggle("active",el.dataset.brand===activeBrand));
+    searchInput.value=activeBrand==="all"?"":activeBrand;
+    activeCat="Overall";
+    catPills.querySelectorAll(".cat-pill").forEach(c=>c.classList.toggle("active",c.dataset.cat==="Overall"));
     filterAndRender();
-    brandWrap.classList.remove("open");
+    brandPopup.classList.remove("open");
   });
 });
 
-/* ===== HERO CAROUSEL ===== */
-let heroRealCount = 2, heroIdx = 0, heroInterval = null, heroTransitioning = false;
-
-function buildHeroDots(count) {
-  const dots = $("heroDots");
-  dots.innerHTML = "";
-  for (let i = 0; i < count; i++) {
-    const d = document.createElement("div");
-    d.className = "dot" + (i === 0 ? " active" : "");
-    d.addEventListener("click", () => jumpToSlide(i));
-    dots.appendChild(d);
-  }
-}
-
-function updateDots(realIdx) {
-  $("heroDots").querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === realIdx));
-}
-
-function setHeroPosRaw(idx, animated) {
-  const track = $("heroTrack");
-  track.style.transition = animated ? "transform 0.5s cubic-bezier(0.4,0,0.2,1)" : "none";
-  track.style.transform = `translateX(${-idx * 100}%)`;
-}
-
-function jumpToSlide(realIdx) {
-  heroIdx = realIdx + 1; // +1 because of leading clone
-  setHeroPosRaw(heroIdx, true);
-  updateDots(realIdx);
-  startHeroAuto();
-}
-
-function startHeroAuto() {
-  clearInterval(heroInterval);
-  heroInterval = setInterval(() => {
-    if (heroTransitioning) return;
-    heroIdx++;
-    setHeroPosRaw(heroIdx, true);
-    const realIdx = (heroIdx - 1) % heroRealCount;
-    updateDots(realIdx);
-  }, 3500);
-}
-
-function initHeroCarousel(slides) {
-  // slides = array of DOM elements (the real slides)
-  heroRealCount = slides.length;
-  const track = $("heroTrack");
-  track.style.transition = "none";
-  track.innerHTML = "";
-
-  // Clone last slide → prepend
-  const cloneFirst = slides[slides.length - 1].cloneNode(true);
-  track.appendChild(cloneFirst);
-  // Real slides
-  slides.forEach(s => track.appendChild(s));
-  // Clone first slide → append
-  const cloneLast = slides[0].cloneNode(true);
-  track.appendChild(cloneLast);
-
-  // Start at index 1 (first real slide)
-  heroIdx = 1;
-  setHeroPosRaw(heroIdx, false);
-  buildHeroDots(heroRealCount);
-
-  // On transition end: if we've reached a clone, snap silently
-  track.addEventListener("transitionend", () => {
-    heroTransitioning = false;
-    const totalSlides = heroRealCount + 2; // real + 2 clones
-    if (heroIdx >= totalSlides - 1) {
-      // Jumped past last clone → snap to first real
-      heroIdx = 1;
-      setHeroPosRaw(heroIdx, false);
-    } else if (heroIdx <= 0) {
-      // Jumped before first clone → snap to last real
-      heroIdx = heroRealCount;
-      setHeroPosRaw(heroIdx, false);
-    }
-  });
-
-  track.addEventListener("transitionstart", () => { heroTransitioning = true; });
-
-  startHeroAuto();
-}
-
-/* ===== ADS → inject into hero carousel ===== */
-async function loadAds() {
-  try {
-    const r = await fetch("ads.json", { cache: "no-store" });
-    if (!r.ok) throw new Error();
-    const ads = await r.json();
-    if (!Array.isArray(ads) || !ads.length) return;
-
-    const slides = ads.map((ad, i) => {
-      const slide = document.createElement("div");
-      slide.className = "carousel-slide";
-      const link = ad.link?.trim() || "";
-      slide.innerHTML = `<img src="${safeImg(ad.image)}" alt="Ad" loading="${i === 0 ? 'eager' : 'lazy'}" style="width:100%;aspect-ratio:16/7;object-fit:cover;display:block;pointer-events:none;" />`;
-      if (link) {
-        slide.style.cursor = "pointer";
-        slide.dataset.link = link;
-        slide.dataset.external = /^https?:\/\//i.test(link) ? "true" : "false";
-      }
-      return slide;
-    });
-
-    // Click handler on track (handles clones too)
-    $("heroTrack").addEventListener("click", e => {
-      const slide = e.target.closest(".carousel-slide");
-      if (!slide || !slide.dataset.link) return;
-      slide.dataset.external === "true"
-        ? window.open(slide.dataset.link, "_blank", "noopener")
-        : (window.location.href = slide.dataset.link);
-    });
-
-    initHeroCarousel(slides);
-  } catch {
-    // Keep default placeholder slides, just init them
-    const existingSlides = Array.from($("heroTrack").querySelectorAll(".carousel-slide"));
-    if (existingSlides.length) initHeroCarousel(existingSlides);
-  }
-}
-
-/* ===== APPS ===== */
-const appsSlider = $("appsSlider");
-const appsTrack = $("appsTrack");
-let appsRaf = null, appsOffset = 0, appsSetW = 0, appsPaused = false, appsDrag = false, appsDragX = 0, appsDragStart = 0;
-const APPS_SPEED = 0.12;
-async function loadApps() {
-  try {
-    const r = await fetch("apps.json", { cache: "no-store" });
-    if (!r.ok) throw new Error();
-    const apps = await r.json();
-    if (!Array.isArray(apps) || !apps.length) { appsTrack.innerHTML = `<span style="font-size:0.85rem;color:var(--muted)">No apps found.</span>`; return; }
-    appsTrack.innerHTML = "";
-    const makeCard = app => {
-      const a = document.createElement("a");
-      a.className = "app-card";
-      a.href = app.link || "#";
-      if (/^https?:\/\//i.test(app.link || "")) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
-      a.innerHTML = `<div class="app-icon"><img src="${safeImg(app.image)}" alt="${app.name || "App"}" loading="lazy" /></div><div class="app-name">${app.name || "App"}</div>`;
-      return a;
-    };
-    apps.concat(apps).forEach(app => appsTrack.appendChild(makeCard(app)));
-    requestAnimationFrame(() => { appsSetW = appsTrack.scrollWidth / 2; startAppsScroll(); setupAppsDrag(); });
-  } catch { appsTrack.innerHTML = `<span style="font-size:0.85rem;color:var(--muted)">Couldn't load apps.</span>`; }
-}
-function startAppsScroll() {
-  cancelAnimationFrame(appsRaf);
-  let last = 0;
-  const step = ts => {
-    if (last) { const dt = ts - last; if (!appsPaused && !appsDrag && appsSetW) { appsOffset = (appsOffset + APPS_SPEED * dt) % appsSetW; appsTrack.style.transform = `translateX(${-appsOffset}px)`; } }
-    last = ts; appsRaf = requestAnimationFrame(step);
-  };
-  appsRaf = requestAnimationFrame(step);
-}
-function setupAppsDrag() {
-  appsSlider.addEventListener("mouseenter", () => appsPaused = true);
-  appsSlider.addEventListener("mouseleave", () => { if (!appsDrag) appsPaused = false; });
-  appsSlider.addEventListener("touchstart", e => { appsDrag = true; appsDragX = e.touches[0].clientX; appsDragStart = appsOffset; }, { passive: true });
-  appsSlider.addEventListener("touchmove", e => { if (!appsDrag) return; const d = appsDragX - e.touches[0].clientX; appsOffset = ((appsDragStart + d) % appsSetW + appsSetW) % appsSetW; appsTrack.style.transform = `translateX(${-appsOffset}px)`; }, { passive: false });
-  appsSlider.addEventListener("touchend", () => { appsDrag = false; setTimeout(() => appsPaused = false, 400); });
-  appsSlider.addEventListener("mousedown", e => { appsDrag = true; appsDragX = e.clientX; appsDragStart = appsOffset; appsSlider.classList.add("dragging"); });
-  window.addEventListener("mousemove", e => { if (!appsDrag) return; const d = appsDragX - e.clientX; appsOffset = ((appsDragStart + d) % appsSetW + appsSetW) % appsSetW; appsTrack.style.transform = `translateX(${-appsOffset}px)`; });
-  window.addEventListener("mouseup", () => { if (appsDrag) { appsDrag = false; appsPaused = false; appsSlider.classList.remove("dragging"); } });
-  appsSlider.addEventListener("dragstart", e => e.preventDefault());
-}
-
-/* ===== PRODUCTS ===== */
-const productGrid = $("productGrid");
-function showSkeletons(n = 4) {
-  productGrid.innerHTML = Array.from({ length: n }, () => `<div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div></div>`).join("");
-}
-function mergeProducts() {
-  const norm_json = jsonCache.map((p, i) => normalizeProduct(p, "json", i));
-  const norm_be = backendCache.map((p, i) => normalizeProduct(p, "backend", i));
-  const map = new Map();
-  [...norm_json, ...norm_be].forEach(p => map.set(`${p.source}-${p.id}`, p));
-  allProducts = [...map.values()].sort((a, b) => { if (a.timeValue !== b.timeValue) return b.timeValue - a.timeValue; return b.fallbackOrder - a.fallbackOrder; });
-  buildFilterPills();
-  buildDealsSection();
-  filterAndRender();
-}
-async function loadProducts() {
-  showSkeletons();
-  const jsonP = fetch("products.json", { cache: "no-store" }).then(r => r.ok ? r.json() : Promise.reject()).then(d => extractArr(d)).catch(() => []);
-  const beP = fetch(`${BACKEND}/api/products`, { cache: "no-store" }).then(r => r.ok ? r.json() : Promise.reject()).then(d => extractArr(d)).catch(() => null);
-  jsonCache = await jsonP;
-  const fast = await Promise.race([beP, new Promise(r => setTimeout(() => r("TO"), 2500))]);
-  if (fast !== "TO" && fast !== null) { backendCache = fast; mergeProducts(); loadStories(); return; }
-  if (jsonCache.length) { mergeProducts(); loadStories(); }
-  else productGrid.innerHTML = `<div class="grid-message">Loading products…</div>`;
-  beP.then(data => { if (Array.isArray(data)) { backendCache = data; mergeProducts(); loadStories(); } else if (!jsonCache.length) { productGrid.innerHTML = `<div class="grid-message error">Failed to load products.</div>`; } });
-}
-function filterAndRender() {
-  const q = norm(searchInput.value);
-  let list = allProducts.filter(p => {
-    const catOk = activeCat === "Overall" || norm(p.category) === norm(activeCat);
-    const qOk = !q || norm(p.name).includes(q) || norm(p.brand).includes(q) || norm(p.description).includes(q);
-    return catOk && qOk;
-  });
-  const title = $("gridTitle");
-  const count = $("gridCount");
-  title.textContent = activeCat === "Overall" ? "all products" : activeCat.toLowerCase();
-  count.textContent = list.length ? `${list.length} items` : "";
-  renderProducts(list);
-}
-function renderProducts(list) {
-  if (!list.length) { productGrid.innerHTML = `<div class="grid-message">No products found.</div>`; return; }
-  productGrid.innerHTML = "";
-  list.forEach((p, i) => {
-    const a = document.createElement("a");
-    a.className = "product-card";
-    a.href = `product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;
-    a.style.animationDelay = `${Math.min(i * 30, 300)}ms`;
-
-    const discount = p.mrp && p.price ? Math.round((1 - p.price / p.mrp) * 100) : null;
-    const priceHTML = p.price
-      ? `<div class="product-price-row">
-          <span class="product-price">₹${p.price}</span>
-          ${p.mrp ? `<span class="product-mrp">₹${p.mrp}</span>` : ""}
-          ${discount ? `<span class="product-discount">(${discount}% off)</span>` : ""}
-         </div>`
-      : "";
-
-    a.innerHTML = `
-      <div class="product-img-wrap">
-        <img src="${safeImg(p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'" />
-        ${discount ? `<div class="product-offer-badge">${discount}% OFF</div>` : ""}
-      </div>
-      <div class="product-body">
-        <div class="product-category">${p.category || ""}</div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-rating">
-          ${p.rating ? `${p.rating} ⭐` : `<span class="no-rating">No rating yet</span>`}
+/* REVIEW CARD */
+function renderReview(p){
+  const wrap=$("reviewWrap");
+  if(!p){wrap.innerHTML="";return;}
+  wrap.innerHTML=`
+    <div class="review-card">
+      <img class="review-img" src="${safeImg(p.image)}" alt="${p.name}" onerror="this.src='${FALLBACK}'"/>
+      <div class="review-right">
+        <div class="review-meta">
+          <span class="review-stars">⭐ ${p.rating||"4.5"}</span>
+          <span class="review-pname">${p.name}</span>
         </div>
-        ${priceHTML}
-      </div>`;
+        <div class="review-title">Top Rated Pick!</div>
+        <div class="review-text">${p.description||"A highly rated product loved by our customers."}</div>
+        <div class="review-author">— ShopPlus Customer</div>
+      </div>
+    </div>`;
+}
+
+/* APPS */
+async function loadApps(){
+  const row=$("appsRow");
+  try{
+    const r=await fetch("apps.json",{cache:"no-store"});if(!r.ok)throw new Error();
+    const apps=await r.json();if(!Array.isArray(apps)||!apps.length){row.innerHTML=`<span style="color:var(--muted);font-size:0.82rem;">No apps.</span>`;return;}
+    row.innerHTML="";
+    apps.forEach(app=>{
+      const a=document.createElement("a");a.className="app-card";a.href=app.link||"#";
+      if(/^https?:\/\//i.test(app.link||"")){a.target="_blank";a.rel="noopener noreferrer";}
+      a.innerHTML=`<div class="app-icon-wrap"><img src="${safeImg(app.image)}" alt="${app.name||"App"}" loading="lazy"/></div><div class="app-label">${app.name||"App"}</div>`;
+      row.appendChild(a);
+    });
+  }catch{row.innerHTML=`<span style="color:var(--muted);font-size:0.82rem;">Couldn't load apps.</span>`;}
+}
+
+/* ADS */
+const adsWrap=$("adsWrap"),adsContainer=$("adsContainer"),adsTrackEl=$("adsTrack"),adsDots=$("adsDots"),adsHdr=$("adsHdr");
+let adsCount=0,adsIdx=1,adsInterval=null,adsDrag=false,adsStartX=0,adsMoved=false;
+
+async function loadAds(){
+  try{
+    const r=await fetch("ads.json",{cache:"no-store"});if(!r.ok)throw new Error();
+    const ads=await r.json();if(!Array.isArray(ads)||!ads.length)return;
+    adsWrap.style.display="block";adsHdr.style.display="flex";
+    adsCount=ads.length;
+    const mk=ad=>{const d=document.createElement("div");d.className="ad-slide";if(ad.link?.trim())d.dataset.link=ad.link.trim();if(/^https?:\/\//i.test(ad.link||""))d.dataset.external="true";d.innerHTML=`<img src="${safeImg(ad.image)}" alt="Ad" loading="lazy" draggable="false"/>`;return d;};
+    if(adsCount===1){adsTrackEl.appendChild(mk(ads[0]));adsIdx=0;setAdPos(false);buildDots(1,0);setupAdDrag();return;}
+    adsTrackEl.appendChild(mk(ads[ads.length-1]));
+    ads.forEach(a=>adsTrackEl.appendChild(mk(a)));
+    adsTrackEl.appendChild(mk(ads[0]));
+    adsIdx=1;setAdPos(false);buildDots(ads.length,0);
+    adsTrackEl.addEventListener("transitionend",()=>{if(adsIdx===adsCount+1){adsIdx=1;setAdPos(false);}if(adsIdx===0){adsIdx=adsCount;setAdPos(false);}updateDots();});
+    adsInterval=setInterval(()=>{adsIdx++;setAdPos(true);updateDots();},3500);
+    setupAdDrag();
+  }catch{}
+}
+function buildDots(n,a){adsDots.innerHTML=Array.from({length:n},(_,i)=>`<div class="ads-dot${i===a?" active":""}"></div>`).join("");}
+function updateDots(){const r=((adsIdx-1)%adsCount+adsCount)%adsCount;adsDots.querySelectorAll(".ads-dot").forEach((d,i)=>d.classList.toggle("active",i===r));}
+function setAdPos(animated){const w=adsContainer.clientWidth;adsTrackEl.style.transition=animated?"transform 0.5s cubic-bezier(0.4,0,0.2,1)":"none";adsTrackEl.style.transform=`translateX(${-adsIdx*w}px)`;}
+function setupAdDrag(){
+  let liveX=0;
+  const start=x=>{
+    adsDrag=true;adsMoved=false;adsStartX=x;liveX=x;
+    clearInterval(adsInterval);
+    adsTrackEl.style.transition="none"; // disable transition during drag
+    adsContainer.classList.add("dragging");
+  };
+  const move=x=>{
+    if(!adsDrag)return;
+    liveX=x;
+    const diff=adsStartX-x;
+    if(Math.abs(diff)>5){
+      adsMoved=true;
+      // Live visual drag
+      const w=adsContainer.clientWidth;
+      const base=-adsIdx*w;
+      adsTrackEl.style.transform=`translateX(${base-diff}px)`;
+    }
+  };
+  const end=(x,tgt)=>{
+    if(!adsDrag)return;adsDrag=false;
+    adsContainer.classList.remove("dragging");
+    const d=adsStartX-x;
+    if(!adsMoved&&Math.abs(d)<5){
+      const sl=tgt?.closest?.(".ad-slide")||adsTrackEl.children[adsIdx];
+      const lk=sl?.dataset?.link;
+      if(lk){sl.dataset.external==="true"?window.open(lk,"_blank","noopener,noreferrer"):(window.location.href=lk);}
+    } else if(Math.abs(d)>40){
+      d>0?adsIdx++:adsIdx--;
+    }
+    setAdPos(true);updateDots();
+    adsInterval=setInterval(()=>{adsIdx++;setAdPos(true);updateDots();},3500);
+  };
+  adsContainer.addEventListener("touchstart",e=>start(e.touches[0].clientX),{passive:true});
+  adsContainer.addEventListener("touchmove",e=>{e.preventDefault();move(e.touches[0].clientX);},{passive:false});
+  adsContainer.addEventListener("touchend",e=>end(e.changedTouches[0].clientX,e.target));
+  adsContainer.addEventListener("mousedown",e=>{e.preventDefault();start(e.clientX);});
+  window.addEventListener("mousemove",e=>{if(adsDrag)move(e.clientX);});
+  window.addEventListener("mouseup",e=>{if(adsDrag){end(e.clientX,e.target);}});
+  window.addEventListener("resize",()=>setAdPos(false));
+  adsContainer.addEventListener("dragstart",e=>e.preventDefault());
+}
+
+/* ===== HERO CAROUSEL SWIPE ===== */
+/* The hero section in this layout uses the ads container above.
+   This adds swipe support to any other hero/banner carousel element if present. */
+function setupHeroSwipe(container, getPosIdx, setPosIdx, getCount, setPos, onDotUpdate) {
+  let hDrag=false, hStartX=0, hMoved=false;
+  const start=x=>{hDrag=true;hMoved=false;hStartX=x;container.style.cursor="grabbing";};
+  const move=x=>{if(!hDrag)return;if(Math.abs(x-hStartX)>6)hMoved=true;};
+  const end=x=>{
+    if(!hDrag)return;hDrag=false;container.style.cursor="grab";
+    const d=hStartX-x;
+    if(hMoved&&Math.abs(d)>40){
+      let idx=getPosIdx();
+      d>0?idx++:idx--;
+      setPosIdx(idx);
+      setPos(true);
+      if(onDotUpdate)onDotUpdate();
+    }
+  };
+  container.style.cursor="grab";
+  container.addEventListener("touchstart",e=>start(e.touches[0].clientX),{passive:true});
+  container.addEventListener("touchmove",e=>move(e.touches[0].clientX),{passive:true});
+  container.addEventListener("touchend",e=>end(e.changedTouches[0].clientX));
+  container.addEventListener("mousedown",e=>start(e.clientX));
+  window.addEventListener("mousemove",e=>{if(hDrag)move(e.clientX);});
+  window.addEventListener("mouseup",e=>{if(hDrag)end(e.clientX);});
+  container.addEventListener("dragstart",e=>e.preventDefault());
+}
+
+/* PRODUCTS */
+const productGrid=$("productGrid"),newArrivals=$("newArrivals");
+function showSkeletons(){productGrid.innerHTML=Array.from({length:6},()=>`<div class="skel-card"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line s"></div></div></div>`).join("");}
+function mergeProducts(){
+  const nj=jsonCache.map((p,i)=>normalizeProduct(p,"json",i));
+  const nb=backendCache.map((p,i)=>normalizeProduct(p,"backend",i));
+  const map=new Map();[...nj,...nb].forEach(p=>map.set(`${p.source}-${p.id}`,p));
+  allProducts=[...map.values()].sort((a,b)=>b.timeValue-a.timeValue||b.fallbackOrder-a.fallbackOrder);
+  const top=[...allProducts].filter(p=>p.rating).sort((a,b)=>parseFloat(b.rating)-parseFloat(a.rating))[0];
+  if(top)renderReview(top);
+  renderNewArrivals(allProducts.slice(0,8));
+  filterAndRender();
+}
+async function loadProducts(){
+  showSkeletons();
+  const jsonP=fetch("products.json",{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject()).then(d=>extractArr(d)).catch(()=>[]);
+  const beP=fetch(`${BACKEND}/api/products`,{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject()).then(d=>extractArr(d)).catch(()=>null);
+  jsonCache=await jsonP;
+  const fast=await Promise.race([beP,new Promise(r=>setTimeout(()=>r("TO"),2500))]);
+  if(fast!=="TO"&&fast!==null){backendCache=fast;mergeProducts();loadStories();return;}
+  if(jsonCache.length){mergeProducts();loadStories();}
+  else productGrid.innerHTML=`<div class="grid-message">Loading products…</div>`;
+  beP.then(data=>{if(Array.isArray(data)){backendCache=data;mergeProducts();loadStories();}else if(!jsonCache.length){productGrid.innerHTML=`<div class="grid-message error">Failed to load. Please try again.</div>`;}});
+}
+function renderNewArrivals(list){
+  if(!list.length){newArrivals.innerHTML=`<span style="color:var(--muted);font-size:0.82rem;padding:4px 0;">No products yet.</span>`;return;}
+  newArrivals.innerHTML="";
+  list.forEach(p=>{
+    const a=document.createElement("a");a.className="hprod-card";a.href=`product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;
+    a.innerHTML=`<img class="hprod-img" src="${safeImg(p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK}'"/><div class="hprod-body"><div class="hprod-name">${p.name}</div><div class="hprod-rating">${p.rating?`⭐ ${p.rating}`:`<span style="color:var(--muted)">No rating</span>`}</div></div>`;
+    newArrivals.appendChild(a);
+  });
+}
+function filterAndRender(){
+  const q=norm(searchInput.value);
+  const list=allProducts.filter(p=>{
+    const cOk=activeCat==="Overall"||norm(p.category)===norm(activeCat);
+    const bOk=activeBrand==="all"||norm(p.brand)===norm(activeBrand);
+    const qOk=!q||norm(p.name).includes(q)||norm(p.brand).includes(q)||norm(p.description).includes(q);
+    return cOk&&bOk&&qOk;
+  });
+  if(!list.length){productGrid.innerHTML=`<div class="grid-message">No products found.</div>`;return;}
+  productGrid.innerHTML="";
+  list.forEach((p,i)=>{
+    const a=document.createElement("a");a.className="product-card";a.href=`product.html?id=${encodeURIComponent(p.id)}&source=${encodeURIComponent(p.source)}`;a.style.animationDelay=`${Math.min(i*25,250)}ms`;
+    a.innerHTML=`<div class="prod-img-wrap"><img src="${safeImg(p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK}'"/></div><div class="prod-body"><div class="prod-name">${p.name}</div><div class="prod-rating">${p.rating?`${p.rating} ⭐`:`<span class="no-rating">No rating yet</span>`}</div></div>`;
     productGrid.appendChild(a);
   });
 }
 
-/* ===== STORIES ===== */
-const storyBtn = $("storyBtn");
-const storyOverlay = $("storyOverlay");
-const storyClose = $("storyClose");
-const storyPrev = $("storyPrev");
-const storyNext = $("storyNext");
-const storyProgress = $("storyProgress");
-const storyBrandName = $("storyBrandName");
-const storyTag = $("storyTag");
-const storyTagTitle = $("storyTagTitle");
-const storyTagImg = $("storyTagImg");
-const storyCaption = $("storyCaption");
+/* STORIES */
+const storyBtn=$("storyBtn"),storyNavBtn=$("storyNavBtn"),storyOverlay=$("storyOverlay");
+const storyClose=$("storyClose"),storyPrev=$("storyPrev"),storyNext=$("storyNext");
+const storyProgress=$("storyProgress"),storyBrandName=$("storyBrandName");
+const storyTag=$("storyTag"),storyTagTitle=$("storyTagTitle"),storyTagImg=$("storyTagImg"),storyCaption=$("storyCaption");
 
-function findProductForStory(story) {
-  if (!story?.productId) return null;
-  const id = String(story.productId).trim();
-  const src = norm(story.source || "json");
-  const pool = src === "backend" ? backendCache : jsonCache;
-  const raw = pool.find(p => String(p._id || p.id || "").trim() === id);
-  return raw ? normalizeProduct(raw, src, 0) : null;
-}
-async function loadStories() {
-  try {
-    const r = await fetch("stories.json", { cache: "no-store" });
-    if (!r.ok) throw new Error();
-    const data = await r.json();
-    stories = Array.isArray(data) ? data.filter(Boolean) : [];
-    storySig = buildSig(stories);
-    updateStoryBtn();
-  } catch { stories = []; storySig = ""; updateStoryBtn(); }
-}
-function updateStoryBtn() {
-  storyBtn.classList.remove("has-story", "story-seen");
-  if (!stories.length) return;
-  const seen = localStorage.getItem(STORY_KEY) === storySig;
-  storyBtn.classList.add(seen ? "story-seen" : "has-story");
-}
-const openStoriesHandler = () => { if (stories.length) openStories(0); };
-storyBtn.addEventListener("click", openStoriesHandler);
+function findProd(s){if(!s?.productId)return null;const id=String(s.productId).trim();const src=norm(s.source||"json");const pool=src==="backend"?backendCache:jsonCache;const raw=pool.find(p=>String(p._id||p.id||"").trim()===id);return raw?normalizeProduct(raw,src,0):null;}
 
-function openStories(idx) {
-  storyIdx = Math.max(0, Math.min(idx, stories.length - 1));
-  storyOverlay.classList.add("open");
-  document.body.style.overflow = "hidden";
-  buildProgressBars();
-  showStory(storyIdx);
-  localStorage.setItem(STORY_KEY, storySig);
-  updateStoryBtn();
+async function loadStories(){
+  try{const r=await fetch("stories.json",{cache:"no-store"});if(!r.ok)throw new Error();const data=await r.json();stories=Array.isArray(data)?data.filter(Boolean):[];storySig=buildSig(stories);updateStoryUI();}
+  catch{stories=[];storySig="";updateStoryUI();}
 }
-function closeStories() { storyOverlay.classList.remove("open"); document.body.style.overflow = ""; clearStoryTimers(); }
-function clearStoryTimers() { clearTimeout(storyTimerID); cancelAnimationFrame(storyRafID); storyTimerID = storyRafID = null; }
-function buildProgressBars() { storyProgress.innerHTML = stories.map((_, i) => `<div class="prog-bar"><div class="prog-fill" id="sf-${i}"></div></div>`).join(""); }
-function showStory(idx) {
-  clearStoryTimers();
-  const s = stories[idx];
-  if (!s) { closeStories(); return; }
-  storyIdx = idx;
-  storyDuration = Math.max(1500, Number(s.duration) || 5000);
-  const prod = findProductForStory(s);
-  const img = prod?.image || safeImg(s.image);
-  const title = prod?.name || s.title || "Featured Product";
-  storyTagImg.src = img; storyTagImg.alt = title; storyTagTitle.textContent = title;
-  storyBrandName.textContent = title; storyCaption.textContent = s.caption || title;
-  stories.forEach((_, i) => { const f = document.getElementById(`sf-${i}`); if (f) f.style.width = i < idx ? "100%" : "0%"; });
-  storyStart = performance.now();
-  animateProgress();
-  storyTimerID = setTimeout(nextStory, storyDuration);
+function updateStoryUI(){
+  storyBtn.classList.remove("has-story","story-seen");
+  if(!stories.length){storyNavBtn.style.background="var(--muted)";return;}
+  const seen=localStorage.getItem(STORY_KEY)===storySig;
+  storyBtn.classList.add(seen?"story-seen":"has-story");
+  storyNavBtn.style.background=seen?"var(--text)":"var(--accent)";
 }
-function animateProgress() {
-  const fill = document.getElementById(`sf-${storyIdx}`);
-  if (!fill) return;
-  const tick = now => { const pct = Math.min(((now - storyStart) / storyDuration) * 100, 100); fill.style.width = pct + "%"; if (pct < 100 && storyOverlay.classList.contains("open")) storyRafID = requestAnimationFrame(tick); };
-  storyRafID = requestAnimationFrame(tick);
+function openStory(){if(!stories.length){window.location.href="home.html";return;}storyIdx=0;storyOverlay.classList.add("open");document.body.style.overflow="hidden";buildBars();showStory(0);localStorage.setItem(STORY_KEY,storySig);updateStoryUI();}
+storyBtn.addEventListener("click",openStory);
+storyNavBtn.addEventListener("click",openStory);
+function closeStories(){storyOverlay.classList.remove("open");document.body.style.overflow="";clearTimeout(storyTimerID);cancelAnimationFrame(storyRafID);storyTimerID=storyRafID=null;}
+function buildBars(){storyProgress.innerHTML=stories.map((_,i)=>`<div class="prog-bar"><div class="prog-fill" id="sf-${i}"></div></div>`).join("");}
+function showStory(idx){
+  clearTimeout(storyTimerID);cancelAnimationFrame(storyRafID);
+  const s=stories[idx];if(!s){closeStories();return;}
+  storyIdx=idx;storyDuration=Math.max(1500,Number(s.duration)||5000);
+  const prod=findProd(s);
+  const img=prod?.image||safeImg(s.image);
+  const title=prod?.name||s.title||"Featured Product";
+  storyTagImg.src=img;storyTagImg.alt=title;storyTagTitle.textContent=title;storyBrandName.textContent=title;storyCaption.textContent=s.caption||title;
+  stories.forEach((_,i)=>{const f=document.getElementById(`sf-${i}`);if(f)f.style.width=i<idx?"100%":"0%";});
+  storyStart=performance.now();
+  const fill=document.getElementById(`sf-${idx}`);
+  if(fill){const tick=now=>{const pct=Math.min(((now-storyStart)/storyDuration)*100,100);fill.style.width=pct+"%";if(pct<100&&storyOverlay.classList.contains("open"))storyRafID=requestAnimationFrame(tick);};storyRafID=requestAnimationFrame(tick);}
+  storyTimerID=setTimeout(()=>{storyIdx<stories.length-1?showStory(storyIdx+1):closeStories();},storyDuration);
 }
-function nextStory() { storyIdx < stories.length - 1 ? showStory(storyIdx + 1) : closeStories(); }
-function prevStory() { showStory(Math.max(0, storyIdx - 1)); }
-function openStoryProduct() { const s = stories[storyIdx]; if (!s?.productId) return; window.location.href = `product.html?id=${encodeURIComponent(s.productId)}&source=${encodeURIComponent(s.source || "json")}`; }
+function openStoryProduct(){const s=stories[storyIdx];if(!s?.productId)return;window.location.href=`product.html?id=${encodeURIComponent(s.productId)}&source=${encodeURIComponent(s.source||"json")}`;}
 
-storyClose.addEventListener("click", e => { e.stopPropagation(); closeStories(); });
-storyPrev.addEventListener("click", e => { e.stopPropagation(); prevStory(); });
-storyNext.addEventListener("click", e => { e.stopPropagation(); nextStory(); });
-storyTag.addEventListener("click", e => { e.stopPropagation(); openStoryProduct(); });
-storyTag.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openStoryProduct(); } });
-storyOverlay.addEventListener("click", e => { if (e.target === storyOverlay) closeStories(); });
-document.addEventListener("keydown", e => {
-  if (!storyOverlay.classList.contains("open")) return;
-  if (e.key === "Escape") closeStories();
-  if (e.key === "ArrowRight") nextStory();
-  if (e.key === "ArrowLeft") prevStory();
-});
+storyClose.addEventListener("click",e=>{e.stopPropagation();closeStories();});
+storyPrev.addEventListener("click",e=>{e.stopPropagation();showStory(Math.max(0,storyIdx-1));});
+storyNext.addEventListener("click",e=>{e.stopPropagation();storyIdx<stories.length-1?showStory(storyIdx+1):closeStories();});
+storyTag.addEventListener("click",e=>{e.stopPropagation();openStoryProduct();});
+storyTag.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openStoryProduct();}});
+storyOverlay.addEventListener("click",e=>{if(e.target===storyOverlay)closeStories();});
+document.addEventListener("keydown",e=>{if(!storyOverlay.classList.contains("open"))return;if(e.key==="Escape")closeStories();if(e.key==="ArrowRight"){storyIdx<stories.length-1?showStory(storyIdx+1):closeStories();}if(e.key==="ArrowLeft")showStory(Math.max(0,storyIdx-1));});
 
-/* ===== INIT ===== */
-document.addEventListener("DOMContentLoaded", () => {
+/* INIT */
+document.addEventListener("DOMContentLoaded",()=>{
   showSkeletons();
+  loadAnnouncement();
   loadApps();
-  loadAds().then(() => {
-    // If loadAds didn't initialize (no ads.json), init with placeholders
-    if (!$("heroTrack").querySelector(".carousel-slide:nth-child(3)")) {
-      const existingSlides = Array.from($("heroTrack").querySelectorAll(".carousel-slide"));
-      if (existingSlides.length) initHeroCarousel(existingSlides);
-    }
-  });
+  loadAds();
   loadProducts();
-  if (isStandalone()) installBtn.classList.remove("show");
+  if(isStandalone())installBtn.style.display="none";
 });
-document.addEventListener("visibilitychange", () => { if (!document.hidden) loadStories(); });
-window.addEventListener("focus", () => loadStories());
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadStories();});
+window.addEventListener("focus",()=>loadStories());
 </script>
 </body>
 </html>
