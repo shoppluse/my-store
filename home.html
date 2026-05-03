@@ -91,25 +91,10 @@ button { border: none; background: none; cursor: pointer; font-family: inherit; 
 input { font-family: inherit; }
 ::-webkit-scrollbar { width: 0; height: 0; }
 
-/* ===== PROMO BANNER ===== */
-.promo-banner {
-  background: var(--accent);
-  color: #fff;
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 9px var(--pad);
-  letter-spacing: 0.2px;
-  position: sticky;
-  top: 0;
-  z-index: 101;
-}
-
 /* ===== HEADER ===== */
 .header {
   position: sticky;
-  top: 36px;
+  top: 0;
   z-index: 100;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -189,7 +174,7 @@ input { font-family: inherit; }
   padding: 10px var(--pad) 12px;
   border-bottom: 1px solid var(--border);
   position: sticky;
-  top: calc(36px + 60px);
+  top: 68px;
   z-index: 99;
 }
 .search-bar {
@@ -764,20 +749,58 @@ input { font-family: inherit; }
 
 
 
-/* Logo story ring */
-.logo-text.has-story {
+/* ===== STORY RING ON LOGO ===== */
+.logo-text {
   position: relative;
+  z-index: 0;
+  padding: 3px 6px;
+  border-radius: var(--radius-xs);
+}
+
+/* Unseen: animated coloured ring */
+.logo-text.has-story::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(var(--radius-xs) + 3px);
+  background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7, #f9ce34);
+  background-size: 300% 300%;
+  z-index: -1;
+  animation: story-ring-spin 2.5s linear infinite;
 }
 .logo-text.has-story::after {
   content: "";
   position: absolute;
-  bottom: -3px; left: 0; right: 0;
-  height: 2.5px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  border-radius: 99px;
-  animation: pulse-line 1.5s ease-in-out infinite alternate;
+  inset: 2px;
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  z-index: -1;
 }
-@keyframes pulse-line { from { opacity: 0.6; } to { opacity: 1; } }
+
+/* Seen: flat grey ring */
+.logo-text.story-seen::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(var(--radius-xs) + 3px);
+  background: var(--muted-2);
+  z-index: -1;
+  animation: none;
+}
+.logo-text.story-seen::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  z-index: -1;
+}
+
+@keyframes story-ring-spin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
 /* Install */
 .install-btn { display: none; }
@@ -806,11 +829,6 @@ input { font-family: inherit; }
 </head>
 
 <body>
-
-<!-- PROMO BANNER -->
-<div class="promo-banner" id="promoBanner">
-  ⚡ Buy any 3 items &amp; get FREE delivery ⚡
-</div>
 
 <!-- HEADER -->
 <header class="header">
@@ -947,7 +965,7 @@ input { font-family: inherit; }
 </section>
 
 <!-- PRODUCTS -->
-<div class="section-header" style="margin-top:8px;">
+<div id="gridAnchor" class="section-header" style="margin-top:8px;">
   <div class="section-title-row">
     <span class="section-icon">✨</span>
     <span class="section-title" id="gridTitle">all products</span>
@@ -1048,21 +1066,6 @@ window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferr
 installBtn.addEventListener("click", async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === "accepted") installBtn.classList.remove("show"); deferredPrompt = null; });
 window.addEventListener("appinstalled", () => { installBtn.classList.remove("show"); deferredPrompt = null; });
 
-/* ===== PROMO BANNER ROTATION ===== */
-const PROMOS = [
-  "⚡ Buy any 3 items & get FREE delivery ⚡",
-  "🔥 Up to 40% off on Electronics this week!",
-  "🎁 Free gift wrapping on orders above ₹999",
-  "💥 Flash sale ends tonight — grab deals now!"
-];
-let promoIdx = 0;
-setInterval(() => {
-  promoIdx = (promoIdx + 1) % PROMOS.length;
-  const b = $("promoBanner");
-  b.style.opacity = "0";
-  setTimeout(() => { b.textContent = PROMOS[promoIdx]; b.style.opacity = "1"; b.style.transition = "opacity 0.5s"; }, 300);
-}, 4000);
-
 /* ===== CATEGORIES ===== */
 const CATS = [
   { name: "Overall", emoji: "🛍️" },
@@ -1134,7 +1137,11 @@ function buildDealsSection() {
       catsScroll.querySelectorAll(".cat-item").forEach(c => c.classList.toggle("active", c.dataset.cat === activeCat));
       buildFilterPills();
       filterAndRender();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // Scroll to products grid with a small delay so render completes first
+      setTimeout(() => {
+        const gridSection = $("gridAnchor");
+        if (gridSection) gridSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 60);
     });
     scroll.appendChild(div);
   });
@@ -1438,10 +1445,10 @@ async function loadStories() {
   } catch { stories = []; storySig = ""; updateStoryBtn(); }
 }
 function updateStoryBtn() {
-  storyBtn.classList.remove("has-story");
+  storyBtn.classList.remove("has-story", "story-seen");
   if (!stories.length) return;
   const seen = localStorage.getItem(STORY_KEY) === storySig;
-  if (!seen) storyBtn.classList.add("has-story");
+  storyBtn.classList.add(seen ? "story-seen" : "has-story");
 }
 const openStoriesHandler = () => { if (stories.length) openStories(0); };
 storyBtn.addEventListener("click", openStoriesHandler);
