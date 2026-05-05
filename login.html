@@ -439,47 +439,42 @@ function hideStatus() {
 }
 
 /* ===== LOGIN WITH AUTO-RETRY ===== */
-// Retries up to 3 times with 5s gap — handles Render cold start
 async function loginWithRetry(payload, maxRetries = 3) {
   let lastError = null;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    statusText.textContent = attempt === 1
+      ? "⏳ Connecting to server…"
+      : `⏳ Server waking up… attempt ${attempt} of ${maxRetries}`;
+
     try {
-      statusText.textContent = attempt === 1
-        ? "⏳ Connecting to server…"
-        : `⏳ Server waking up… attempt ${attempt} of ${maxRetries}`;
-
-      const controller = new AbortController();
-      // 30s timeout per attempt — enough for Render cold start
-      const timer = setTimeout(() => controller.abort(), 30000);
-
       const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(payload),
-        signal:  controller.signal
+        body:    JSON.stringify(payload)
       });
-
-      clearTimeout(timer);
 
       let data = {};
       try { data = await res.json(); } catch { throw new Error("Invalid server response"); }
 
-      return { res, data }; // ✅ success — return immediately
+      return { res, data };
 
     } catch (err) {
       lastError = err;
-      const isAbort = err.name === "AbortError";
-      const isFetch = err.message === "Failed to fetch" || err.message === "fetch failed" || err.message === "NetworkError when attempting to fetch resource.";
+      const msg = err?.message || "";
+      const isNetworkErr = msg.includes("Failed to fetch") ||
+                           msg.includes("fetch failed") ||
+                           msg.includes("NetworkError") ||
+                           msg.includes("Load failed") ||
+                           msg.includes("network");
 
-      if ((isAbort || isFetch) && attempt < maxRetries) {
-        // Server is still waking — wait 6s then retry
-        statusText.textContent = `⏳ Server is starting up… retrying in 6s (${attempt}/${maxRetries})`;
-        await new Promise(r => setTimeout(r, 6000));
+      if (isNetworkErr && attempt < maxRetries) {
+        statusText.textContent = `⏳ Server starting… retrying in 8s (${attempt}/${maxRetries})`;
+        await new Promise(r => setTimeout(r, 8000));
         continue;
       }
 
-      throw lastError; // out of retries or non-network error
+      throw lastError;
     }
   }
 }
@@ -511,7 +506,6 @@ form.addEventListener("submit", async (e) => {
       return;
     }
 
-    // ✅ Success
     showOnline();
     localStorage.setItem("shopplusLoggedIn", "true");
     localStorage.setItem("shopplusToken",    data.token || "");
@@ -524,10 +518,9 @@ form.addEventListener("submit", async (e) => {
     hideStatus();
     const msg = err?.message || "";
 
-    if (msg.includes("Failed to fetch") || msg.includes("fetch failed") || msg.includes("NetworkError")) {
-      showMessage("❌ Could not reach server after 3 attempts. Please check your internet and try again.", "error");
-    } else if (err.name === "AbortError") {
-      showMessage("❌ Request timed out. Server may be busy — please try again.", "error");
+    if (msg.includes("Failed to fetch") || msg.includes("fetch failed") ||
+        msg.includes("NetworkError") || msg.includes("Load failed")) {
+      showMessage("❌ Server is unavailable after 3 attempts. Please check your internet and try again.", "error");
     } else {
       showMessage("❌ " + (msg || "Something went wrong. Please try again."), "error");
     }
@@ -538,10 +531,9 @@ form.addEventListener("submit", async (e) => {
 });
 
 /* ===== SILENT PRE-WARM on page load ===== */
-// Wakes Render server in background while user fills the form
 setTimeout(() => {
   fetch(`${BACKEND_URL}/health`).catch(() => {});
-}, 500);
+}, 300);
 </script>
 </body>
 </html>
