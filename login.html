@@ -379,8 +379,6 @@ input  { font-family: inherit; }
 "use strict";
 
 const BACKEND_URL = "https://my-store-e28j.onrender.com";
-const WAKE_TIMEOUT = 60000; // 60s — Render free tier can take up to 50s to wake
-const LOGIN_TIMEOUT = 15000; // 15s for actual login after server is awake
 
 /* ===== THEME ===== */
 const htmlEl   = document.documentElement;
@@ -440,27 +438,52 @@ function hideStatus() {
   serverStatus.className = "server-status";
 }
 
-/* ===== FETCH WITH TIMEOUT ===== */
-function fetchWithTimeout(url, options, timeout) {
-  return Promise.race([
-    fetch(url, options),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("TIMEOUT")), timeout)
-    )
-  ]);
-}
+/* ===== LOGIN WITH AUTO-RETRY ===== */
+// Retries up to 3 times with 5s gap — handles Render cold start
+async function loginWithRetry(payload, maxRetries = 3) {
+  let lastError = null;
 
-/* ===== WAKE SERVER (ping /health) ===== */
-async function wakeServer() {
-  try {
-    await fetchWithTimeout(`${BACKEND_URL}/health`, {}, WAKE_TIMEOUT);
-    return true;
-  } catch {
-    return false;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      statusText.textContent = attempt === 1
+        ? "⏳ Connecting to server…"
+        : `⏳ Server waking up… attempt ${attempt} of ${maxRetries}`;
+
+      const controller = new AbortController();
+      // 30s timeout per attempt — enough for Render cold start
+      const timer = setTimeout(() => controller.abort(), 30000);
+
+      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(payload),
+        signal:  controller.signal
+      });
+
+      clearTimeout(timer);
+
+      let data = {};
+      try { data = await res.json(); } catch { throw new Error("Invalid server response"); }
+
+      return { res, data }; // ✅ success — return immediately
+
+    } catch (err) {
+      lastError = err;
+      const isAbort = err.name === "AbortError";
+      const isFetch = err.message === "Failed to fetch" || err.message === "fetch failed" || err.message === "NetworkError when attempting to fetch resource.";
+
+      if ((isAbort || isFetch) && attempt < maxRetries) {
+        // Server is still waking — wait 6s then retry
+        statusText.textContent = `⏳ Server is starting up… retrying in 6s (${attempt}/${maxRetries})`;
+        await new Promise(r => setTimeout(r, 6000));
+        continue;
+      }
+
+      throw lastError; // out of retries or non-network error
+    }
   }
 }
 
-/* ===== LOGIN ===== */
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   hideMessage();
@@ -474,79 +497,51 @@ form.addEventListener("submit", async (e) => {
   }
 
   loginBtn.disabled    = true;
-  loginBtn.textContent = "Connecting…";
-
-  // Step 1 — wake the server first
-  showWaking();
-  const isAwake = await wakeServer();
-
-  if (!isAwake) {
-    hideStatus();
-    showMessage("Server is not responding. Please try again in a moment.", "error");
-    loginBtn.disabled    = false;
-    loginBtn.textContent = "Login";
-    return;
-  }
-
-  showOnline();
   loginBtn.textContent = "Logging in…";
+  showWaking();
 
-  // Step 2 — actual login request
   try {
-    const res = await fetchWithTimeout(
-      `${BACKEND_URL}/api/auth/login`,
-      {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ emailOrMobile, password })
-      },
-      LOGIN_TIMEOUT
-    );
-
-    let data = {};
-    try {
-      data = await res.json();
-    } catch {
-      throw new Error("Server returned an invalid response.");
-    }
+    const { res, data } = await loginWithRetry({ emailOrMobile, password });
 
     if (!res.ok || !data.success) {
-      showMessage(data.message || "Login failed. Please try again.", "error");
+      hideStatus();
+      showMessage(data.message || "Login failed. Please check your credentials.", "error");
       loginBtn.disabled    = false;
       loginBtn.textContent = "Login";
       return;
     }
 
     // ✅ Success
+    showOnline();
     localStorage.setItem("shopplusLoggedIn", "true");
     localStorage.setItem("shopplusToken",    data.token || "");
     localStorage.setItem("shopplusUser",     JSON.stringify(data.user || {}));
 
-    showMessage("Login successful! Redirecting…", "success");
+    showMessage("✅ Login successful! Redirecting…", "success");
     setTimeout(() => { window.location.href = "home.html"; }, 1000);
 
   } catch (err) {
     hideStatus();
-    if (err.message === "TIMEOUT") {
-      showMessage("Login timed out. Server may be busy — please try again.", "error");
+    const msg = err?.message || "";
+
+    if (msg.includes("Failed to fetch") || msg.includes("fetch failed") || msg.includes("NetworkError")) {
+      showMessage("❌ Could not reach server after 3 attempts. Please check your internet and try again.", "error");
+    } else if (err.name === "AbortError") {
+      showMessage("❌ Request timed out. Server may be busy — please try again.", "error");
     } else {
-      showMessage(err.message || "Something went wrong. Please try again.", "error");
+      showMessage("❌ " + (msg || "Something went wrong. Please try again."), "error");
     }
+
     loginBtn.disabled    = false;
     loginBtn.textContent = "Login";
   }
 });
 
-/* ===== PRE-WARM: ping server as soon as page loads ===== */
-// This silently wakes the Render server in the background
-// so by the time the user fills the form, server is already awake
-(async () => {
-  try {
-    await fetchWithTimeout(`${BACKEND_URL}/health`, {}, WAKE_TIMEOUT);
-  } catch {
-    // silent — handled at submit time
-  }
-})();
+/* ===== SILENT PRE-WARM on page load ===== */
+// Wakes Render server in background while user fills the form
+setTimeout(() => {
+  fetch(`${BACKEND_URL}/health`).catch(() => {});
+}, 500);
 </script>
 </body>
 </html>
