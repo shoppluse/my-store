@@ -6,17 +6,24 @@ require("dotenv").config();
 
 const app = express();
 
-/* =========================================
-   BASIC APP SETTINGS
-========================================= */
 app.set("trust proxy", 1);
 
 /* =========================================
-   CORS
+   CORS — explicit headers fix for Android
+   WebView + APK + all browsers
 ========================================= */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
+
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"]
 }));
 
 /* =========================================
@@ -34,9 +41,9 @@ app.use("/my-store", express.static(frontendPath));
 /* =========================================
    API ROUTES
 ========================================= */
-app.use("/api/auth", require("./routes/auth"));
+app.use("/api/auth",     require("./routes/auth"));
 app.use("/api/products", require("./routes/products"));
-app.use("/api/rewards", require("./routes/rewardRoutes")); // ✅ THIS WAS MISSING
+app.use("/api/rewards",  require("./routes/rewardRoutes"));
 
 /* =========================================
    HEALTH CHECKS
@@ -53,9 +60,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-/* =========================================
-   STATIC FALLBACK
-========================================= */
 app.get("/my-store", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
@@ -64,10 +68,7 @@ app.get("/my-store", (req, res) => {
    404 HANDLER
 ========================================= */
 app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route not found"
-  });
+  res.status(404).json({ success: false, message: "Route not found" });
 });
 
 /* =========================================
@@ -89,14 +90,12 @@ const MONGO_URI = process.env.MONGO_URI;
 
 async function startServer() {
   try {
-    if (!MONGO_URI) {
-      throw new Error("MONGO_URI is missing in environment variables");
-    }
+    if (!MONGO_URI) throw new Error("MONGO_URI is missing in environment variables");
     await mongoose.connect(MONGO_URI);
     console.log("✅ MongoDB connected successfully");
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+      console.log(`🌐 Health: http://localhost:${PORT}/health`);
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error.message);
