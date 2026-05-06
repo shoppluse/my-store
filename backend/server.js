@@ -23,7 +23,12 @@ app.use((req, res, next) => {
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: "*"
+  allowedHeaders: [
+  "Content-Type",
+  "Authorization",
+  "Accept",
+  "Cache-Control"
+]
 }));
 
 /* =========================================
