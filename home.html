@@ -825,6 +825,18 @@ input { font-family: inherit; }
 }
 .brand-item:hover { background: var(--bg-2); }
 .brand-item.active { background: var(--accent-glow); color: var(--accent); font-weight: 700; }
+  @media (min-width: 1024px) {
+
+  .product-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .carousel-slide img,
+  .carousel-slide .slide-placeholder {
+    aspect-ratio: 16/4;
+  }
+
+}
 </style>
 </head>
 
