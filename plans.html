@@ -795,7 +795,8 @@
           throw new Error("Please login again.");
         }
 
-        const response = await fetch(`${API_BASE}/api/affiliate/select-plan`, {
+        // ✅ FIXED: was /api/affiliate/select-plan (wrong)
+        const response = await fetch(`${API_BASE}/api/rewards/select-plan`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -848,12 +849,14 @@
           throw new Error("Please login again.");
         }
 
-        const response = await fetch(`${API_BASE}/api/auth/user/${storedUser.id}`, {
-          method: "GET",
+        // ✅ FIXED: was /api/auth/user/:id (wrong — no such route)
+        const response = await fetch(`${API_BASE}/api/rewards/status`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Cache-Control": "no-cache"
           },
+          body: JSON.stringify({ userId: storedUser.id }),
           cache: "no-store"
         });
 
