@@ -848,7 +848,6 @@
           throw new Error("Please login again.");
         }
 
-        // ✅ CORRECT: GET /api/auth/user/:id exists in auth.js
         const response = await fetch(`${API_BASE}/api/auth/user/${storedUser.id}`, {
           method: "GET",
           headers: {
@@ -862,7 +861,7 @@
 
         console.log("Plans page user verify response:", response.status, data);
 
-        if (!response.ok || !data.success || !data.user) {
+        if (!response.ok || !data.user) {
           throw new Error(data.message || "Failed to fetch affiliate status");
         }
 
