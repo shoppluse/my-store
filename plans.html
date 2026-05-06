@@ -795,8 +795,7 @@
           throw new Error("Please login again.");
         }
 
-        // ✅ FIXED: was /api/affiliate/select-plan (wrong)
-        const response = await fetch(`${API_BASE}/api/rewards/select-plan`, {
+        const response = await fetch(`${API_BASE}/api/affiliate/select-plan`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
