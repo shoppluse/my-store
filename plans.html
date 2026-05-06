@@ -802,7 +802,7 @@
             "Cache-Control": "no-cache"
           },
           body: JSON.stringify({
-            userId: storedUser.id,
+            userId: storedUser.id || storedUser._id,
             plan: "starter"
           }),
           cache: "no-store"
@@ -844,11 +844,14 @@
 
     async function initPlansPage() {
       try {
+        console.log("Stored User:", storedUser);
+        console.log("User ID:", storedUser.id);
+        const userId = storedUser.id || storedUser._id;
         if (!storedUser.id) {
           throw new Error("Please login again.");
         }
 
-        const response = await fetch(`${API_BASE}/api/auth/user/${storedUser.id}`, {
+        const response = await fetch(`${API_BASE}/api/auth/user/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
