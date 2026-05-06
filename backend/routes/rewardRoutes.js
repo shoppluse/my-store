@@ -6,66 +6,6 @@ const AffiliateApplication = require("../models/AffiliateApplication");
 const router = express.Router();
 
 // =======================================
-// GET AVAILABLE PLANS
-// =======================================
-router.get("/plans", (req, res) => {
-  try {
-    const plans = [
-      {
-        id: "starter",
-        name: "Starter",
-        price: 0,
-        currency: "INR",
-        priceLabel: "Free",
-        maxProducts: 3,
-        features: [
-          "Up to 3 products",
-          "Basic affiliate dashboard",
-          "Standard commission rate"
-        ]
-      },
-      {
-        id: "growth",
-        name: "Growth",
-        price: 29,
-        currency: "INR",
-        priceLabel: "₹29/month",
-        maxProducts: 20,
-        features: [
-          "Up to 20 products",
-          "Advanced analytics",
-          "Higher commission rate"
-        ]
-      },
-      {
-        id: "elite",
-        name: "Elite",
-        price: 79,
-        currency: "INR",
-        priceLabel: "₹79/month",
-        maxProducts: -1,
-        features: [
-          "Unlimited products",
-          "Priority support",
-          "Highest commission rate"
-        ]
-      }
-    ];
-
-    res.status(200).json({
-      success: true,
-      plans
-    });
-  } catch (error) {
-    console.error("Get plans error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch plans"
-    });
-  }
-});
-
-// =======================================
 // APPLY FOR AFFILIATE
 // =======================================
 router.post("/apply", async (req, res) => {
@@ -250,17 +190,16 @@ router.post("/select-plan", async (req, res) => {
       planStatus = "active";
     } else if (safePlan === "growth") {
       maxProducts = 20;
-      planStatus = "inactive"; // activate after payment confirmation
+      planStatus = "inactive";
     } else if (safePlan === "elite") {
       maxProducts = -1;
-      planStatus = "inactive"; // activate after payment confirmation
+      planStatus = "inactive";
     }
 
     user.affiliatePlan = safePlan;
     user.planStatus = planStatus;
     user.maxProducts = maxProducts;
 
-    // If starter, make sure affiliate is active
     if (safePlan === "starter") {
       user.isAffiliate = true;
       user.affiliateStatus = "approved";
