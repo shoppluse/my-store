@@ -799,7 +799,6 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-cache"
           },
           body: JSON.stringify({
             userId: storedUser.id || storedUser._id,
@@ -855,7 +854,6 @@
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Cache-Control": "no-cache"
           },
           cache: "no-store"
         });
