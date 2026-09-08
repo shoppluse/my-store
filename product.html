@@ -536,7 +536,7 @@
   <header class="header">
     <div class="header-pill">
       <a href="./home.html" class="hdr-btn">← Home</a>
-      <a href="./profile.html" class="hdr-btn">👤 Profile</a>
+      <a href="./profile.html" id="headerProfileBtn" class="hdr-btn">👤 Profile</a>
     </div>
   </header>
 
@@ -584,10 +584,21 @@
     const BACKEND = "https://my-store-e28j.onrender.com";
     const FALLBACK_IMG = "https://via.placeholder.com/600x600/f4f3f0/aaa?text=No+Image";
 
-    /* Auth guard */
-    if (localStorage.getItem("shopplusLoggedIn") !== "true" || !localStorage.getItem("shopplusUser")) {
-      window.location.href = "./login.html";
-    }
+    // Dynamically update Header profile button based on Auth status
+    document.addEventListener("DOMContentLoaded", () => {
+      const profileBtn = document.getElementById("headerProfileBtn");
+      const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+      
+      if (profileBtn) {
+        if (isLoggedIn === "true") {
+          profileBtn.href = "./profile.html";
+          profileBtn.textContent = "👤 Profile";
+        } else {
+          profileBtn.href = "./login.html";
+          profileBtn.textContent = "👤 Login";
+        }
+      }
+    });
 
     /* ===== UTILS ===== */
     function esc(text) {
