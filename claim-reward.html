@@ -16,6 +16,8 @@
       const t = localStorage.getItem("theme");
       document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
     })();
+
+    // Bouncer: Forces guests to login before claiming a reward
     const _u = localStorage.getItem("shopplusUser");
     if (!localStorage.getItem("shopplusLoggedIn") || !_u) {
       window.location.href = "login.html";
