@@ -11,9 +11,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
 <script>
-  if (localStorage.getItem("shopplusLoggedIn") !== "true" || !localStorage.getItem("shopplusUser")) {
-    window.location.href = "login.html";
-  }
   (function () {
     const t = localStorage.getItem("theme");
     document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
@@ -1532,6 +1529,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   loadProducts();
   if (isStandalone()) installBtn.classList.remove("show");
+
+  // Dynamically route the profile button based on login status
+  const profileBtn = document.querySelector('a[aria-label="Profile"]');
+  const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
+  if (profileBtn) {
+    if (isLoggedIn === "true") {
+      profileBtn.href = "profile.html";
+      profileBtn.title = "Profile";
+    } else {
+      profileBtn.href = "login.html";
+      profileBtn.title = "Login / Sign Up";
+    }
+  }
 });
 document.addEventListener("visibilitychange", () => { if (!document.hidden) loadStories(); });
 window.addEventListener("focus", () => loadStories());
