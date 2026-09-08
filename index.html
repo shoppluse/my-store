@@ -349,15 +349,9 @@ body {
       });
     }
 
-    // Redirect after splash
+    // Redirect after splash directly to the storefront
     setTimeout(() => {
-      const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
-      const user = localStorage.getItem("shopplusUser");
-      if (isLoggedIn === "true" && user) {
-        window.location.replace("home.html");
-      } else {
-        window.location.replace("login.html");
-      }
+      window.location.replace("home.html");
     }, 1200);
   </script>
 </body>
