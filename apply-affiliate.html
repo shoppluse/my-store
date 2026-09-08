@@ -17,6 +17,7 @@
       document.documentElement.setAttribute("data-theme", savedTheme === "dark" ? "dark" : "light");
     })();
 
+    // Bouncer: Forces guests to login before applying
     const isLoggedIn = localStorage.getItem("shopplusLoggedIn");
     const currentUserRaw = localStorage.getItem("shopplusUser");
 
