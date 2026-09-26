@@ -383,6 +383,17 @@ input { font-family: inherit; }
 /* ===== HORIZONTAL CARDS (deals) ===== */
 .h-scroll-section {
   padding: 0 var(--pad) 0;
+  position: relative;
+}
+.h-scroll-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 4px;
+  width: 36px;
+  background: linear-gradient(to right, transparent, var(--bg) 75%);
+  pointer-events: none;
 }
 .h-scroll {
   display: flex;
@@ -390,6 +401,8 @@ input { font-family: inherit; }
   overflow-x: auto;
   scrollbar-width: none;
   padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--pad);
 }
 .deal-card {
   flex-shrink: 0;
@@ -402,6 +415,7 @@ input { font-family: inherit; }
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
+  scroll-snap-align: start;
 }
 .deal-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .deal-card-img {
@@ -434,6 +448,25 @@ input { font-family: inherit; }
 /* ===== APP SHORTCUTS ===== */
 .apps-section {
   padding: 0 var(--pad) 0;
+  position: relative;
+}
+.apps-section::before,
+.apps-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 4px;
+  width: 28px;
+  z-index: 2;
+  pointer-events: none;
+}
+.apps-section::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+.apps-section::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
 }
 .apps-slider {
   overflow: hidden;
@@ -829,11 +862,12 @@ input { font-family: inherit; }
     gap: 16px;
   }
 
-  .carousel-slide img,
-  .carousel-slide .slide-placeholder {
-    aspect-ratio: 16/14;
-    object-fit: contain;
-    background: var(--surface);
+  .carousel-slide img {
+    aspect-ratio: 21 / 7;
+    object-fit: cover;
+  }
+  .slide-placeholder {
+    aspect-ratio: 21 / 7;
   }
 
 }
