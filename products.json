@@ -833,5 +833,21 @@
   ],
   "category": "Fashion",
   "brand": "KOTTY"
+},
+  {
+  "id": 50,
+  "name": "WishCare Tinted Ceramide Lip Balm",
+  "description": "WishCare Tinted Ceramide Lip Balm - SPF 50 PA++++ is a specialized formula that combines the moisturizing benefits of Ceramides, the lightening benefits of Niacinamide & Kojic Acid with protection of SPF to ensure holistic lip care and repair. This unique formula brightens and keeps your lips hydrated, soft and shielded from the damaging effects of UV radiation. This formulation comes in a natural red tint for your lips.",
+  "price": "Just ₹ 206",
+  "rating": 4.3,
+  "link": "https://fktr.in/xPER2XU",
+  "image": "https://rukminim2.flixcart.com/image/1536/1536/xif0q/lip-balm/s/x/u/5-tinted-ceramide-lip-balm-with-spf50-pa-kojic-acid-niacinamide-resized-original-imahzqrgdccaejpm.jpeg?q=90",
+  "images": [
+    "https://rukminim2.flixcart.com/image/1536/1536/xif0q/lip-balm/i/c/w/5-tinted-ceramide-lip-balm-with-spf50-pa-kojic-acid-niacinamide-original-imahzqqzzguhyzej.jpeg?q=90",
+    "https://rukminim2.flixcart.com/image/1536/1536/xif0q/lip-balm/d/i/f/5-tinted-ceramide-lip-balm-with-spf50-pa-kojic-acid-niacinamide-original-imahzqqzznhkymhc.jpeg?q=90",
+    "https://rukminim2.flixcart.com/image/1536/1536/xif0q/lip-balm/d/b/m/-original-imahzwcsqgs4jegk.jpeg?q=90"
+  ],
+  "category": "Beauty",
+  "brand": "WishCare"
 }
 ]
